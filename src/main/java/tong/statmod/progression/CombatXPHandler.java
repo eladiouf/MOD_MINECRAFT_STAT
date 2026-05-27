@@ -7,7 +7,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStatsProvider;
-import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.stats.StatType;
@@ -35,23 +34,21 @@ public class CombatXPHandler {
     }
 
     private static StatType determinePrimaryStat(ServerPlayer player) {
-        if (EpicFightCompat.isEpicFightLoaded()) {
-            var cap = player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
-            if (cap.isPresent() && cap.resolve().isPresent()) {
-                Object patch = cap.resolve().get();
-                if (patch instanceof ServerPlayerPatch playerPatch) {
-                    CapabilityItem itemCap = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
-                    if (itemCap != null && !itemCap.isEmpty()) {
-                        WeaponCategory cat = itemCap.getWeaponCategory();
-                        if (cat == CapabilityItem.WeaponCategories.AXE || cat == CapabilityItem.WeaponCategories.GREATSWORD) return StatType.BRUTE_FORCE;
-                        if (cat == CapabilityItem.WeaponCategories.SWORD || cat == CapabilityItem.WeaponCategories.DAGGER
-                            || cat == CapabilityItem.WeaponCategories.UCHIGATANA || cat == CapabilityItem.WeaponCategories.TACHI
-                            || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD) return StatType.BLADE_TECHNIQUE;
-                        if (cat == CapabilityItem.WeaponCategories.FIST) return StatType.RAPIDITE;
-                        if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW) return StatType.PRECISION;
-                        if (cat == CapabilityItem.WeaponCategories.SPEAR) return StatType.AGILITY;
-                        if (cat == CapabilityItem.WeaponCategories.SHIELD) return StatType.PHYSICAL_ENDURANCE;
-                    }
+        var cap = player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
+        if (cap.isPresent() && cap.resolve().isPresent()) {
+            Object patch = cap.resolve().get();
+            if (patch instanceof ServerPlayerPatch playerPatch) {
+                CapabilityItem itemCap = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
+                if (itemCap != null && !itemCap.isEmpty()) {
+                    WeaponCategory cat = itemCap.getWeaponCategory();
+                    if (cat == CapabilityItem.WeaponCategories.AXE || cat == CapabilityItem.WeaponCategories.GREATSWORD) return StatType.BRUTE_FORCE;
+                    if (cat == CapabilityItem.WeaponCategories.SWORD || cat == CapabilityItem.WeaponCategories.DAGGER
+                        || cat == CapabilityItem.WeaponCategories.UCHIGATANA || cat == CapabilityItem.WeaponCategories.TACHI
+                        || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD) return StatType.BLADE_TECHNIQUE;
+                    if (cat == CapabilityItem.WeaponCategories.FIST) return StatType.RAPIDITE;
+                    if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW) return StatType.PRECISION;
+                    if (cat == CapabilityItem.WeaponCategories.SPEAR) return StatType.AGILITY;
+                    if (cat == CapabilityItem.WeaponCategories.SHIELD) return StatType.PHYSICAL_ENDURANCE;
                 }
             }
         }

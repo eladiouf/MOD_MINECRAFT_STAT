@@ -72,8 +72,8 @@ description='''${mod_description}'''
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="epicfight"
-    mandatory=false
-    versionRange="[20.9.5,)"
+    mandatory=true
+    versionRange="[20.14.17,)"
     ordering="NONE"
     side="BOTH"
 

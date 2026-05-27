@@ -7,7 +7,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStatsProvider;
-import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.stats.StatType;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -20,7 +19,6 @@ public class WeaponXPHandler {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
-        if (!EpicFightCompat.isEpicFightLoaded()) return;
 
         WeaponType weaponType = determineWeaponType(player);
         if (weaponType == null) return;

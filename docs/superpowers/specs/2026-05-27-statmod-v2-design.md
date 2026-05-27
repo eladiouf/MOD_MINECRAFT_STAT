@@ -1,6 +1,7 @@
 # STAT Mod v2 — Design Specification
 
-**Date:** 2026-05-27
+
+ **Date:** 2026-05-27
 **Branch:** experiment
 **Package:** tong.statmod
 **Minecraft:** 1.20.1 | **Forge:** 47.4.20 | **Epic Fight:** 20.9.5

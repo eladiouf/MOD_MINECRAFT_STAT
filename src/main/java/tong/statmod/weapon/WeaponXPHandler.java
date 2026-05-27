@@ -60,7 +60,7 @@ public class WeaponXPHandler {
             case AXE, GREATSWORD -> StatType.BRUTE_FORCE;
             case SWORD, DAGGER, UCHIGATANA, TACHI, LONGSWORD, TRIDENT -> StatType.BLADE_TECHNIQUE;
             case FIST -> StatType.RAPIDITE;
-            case RANGED -> StatType.PRECISION;
+            case BOW, CROSSBOW -> StatType.PRECISION;
             case SPEAR -> StatType.AGILITY;
             case SHIELD -> StatType.PHYSICAL_ENDURANCE;
         };

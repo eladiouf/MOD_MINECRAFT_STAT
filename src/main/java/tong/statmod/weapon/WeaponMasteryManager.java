@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import tong.statmod.stats.StatCalculator;
 
 public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
-    public static final int WEAPON_COUNT = 12;
+    public static final int WEAPON_COUNT = 13;
     private static final int MAX_LEVEL = 50;
     private final int[] levels = new int[WEAPON_COUNT];
     private final int[] xp = new int[WEAPON_COUNT];

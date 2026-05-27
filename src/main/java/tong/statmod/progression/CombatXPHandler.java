@@ -48,7 +48,7 @@ public class CombatXPHandler {
                             || cat == CapabilityItem.WeaponCategories.UCHIGATANA || cat == CapabilityItem.WeaponCategories.TACHI
                             || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD) return StatType.BLADE_TECHNIQUE;
                         if (cat == CapabilityItem.WeaponCategories.FIST) return StatType.RAPIDITE;
-                        if (cat == CapabilityItem.WeaponCategories.RANGED) return StatType.PRECISION;
+                        if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW) return StatType.PRECISION;
                         if (cat == CapabilityItem.WeaponCategories.SPEAR) return StatType.AGILITY;
                         if (cat == CapabilityItem.WeaponCategories.SHIELD) return StatType.PHYSICAL_ENDURANCE;
                     }

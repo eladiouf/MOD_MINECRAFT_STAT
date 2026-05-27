@@ -15,9 +15,11 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     public void addXp(int index, int amount) {
         if (index < 0 || index >= STAT_COUNT) return;
         this.xp[index] += amount;
-        while (this.xp[index] >= getXpForNextLevel(levels[index]) && levels[index] < 100) {
+        while (levels[index] < 100) {
+            int required = getXpForNextLevel(levels[index]);
+            if (this.xp[index] < required) break;
+            this.xp[index] -= required;
             levels[index]++;
-            this.xp[index] -= getXpForNextLevel(levels[index]);
             STATMod.LOGGER.debug("Level up! Stat {} → level {}", index, levels[index]);
         }
     }

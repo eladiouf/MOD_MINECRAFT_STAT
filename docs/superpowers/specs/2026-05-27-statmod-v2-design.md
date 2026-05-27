@@ -150,7 +150,7 @@ tong.statmod/
 | 11 | Magic | Air Affinity | Jumping, falling, elytra | Fall damage reduction, air speed |
 | 12 | Magic | Magic Resistance | Suffer potion/poison effects | -1% magic damage taken/point |
 | 13 | Magic | Casting Speed | Using potions, enchanted items | Item use speed |
-| 14 | Magic | Mana Pool | Passive (scales with magic XP) | Mana reserve for EF skills |
+| 14 | Magic | Mana Pool | Passive (scales with total magic XP accrued) | Reduces fatigue cost of magic-related EF skills by 0.5%/point |
 | 15 | Magic | Erudition | Discover enchantments, read books | Anvil XP cost reduction |
 | 16 | Survival | Tracking | Kill hostile mobs | Detection range + loot bonus |
 | 17 | Survival | Keen Senses | Explore, discover biomes | Night vision + ore detection |
@@ -194,7 +194,7 @@ tong.statmod/
 | Jump, take fall damage, use elytra | Air Affinity |
 | Get hit by potion/poison/wither | Magic Resistance |
 | Drink potions, use enchanted items | Casting Speed |
-| Passive (1% of all magic XP gained) | Mana Pool |
+| Passive (accumulates as other magic stats gain XP) | Mana Pool |
 | Find enchanted books, disenchant | Erudition |
 | Kill hostile mobs | Tracking |
 | Discover new biomes, break spawners | Keen Senses |
@@ -539,7 +539,7 @@ character_screen = 47
 |------|-----------|
 | Epic Fight API changes between versions | Pin to 20.9.5, check API surface before implementing skills |
 | 23 stats too many to balance | Start with Combat + Fatigue, add remaining categories incrementally |
-| Mana Pool stat requires new resource | Defer: use fatigue as universal resource initially; Mana Pool is cosmetic + passive bonus |
+| Mana Pool stat's fatigue reduction can be hard to balance | Start with flat 0.5% reduction per level, tune from playtesting |
 | EF Skill class hierarchy is complex | Start with 2-3 skills (one per category type), validate pattern, then scale to full matrix |
 | Client/server desync on skill unlocks | EF handles its own skill sync; we only fire unlock trigger server-side |
 | Performance with 23 stats per player | Dirty flag pattern ensures max 1 network packet/tick; stat effects calculated on-demand |

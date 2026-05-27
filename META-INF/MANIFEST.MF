@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: statmod
+Specification-Vendor: ela_juff
+Specification-Version: 1
+Implementation-Title: STAT_MOD
+Implementation-Version: 1.0.0
+Implementation-Vendor: ela_juff
+Implementation-Timestamp: 2026-05-27T09:32:39+0000
+

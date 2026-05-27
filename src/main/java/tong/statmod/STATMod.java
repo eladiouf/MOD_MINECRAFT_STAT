@@ -2,6 +2,7 @@ package tong.statmod;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,8 +43,13 @@ public class STATMod
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        StatsCommands.register(event.getServer().getCommands().getDispatcher());
         LOGGER.info("STAT Mod prêt sur le serveur");
+    }
+
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event)
+    {
+        StatsCommands.register(event.getDispatcher());
     }
 
     @Mod.EventBusSubscriber(modid = STATMod.MODID)

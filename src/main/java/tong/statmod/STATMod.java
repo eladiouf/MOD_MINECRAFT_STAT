@@ -1,8 +1,11 @@
 package tong.statmod;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,7 +40,20 @@ public class STATMod
         StatRegistry.init();
         EpicFightCompat.init();
         SkillUnlockRegistry.init();
+        initEpicFightData();
         LOGGER.info("STAT Mod chargé !");
+    }
+
+    private static void initEpicFightData() {
+        try {
+            Class<?> cls = Class.forName("yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch");
+            java.lang.reflect.Method init = cls.getDeclaredMethod("initLivingEntityDataAccessor");
+            init.setAccessible(true);
+            init.invoke(null);
+            LOGGER.info("Epic Fight LivingEntityPatch data initialized via STAT Mod");
+        } catch (Exception e) {
+            LOGGER.debug("Could not init Epic Fight data (not loaded?): {}", e.getMessage());
+        }
     }
 
     @SubscribeEvent
@@ -50,6 +66,24 @@ public class STATMod
     public void onRegisterCommands(RegisterCommandsEvent event)
     {
         StatsCommands.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void onEntityJoin(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof LivingEntity living) {
+            callCreateSyncedEntityData(living);
+        }
+    }
+
+    private static void callCreateSyncedEntityData(LivingEntity living) {
+        try {
+            Class<?> cls = Class.forName("yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch");
+            java.lang.reflect.Method create = cls.getDeclaredMethod("createSyncedEntityData", LivingEntity.class);
+            create.setAccessible(true);
+            create.invoke(null, living);
+        } catch (Exception e) {
+            // Epic Fight not loaded
+        }
     }
 
     @Mod.EventBusSubscriber(modid = STATMod.MODID)

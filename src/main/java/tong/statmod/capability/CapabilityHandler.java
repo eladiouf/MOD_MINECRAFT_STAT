@@ -9,12 +9,18 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
+import tong.statmod.fatigue.FatigueManager;
+import tong.statmod.fatigue.FatigueProvider;
+import tong.statmod.weapon.WeaponMasteryManager;
+import tong.statmod.weapon.WeaponMasteryProvider;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class CapabilityHandler {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.register(PlayerStats.class);
+        event.register(FatigueManager.class);
+        event.register(WeaponMasteryManager.class);
     }
 
     @SubscribeEvent
@@ -23,6 +29,9 @@ public class CapabilityHandler {
             event.addCapability(
                 new ResourceLocation(STATMod.MODID, "player_stats"),
                 new PlayerStatsProvider());
+            event.addCapability(
+                new ResourceLocation(STATMod.MODID, "fatigue"),
+                new FatigueProvider());
         }
     }
 
@@ -32,6 +41,11 @@ public class CapabilityHandler {
             event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(oldStats -> {
                 event.getEntity().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(newStats -> {
                     newStats.copyFrom(oldStats);
+                });
+            });
+            event.getOriginal().getCapability(FatigueProvider.FATIGUE).ifPresent(oldFatigue -> {
+                event.getEntity().getCapability(FatigueProvider.FATIGUE).ifPresent(newFatigue -> {
+                    newFatigue.reset();
                 });
             });
         }

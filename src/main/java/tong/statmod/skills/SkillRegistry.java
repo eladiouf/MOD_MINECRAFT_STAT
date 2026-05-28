@@ -185,28 +185,28 @@ public class SkillRegistry {
             builder -> new StatPassiveSkill(builder, StatType.PHYSICAL_RESISTANCE, 3),
             makePassiveBuilder("resist_diamond"));
 
-        // ===== WEAPON INNATE (7) =====
+        // ===== WEAPON INNATE (7) — Custom CLASS_ARTS slot =====
         HEAVY_STRIKE = worker.build("heavy_strike",
             builder -> new StatActiveSkill(builder, StatType.BRUTE_FORCE, 8000L),
-            makeBuilder("heavy_strike", SkillCategories.WEAPON_INNATE));
+            makeBuilder("heavy_strike", StatModSkillCategories.CLASS_ARTS));
         BLADE_DANCE = worker.build("blade_dance",
             builder -> new StatActiveSkill(builder, StatType.BLADE_TECHNIQUE, 10000L),
-            makeBuilder("blade_dance", SkillCategories.WEAPON_INNATE));
+            makeBuilder("blade_dance", StatModSkillCategories.CLASS_ARTS));
         BLITZ_ASSAULT = worker.build("blitz_assault",
             builder -> new StatActiveSkill(builder, StatType.RAPIDITE, 12000L),
-            makeBuilder("blitz_assault", SkillCategories.WEAPON_INNATE));
+            makeBuilder("blitz_assault", StatModSkillCategories.CLASS_ARTS));
         SHADOW_STEP = worker.build("shadow_step",
             builder -> new StatActiveSkill(builder, StatType.AGILITY, 15000L),
-            makeBuilder("shadow_step", SkillCategories.WEAPON_INNATE));
+            makeBuilder("shadow_step", StatModSkillCategories.CLASS_ARTS));
         STONE_SKIN = worker.build("stone_skin",
             builder -> new StatActiveSkill(builder, StatType.PHYSICAL_RESISTANCE, 20000L),
-            makeBuilder("stone_skin", SkillCategories.WEAPON_INNATE));
+            makeBuilder("stone_skin", StatModSkillCategories.CLASS_ARTS));
         ENDURANCE_SURGE = worker.build("endurance_surge",
             builder -> new StatActiveSkill(builder, StatType.PHYSICAL_ENDURANCE, 25000L),
-            makeBuilder("endurance_surge", SkillCategories.WEAPON_INNATE));
+            makeBuilder("endurance_surge", StatModSkillCategories.CLASS_ARTS));
         PRECISION_SHOT = worker.build("precision_shot",
             builder -> new StatActiveSkill(builder, StatType.PRECISION, 18000L),
-            makeBuilder("precision_shot", SkillCategories.WEAPON_INNATE));
+            makeBuilder("precision_shot", StatModSkillCategories.CLASS_ARTS));
 
         // ===== MOVER (3) =====
         QUICK_STEP = worker.build("quick_step",

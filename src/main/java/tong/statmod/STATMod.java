@@ -25,6 +25,10 @@ import tong.statmod.network.SyncAllStatsPacket;
 import tong.statmod.skills.SkillRegistry;
 import tong.statmod.skills.SkillRequirementRegistry;
 import tong.statmod.skills.SkillUnlockRegistry;
+import tong.statmod.skills.StatModSkillCategories;
+import tong.statmod.skills.StatModSkillSlots;
+import yesman.epicfight.skill.SkillSlot;
+import yesman.epicfight.skill.SkillCategory;
 import tong.statmod.stats.StatRegistry;
 import tong.statmod.world.effect.ModEffects;
 import tong.statmod.fatigue.FatigueProvider;
@@ -54,6 +58,10 @@ public class STATMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        // Register custom skill categories and slots with Epic Fight
+        SkillCategory.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillCategories.class);
+        SkillSlot.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillSlots.class);
+
         StatRegistry.init();
         EpicFightCompat.init();
         EpicParcoolCompat.init();

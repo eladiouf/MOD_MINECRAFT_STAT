@@ -1,6 +1,7 @@
 {
   "key.categories.statmod": "STAT Mod",
   "key.statmod.open_stats": "Ouvrir l'écran de personnage",
+  "key.statmod.class_arts": "Skill Class Arts",
   "screen.statmod.character": "Stats du personnage",
   "screen.statmod.perks": "Perks",
   "key.statmod.open_perks": "Ouvrir l'écran des perks",

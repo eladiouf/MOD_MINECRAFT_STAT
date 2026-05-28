@@ -15,6 +15,7 @@ import tong.statmod.perks.PerkManager;
 import tong.statmod.perks.PerkProvider;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.weapon.WeaponMasteryManager;
+import tong.statmod.weapon.WeaponMasteryProvider;
 import tong.statmod.world.thirst.ThirstManager;
 import tong.statmod.world.thirst.ThirstProvider;
 
@@ -44,6 +45,9 @@ public class CapabilityHandler {
             event.addCapability(
                 new ResourceLocation(STATMod.MODID, "perks"),
                 new PerkProvider());
+            event.addCapability(
+                new ResourceLocation(STATMod.MODID, "weapon_mastery"),
+                new WeaponMasteryProvider());
         }
     }
 
@@ -63,6 +67,11 @@ public class CapabilityHandler {
             event.getOriginal().getCapability(PerkProvider.PERKS).ifPresent(oldPerks -> {
                 event.getEntity().getCapability(PerkProvider.PERKS).ifPresent(newPerks -> {
                     newPerks.deserializeNBT(oldPerks.serializeNBT());
+                });
+            });
+            event.getOriginal().getCapability(WeaponMasteryProvider.WEAPON_MASTERY).ifPresent(oldWeapon -> {
+                event.getEntity().getCapability(WeaponMasteryProvider.WEAPON_MASTERY).ifPresent(newWeapon -> {
+                    newWeapon.deserializeNBT(oldWeapon.serializeNBT());
                 });
             });
         }

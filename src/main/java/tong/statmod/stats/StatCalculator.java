@@ -101,11 +101,6 @@ public class StatCalculator {
         return 0.003f * level;
     }
 
-    // Intimidation: +0.3% mob fear range per level (max +30%)
-    public static float getFearRange(int level) {
-        return 0.003f * level;
-    }
-
     // Willpower: -0.5% status duration per level (max -50%)
     public static float getStatusDurationReduction(int level) {
         return 0.005f * level;
@@ -121,8 +116,18 @@ public class StatCalculator {
         return 0.003f * level;
     }
 
-    // Keen Senses: +0.2 blocks entity reach per level (max +20 blocks)
-    public static float getEntityReachBonus(int level) {
-        return 0.2f * level;
+    // Keen Senses: +0.3 blocks detection radius per level (max +30 blocks, base 5)
+    public static float getDetectionRadius(int level) {
+        return 5.0f + level * 0.3f;
+    }
+
+    // Intimidation: fear range +0.5 blocks per level (base 2)
+    public static float getFearRange(int level) {
+        return 2.0f + level * 0.5f;
+    }
+
+    // Crafting: extra nutrition per level
+    public static int getExtraNutrition(int level) {
+        return Math.max(1, level / 20);
     }
 }

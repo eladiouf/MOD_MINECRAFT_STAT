@@ -2,10 +2,17 @@ package tong.statmod.stats;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,11 +21,50 @@ import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStatsProvider;
 
 import java.util.Iterator;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class StatPassiveEffects {
 
-    // Cooking: bonus saturation when eating
+    private static final int TICK_INTERVAL = 20;
+    private static int tickCounter = 0;
+
+    // Batched periodic effects: Keen Senses + Physical Endurance
+    @SubscribeEvent
+    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        tickCounter++;
+        if (tickCounter % TICK_INTERVAL != 0) return;
+
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            // Keen Senses: reveal nearby mobs when sneaking
+            int keenLevel = stats.getLevel(StatType.KEEN_SENSES.index);
+            if (keenLevel > 0 && player.isShiftKeyDown()) {
+                float range = StatCalculator.getDetectionRadius(keenLevel);
+                AABB box = player.getBoundingBox().inflate(range);
+                List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, box,
+                    m -> m != null && m.isAlive() && m.hasLineOfSight(player));
+                for (Mob mob : mobs) {
+                    mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30, 0, false, false));
+                }
+            }
+
+            // Physical Endurance: natural regen boost when hunger full
+            int enduranceLevel = stats.getLevel(StatType.PHYSICAL_ENDURANCE.index);
+            if (enduranceLevel > 0 && player.getFoodData().getFoodLevel() >= 18) {
+                float health = player.getHealth();
+                float maxHealth = player.getMaxHealth();
+                if (health < maxHealth && health > 0) {
+                    int delay = Math.max(8, 40 - enduranceLevel / 3);
+                    if (player.tickCount % delay == 0) {
+                        player.heal(0.5f);
+                    }
+                }
+            }
+        });
+    }
+
+    // Cooking: bonus nutrition + saturation when eating
     @SubscribeEvent
     public static void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -33,14 +79,15 @@ public class StatPassiveEffects {
             if (cookingLevel <= 0) return;
 
             float bonus = StatCalculator.getSaturationBonus(cookingLevel);
-            int extraSaturation = Math.round(food.getNutrition() * bonus);
-            if (extraSaturation > 0) {
-                player.getFoodData().eat(0, extraSaturation);
+            int extraSat = Math.round(food.getNutrition() * bonus);
+            int extraNut = StatCalculator.getExtraNutrition(cookingLevel);
+            if (extraSat > 0 || extraNut > 0) {
+                player.getFoodData().eat(extraNut, extraSat);
             }
         });
     }
 
-    // Forging: chance to reduce durability loss when breaking a block/tool
+    // Forging: mining speed bonus + durability preservation
     @SubscribeEvent
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -50,7 +97,7 @@ public class StatPassiveEffects {
             if (forgingLevel <= 0) return;
 
             float bonus = StatCalculator.getDurabilityBonus(forgingLevel);
-            event.setNewSpeed(event.getNewSpeed() * (1.0f + bonus * 0.5f));
+            event.setNewSpeed(event.getNewSpeed() * (1.0f + bonus));
         });
     }
 
@@ -69,13 +116,11 @@ public class StatPassiveEffects {
 
             for (Iterator<MobEffectInstance> it = player.getActiveEffectsMap().values().iterator(); it.hasNext();) {
                 MobEffectInstance effect = it.next();
-                if (effect.isAmbient()) continue;
-                if (effect.getDuration() > 200) {
-                    int extra = (int) (effect.getDuration() * extension);
-                    player.addEffect(new MobEffectInstance(
-                        effect.getEffect(), effect.getDuration() + extra,
-                        effect.getAmplifier(), effect.isAmbient(), effect.isVisible()));
-                }
+                if (effect.isAmbient() || effect.getDuration() <= 200) continue;
+                int extra = (int) (effect.getDuration() * extension);
+                player.addEffect(new MobEffectInstance(
+                    effect.getEffect(), effect.getDuration() + extra,
+                    effect.getAmplifier(), effect.isAmbient(), effect.isVisible()));
             }
         });
     }
@@ -95,13 +140,35 @@ public class StatPassiveEffects {
             MobEffectInstance effectInstance = event.getEffectInstance();
             if (effectInstance == null || effectInstance.isAmbient()) return;
 
-            int reducedDuration = (int) (effectInstance.getDuration() * (1.0f - reduction));
-            if (reducedDuration < 20) reducedDuration = 20;
+            int reduced = (int) (effectInstance.getDuration() * (1.0f - reduction));
+            if (reduced < 20) reduced = 20;
 
             player.removeEffect(effectInstance.getEffect());
             player.addEffect(new MobEffectInstance(
-                effectInstance.getEffect(), reducedDuration,
+                effectInstance.getEffect(), reduced,
                 effectInstance.getAmplifier(), effectInstance.isAmbient(), effectInstance.isVisible()));
+        });
+    }
+
+    // Intimidation AoE: panic + weakness on mobs near the one you hit
+    @SubscribeEvent
+    public static void onLivingHurtAoE(LivingHurtEvent event) {
+        if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
+
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            int intimidationLevel = stats.getLevel(StatType.INTIMIDATION.index);
+            if (intimidationLevel <= 0) return;
+
+            float range = StatCalculator.getFearRange(intimidationLevel);
+            AABB box = player.getBoundingBox().inflate(range);
+            List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, box, m -> m.isAlive());
+            for (Mob mob : mobs) {
+                if (mob == event.getEntity()) continue;
+                if (player.getRandom().nextFloat() < 0.3f) {
+                    mob.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60 + intimidationLevel, 0));
+                    mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 0));
+                }
+            }
         });
     }
 }

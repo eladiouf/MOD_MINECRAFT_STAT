@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,36 +25,49 @@ public class StatEffectApplier {
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
+        // --- PLAYER ATTACKING ---
         if (event.getSource().getEntity() instanceof Player player) {
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
                 float multiplier = 1.0f;
+
+                // Brute Force + Blade Technique
                 multiplier += StatCalculator.getDamageBonus(stats.getLevel(StatType.BRUTE_FORCE.index));
                 multiplier += StatCalculator.getBladeDamageBonus(stats.getLevel(StatType.BLADE_TECHNIQUE.index));
 
-                // Precision: crit chance
+                // Precision: critical hit
                 float critChance = StatCalculator.getCritChance(stats.getLevel(StatType.PRECISION.index));
-                if (player.getRandom().nextFloat() < critChance) {
-                    multiplier *= 2.0f;
+                boolean isCrit = player.getRandom().nextFloat() < critChance;
+                if (isCrit) multiplier *= 2.0f;
+
+                // Precision: arrow damage bonus (bow/crossbow)
+                if (event.getSource().getDirectEntity() instanceof AbstractArrow) {
+                    float arrowBonus = StatCalculator.getCritChance(stats.getLevel(StatType.PRECISION.index));
+                    multiplier += arrowBonus;
                 }
 
                 event.setAmount(event.getAmount() * multiplier);
 
-                // Intimidation: apply weakness to mob on hit
+                // Intimidation: guaranteed debuff on direct hit
                 if (event.getEntity() instanceof LivingEntity) {
                     LivingEntity target = (LivingEntity) event.getEntity();
-                    int intimidationLevel = stats.getLevel(StatType.INTIMIDATION.index);
-                    if (intimidationLevel > 0 && player.getRandom().nextFloat() < intimidationLevel * 0.005f) {
-                        int duration = 40 + intimidationLevel;
-                        var effect = new net.minecraft.world.effect.MobEffectInstance(
-                            net.minecraft.world.effect.MobEffects.WEAKNESS, duration, 0);
-                        target.addEffect(effect);
+                    int intimid = stats.getLevel(StatType.INTIMIDATION.index);
+                    if (intimid > 0) {
+                        int dur = 40 + intimid;
+                        target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                            net.minecraft.world.effect.MobEffects.WEAKNESS, dur, Math.min(2, intimid / 30)));
+                        if (isCrit) {
+                            target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, dur / 2, 0));
+                        }
                     }
                 }
             });
         }
 
+        // --- PLAYER BEING HIT ---
         if (event.getEntity() instanceof Player player) {
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                // Physical Resistance
                 float reduction = StatCalculator.getDamageReduction(stats.getLevel(StatType.PHYSICAL_RESISTANCE.index));
                 event.setAmount(event.getAmount() * (1.0f - reduction));
             });

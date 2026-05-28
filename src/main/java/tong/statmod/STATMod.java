@@ -49,6 +49,15 @@ public class STATMod
     {
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         var bus = context.getModEventBus();
+
+        // Register custom skill categories and slots with Epic Fight (must be early)
+        SkillCategory.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillCategories.class);
+        SkillSlot.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillSlots.class);
+
+        // Load the enums immediately so they're available for skill registration
+        SkillCategory.ENUM_MANAGER.loadEnum();
+        SkillSlot.ENUM_MANAGER.loadEnum();
+
         bus.addListener(this::commonSetup);
         ModEffects.register(bus);
         ModPotions.register(bus);
@@ -58,10 +67,6 @@ public class STATMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        // Register custom skill categories and slots with Epic Fight
-        SkillCategory.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillCategories.class);
-        SkillSlot.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillSlots.class);
-
         StatRegistry.init();
         EpicFightCompat.init();
         EpicParcoolCompat.init();

@@ -1,6 +1,11 @@
 package tong.statmod;
 
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraft.server.level.ServerPlayer;
+import tong.statmod.world.effect.AdrenalineBrewingRecipe;
+import tong.statmod.world.effect.ModPotions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -18,6 +23,14 @@ import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncAllStatsPacket;
 import tong.statmod.skills.SkillUnlockRegistry;
 import tong.statmod.stats.StatRegistry;
+import tong.statmod.world.effect.ModEffects;
+import tong.statmod.fatigue.FatigueProvider;
+import tong.statmod.network.FatiguePacket;
+import tong.statmod.network.ThirstPacket;
+import tong.statmod.network.SyncPerksPacket;
+import tong.statmod.perks.PerkProvider;
+import tong.statmod.world.thirst.ThirstProvider;
+import net.minecraftforge.fml.config.ModConfig;
 
 @Mod(STATMod.MODID)
 public class STATMod
@@ -27,7 +40,11 @@ public class STATMod
 
     public STATMod(FMLJavaModLoadingContext context)
     {
-        context.getModEventBus().addListener(this::commonSetup);
+        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        var bus = context.getModEventBus();
+        bus.addListener(this::commonSetup);
+        ModEffects.register(bus);
+        ModPotions.register(bus);
         NetworkHandler.register();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -37,6 +54,11 @@ public class STATMod
         StatRegistry.init();
         EpicFightCompat.init();
         SkillUnlockRegistry.init();
+        event.enqueueWork(() -> {
+            BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(Potions.AWKWARD, Items.SUGAR, ModPotions.ADRENALINE.get()));
+            BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.REDSTONE, ModPotions.LONG_ADRENALINE.get()));
+            BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_ADRENALINE.get()));
+        });
         LOGGER.info("STAT Mod chargé !");
     }
 
@@ -65,6 +87,14 @@ public class STATMod
                         xp[i] = stats.getXp(i);
                     }
                     NetworkHandler.sendToPlayer(new SyncAllStatsPacket(levels, xp), serverPlayer);
+                });
+                serverPlayer.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue ->
+                    NetworkHandler.sendToPlayer(new FatiguePacket(fatigue.getFatigue(), fatigue.getMaxFatigue()), serverPlayer));
+                serverPlayer.getCapability(ThirstProvider.THIRST).ifPresent(thirst ->
+                    NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), serverPlayer));
+                serverPlayer.getCapability(PerkProvider.PERKS).ifPresent(perks -> {
+                    int[] ids = perks.getUnlockedPerks().stream().mapToInt(i -> i).toArray();
+                    NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), serverPlayer);
                 });
             }
         }

@@ -2,6 +2,8 @@
   "key.categories.statmod": "STAT Mod",
   "key.statmod.open_stats": "Open Character Screen",
   "screen.statmod.character": "Character Stats",
+  "screen.statmod.perks": "Perks",
+  "key.statmod.open_perks": "Open Perks Screen",
 
   "statmod.stat.combat": "Combat",
   "statmod.stat.magic": "Magic",
@@ -42,5 +44,16 @@
   "statmod.command.stat_set": "%s set to Lv.%d",
   "statmod.command.stats_reset": "All stats reset",
   "statmod.command.fatigue_value": "Fatigue: %d%%",
-  "statmod.command.fatigue_reset": "Fatigue reset"
+  "statmod.command.fatigue_reset": "Fatigue reset",
+
+  "effect.statmod.adrenaline": "Adrenaline",
+  "item.minecraft.potion.effect.adrenaline": "Adrenaline Potion",
+  "item.minecraft.splash_potion.effect.adrenaline": "Splash Adrenaline Potion",
+  "item.minecraft.lingering_potion.effect.adrenaline": "Lingering Adrenaline Potion",
+  "item.minecraft.potion.effect.long_adrenaline": "Long Adrenaline Potion",
+  "item.minecraft.splash_potion.effect.long_adrenaline": "Splash Long Adrenaline Potion",
+  "item.minecraft.lingering_potion.effect.long_adrenaline": "Lingering Long Adrenaline Potion",
+  "item.minecraft.potion.effect.strong_adrenaline": "Strong Adrenaline Potion",
+  "item.minecraft.splash_potion.effect.strong_adrenaline": "Splash Strong Adrenaline Potion",
+  "item.minecraft.lingering_potion.effect.strong_adrenaline": "Lingering Strong Adrenaline Potion"
 }

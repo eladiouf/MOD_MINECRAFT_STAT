@@ -1,0 +1,173 @@
+<h2>Concept Design — Interface Parchemin</h2>
+<p class="subtitle">Voici comment je vois l'ensemble. Dis-moi si ça colle.</p>
+
+<div class="section">
+  <h3>Écran Personnage (touche P)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background: linear-gradient(135deg, #f5e6c8, #e8d5a3); border-radius: 8px; padding: 1.5rem; font-family: Georgia, serif;">
+      <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+        <div style="flex: 1;">
+          <div style="background: #8b4513; height: 2px; margin-bottom: 0.5rem;"></div>
+          <div style="display: flex; gap: 0.75rem; justify-content: center;">
+            <div style="background: #d4c494; border: 1px solid #8b4513; padding: 0.35rem 0.8rem; border-radius: 4px; color: #3a1a00; font-weight: bold; font-size: 0.75rem;">❧ Combat</div>
+            <div style="background: #c4a86a; border: 1px solid #8b4513; padding: 0.35rem 0.8rem; border-radius: 4px; color: #5a3a10; font-size: 0.75rem;">Magie</div>
+            <div style="background: #c4a86a; border: 1px solid #8b4513; padding: 0.35rem 0.8rem; border-radius: 4px; color: #5a3a10; font-size: 0.75rem;">Survie</div>
+            <div style="background: #c4a86a; border: 1px solid #8b4513; padding: 0.35rem 0.8rem; border-radius: 4px; color: #5a3a10; font-size: 0.75rem;">Artisanat</div>
+            <div style="background: #c4a86a; border: 1px solid #8b4513; padding: 0.35rem 0.8rem; border-radius: 4px; color: #5a3a10; font-size: 0.75rem;">Mental</div>
+          </div>
+          <div style="background: #8b4513; height: 2px; margin-top: 0.5rem; margin-bottom: 1rem;"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="background: #d4c494; border: 1px solid #a0724a; border-radius: 6px; padding: 0.6rem 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⚔</span>
+              <span style="color: #3a1a00; font-weight: bold; font-size: 0.8rem;">Brute Force</span>
+            </div>
+            <span style="color: #8b4513; font-weight: bold; font-size: 0.85rem;">Niv. 34</span>
+          </div>
+          <div style="background: #b8965a; height: 4px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #8b4513, #d2691e); width: 65%; height: 100%; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; color: #6b4c1e; font-size: 0.6rem; margin-top: 0.15rem;">340 / 520 XP</div>
+        </div>
+
+        <div style="background: #d4c494; border: 1px solid #a0724a; border-radius: 6px; padding: 0.6rem 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">🗡</span>
+              <span style="color: #3a1a00; font-weight: bold; font-size: 0.8rem;">Technique de Lame</span>
+            </div>
+            <span style="color: #8b4513; font-weight: bold; font-size: 0.85rem;">Niv. 28</span>
+          </div>
+          <div style="background: #b8965a; height: 4px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #8b4513, #d2691e); width: 55%; height: 100%; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; color: #6b4c1e; font-size: 0.6rem; margin-top: 0.15rem;">220 / 400 XP</div>
+        </div>
+
+        <div style="background: #d4c494; border: 1px solid #a0724a; border-radius: 6px; padding: 0.6rem 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">🏹</span>
+              <span style="color: #3a1a00; font-weight: bold; font-size: 0.8rem;">Précision</span>
+            </div>
+            <span style="color: #8b4513; font-weight: bold; font-size: 0.85rem;">Niv. 22</span>
+          </div>
+          <div style="background: #b8965a; height: 4px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #8b4513, #d2691e); width: 42%; height: 100%; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; color: #6b4c1e; font-size: 0.6rem; margin-top: 0.15rem;">168 / 400 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Arbre de Talents (touche O)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background: linear-gradient(135deg, #ede0c8, #dcc8a0); border-radius: 8px; padding: 1.5rem; font-family: Georgia, serif; min-height: 280px;">
+      <div style="background: #8b4513; height: 2px; margin-bottom: 0.5rem;"></div>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1rem;">
+        <div style="background: #d4c494; border: 1px solid #8b4513; padding: 0.3rem 0.7rem; border-radius: 4px; color: #3a1a00; font-weight: bold; font-size: 0.7rem;">Combat</div>
+        <div style="background: #c4a86a; border: 1px solid #8b4513; padding: 0.3rem 0.7rem; border-radius: 4px; color: #5a3a10; font-size: 0.7rem;">Survie</div>
+      </div>
+
+      <!-- Tree visualization -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <div style="display: flex; gap: 2.5rem; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="background: #d4c494; border: 2px solid #c49a3c; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem; box-shadow: 0 0 8px rgba(196,154,60,0.4);">
+              <span style="font-size: 1.2rem;">⚔</span>
+            </div>
+            <div style="color: #3a1a00; font-size: 0.6rem;">Force Brute</div>
+            <div style="color: #c49a3c; font-size: 0.55rem;">Niv.20 ✓</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="background: #888; border: 2px solid #666; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem;">
+              <span style="font-size: 1.2rem; opacity: 0.4;">⚔</span>
+            </div>
+            <div style="color: #666; font-size: 0.6rem;">Cogne Dur</div>
+            <div style="color: #888; font-size: 0.55rem;">Niv.50</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="background: #666; border: 2px solid #555; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem;">
+              <span style="font-size: 1.2rem; opacity: 0.3;">⚔</span>
+            </div>
+            <div style="color: #555; font-size: 0.6rem;">Titan</div>
+            <div style="color: #666; font-size: 0.55rem;">Niv.80</div>
+          </div>
+        </div>
+        <!-- Connector lines -->
+        <div style="display: flex; gap: 2.5rem; justify-content: center; margin: -0.3rem 0;">
+          <div style="width: 3.5rem; height: 2px; background: #c49a3c;"></div>
+          <div style="width: 3.5rem; height: 2px; background: #666;"></div>
+        </div>
+        <div style="display: flex; gap: 2.5rem; justify-content: center; margin-top: -0.3rem;">
+          <div style="text-align: center;">
+            <div style="background: #888; border: 2px solid #666; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem;">
+              <span style="font-size: 1rem; opacity: 0.4;">🛡</span>
+            </div>
+            <div style="color: #666; font-size: 0.55rem;">Muraille</div>
+            <div style="color: #888; font-size: 0.5rem;">Niv.20</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="background: #888; border: 2px solid #666; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem;">
+              <span style="font-size: 1rem; opacity: 0.4;">🗡</span>
+            </div>
+            <div style="color: #666; font-size: 0.55rem;">Lame Folle</div>
+            <div style="color: #888; font-size: 0.5rem;">Niv.50</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="background: #666; border: 2px solid #555; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.2rem;">
+              <span style="font-size: 1rem; opacity: 0.3;">🗡</span>
+            </div>
+            <div style="color: #555; font-size: 0.55rem;">Danseur</div>
+            <div style="color: #666; font-size: 0.5rem;">Niv.80</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>HUD (haut-gauche)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background: linear-gradient(180deg, #f5e6c8, #e8d5a3); border-radius: 8px; padding: 1rem; font-family: Georgia, serif; display: flex; gap: 1.5rem; align-items: flex-start;">
+      <div style="flex: 1;">
+        <div style="color: #3a1a00; font-size: 0.7rem; margin-bottom: 0.3rem;">✦ Niveau 34</div>
+        <div style="background: #b8965a; height: 3px; border-radius: 2px; width: 120px;">
+          <div style="background: linear-gradient(90deg, #8b4513, #d2691e); width: 65%; height: 100%; border-radius: 2px;"></div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <span style="color: #cc3333; font-size: 0.65rem;">♥</span>
+          <div style="background: #b8965a; height: 5px; width: 80px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #cc3333, #ff6666); width: 75%; height: 100%; border-radius: 2px;"></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <span style="color: #cc8800; font-size: 0.65rem;">☕</span>
+          <div style="background: #b8965a; height: 5px; width: 80px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #cc8800, #ffaa33); width: 60%; height: 100%; border-radius: 2px;"></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <span style="color: #2288cc; font-size: 0.65rem;">💧</span>
+          <div style="background: #b8965a; height: 5px; width: 80px; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #2288cc, #66bbff); width: 85%; height: 100%; border-radius: 2px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="subtitle">Ça te parle visuellement ? Des ajustements sur le layout, les couleurs, la disposition des éléments ?</p>
+</div>

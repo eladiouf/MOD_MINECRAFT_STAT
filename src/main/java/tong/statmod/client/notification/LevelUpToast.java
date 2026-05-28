@@ -20,7 +20,15 @@ public class LevelUpToast {
     }
 
     public static void onLevelUp(String statName, int newLevel) {
-        show("§6" + statName + " → Level " + newLevel + "!");
+        String msg;
+        if (newLevel == 100) {
+            msg = "§6✦ " + statName + " §e→ §6NIVEAU MAX §6✦";
+        } else if (newLevel % 10 == 0) {
+            msg = "§e★ " + statName + " §e→ Palier " + newLevel + " ★";
+        } else {
+            msg = "§6" + statName + " → Level " + newLevel + "!";
+        }
+        show(msg);
     }
 
     @SubscribeEvent

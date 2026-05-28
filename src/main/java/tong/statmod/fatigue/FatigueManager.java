@@ -5,21 +5,40 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class FatigueManager implements INBTSerializable<CompoundTag> {
     private float fatigue = 0;
-    private static final float MAX_FATIGUE = 100;
+    private int maxFatigue = 200;
+    private int sleeplessNights = 0;
+    private long lastSleepTime = 0;
 
     public float getFatigue() { return fatigue; }
-    public float getFatiguePercent() { return fatigue / MAX_FATIGUE; }
-    public boolean isExhausted() { return fatigue >= MAX_FATIGUE; }
+    public int getMaxFatigue() { return maxFatigue; }
+    public void setMaxFatigue(int max) { this.maxFatigue = Math.max(50, max); }
+    public float getFatiguePercent() { return fatigue / (float)maxFatigue; }
+    public boolean isExhausted() { return fatigue >= maxFatigue; }
+
+    public int getSleeplessNights() { return sleeplessNights; }
+    public void setSleeplessNights(int n) { this.sleeplessNights = n; }
+    public void incrementSleeplessNights() { this.sleeplessNights++; }
+    public long getLastSleepTime() { return lastSleepTime; }
+    public void setLastSleepTime(long time) { this.lastSleepTime = time; }
 
     public void addFatigue(float amount) {
-        this.fatigue = Math.min(MAX_FATIGUE, this.fatigue + amount);
+        this.fatigue = Math.min(maxFatigue, this.fatigue + amount);
     }
 
     public void reduceFatigue(float amount) {
         this.fatigue = Math.max(0, this.fatigue - amount);
     }
 
-    public void reset() { this.fatigue = 0; }
+    public void reset() {
+        this.fatigue = 0;
+        this.sleeplessNights = 0;
+    }
+
+    public void markSlept(long gameTime) {
+        this.fatigue = 0;
+        this.sleeplessNights = 0;
+        this.lastSleepTime = gameTime;
+    }
 
     public FatigueThreshold getThreshold() {
         float pct = getFatiguePercent();
@@ -28,6 +47,7 @@ public class FatigueManager implements INBTSerializable<CompoundTag> {
         if (pct >= 0.75f) return FatigueThreshold.SEVERE;
         if (pct >= 0.5f) return FatigueThreshold.MODERATE;
         if (pct >= 0.25f) return FatigueThreshold.LIGHT;
+        if (pct >= 0.1f) return FatigueThreshold.WARNING;
         return FatigueThreshold.NONE;
     }
 
@@ -35,15 +55,19 @@ public class FatigueManager implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putFloat("Fatigue", fatigue);
+        tag.putInt("SleeplessNights", sleeplessNights);
+        tag.putLong("LastSleepTime", lastSleepTime);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
         this.fatigue = tag.getFloat("Fatigue");
+        this.sleeplessNights = tag.getInt("SleeplessNights");
+        this.lastSleepTime = tag.getLong("LastSleepTime");
     }
 
     public enum FatigueThreshold {
-        NONE, LIGHT, MODERATE, SEVERE, CRITICAL, EXHAUSTED
+        NONE, WARNING, LIGHT, MODERATE, SEVERE, CRITICAL, EXHAUSTED
     }
 }

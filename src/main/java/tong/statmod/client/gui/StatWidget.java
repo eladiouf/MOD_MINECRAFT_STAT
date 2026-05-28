@@ -11,19 +11,18 @@ import tong.statmod.client.texture.TextureCache;
 import tong.statmod.stats.StatType;
 
 public class StatWidget extends AbstractWidget {
+    private static final int WIDGET_HEIGHT = 28;
     private static final int CARD_COLOR = 0xFFD4C494;
     private static final int BORDER_COLOR = 0xFFA0724A;
     private static final int TEXT_COLOR = 0xFF3A1A00;
     private static final int LEVEL_COLOR = 0xFF8B4513;
     private static final int XP_BG_COLOR = 0xFFB8965A;
-    private static final int XP_GRADIENT_START = 0xFF8B4513;
-    private static final int XP_GRADIENT_END = 0xFFD2691E;
     private static final int XP_TEXT_COLOR = 0xFF6B4C1E;
 
     private final StatType stat;
 
     public StatWidget(StatType stat, int x, int y) {
-        super(x, y, 220, 30, Component.literal(stat.displayName));
+        super(x, y, 220, WIDGET_HEIGHT, Component.literal(stat.displayName));
         this.stat = stat;
     }
 
@@ -33,19 +32,22 @@ public class StatWidget extends AbstractWidget {
         int xp = ClientStatsCache.getXp(stat);
         int needed = (level + 1) * (level + 1) * 10;
 
+        int right = getX() + 220;
+        int bottom = getY() + WIDGET_HEIGHT;
+
         // Card background
-        graphics.fill(getX(), getY(), getX() + 220, getY() + 30, CARD_COLOR);
+        graphics.fill(getX(), getY(), right, bottom, CARD_COLOR);
         // Card border
-        graphics.fill(getX(), getY(), getX() + 220, getY() + 1, BORDER_COLOR);
-        graphics.fill(getX(), getY() + 29, getX() + 220, getY() + 30, BORDER_COLOR);
-        graphics.fill(getX(), getY(), getX() + 1, getY() + 30, BORDER_COLOR);
-        graphics.fill(getX() + 219, getY(), getX() + 220, getY() + 30, BORDER_COLOR);
+        graphics.fill(getX(), getY(), right, getY() + 1, BORDER_COLOR);
+        graphics.fill(getX(), bottom - 1, right, bottom, BORDER_COLOR);
+        graphics.fill(getX(), getY(), getX() + 1, bottom, BORDER_COLOR);
+        graphics.fill(right - 1, getY(), right, bottom, BORDER_COLOR);
 
         var font = Minecraft.getInstance().font;
 
         // Icon
         ResourceLocation iconTex = TextureCache.get("stat_icon_" + stat.index + ".png");
-        graphics.blit(iconTex, getX() + 4, getY() + 5, 0, 0, 16, 16, 16, 16);
+        graphics.blit(iconTex, getX() + 4, getY() + 5, 16, 16, 0, 0, 32, 32, 32, 32);
 
         // Name + Level
         graphics.drawString(font, stat.displayName, getX() + 24, getY() + 4, TEXT_COLOR);

@@ -1,0 +1,94 @@
+<h2>Quel style RPG pour l'interface ?</h2>
+<p class="subtitle">Choisis une direction visuelle, on pourra l'adapter ensuite</p>
+
+<div class="cards">
+  <div class="card" data-choice="dark-fantasy" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #1a1a2e; padding: 1.5rem;">
+      <div style="background: #16213e; border: 2px solid #e0a800; border-radius: 8px; padding: 1rem; width: 100%;">
+        <div style="color: #e0a800; font-size: 0.8rem; text-align: center; margin-bottom: 0.5rem; font-weight: bold;">◈ STATISTIQUES ◈</div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem;">
+          <div style="background: #0f3460; padding: 0.3rem 0.6rem; border-radius: 4px; color: #e0a800; font-size: 0.6rem;">Combat</div>
+          <div style="background: #0f3460; padding: 0.3rem 0.6rem; border-radius: 4px; color: #a0a0ff; font-size: 0.6rem;">Magie</div>
+          <div style="background: #0f3460; padding: 0.3rem 0.6rem; border-radius: 4px; color: #80e080; font-size: 0.6rem;">Survie</div>
+        </div>
+        <div style="background: #0f3460; height: 4px; width: 100%; border-radius: 2px; margin-bottom: 0.3rem;">
+          <div style="background: linear-gradient(90deg, #e0a800, #ff6b35); width: 65%; height: 100%; border-radius: 2px;"></div>
+        </div>
+        <div style="color: #c0c0c0; font-size: 0.55rem; text-align: center;">Brute Force · Niv.34 · 65%</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark Fantasy</h3>
+      <p>Sombre, fond pierre/ardoise, accents ambrés, bordures ouvragées — univers médiéval-fantastique sombre</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="parchment" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #f5e6c8, #e8d5a3); padding: 1.5rem;">
+      <div style="background: #d4c494; border: 2px solid #6b4c1e; border-radius: 8px; padding: 1rem; width: 100%; box-shadow: inset 0 0 20px rgba(107,76,30,0.15);">
+        <div style="color: #4a2c0a; font-size: 0.8rem; text-align: center; margin-bottom: 0.5rem; font-family: Georgia, serif; font-weight: bold;">❧ Statistiques ❧</div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem;">
+          <div style="background: #c4a86a; padding: 0.3rem 0.6rem; border-radius: 4px; color: #4a2c0a; font-size: 0.6rem;">Combat</div>
+          <div style="background: #c4a86a; padding: 0.3rem 0.6rem; border-radius: 4px; color: #4a2c0a; font-size: 0.6rem;">Magie</div>
+          <div style="background: #c4a86a; padding: 0.3rem 0.6rem; border-radius: 4px; color: #4a2c0a; font-size: 0.6rem;">Survie</div>
+        </div>
+        <div style="background: #c4a86a; height: 4px; width: 100%; border-radius: 2px; margin-bottom: 0.3rem;">
+          <div style="background: linear-gradient(90deg, #8b4513, #d2691e); width: 65%; height: 100%; border-radius: 2px;"></div>
+        </div>
+        <div style="color: #4a2c0a; font-size: 0.55rem; text-align: center;">Brute Force · Niv.34 · 65%</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Parchemin</h3>
+      <p>Beige/chaud, bordures encre sépia, police sérif ou manuscrite, aspect livre de sorts ou grimoire</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="arcane-modern" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0a0a1a; padding: 1.5rem;">
+      <div style="background: linear-gradient(135deg, #1a0033, #0d0d2b); border: 1px solid #7b2fbe; border-radius: 6px; padding: 1rem; width: 100%; box-shadow: 0 0 15px rgba(123,47,190,0.3);">
+        <div style="color: #b366ff; font-size: 0.8rem; text-align: center; margin-bottom: 0.5rem; font-family: monospace; font-weight: bold;">[STAT_MOD v1.0]</div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem;">
+          <div style="background: rgba(255,68,68,0.2); border: 1px solid #ff4444; padding: 0.3rem 0.6rem; border-radius: 3px; color: #ff4444; font-size: 0.6rem;">Combat</div>
+          <div style="background: rgba(68,68,255,0.2); border: 1px solid #4444ff; padding: 0.3rem 0.6rem; border-radius: 3px; color: #6666ff; font-size: 0.6rem;">Magie</div>
+          <div style="background: rgba(68,255,68,0.2); border: 1px solid #44ff44; padding: 0.3rem 0.6rem; border-radius: 3px; color: #44ff44; font-size: 0.6rem;">Survie</div>
+        </div>
+        <div style="background: #1a1a3a; height: 4px; width: 100%; border-radius: 2px; margin-bottom: 0.3rem;">
+          <div style="background: linear-gradient(90deg, #7b2fbe, #ff6bff); width: 65%; height: 100%; border-radius: 2px;"></div>
+        </div>
+        <div style="color: #8888cc; font-size: 0.55rem; text-align: center; font-family: monospace;">BRUTE_FORCE · LVL.34 · 65%</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Arcane Moderne</h3>
+      <p>Fond sombre, néons violets/bleus, lignes épurées, aspect high-tech ou cyber-arcane, glow</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="mmo" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #1e1e2e; padding: 1.5rem;">
+      <div style="background: #2a2a3e; border: 1px solid #4a4a6e; border-radius: 4px; padding: 0.8rem; width: 100%;">
+        <div style="color: #ffd700; font-size: 0.7rem; margin-bottom: 0.4rem; font-weight: bold;">⬥ PERSONNAGE</div>
+        <div style="display: flex; gap: 4px; margin-bottom: 0.4rem;">
+          <div style="background: #3a3a5e; color: #ff6666; padding: 2px 8px; font-size: 0.55rem; border-radius: 2px;">Force 34</div>
+          <div style="background: #3a3a5e; color: #66ff66; padding: 2px 8px; font-size: 0.55rem; border-radius: 2px;">Agi 28</div>
+          <div style="background: #3a3a5e; color: #6666ff; padding: 2px 8px; font-size: 0.55rem; border-radius: 2px;">Int 15</div>
+        </div>
+        <div style="display: flex; gap: 4px; margin-bottom: 0.3rem;">
+          <div style="background: #3a3a5e; height: 3px; flex: 1; border-radius: 2px;">
+            <div style="background: linear-gradient(90deg, #ff4444, #ff8888); width: 65%; height: 100%; border-radius: 2px;"></div>
+          </div>
+        </div>
+        <div style="color: #8888aa; font-size: 0.5rem;">XP: 340/520</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>MMO Classique</h3>
+      <p>Sombre avec bordures nettes, panneaux organisés, affichage compact, couleurs par type de stat — inspiré WoW/FFXIV</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p class="subtitle">Clique sur le style qui te parle le plus, puis reviens au terminal.</p>
+</div>

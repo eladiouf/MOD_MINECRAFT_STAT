@@ -22,6 +22,8 @@ public class CharacterScreen extends Screen {
     private static final int BG_COLOR = 0xC0E8D5A3;
     private static final int TEXT_COLOR = 0xFF3A1A00;
     private static final int SEPARATOR_COLOR = 0xFF8B4513;
+    private static final int WIDGET_SPACING = 32;
+    private static final int WIDGET_HEIGHT = 28;
 
     private final List<StatWidget> widgets = new ArrayList<>();
     private int scrollOffset = 0;
@@ -48,13 +50,18 @@ public class CharacterScreen extends Screen {
                 StatWidget widget = new StatWidget(stat, this.width / 2 - 110, y);
                 addRenderableWidget(widget);
                 widgets.add(widget);
-                y += 34;
+                y += WIDGET_SPACING;
             }
         }
     }
 
     private int getTabAreaEnd() {
         return 55;
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics graphics) {
+        // Prevent vanilla dirt overlay from overwriting our parchment
     }
 
     @Override
@@ -147,7 +154,7 @@ public class CharacterScreen extends Screen {
         for (StatType stat : StatType.values()) {
             if (stat.category == category) {
                 if (i < widgets.size()) {
-                    widgets.get(i).setY(baseY + i * 34 - scrollOffset);
+                    widgets.get(i).setY(baseY + i * WIDGET_SPACING - scrollOffset);
                 }
                 i++;
             }

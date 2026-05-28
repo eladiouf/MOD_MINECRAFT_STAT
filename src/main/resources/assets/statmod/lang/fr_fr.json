@@ -2,6 +2,8 @@
   "key.categories.statmod": "STAT Mod",
   "key.statmod.open_stats": "Ouvrir l'écran de personnage",
   "screen.statmod.character": "Stats du personnage",
+  "screen.statmod.perks": "Perks",
+  "key.statmod.open_perks": "Ouvrir l'écran des perks",
 
   "statmod.stat.combat": "Combat",
   "statmod.stat.magic": "Magie",
@@ -42,5 +44,16 @@
   "statmod.command.stat_set": "%s défini au Nv.%d",
   "statmod.command.stats_reset": "Toutes les stats réinitialisées",
   "statmod.command.fatigue_value": "Fatigue : %d%%",
-  "statmod.command.fatigue_reset": "Fatigue réinitialisée"
+  "statmod.command.fatigue_reset": "Fatigue réinitialisée",
+
+  "effect.statmod.adrenaline": "Adrénaline",
+  "item.minecraft.potion.effect.adrenaline": "Potion d'Adrénaline",
+  "item.minecraft.splash_potion.effect.adrenaline": "Potion d'Adrénaline jetable",
+  "item.minecraft.lingering_potion.effect.adrenaline": "Potion d'Adrénaline persistante",
+  "item.minecraft.potion.effect.long_adrenaline": "Potion d'Adrénaline longue",
+  "item.minecraft.splash_potion.effect.long_adrenaline": "Potion d'Adrénaline longue jetable",
+  "item.minecraft.lingering_potion.effect.long_adrenaline": "Potion d'Adrénaline longue persistante",
+  "item.minecraft.potion.effect.strong_adrenaline": "Potion d'Adrénaline forte",
+  "item.minecraft.splash_potion.effect.strong_adrenaline": "Potion d'Adrénaline forte jetable",
+  "item.minecraft.lingering_potion.effect.strong_adrenaline": "Potion d'Adrénaline forte persistante"
 }

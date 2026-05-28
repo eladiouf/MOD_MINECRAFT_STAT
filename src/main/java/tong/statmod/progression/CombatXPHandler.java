@@ -3,18 +3,14 @@ package tong.statmod.progression;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStats;
-import tong.statmod.capability.PlayerStatsProvider;
-import tong.statmod.network.NetworkHandler;
-import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.stats.StatType;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
-import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,73 +19,73 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class CombatXPHandler {
     private static final Map<UUID, HitTracker> hitTrackers = new HashMap<>();
+    private static final Map<UUID, ComboTracker> comboTrackers = new HashMap<>();
+    private static final Map<UUID, Long> lastDamageTime = new HashMap<>();
+    private static final Map<UUID, DamageSourceTracker> dmgSourceTrackers = new HashMap<>();
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
+        // ★ Common: weapon hit
         awardWeaponXp(player);
-        trackRapidHit(player);
 
-        if (event.getAmount() > 0) {
-            double critBonus = event.getAmount() - Math.floor(event.getAmount());
-            if (critBonus > 0.5) {
-                player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                    stats.addXp(StatType.PRECISION.index, 3);
-                    sendUpdate(player, StatType.PRECISION.index, stats);
-                });
-            }
+        // ★★ Intermediate: combo (3 hits in 2s)
+        trackCombo(player);
+
+        // ★★ Intermediate: overkill (would kill with >20 damage)
+        if (event.getEntity().getHealth() - event.getAmount() <= 0 && event.getAmount() > 20) {
+            ActionXpHelper.awardXp(player, StatType.BRUTE_FORCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
         }
+
+        // ★★ Intermediate: hit without being touched for 5s
+        long now = System.currentTimeMillis();
+        Long lastHit = lastDamageTime.get(player.getUUID());
+        if (lastHit != null && now - lastHit > 5000) {
+            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+        }
+
+        // ★★ Intermediate: rapid hits (5 hits in 2s)
+        trackRapidHit(player);
     }
 
     @SubscribeEvent
     public static void onPlayerHurt(LivingHurtEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        if (event.getSource().getEntity() == null) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-            stats.addXp(StatType.PHYSICAL_RESISTANCE.index, 2);
-            sendUpdate(player, StatType.PHYSICAL_RESISTANCE.index, stats);
-        });
+        lastDamageTime.put(player.getUUID(), System.currentTimeMillis());
 
-        if (player.isBlocking()) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                stats.addXp(StatType.PHYSICAL_ENDURANCE.index, 3);
-                sendUpdate(player, StatType.PHYSICAL_ENDURANCE.index, stats);
-            });
+        // ★ Common: take damage
+        ActionXpHelper.awardXp(player, StatType.PHYSICAL_RESISTANCE.index, ActionXpHelper.XpTier.COMMON);
+
+        // ★★ Intermediate: survive with <4 hearts
+        if (player.getHealth() / player.getMaxHealth() < 0.2f) {
+            ActionXpHelper.awardXp(player, StatType.PHYSICAL_RESISTANCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
         }
 
+        // ★★ Intermediate: block
+        if (player.isBlocking()) {
+            ActionXpHelper.awardXp(player, StatType.PHYSICAL_ENDURANCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+        }
+
+        // ★★ Intermediate: take damage from multiple sources
+        trackDamageSources(player, event.getSource().getMsgId());
+
+        // ★ Common: low hp willpower
         if (player.getHealth() / player.getMaxHealth() < 0.3f) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                stats.addXp(StatType.WILLPOWER.index, 3);
-                sendUpdate(player, StatType.WILLPOWER.index, stats);
-            });
+            ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.COMMON);
+        }
+
+        // ★★★ Rare: survive with 1/2 heart
+        if (player.getHealth() - event.getAmount() <= 1.0f && player.getHealth() > 0) {
+            ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.RARE);
         }
     }
 
     private static void awardWeaponXp(ServerPlayer player) {
-        StatType primaryStat = determinePrimaryStat(player);
-        if (primaryStat == null) return;
-
-        int xp = 5 + player.getRandom().nextInt(6);
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-            stats.addXp(primaryStat.index, xp);
-            sendUpdate(player, primaryStat.index, stats);
-        });
-    }
-
-    private static void trackRapidHit(ServerPlayer player) {
-        long now = System.currentTimeMillis();
-        HitTracker tracker = hitTrackers.computeIfAbsent(player.getUUID(), k -> new HitTracker());
-        tracker.addHit(now);
-
-        if (tracker.getHitCount(2000) >= 5) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                stats.addXp(StatType.RAPIDITE.index, 2);
-                sendUpdate(player, StatType.RAPIDITE.index, stats);
-            });
-            tracker.reset();
-        }
+        StatType stat = determinePrimaryStat(player);
+        if (stat == null) return;
+        ActionXpHelper.awardXp(player, stat.index, ActionXpHelper.XpTier.COMMON);
     }
 
     private static StatType determinePrimaryStat(ServerPlayer player) {
@@ -99,45 +95,100 @@ public class CombatXPHandler {
             if (patch instanceof ServerPlayerPatch playerPatch) {
                 CapabilityItem itemCap = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
                 if (itemCap != null && !itemCap.isEmpty()) {
-                    WeaponCategory cat = itemCap.getWeaponCategory();
-                    if (cat == CapabilityItem.WeaponCategories.AXE || cat == CapabilityItem.WeaponCategories.GREATSWORD) return StatType.BRUTE_FORCE;
+                    var cat = itemCap.getWeaponCategory();
+                    if (cat == CapabilityItem.WeaponCategories.AXE || cat == CapabilityItem.WeaponCategories.GREATSWORD)
+                        return StatType.BRUTE_FORCE;
                     if (cat == CapabilityItem.WeaponCategories.SWORD || cat == CapabilityItem.WeaponCategories.DAGGER
                         || cat == CapabilityItem.WeaponCategories.UCHIGATANA || cat == CapabilityItem.WeaponCategories.TACHI
-                        || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD) return StatType.BLADE_TECHNIQUE;
-                    if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW) return StatType.PRECISION;
-                    if (cat == CapabilityItem.WeaponCategories.SPEAR) return StatType.AGILITY;
-                    if (cat == CapabilityItem.WeaponCategories.SHIELD) return StatType.PHYSICAL_ENDURANCE;
+                        || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD)
+                        return StatType.BLADE_TECHNIQUE;
+                    if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW)
+                        return StatType.PRECISION;
+                    if (cat == CapabilityItem.WeaponCategories.SPEAR)
+                        return StatType.AGILITY;
+                    if (cat == CapabilityItem.WeaponCategories.SHIELD)
+                        return StatType.PHYSICAL_ENDURANCE;
+                    if (cat == CapabilityItem.WeaponCategories.FIST)
+                        return StatType.RAPIDITE;
                 }
             }
         }
-        return StatType.BRUTE_FORCE;
+        return null;
     }
 
-    private static void sendUpdate(ServerPlayer player, int index, PlayerStats stats) {
-        NetworkHandler.sendToPlayer(
-            new StatUpdatePacket(index, stats.getLevel(index), stats.getXp(index)), player);
+    private static void trackRapidHit(ServerPlayer player) {
+        long now = System.currentTimeMillis();
+        HitTracker tracker = hitTrackers.computeIfAbsent(player.getUUID(), k -> new HitTracker());
+        tracker.addHit(now);
+        if (tracker.getHitCount(2000) >= 5) {
+            ActionXpHelper.awardXp(player, StatType.RAPIDITE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            tracker.reset();
+        }
+    }
+
+    private static void trackCombo(ServerPlayer player) {
+        long now = System.currentTimeMillis();
+        ComboTracker combo = comboTrackers.computeIfAbsent(player.getUUID(), k -> new ComboTracker());
+        combo.addHit(now);
+        if (combo.getHitCount(2000) >= 3) {
+            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            combo.reset();
+        }
+    }
+
+    private static void trackDamageSources(ServerPlayer player, String sourceType) {
+        DamageSourceTracker tracker = dmgSourceTrackers.computeIfAbsent(player.getUUID(), k -> new DamageSourceTracker());
+        tracker.recordSource(sourceType);
+        if (tracker.getUniqueSourceCount() >= 3) {
+            ActionXpHelper.awardXp(player, StatType.PHYSICAL_RESISTANCE.index, ActionXpHelper.XpTier.RARE);
+            tracker.reset();
+        }
     }
 
     private static class HitTracker {
         private final long[] hits = new long[20];
         private int index = 0;
-
-        void addHit(long time) {
-            hits[index % hits.length] = time;
-            index++;
-        }
-
+        void addHit(long time) { hits[index % hits.length] = time; index++; }
         int getHitCount(long windowMs) {
             long threshold = System.currentTimeMillis() - windowMs;
             int count = 0;
-            for (long h : hits) {
-                if (h >= threshold) count++;
-            }
+            for (long h : hits) { if (h >= threshold) count++; }
             return count;
         }
+        void reset() { for (int i = 0; i < hits.length; i++) hits[i] = 0; }
+    }
 
-        void reset() {
-            for (int i = 0; i < hits.length; i++) hits[i] = 0;
+    private static class ComboTracker {
+        private final long[] hits = new long[10];
+        private int index = 0;
+        void addHit(long time) { hits[index % hits.length] = time; index++; }
+        int getHitCount(long windowMs) {
+            long threshold = System.currentTimeMillis() - windowMs;
+            int count = 0;
+            for (long h : hits) { if (h >= threshold) count++; }
+            return count;
+        }
+        void reset() { for (int i = 0; i < hits.length; i++) hits[i] = 0; }
+    }
+
+    private static class DamageSourceTracker {
+        private final java.util.HashSet<String> sources = new java.util.HashSet<>();
+        private long lastReset = System.currentTimeMillis();
+        void recordSource(String sourceType) {
+            if (System.currentTimeMillis() - lastReset > 10000) { sources.clear(); lastReset = System.currentTimeMillis(); }
+            sources.add(sourceType);
+        }
+        int getUniqueSourceCount() { return sources.size(); }
+        void reset() { sources.clear(); lastReset = System.currentTimeMillis(); }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            hitTrackers.remove(player.getUUID());
+            comboTrackers.remove(player.getUUID());
+            lastDamageTime.remove(player.getUUID());
+            dmgSourceTrackers.remove(player.getUUID());
         }
     }
 }

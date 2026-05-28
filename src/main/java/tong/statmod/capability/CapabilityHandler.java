@@ -11,8 +11,12 @@ import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.fatigue.FatigueManager;
 import tong.statmod.fatigue.FatigueProvider;
+import tong.statmod.perks.PerkManager;
+import tong.statmod.perks.PerkProvider;
+import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.weapon.WeaponMasteryManager;
-import tong.statmod.weapon.WeaponMasteryProvider;
+import tong.statmod.world.thirst.ThirstManager;
+import tong.statmod.world.thirst.ThirstProvider;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class CapabilityHandler {
@@ -21,6 +25,8 @@ public class CapabilityHandler {
         event.register(PlayerStats.class);
         event.register(FatigueManager.class);
         event.register(WeaponMasteryManager.class);
+        event.register(ThirstManager.class);
+        event.register(PerkManager.class);
     }
 
     @SubscribeEvent
@@ -32,6 +38,12 @@ public class CapabilityHandler {
             event.addCapability(
                 new ResourceLocation(STATMod.MODID, "fatigue"),
                 new FatigueProvider());
+            event.addCapability(
+                new ResourceLocation(STATMod.MODID, "thirst"),
+                new ThirstProvider());
+            event.addCapability(
+                new ResourceLocation(STATMod.MODID, "perks"),
+                new PerkProvider());
         }
     }
 
@@ -48,6 +60,19 @@ public class CapabilityHandler {
                     newFatigue.reset();
                 });
             });
+            event.getOriginal().getCapability(PerkProvider.PERKS).ifPresent(oldPerks -> {
+                event.getEntity().getCapability(PerkProvider.PERKS).ifPresent(newPerks -> {
+                    newPerks.deserializeNBT(oldPerks.serializeNBT());
+                });
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            // Re-apply attribute bonuses after respawn (player entity is recreated)
+            StatEffectApplier.applyAllBonuses(serverPlayer);
         }
     }
 }

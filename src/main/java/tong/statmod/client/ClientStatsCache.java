@@ -7,6 +7,8 @@ public class ClientStatsCache {
     private static final int[] levels = new int[23];
     private static final int[] xp = new int[23];
     private static float fatigue = 0;
+    private static int maxFatigue = 500;
+    private static float thirst = 100;
 
     public static void updateAll(int[] newLevels, int[] newXp) {
         System.arraycopy(newLevels, 0, levels, 0, Math.min(newLevels.length, 23));
@@ -26,9 +28,33 @@ public class ClientStatsCache {
 
     public static void updateFatigue(float f) { fatigue = f; }
 
+    public static void updateFatigue(float f, int max) {
+        fatigue = f;
+        maxFatigue = Math.max(50, max);
+    }
+
+    public static void updateThirst(float t) { thirst = t; }
+
     public static int getLevel(int index) { return levels[index]; }
     public static int getXp(int index) { return xp[index]; }
     public static int getLevel(StatType type) { return levels[type.index]; }
     public static int getXp(StatType type) { return xp[type.index]; }
     public static float getFatigue() { return fatigue; }
+    public static int getMaxFatigue() { return maxFatigue; }
+    public static float getThirst() { return thirst; }
+
+    public static int getGlobalLevel() {
+        int sum = 0;
+        for (int i = 0; i < 23; i++) sum += levels[i];
+        return Math.round(sum / 23.0f);
+    }
+
+    public static float getGlobalXpProgress() {
+        float total = 0;
+        for (int i = 0; i < 23; i++) {
+            int needed = tong.statmod.stats.StatCalculator.getXpForNextLevel(levels[i]);
+            total += (needed > 0) ? (float) xp[i] / needed : 1.0f;
+        }
+        return total / 23.0f;
+    }
 }

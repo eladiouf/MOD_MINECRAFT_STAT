@@ -26,6 +26,10 @@ public class NetworkHandler {
             StatUpdatePacket::encode, StatUpdatePacket::decode, StatUpdatePacket::handle);
         CHANNEL.registerMessage(packetId++, FatiguePacket.class,
             FatiguePacket::encode, FatiguePacket::decode, FatiguePacket::handle);
+        CHANNEL.registerMessage(packetId++, ThirstPacket.class,
+            ThirstPacket::encode, ThirstPacket::decode, ThirstPacket::handle);
+        CHANNEL.registerMessage(packetId++, SyncPerksPacket.class,
+            SyncPerksPacket::encode, SyncPerksPacket::decode, SyncPerksPacket::handle);
     }
 
     public static void sendToPlayer(Object packet, ServerPlayer player) {

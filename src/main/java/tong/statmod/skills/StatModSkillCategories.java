@@ -14,12 +14,14 @@ public enum StatModSkillCategories implements SkillCategory {
     private final boolean shouldSynchronize;
     private final boolean learnable;
     private final ResourceLocation bookIcon;
+    private final int id;
 
     StatModSkillCategories(boolean shouldSave, boolean shouldSynchronize, boolean learnable, ResourceLocation bookIcon) {
         this.shouldSave = shouldSave;
         this.shouldSynchronize = shouldSynchronize;
         this.learnable = learnable;
         this.bookIcon = bookIcon;
+        this.id = SkillCategory.ENUM_MANAGER.assign(this);
     }
 
     @Override
@@ -32,7 +34,7 @@ public enum StatModSkillCategories implements SkillCategory {
     public boolean learnable() { return learnable; }
 
     @Override
-    public int universalOrdinal() { return ordinal(); }
+    public int universalOrdinal() { return id; }
 
     @Override
     public ResourceLocation bookIcon() { return bookIcon; }

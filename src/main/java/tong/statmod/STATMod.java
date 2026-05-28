@@ -54,10 +54,6 @@ public class STATMod
         SkillCategory.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillCategories.class);
         SkillSlot.ENUM_MANAGER.registerEnumCls(STATMod.MODID, StatModSkillSlots.class);
 
-        // Load the enums immediately so they're available for skill registration
-        SkillCategory.ENUM_MANAGER.loadEnum();
-        SkillSlot.ENUM_MANAGER.loadEnum();
-
         bus.addListener(this::commonSetup);
         ModEffects.register(bus);
         ModPotions.register(bus);

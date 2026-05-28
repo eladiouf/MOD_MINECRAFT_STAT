@@ -5,15 +5,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import tong.statmod.client.texture.TextureCache;
 import tong.statmod.perks.Perk;
 
 public class PerkNodeWidget extends AbstractWidget {
     private static final int NODE_SIZE = 24;
-    private static final int LOCKED_BG = 0xFF666666;
     private static final int LOCKED_BORDER = 0xFF555555;
-    private static final int AVAILABLE_BG = 0xFFD4C494;
     private static final int AVAILABLE_BORDER = 0xFFC49A3C;
-    private static final int UNLOCKED_BG = 0xFFD4C494;
     private static final int UNLOCKED_BORDER = 0xFFFFD700;
 
     private final Perk perk;
@@ -33,24 +32,17 @@ public class PerkNodeWidget extends AbstractWidget {
         int cy = getY() + NODE_SIZE / 2;
         int r = NODE_SIZE / 2;
 
-        int bgColor, borderColor;
         boolean showGlow = false;
 
         switch (state) {
             case UNLOCKED:
-                bgColor = UNLOCKED_BG;
-                borderColor = UNLOCKED_BORDER;
                 showGlow = true;
                 break;
             case AVAILABLE:
-                bgColor = AVAILABLE_BG;
-                borderColor = AVAILABLE_BORDER;
                 showGlow = true;
                 break;
             case LOCKED:
             default:
-                bgColor = LOCKED_BG;
-                borderColor = LOCKED_BORDER;
                 showGlow = false;
                 break;
         }
@@ -60,20 +52,35 @@ public class PerkNodeWidget extends AbstractWidget {
             float pulse = 0.7f + 0.3f * (float) Math.sin(System.currentTimeMillis() / 300.0);
             int glowAlpha = (int)(60 * pulse);
             int glowColor = (glowAlpha << 24) | (0xC49A3C & 0x00FFFFFF);
-            graphics.fill(cx - r - 2, cy - r - 2, cx + r + 2, cy - r, glowColor);
-            graphics.fill(cx - r - 2, cy + r, cx + r + 2, cy + r + 2, glowColor);
-            graphics.fill(cx - r - 2, cy - r, cx - r, cy + r, glowColor);
-            graphics.fill(cx + r, cy - r, cx + r + 2, cy + r, glowColor);
+            graphics.fill(cx - r - 3, cy - r - 3, cx + r + 3, cy - r - 1, glowColor);
+            graphics.fill(cx - r - 3, cy + r + 1, cx + r + 3, cy + r + 3, glowColor);
+            graphics.fill(cx - r - 3, cy - r - 1, cx - r - 1, cy + r + 1, glowColor);
+            graphics.fill(cx + r + 1, cy - r - 1, cx + r + 3, cy + r + 1, glowColor);
         } else if (showGlow && state == PerkNodeState.UNLOCKED) {
             int glowColor = 0x40FFD700;
-            graphics.fill(cx - r - 2, cy - r - 2, cx + r + 2, cy - r, glowColor);
-            graphics.fill(cx - r - 2, cy + r, cx + r + 2, cy + r + 2, glowColor);
-            graphics.fill(cx - r - 2, cy - r, cx - r, cy + r, glowColor);
-            graphics.fill(cx + r, cy - r, cx + r + 2, cy + r, glowColor);
+            graphics.fill(cx - r - 3, cy - r - 3, cx + r + 3, cy - r - 1, glowColor);
+            graphics.fill(cx - r - 3, cy + r + 1, cx + r + 3, cy + r + 3, glowColor);
+            graphics.fill(cx - r - 3, cy - r - 1, cx - r - 1, cy + r + 1, glowColor);
+            graphics.fill(cx + r + 1, cy - r - 1, cx + r + 3, cy + r + 1, glowColor);
         }
 
-        // Square node (circle approximation)
-        graphics.fill(cx - r, cy - r, cx + r, cy + r, bgColor);
+        // Node background texture
+        ResourceLocation bgTex = TextureCache.get("perk_node_bg.png");
+        graphics.blit(bgTex, cx - r, cy - r, NODE_SIZE, NODE_SIZE, 0, 0, 30, 32, 30, 32);
+
+        // Border overlay based on state
+        int borderColor;
+        switch (state) {
+            case UNLOCKED:
+                borderColor = UNLOCKED_BORDER;
+                break;
+            case AVAILABLE:
+                borderColor = AVAILABLE_BORDER;
+                break;
+            default:
+                borderColor = LOCKED_BORDER;
+                break;
+        }
         graphics.fill(cx - r, cy - r, cx + r, cy - r + 1, borderColor);
         graphics.fill(cx - r, cy + r - 1, cx + r, cy + r, borderColor);
         graphics.fill(cx - r, cy - r, cx - r + 1, cy + r, borderColor);
@@ -87,7 +94,8 @@ public class PerkNodeWidget extends AbstractWidget {
 
         // Checkmark for unlocked
         if (state == PerkNodeState.UNLOCKED) {
-            graphics.drawString(font, "\u2713", cx + 5, cy - 8, 0xFFFFD700);
+            ResourceLocation unlockedTex = TextureCache.get("perk_node_unlocked.png");
+            graphics.blit(unlockedTex, cx - r, cy - r, NODE_SIZE, NODE_SIZE, 0, 0, 33, 32, 33, 32);
         }
     }
 

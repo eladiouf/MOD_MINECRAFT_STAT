@@ -64,6 +64,33 @@ public class HudBar {
 
     public void renderWithBorder(GuiGraphics graphics, int x, int y, int color, int borderColor) {
         render(graphics, x, y, color);
+        drawBorder(graphics, x, y, borderColor);
+    }
+
+    public void renderGradientWithBorder(GuiGraphics graphics, int x, int y, int colorStart, int colorEnd, int borderColor) {
+        float fill = lerp.getValue(0);
+        int filledWidth = (int)(fill * barWidth);
+
+        drawBorder(graphics, x, y, borderColor);
+        graphics.fill(x, y, x + barWidth, y + barHeight, 0xB8965A);
+
+        if (filledWidth > 0) {
+            int slices = 10;
+            int sliceW = Math.max(1, filledWidth / slices);
+            for (int i = 0; i < slices && i * sliceW < filledWidth; i++) {
+                float t = (float) i / slices;
+                int r = lerpColor((colorStart >> 16) & 0xFF, (colorEnd >> 16) & 0xFF, t);
+                int g = lerpColor((colorStart >> 8) & 0xFF, (colorEnd >> 8) & 0xFF, t);
+                int bVal = lerpColor(colorStart & 0xFF, colorEnd & 0xFF, t);
+                int sliceColor = 0xFF000000 | (r << 16) | (g << 8) | bVal;
+                int sx = x + i * sliceW;
+                int ex = Math.min(sx + sliceW, x + filledWidth);
+                graphics.fill(sx, y, ex, y + barHeight, sliceColor);
+            }
+        }
+    }
+
+    private void drawBorder(GuiGraphics graphics, int x, int y, int borderColor) {
         graphics.fill(x - 1, y - 1, x + barWidth + 1, y, borderColor);
         graphics.fill(x - 1, y + barHeight, x + barWidth + 1, y + barHeight + 1, borderColor);
         graphics.fill(x - 1, y, x, y + barHeight, borderColor);

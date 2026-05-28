@@ -2,6 +2,7 @@ package tong.statmod.client.hud.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -12,6 +13,9 @@ import tong.statmod.STATMod;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.hud.components.HudBar;
 import tong.statmod.client.hud.animation.LerpedValue;
+import tong.statmod.client.texture.TextureCache;
+
+import static tong.statmod.client.texture.TextureCache.drawInkText;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GlobalLevelOverlay implements IGuiOverlay {
@@ -57,15 +61,19 @@ public class GlobalLevelOverlay implements IGuiOverlay {
 
         // Level text
         String levelText = "\u2726 Niveau " + globalLevel;
-        graphics.drawString(font, levelText, x, y, LEVEL_COLOR);
+        drawInkText(graphics, font, levelText, x, y, LEVEL_COLOR);
 
-        // XP bar background and gradient fill
+        // XP bar background and fill
         graphics.fill(x, y + 12, x + XP_BAR_WIDTH, y + 12 + XP_BAR_HEIGHT, XP_BG_COLOR);
-        xpBar.renderGradient(graphics, x, y + 12, XP_GRADIENT_START, XP_GRADIENT_END);
+        ResourceLocation xpFillTex = TextureCache.get("xp_bar_fill.png");
+        int filledW = (int)(xpProgress * XP_BAR_WIDTH);
+        if (filledW > 0) {
+            graphics.blit(xpFillTex, x, y + 12, filledW, XP_BAR_HEIGHT, 0, 0, 64, 17, 64, 17);
+        }
 
         // XP percentage
         String pctText = Math.round(xpProgress * 100) + "%";
-        graphics.drawString(font, pctText, x + XP_BAR_WIDTH + 4, y + 10, 0xFF6B4C1E);
+        drawInkText(graphics, font, pctText, x + XP_BAR_WIDTH + 4, y + 10, 0xFF6B4C1E);
 
         if (globalLevel > lastLevel && lastLevel >= 0) {
             graphics.fill(0, 0, screenWidth, screenHeight, 0x60FFFFFF);

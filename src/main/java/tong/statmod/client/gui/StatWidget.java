@@ -10,6 +10,8 @@ import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.texture.TextureCache;
 import tong.statmod.stats.StatType;
 
+import static tong.statmod.client.texture.TextureCache.drawInkText;
+
 public class StatWidget extends AbstractWidget {
     private static final int WIDGET_HEIGHT = 28;
     private static final int CARD_COLOR = 0xFFD4C494;
@@ -50,8 +52,8 @@ public class StatWidget extends AbstractWidget {
         graphics.blit(iconTex, getX() + 4, getY() + 5, 16, 16, 0, 0, 32, 32, 32, 32);
 
         // Name + Level
-        graphics.drawString(font, stat.displayName, getX() + 24, getY() + 4, TEXT_COLOR);
-        graphics.drawString(font, "Niv. " + level, getX() + 160, getY() + 4, LEVEL_COLOR);
+        drawInkText(graphics, font, stat.displayName, getX() + 24, getY() + 4, TEXT_COLOR);
+        drawInkText(graphics, font, "Niv. " + level, getX() + 160, getY() + 4, LEVEL_COLOR);
 
         // XP bar
         int barX = getX() + 24;
@@ -61,29 +63,22 @@ public class StatWidget extends AbstractWidget {
 
         graphics.fill(barX, barY, barX + barWidth, barY + barHeight, XP_BG_COLOR);
 
-        if (level < 100) {
+        ResourceLocation xpFillTex = TextureCache.get("xp_bar_fill.png");
+        if (level >= 100) {
+            graphics.blit(xpFillTex, barX, barY, barWidth, barHeight, 0, 0, 64, 17, 64, 17);
+            String maxText = "MAX";
+            drawInkText(graphics, font, maxText, barX + barWidth - font.width(maxText), barY - 1, XP_TEXT_COLOR);
+        } else {
             int filled = (int) ((float) xp / needed * barWidth);
             if (filled > 0) {
-                int slices = 10;
-                int sliceW = Math.max(1, filled / slices);
-                for (int i = 0; i < slices && i * sliceW < filled; i++) {
-                    float t = (float) i / slices;
-                    int r = (int) (0x8B + (0xD2 - 0x8B) * t);
-                    int g = (int) (0x45 + (0x69 - 0x45) * t);
-                    int bVal = (int) (0x13 + (0x1E - 0x13) * t);
-                    int color = 0xFF000000 | (r << 16) | (g << 8) | bVal;
-                    graphics.fill(barX + i * sliceW, barY, Math.min(barX + i * sliceW + sliceW, barX + filled), barY + barHeight, color);
-                }
+                graphics.blit(xpFillTex, barX, barY, filled, barHeight, 0, 0, 64, 17, 64, 17);
             }
-        } else {
-            String maxText = "MAX";
-            graphics.drawString(font, maxText, barX + barWidth - font.width(maxText), barY - 1, XP_TEXT_COLOR);
         }
 
         // XP text right-aligned below bar
         String xpText = level < 100 ? xp + " / " + needed + " XP" : "";
         if (!xpText.isEmpty()) {
-            graphics.drawString(font, xpText, barX + barWidth - font.width(xpText), barY + 5, XP_TEXT_COLOR);
+            drawInkText(graphics, font, xpText, barX + barWidth - font.width(xpText), barY + 5, XP_TEXT_COLOR);
         }
     }
 

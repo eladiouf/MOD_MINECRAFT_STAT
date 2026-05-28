@@ -1,5 +1,6 @@
 package tong.statmod.client.texture;
 
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.STATMod;
@@ -38,5 +39,12 @@ public class TextureCache {
 
         // Center
         graphics.blit(tex, x + b, y + b, innerW, innerH, b, b, srcInnerW, srcInnerH, texWidth, texHeight);
+    }
+
+    public static void drawInkText(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
+        int shadowColor = (color & 0x00FFFFFF) | 0x40000000;
+        graphics.drawString(font, text, x + 1, y, shadowColor, false);
+        graphics.drawString(font, text, x, y + 1, shadowColor, false);
+        graphics.drawString(font, text, x, y, color, false);
     }
 }

@@ -5,8 +5,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatsCache;
+import tong.statmod.client.texture.TextureCache;
 import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatCategory;
 import tong.statmod.stats.StatType;
@@ -14,8 +16,9 @@ import tong.statmod.stats.StatType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static tong.statmod.client.texture.TextureCache.drawInkText;
+
 public class TalentTreePanel extends AbstractWidget {
-    private static final int PANEL_BORDER_COLOR = 0xFF8B4513;
     private static final int STAT_NAME_COLOR = 0xFF3A1A00;
     private static final int CONNECTOR_COLOR = 0xFFC49A3C;
     private static final int CONNECTOR_LOCKED_COLOR = 0xFF666666;
@@ -32,13 +35,12 @@ public class TalentTreePanel extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        // Panel border
-        graphics.fill(getX(), getY(), getX() + getWidth(), getY() + 1, PANEL_BORDER_COLOR);
-        graphics.fill(getX(), getY() + getHeight() - 1, getX() + getWidth(), getY() + getHeight(), PANEL_BORDER_COLOR);
-        graphics.fill(getX(), getY(), getX() + 1, getY() + getHeight(), PANEL_BORDER_COLOR);
-        graphics.fill(getX() + getWidth() - 1, getY(), getX() + getWidth(), getY() + getHeight(), PANEL_BORDER_COLOR);
+        // Panel border using nine-patch
+        ResourceLocation panelBorderTex = TextureCache.get("panel_border.png");
+        TextureCache.drawNinePatch(graphics, panelBorderTex, getX(), getY(), getWidth(), getHeight(), 8, 32, 31);
 
         var font = Minecraft.getInstance().font;
+        ResourceLocation connectorTex = TextureCache.get("perk_connector.png");
 
         int rowY = getY() + 10 - scrollOffset;
         int centerX = getX() + getWidth() / 2;
@@ -50,7 +52,7 @@ public class TalentTreePanel extends AbstractWidget {
 
             // Stat name header
             String header = stat.displayName + "  \u2605" + statLevel;
-            graphics.drawString(font, header, centerX - font.width(header) / 2, rowY, STAT_NAME_COLOR);
+            drawInkText(graphics, font, header, centerX - font.width(header) / 2, rowY, STAT_NAME_COLOR);
 
             // Get stat perks
             List<Perk> statPerks = new ArrayList<>();
@@ -63,12 +65,18 @@ public class TalentTreePanel extends AbstractWidget {
             for (int i = 0; i < statPerks.size() - 1; i++) {
                 boolean leftUnlocked = ClientPerkCache.isUnlocked(statPerks.get(i));
                 boolean rightUnlocked = ClientPerkCache.isUnlocked(statPerks.get(i + 1));
-                int color = (leftUnlocked || rightUnlocked) ? CONNECTOR_COLOR : CONNECTOR_LOCKED_COLOR;
+                boolean anyUnlocked = leftUnlocked || rightUnlocked;
+                int endpointColor = anyUnlocked ? CONNECTOR_COLOR : CONNECTOR_LOCKED_COLOR;
 
                 int lx = nodeStartX + i * NODE_GAP + 24;
                 int rx = nodeStartX + (i + 1) * NODE_GAP;
-                int cy = rowY + 32;
-                graphics.fill(lx, cy, rx, cy + 1, color);
+                int cy = rowY + 30;
+                int cw = rx - lx;
+                // Blit connector texture stretched, color-tinted via the fill endpoints
+                graphics.blit(connectorTex, lx, cy, cw, 7, 0, 0, 64, 7, 64, 7);
+                // Overlay color strips at ends for unlock state indicator
+                graphics.fill(lx, cy + 3, lx + 2, cy + 4, endpointColor);
+                graphics.fill(rx - 2, cy + 3, rx, cy + 4, endpointColor);
             }
 
             // Render node widgets for this stat

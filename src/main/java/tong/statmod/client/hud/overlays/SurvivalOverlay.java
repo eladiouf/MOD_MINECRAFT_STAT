@@ -8,9 +8,13 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.resources.ResourceLocation;
 import tong.statmod.STATMod;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.hud.components.HudBar;
+import tong.statmod.client.texture.TextureCache;
+
+import static tong.statmod.client.texture.TextureCache.drawInkText;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SurvivalOverlay implements IGuiOverlay {
@@ -42,26 +46,32 @@ public class SurvivalOverlay implements IGuiOverlay {
         fatigueBar.setFill(fatigue);
         thirstBar.setFill(thirst);
 
-        var font = Minecraft.getInstance().font;
-
         int x = 4;
         int y = 32;
 
-        renderBar(graphics, font, x, y, healthBar, "\u2665", health, 0xFF4444, (int)(health * 100) + "%");
+        renderBarWithIcon(graphics, x, y, healthBar, "hud_heart.png", 0xFF4444, (int)(health * 100) + "%", 228);
         y += 10;
-        renderBar(graphics, font, x, y, foodBar, "\u2615", food, 0xFFA500, mc.player.getFoodData().getFoodLevel() + "/20");
+        renderBarWithIcon(graphics, x, y, foodBar, "hud_food.png", 0xFFA500, mc.player.getFoodData().getFoodLevel() + "/20", 228);
         y += 10;
-        renderBar(graphics, font, x, y, fatigueBar, "\u26A1", fatigue, getFatigueColor(fatigue), (int)(fatigue * 100) + "%");
+        renderBarWithIcon(graphics, x, y, fatigueBar, "hud_fatigue.png", getFatigueColor(fatigue), (int)(fatigue * 100) + "%", 32);
         y += 10;
-        renderBar(graphics, font, x, y, thirstBar, "\uD83D\uDCA7", thirst, 0x3399FF, (int) ClientStatsCache.getThirst() + "/100");
+        renderBarWithIcon(graphics, x, y, thirstBar, "hud_thirst.png", 0x3399FF, (int) ClientStatsCache.getThirst() + "/100", 32);
     }
 
-    private void renderBar(GuiGraphics graphics, net.minecraft.client.gui.Font font,
-                           int x, int y, HudBar bar, String icon, float value,
-                           int fillColor, String label) {
-        graphics.drawString(font, icon, x, y, LABEL_COLOR);
-        bar.renderWithBorder(graphics, x + 10, y, fillColor, BAR_BORDER_COLOR);
-        graphics.drawString(font, label, x + 10 + BAR_WIDTH + 4, y, VALUE_COLOR);
+    private void renderBarWithIcon(GuiGraphics graphics, int x, int y, HudBar bar,
+                                    String iconName, int fillColor, String label, int texSize) {
+        ResourceLocation tex = TextureCache.get(iconName);
+        graphics.blit(tex, x, y, 7, 7, 0, 0, texSize, texSize, texSize, texSize);
+        int darkColor = darken(fillColor, 0.5f);
+        bar.renderGradientWithBorder(graphics, x + 10, y, fillColor, darkColor, BAR_BORDER_COLOR);
+        drawInkText(graphics, Minecraft.getInstance().font, label, x + 10 + BAR_WIDTH + 4, y, VALUE_COLOR);
+    }
+
+    private static int darken(int color, float factor) {
+        int r = (int)(((color >> 16) & 0xFF) * factor);
+        int g = (int)(((color >> 8) & 0xFF) * factor);
+        int b = (int)((color & 0xFF) * factor);
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
     private int getFatigueColor(float fatiguePercent) {

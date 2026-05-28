@@ -52,7 +52,7 @@ public class StatsCommands {
                 .executes(ctx -> resetStats(ctx, ctx.getSource().getPlayerOrException())))
             .executes(ctx -> {
                 ctx.getSource().sendSuccess(() -> Component.literal(
-                    "§6StatMod §7- §e/stats list [player] §8| §e/get <stat> §8| §e/set <stat> <level> §8| §e/xp <stat> <amount> §8| §e/reset"), false);
+                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset"), false);
                 return 1;
             }));
     }
@@ -73,6 +73,7 @@ public class StatsCommands {
     }
 
     private static CompletableFuture<Suggestions> suggestStats(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+        builder.suggest("all");
         for (StatType s : StatType.values()) {
             builder.suggest(s.name().toLowerCase());
         }
@@ -116,12 +117,37 @@ public class StatsCommands {
     }
 
     private static int setStat(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
-        StatType stat = resolveStat(StringArgumentType.getString(ctx, "stat"));
+        String statInput = StringArgumentType.getString(ctx, "stat");
+        int newLevel = IntegerArgumentType.getInteger(ctx, "level");
+
+        // Handle "all" keyword - set all stats to the given level
+        if (statInput.equalsIgnoreCase("all")) {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                for (StatType s : StatType.values()) {
+                    stats.setLevel(s.index, newLevel);
+                    stats.setXp(s.index, 0);
+                }
+                // Sync all stats to client
+                int[] levels = new int[PlayerStats.STAT_COUNT];
+                int[] xp = new int[PlayerStats.STAT_COUNT];
+                for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
+                    levels[i] = newLevel;
+                    xp[i] = 0;
+                }
+                NetworkHandler.sendToPlayer(new SyncAllStatsPacket(levels, xp), player);
+                StatEffectApplier.applyAllBonuses(player);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "§aToutes les stats §7→ §e" + newLevel + "§8/100"), true);
+            });
+            return 1;
+        }
+
+        // Handle single stat
+        StatType stat = resolveStat(statInput);
         if (stat == null) {
-            ctx.getSource().sendFailure(Component.literal("§cStat inconnue."));
+            ctx.getSource().sendFailure(Component.literal("§cStat inconnue. Utilise 'all' pour toutes les stats."));
             return 0;
         }
-        int newLevel = IntegerArgumentType.getInteger(ctx, "level");
         String name = stat.displayName;
 
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {

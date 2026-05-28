@@ -30,6 +30,8 @@ public class NetworkHandler {
             ThirstPacket::encode, ThirstPacket::decode, ThirstPacket::handle);
         CHANNEL.registerMessage(packetId++, SyncPerksPacket.class,
             SyncPerksPacket::encode, SyncPerksPacket::decode, SyncPerksPacket::handle);
+        CHANNEL.registerMessage(packetId++, UnlockPerkPacket.class,
+            UnlockPerkPacket::encode, UnlockPerkPacket::decode, UnlockPerkPacket::handle);
     }
 
     public static void sendToPlayer(Object packet, ServerPlayer player) {

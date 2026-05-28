@@ -1,37 +1,54 @@
 package tong.statmod.skills;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.stats.StatType;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class SkillUnlockHandler {
-    @SubscribeEvent
-    public static void onPlayerTick(net.minecraftforge.event.TickEvent.PlayerTickEvent event) {
-        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer player)) return;
+    private static final int[] TIERS = {10, 25, 50, 75};
+    private static final Set<UUID> processed = new HashSet<>();
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-            for (StatType stat : StatType.values()) {
-                int level = stats.getLevel(stat.index);
-                checkAndUnlock(player, stat, level);
-            }
-        });
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        processed.add(player.getUUID());
+        syncAllSkills(player);
     }
 
-    private static final int[] TIERS = {10, 25, 50, 75};
-
-    private static void checkAndUnlock(ServerPlayer player, StatType stat, int level) {
+    public static void onLevelUp(ServerPlayer player, StatType stat, int newLevel) {
         for (int i = 0; i < TIERS.length; i++) {
-            if (level >= TIERS[i]) {
+            if (newLevel >= TIERS[i]) {
                 var skill = SkillUnlockRegistry.getSkill(stat, i);
                 if (skill != null) {
-                    tong.statmod.integration.EpicFightCompat.grantSkill(player, skill);
+                    EpicFightCompat.grantSkill(player, skill);
                 }
             }
         }
+    }
+
+    public static void syncAllSkills(ServerPlayer player) {
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            for (StatType stat : StatType.values()) {
+                int level = stats.getLevel(stat.index);
+                for (int i = 0; i < TIERS.length; i++) {
+                    if (level >= TIERS[i]) {
+                        var skill = SkillUnlockRegistry.getSkill(stat, i);
+                        if (skill != null) {
+                            EpicFightCompat.grantSkill(player, skill);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

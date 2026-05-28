@@ -117,12 +117,50 @@ repositories {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // Epic Fight (local JAR)
     implementation fg.deobf("blank:epic-fight-20.14.17-mc1.20.1-forge:20.14.17")
+
+    // ParCool (CurseMaven)
+    implementation fg.deobf("curse.maven:parcool-482378:6612358")
+
+    // Epic Parcool - Epic Fight x ParCool compatibility (local JAR)
+    implementation fg.deobf("blank:epicparcool-20.12.0.1-1.20.1:20.12.0.1")
+
+    // AAA Particles (local JAR)
+    implementation fg.deobf("blank:aaa_particles-forge-1.20.1-2.2.1-beta.2:2.2.1-beta.2")
+
+    // Invincible Lib - JSON-based skill creation framework (local JAR)
+    implementation fg.deobf("blank:epic-fight-invincible-lib-20.14.8.2-mc1.20.1-forge:20.14.8.2")
+
+    // EpicFight Nightfall v3.3.3 (local JAR in libs/)
+    implementation fg.deobf("blank:epicfight-nightfall-3.3.3-all:3.3.3")
+
+    // EpicFight Extra v1.2 (Modrinth) - animations, weapons, scythe
+    implementation fg.deobf("maven.modrinth:epicfight-extra:1.2")
+
+    // Epic Fight Avalon (CurseMaven) - animation/combat library required by Nightfall
+    implementation fg.deobf("curse.maven:epic-fight-avalon-1268823:7619938")
+
+    // Weapons of Miracles (local JAR) - custom weapons and skills
+    implementation fg.deobf("blank:WeaponsOfMiracles-2.0.15-mc1.20.1-forge:2.0.15")
 
 }
 

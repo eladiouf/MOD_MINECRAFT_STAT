@@ -106,6 +106,35 @@ public class TalentTreePanel extends AbstractWidget {
         this.scrollOffset = Math.max(0, offset);
     }
 
+    /**
+     * Returns the Perk at the given screen coordinates, or null if none.
+     */
+    public Perk getPerkAt(double mouseX, double mouseY) {
+        int rowY = getY() + 10 - scrollOffset;
+        int centerX = getX() + getWidth() / 2;
+
+        for (StatType stat : StatType.values()) {
+            if (stat.category != category) continue;
+
+            List<Perk> statPerks = new ArrayList<>();
+            for (Perk perk : Perk.values()) {
+                if (perk.stat == stat) statPerks.add(perk);
+            }
+
+            int nodeStartX = centerX - (statPerks.size() * NODE_GAP) / 2;
+            for (int i = 0; i < statPerks.size(); i++) {
+                int nx = nodeStartX + i * NODE_GAP;
+                int ny = rowY + 20;
+                // Node is 24x24
+                if (mouseX >= nx && mouseX <= nx + 24 && mouseY >= ny && mouseY <= ny + 24) {
+                    return statPerks.get(i);
+                }
+            }
+            rowY += STAT_GAP;
+        }
+        return null;
+    }
+
     public int getTotalHeight() {
         int count = 0;
         for (StatType stat : StatType.values()) {

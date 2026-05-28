@@ -1,7 +1,7 @@
 # STAT Mod - Plan de Test
 
 ## 📦 Installation
-1. Copie `statmod-1.0.0.jar` dans le dossier `mods` de Minecraft Forge 1.20.1
+regarde la bnavant de retirer le quelle deatt ca 1. Copie `statmod-1.0.0.jar` dans le dossier `mods` de Minecraft Forge 1.20.1
 2. **Requis** : Epic Fight 20.14.17 (dans `mods` aussi)
 3. Lance le jeu
 

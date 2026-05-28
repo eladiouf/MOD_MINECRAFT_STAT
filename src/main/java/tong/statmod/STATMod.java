@@ -19,8 +19,11 @@ import tong.statmod.capability.PlayerStats;
 import tong.statmod.capability.PlayerStatsProvider;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.integration.EpicFightCompat;
+import tong.statmod.integration.EpicParcoolCompat;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncAllStatsPacket;
+import tong.statmod.skills.SkillRegistry;
+import tong.statmod.skills.SkillRequirementRegistry;
 import tong.statmod.skills.SkillUnlockRegistry;
 import tong.statmod.stats.StatRegistry;
 import tong.statmod.world.effect.ModEffects;
@@ -53,7 +56,9 @@ public class STATMod
     {
         StatRegistry.init();
         EpicFightCompat.init();
+        EpicParcoolCompat.init();
         SkillUnlockRegistry.init();
+        SkillRequirementRegistry.init();
         event.enqueueWork(() -> {
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(Potions.AWKWARD, Items.SUGAR, ModPotions.ADRENALINE.get()));
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.REDSTONE, ModPotions.LONG_ADRENALINE.get()));

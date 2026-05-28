@@ -8,6 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.texture.TextureCache;
 import tong.statmod.client.gui.perks.TalentTreePanel;
+import tong.statmod.network.NetworkHandler;
+import tong.statmod.network.UnlockPerkPacket;
+import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatCategory;
 
 import static tong.statmod.client.texture.TextureCache.drawInkText;
@@ -102,6 +105,7 @@ public class PerkScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Tab click handling
         int tabX = this.width / 2 - (TAB_COUNT * 52) / 2;
         for (int i = 0; i < TAB_COUNT; i++) {
             if (mouseX >= tabX && mouseX <= tabX + 48 && mouseY >= 22 && mouseY <= 46) {
@@ -114,6 +118,17 @@ public class PerkScreen extends Screen {
             }
             tabX += 60;
         }
+
+        // Perk node click handling
+        if (treePanel != null) {
+            Perk clickedPerk = treePanel.getPerkAt(mouseX, mouseY);
+            if (clickedPerk != null && ClientPerkCache.getAvailablePoints() > 0
+                    && !ClientPerkCache.isUnlocked(clickedPerk)) {
+                NetworkHandler.CHANNEL.sendToServer(new UnlockPerkPacket(clickedPerk.id));
+                return true;
+            }
+        }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

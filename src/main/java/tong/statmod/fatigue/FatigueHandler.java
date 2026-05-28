@@ -16,6 +16,7 @@ import tong.statmod.capability.PlayerStatsProvider;
 import tong.statmod.network.FatiguePacket;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
+import tong.statmod.stats.StatCalculator;
 import tong.statmod.world.thirst.ThirstProvider;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +46,7 @@ public class FatigueHandler {
             fatigue.setMaxFatigue(Config.FATIGUE_MAX_CAPACITY.get() + endurance * 5);
 
             float enduranceMod = Math.max(0, 1.0f - endurance * 0.01f);
-            float willpowerMod = Math.max(0, 1.0f - willpower * 0.003f);
+            float willpowerMod = Math.max(0, 1.0f - StatCalculator.getFatigueReduction(willpower));
 
             // Passive fatigue accumulation by environment
             float baseRate;
@@ -96,7 +97,7 @@ public class FatigueHandler {
         float[] adjusted = {penalty};
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
             int willpower = stats.getLevel(22);
-            adjusted[0] = penalty * (1.0f - willpower * 0.005f);
+            adjusted[0] = penalty * (1.0f - StatCalculator.getFatigueReduction(willpower));
         });
         fatigue.addFatigue(adjusted[0]);
     }

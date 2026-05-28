@@ -115,4 +115,14 @@ public class StatCalculator {
     public static float getFatigueReduction(int level) {
         return 0.005f * level;
     }
+
+    // Tracking: +0.3% luck per level (max +30%)
+    public static float getLuckBonus(int level) {
+        return 0.003f * level;
+    }
+
+    // Keen Senses: +0.2 blocks entity reach per level (max +20 blocks)
+    public static float getEntityReachBonus(int level) {
+        return 0.2f * level;
+    }
 }

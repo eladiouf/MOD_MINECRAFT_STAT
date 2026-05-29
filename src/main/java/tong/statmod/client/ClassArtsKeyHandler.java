@@ -8,8 +8,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.skills.StatModSkillSlots;
+import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.skill.SkillContainer;
-import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
@@ -33,14 +33,18 @@ public class ClassArtsKeyHandler {
             // Get the player's Epic Fight capability
             player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
-                    // Get the CLASS_ARTS skill container using the slot's universal ordinal
+                    // Get the CLASS_ARTS skill container
                     SkillContainer container = playerPatch.getSkill(StatModSkillSlots.CLASS_ARTS);
                     if (container != null && container.hasSkill()) {
-                        // Send cast request to server
-                        container.sendCastRequest(
-                            (yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch) playerPatch,
-                            null
-                        );
+                        // Get the ClientEngine and ControlEngine
+                        ClientEngine clientEngine = ClientEngine.getInstance();
+                        if (clientEngine != null && clientEngine.controlEngine != null) {
+                            // Send cast request to server via Epic Fight's system
+                            container.sendCastRequest(
+                                (yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch) playerPatch,
+                                clientEngine.controlEngine
+                            );
+                        }
                     }
                 }
             });

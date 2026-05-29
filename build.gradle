@@ -162,6 +162,10 @@ dependencies {
     // Weapons of Miracles (local JAR) - custom weapons and skills
     implementation fg.deobf("blank:WeaponsOfMiracles-2.0.15-mc1.20.1-forge:2.0.15")
 
+    // P1nero Bow (local JAR) - Epic Fight bow addon
+    implementation fg.deobf("blank:p1nero_bow-forge1.20.1-20.14.1.6:20.14.1.6")
+
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -384,6 +384,11 @@ public class SkillRequirementRegistry {
         register("wom:true_berserk", StatType.BRUTE_FORCE, 65, StatType.INTIMIDATION, 40);          // 105
         register("wom:demonic_ascension", StatType.INTIMIDATION, 65, StatType.BRUTE_FORCE, 50);     // 115
 
+        // =====================================================================
+        // P1NERO BOW SKILLS (1) — namespace p1nero_bow:
+        // =====================================================================
+        register("p1nero_bow:mortis_innate", StatType.PRECISION, 30, StatType.AGILITY, 20);          // 50
+
         STATMod.LOGGER.info("Registered stat requirements for {} skills", REQUIREMENTS.size());
     }
 

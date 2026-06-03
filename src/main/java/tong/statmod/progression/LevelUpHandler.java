@@ -39,15 +39,11 @@ public class LevelUpHandler {
         // Spawn particles
         spawnMilestoneParticles(player, level);
 
-        // Grant perk points at level 50 and 100
-        if (level == 50) {
-            player.getCapability(PerkProvider.PERKS).ifPresent(perks -> {
-                perks.addPoints(1);
-            });
-        } else if (level == 100) {
-            player.getCapability(PerkProvider.PERKS).ifPresent(perks -> {
-                perks.addPoints(3);
-            });
+        // Grant perk points: 20/40/50/60/80 → +1, 100 → +3
+        int points = level == 100 ? 3 : (level == 50 || level % 20 == 0) ? 1 : 0;
+        if (points > 0) {
+            int p = points;
+            player.getCapability(PerkProvider.PERKS).ifPresent(perks -> perks.addPoints(p));
         }
 
         // Grant Epic Fight skills at specific tiers (per spec: 20/50/80/100)

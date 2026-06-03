@@ -3,7 +3,7 @@ package tong.statmod.stats;
 public class StatCalculator {
 
     public static int getXpForNextLevel(int level) {
-        return (level + 1) * (level + 1) * 10;
+        return (level + 1) * 50;
     }
 
     // Brute Force: +0.2% damage per level (max +20%)

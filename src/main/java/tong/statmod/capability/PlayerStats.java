@@ -29,7 +29,7 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     }
 
     public static int getXpForNextLevel(int level) {
-        return (level + 1) * (level + 1) * 10;
+        return (level + 1) * 50;
     }
 
     public void setLevel(int index, int level) { this.levels[index] = level; }

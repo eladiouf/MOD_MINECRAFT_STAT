@@ -88,11 +88,34 @@ public class NonCombatXPHandler {
         }
     }
 
-    // ---- Magic stats (standby) ----
+    // ---- Magic stats ----
 
     @SubscribeEvent
-    public static void onDealMagicDamage(LivingDamageEvent event) {
-        // Magic stats on standby
+    public static void onMagicDamage(LivingDamageEvent event) {
+        boolean isMagic = event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MAGIC)
+            || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC);
+        if (!isMagic) return;
+
+        // Caster gains XP
+        if (event.getSource().getEntity() instanceof ServerPlayer caster) {
+            ActionXpHelper.awardXp(caster, StatType.ARCANE_POWER.index, ActionXpHelper.XpTier.COMMON);
+            ActionXpHelper.awardXp(caster, StatType.MANA_POOL.index, ActionXpHelper.XpTier.COMMON);
+            ActionXpHelper.awardXp(caster, StatType.CASTING_SPEED.index, ActionXpHelper.XpTier.COMMON);
+            ActionXpHelper.awardXp(caster, StatType.ERUDITION.index, ActionXpHelper.XpTier.COMMON);
+            if (event.getAmount() >= 15) {
+                ActionXpHelper.awardXp(caster, StatType.ARCANE_POWER.index, ActionXpHelper.XpTier.INTERMEDIATE);
+                ActionXpHelper.awardXp(caster, StatType.MANA_POOL.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            }
+        }
+
+        // Target gains resistance XP
+        if (event.getEntity() instanceof ServerPlayer target) {
+            ActionXpHelper.awardXp(target, StatType.MAGIC_RESISTANCE.index, ActionXpHelper.XpTier.COMMON);
+            ActionXpHelper.awardXp(target, StatType.WILLPOWER.index, ActionXpHelper.XpTier.COMMON);
+            if (event.getAmount() >= 10) {
+                ActionXpHelper.awardXp(target, StatType.MAGIC_RESISTANCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            }
+        }
     }
 
     @SubscribeEvent

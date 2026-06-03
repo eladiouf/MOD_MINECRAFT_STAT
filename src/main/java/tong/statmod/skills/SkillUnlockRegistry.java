@@ -53,12 +53,16 @@ public class SkillUnlockRegistry {
         set(StatType.PHYSICAL_RESISTANCE, 3, SkillRegistry.STONE_SKIN);
 
         // --- Physical Endurance ---
+        set(StatType.PHYSICAL_ENDURANCE, 0, SkillRegistry.ENDURANCE_VITALITY);
+        set(StatType.PHYSICAL_ENDURANCE, 1, SkillRegistry.ENDURANCE_TOUGHNESS);
+        set(StatType.PHYSICAL_ENDURANCE, 2, SkillRegistry.ENDURANCE_UNBREAKABLE);
         set(StatType.PHYSICAL_ENDURANCE, 3, SkillRegistry.ENDURANCE_SURGE);
-        // Endurance passives not yet implemented
 
         // --- Precision ---
+        set(StatType.PRECISION, 0, SkillRegistry.PRECISION_FOCUS);
+        set(StatType.PRECISION, 1, SkillRegistry.PRECISION_ACCURACY);
+        set(StatType.PRECISION, 2, SkillRegistry.PRECISION_DEADEYE);
         set(StatType.PRECISION, 3, SkillRegistry.PRECISION_SHOT);
-        // Precision passives not yet implemented
     }
 
     private static void set(StatType stat, int tier, Skill skill) {

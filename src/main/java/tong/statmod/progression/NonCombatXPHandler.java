@@ -76,6 +76,13 @@ public class NonCombatXPHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onBrewPotion(net.minecraftforge.event.brewing.PlayerBrewedPotionEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ActionXpHelper.awardXp(player, StatType.ALCHEMY.index, ActionXpHelper.XpTier.INTERMEDIATE);
+        }
+    }
+
     // ---- Earth Affinity (mining) + Brute Force (hard blocks) ----
 
     @SubscribeEvent

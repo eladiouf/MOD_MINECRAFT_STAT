@@ -61,6 +61,14 @@ public class SkillRegistry {
     public static Skill RESIST_IRON;
     public static Skill RESIST_STEEL;
     public static Skill RESIST_DIAMOND;
+    // Physical Endurance
+    public static Skill ENDURANCE_VITALITY;
+    public static Skill ENDURANCE_TOUGHNESS;
+    public static Skill ENDURANCE_UNBREAKABLE;
+    // Precision
+    public static Skill PRECISION_FOCUS;
+    public static Skill PRECISION_ACCURACY;
+    public static Skill PRECISION_DEADEYE;
 
     // ========== WEAPON INNATE (7) ==========
     public static Skill HEAVY_STRIKE;
@@ -184,6 +192,28 @@ public class SkillRegistry {
         RESIST_DIAMOND = worker.build("resist_diamond",
             builder -> new StatPassiveSkill(builder, StatType.PHYSICAL_RESISTANCE, 3),
             makePassiveBuilder("resist_diamond"));
+
+        // Physical Endurance
+        ENDURANCE_VITALITY = worker.build("endurance_vitality",
+            builder -> new StatPassiveSkill(builder, StatType.PHYSICAL_ENDURANCE, 1),
+            makePassiveBuilder("endurance_vitality"));
+        ENDURANCE_TOUGHNESS = worker.build("endurance_toughness",
+            builder -> new StatPassiveSkill(builder, StatType.PHYSICAL_ENDURANCE, 2),
+            makePassiveBuilder("endurance_toughness"));
+        ENDURANCE_UNBREAKABLE = worker.build("endurance_unbreakable",
+            builder -> new StatPassiveSkill(builder, StatType.PHYSICAL_ENDURANCE, 3),
+            makePassiveBuilder("endurance_unbreakable"));
+
+        // Precision
+        PRECISION_FOCUS = worker.build("precision_focus",
+            builder -> new StatPassiveSkill(builder, StatType.PRECISION, 1),
+            makePassiveBuilder("precision_focus"));
+        PRECISION_ACCURACY = worker.build("precision_accuracy",
+            builder -> new StatPassiveSkill(builder, StatType.PRECISION, 2),
+            makePassiveBuilder("precision_accuracy"));
+        PRECISION_DEADEYE = worker.build("precision_deadeye",
+            builder -> new StatPassiveSkill(builder, StatType.PRECISION, 3),
+            makePassiveBuilder("precision_deadeye"));
 
         // ===== WEAPON INNATE (7) — Custom CLASS_ARTS slot =====
         HEAVY_STRIKE = worker.build("heavy_strike",

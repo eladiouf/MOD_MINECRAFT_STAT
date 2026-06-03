@@ -65,7 +65,16 @@ public class NonCombatXPHandler {
     }
 
     // ---- Alchemy ----
-    // XP from drinking potions only (see onDrinkPotion). Removed click-on-brewingstand exploit.
+    // XP from drinking potions
+
+    @SubscribeEvent
+    public static void onDrinkPotion(net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (event.getItem().getItem() instanceof net.minecraft.world.item.PotionItem
+            || event.getItem().getItem() instanceof net.minecraft.world.item.LingeringPotionItem) {
+            ActionXpHelper.awardXp(player, StatType.ALCHEMY.index, ActionXpHelper.XpTier.COMMON);
+        }
+    }
 
     // ---- Earth Affinity (mining) + Brute Force (hard blocks) ----
 

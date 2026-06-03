@@ -11,7 +11,7 @@ ICON_SIZE = 128
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 GAME_ICONS_DIR = os.path.join(SCRIPT_DIR, "..", "..", "SIHRIYA", "tools", "game-icons", "icons-master")
-OUT_DIR = os.path.join(PROJECT_ROOT, "src", "main", "resources", "assets", "statmod", "textures", "gui", "skill")
+OUT_DIR = os.path.join(PROJECT_ROOT, "src", "main", "resources", "assets", "statmod", "textures", "gui", "skills")
 
 # ─── Shape helpers (same as gen_stat_icons) ───
 
@@ -228,7 +228,6 @@ def make_icon(svg_name, icon_color, bg_tint, shape, size=ICON_SIZE):
     return img
 
 def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
     svg_index = build_svg_index()
     print(f"SVGs: {len(svg_index)}")
     count = 0
@@ -236,11 +235,13 @@ def main():
     for s in SKILLS_DATA:
         by_cat.setdefault(s['cat'], []).append(s)
     for cat, items in by_cat.items():
+        cat_dir = os.path.join(OUT_DIR, cat)
+        os.makedirs(cat_dir, exist_ok=True)
         print(f"\n── {cat.upper()} ({len(items)}) ──")
         for s in items:
             icon = make_icon(s['svg'], s['color'], s['tint'], s['shape'], ICON_SIZE)
             if icon:
-                icon.save(os.path.join(OUT_DIR, f"{s['name']}.png"))
+                icon.save(os.path.join(cat_dir, f"{s['name']}.png"))
                 count += 1
                 print(f"  {s['name']:25s} {s['shape']:15s} OK")
             else:

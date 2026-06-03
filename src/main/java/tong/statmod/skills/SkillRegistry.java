@@ -342,6 +342,8 @@ public class SkillRegistry {
 
     // ===== Builder helpers =====
 
+    // ===== Builder helpers =====
+
     @SuppressWarnings("unchecked")
     private static SkillBuilder<Skill> makeBuilder(String name, yesman.epicfight.skill.SkillCategory category) {
         SkillBuilder<Skill> builder = (SkillBuilder<Skill>) Skill.createBuilder();

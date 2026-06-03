@@ -7,6 +7,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.client.ClientStatsCache;
+import tong.statmod.client.texture.StatIconRenderer;
 import tong.statmod.client.texture.TextureCache;
 import tong.statmod.stats.StatType;
 
@@ -47,9 +48,8 @@ public class StatWidget extends AbstractWidget {
 
         var font = Minecraft.getInstance().font;
 
-        // Icon
-        ResourceLocation iconTex = TextureCache.get("stat_icon_" + stat.index + ".png");
-        graphics.blit(iconTex, getX() + 4, getY() + 5, 16, 16, 0, 0, 32, 32, 32, 32);
+        // Icon (sprite atlas)
+        StatIconRenderer.renderIcon(graphics, stat.name(), getX() + 4, getY() + 5);
 
         // Name + Level
         drawInkText(graphics, font, stat.displayName, getX() + 24, getY() + 4, TEXT_COLOR);

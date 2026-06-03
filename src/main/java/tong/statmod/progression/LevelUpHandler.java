@@ -17,8 +17,8 @@ public class LevelUpHandler {
     public static void onLevelUp(ServerPlayer player, int statIndex, int newLevel) {
         if (newLevel <= 0) return;
 
-        // Check if this is a milestone (every 10 levels + skill tier levels 25, 75)
-        if (newLevel % 10 == 0 || newLevel == 25 || newLevel == 75) {
+        // Check if this is a milestone (every 10 levels)
+        if (newLevel % 10 == 0) {
             handleMilestone(player, statIndex, newLevel);
         }
 
@@ -50,13 +50,13 @@ public class LevelUpHandler {
             });
         }
 
-        // Grant Epic Fight skills at specific tiers (per spec: 10/25/50/75)
+        // Grant Epic Fight skills at specific tiers (per spec: 20/50/80/100)
         StatType stat = StatType.byIndex(statIndex);
         int skillTier = switch (level) {
-            case 10 -> 0;
-            case 25 -> 1;
-            case 50 -> 2;
-            case 75 -> 3;
+            case 20 -> 0;
+            case 50 -> 1;
+            case 80 -> 2;
+            case 100 -> 3;
             default -> -1;
         };
         if (skillTier >= 0) {

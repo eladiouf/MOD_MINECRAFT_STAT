@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,8 @@ public class StatEffectApplier {
     private static final UUID SPEED_UUID = UUID.fromString("b2c3d4e5-f6a7-8901-bcde-f12345678901");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("c3d4e5f6-a7b8-9012-cdef-123456789012");
     private static final UUID LUCK_UUID = UUID.fromString("d4e5f6a7-b8c9-0123-defa-123456789abc");
+    private static final UUID AIR_JUMP_UUID = UUID.fromString("f6a7b8c9-d0e1-2345-fabc-1234567890de");
+    private static final UUID CAST_SPEED_UUID = UUID.fromString("a7b8c9d0-e1f2-3456-abcd-2345678901ef");
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
@@ -47,6 +50,22 @@ public class StatEffectApplier {
 
                 event.setAmount(event.getAmount() * multiplier);
 
+                // Arcane Power: amplify magic damage
+                if (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MAGIC)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC)) {
+                    float arcaneBonus = StatCalculator.getMagicDamageBonus(stats.getLevel(StatType.ARCANE_POWER.index));
+                    event.setAmount(event.getAmount() * (1.0f + arcaneBonus));
+                }
+
+                // Fire Affinity: amplify fire damage
+                if (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.ON_FIRE)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.LAVA)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.FIREBALL)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.HOT_FLOOR)) {
+                    float fireBonus = StatCalculator.getFireDamageBonus(stats.getLevel(StatType.FIRE_AFFINITY.index));
+                    event.setAmount(event.getAmount() * (1.0f + fireBonus));
+                }
+
                 // Intimidation: guaranteed debuff on direct hit
                 if (event.getEntity() instanceof LivingEntity) {
                     LivingEntity target = (LivingEntity) event.getEntity();
@@ -70,6 +89,15 @@ public class StatEffectApplier {
                 // Physical Resistance
                 float reduction = StatCalculator.getDamageReduction(stats.getLevel(StatType.PHYSICAL_RESISTANCE.index));
                 event.setAmount(event.getAmount() * (1.0f - reduction));
+
+                // Magic Resistance
+                if (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MAGIC)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.WITHER)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.DRAGON_BREATH)) {
+                    float magicReduction = StatCalculator.getMagicReduction(stats.getLevel(StatType.MAGIC_RESISTANCE.index));
+                    event.setAmount(event.getAmount() * (1.0f - magicReduction));
+                }
             });
         }
     }
@@ -125,6 +153,41 @@ public class StatEffectApplier {
                     luck.addPermanentModifier(new AttributeModifier(
                         LUCK_UUID, "Tracking Bonus", luckBonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
                 }
+            }
+
+            // Casting Speed → attack speed
+            AttributeInstance castSpeedAttr = player.getAttribute(Attributes.ATTACK_SPEED);
+            if (castSpeedAttr != null) {
+                castSpeedAttr.removeModifier(CAST_SPEED_UUID);
+                float castBonus = StatCalculator.getItemUseSpeed(stats.getLevel(StatType.CASTING_SPEED.index));
+                if (castBonus > 0) {
+                    castSpeedAttr.addPermanentModifier(new AttributeModifier(
+                        CAST_SPEED_UUID, "Casting Speed Bonus", castBonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                }
+            }
+
+            // Air Affinity → jump strength
+            AttributeInstance jumpAttr = player.getAttribute(Attributes.JUMP_STRENGTH);
+            if (jumpAttr != null) {
+                jumpAttr.removeModifier(AIR_JUMP_UUID);
+                float jumpBonus = StatCalculator.getJumpBonus(stats.getLevel(StatType.AIR_AFFINITY.index));
+                if (jumpBonus > 0) {
+                    jumpAttr.addPermanentModifier(new AttributeModifier(
+                        AIR_JUMP_UUID, "Air Affinity Bonus", jumpBonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                }
+            }
+        });
+    }
+
+    // Erudition: multiply XP orbs dropped by mobs
+    @SubscribeEvent
+    public static void onXpDrop(LivingExperienceDropEvent event) {
+        if (!(event.getAttackingPlayer() instanceof ServerPlayer player)) return;
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            float xpBonus = StatCalculator.getXpBonus(stats.getLevel(StatType.ERUDITION.index));
+            if (xpBonus > 0) {
+                int extra = Math.round(event.getDroppedExperience() * xpBonus);
+                event.setDroppedExperience(event.getDroppedExperience() + extra);
             }
         });
     }

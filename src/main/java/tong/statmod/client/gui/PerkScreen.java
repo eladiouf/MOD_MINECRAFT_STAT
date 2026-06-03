@@ -116,7 +116,7 @@ public class PerkScreen extends Screen {
                 }
                 return true;
             }
-            tabX += 60;
+            tabX += 52;
         }
 
         // Perk node click handling

@@ -1,5 +1,6 @@
 package tong.statmod.progression;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +16,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.stats.StatType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class NonCombatXPHandler {
@@ -134,12 +139,7 @@ public class NonCombatXPHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onGetPotionHit(LivingDamageEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.COMMON);
-        }
-    }
+    private static final Map<UUID, BlockPos> lastPositions = new HashMap<>();
 
     // ---- Elemental tick actions ----
 
@@ -148,6 +148,11 @@ public class NonCombatXPHandler {
         if (!(event.player instanceof ServerPlayer player) || event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
 
         if (player.tickCount % 100 != 0) return;
+
+        // Anti-AFK: only award XP if player has moved since last check
+        BlockPos currentPos = player.blockPosition();
+        BlockPos prevPos = lastPositions.put(player.getUUID(), currentPos);
+        if (prevPos != null && currentPos.equals(prevPos)) return;
 
         if (player.isInWater() || player.isUnderWater()) {
             ActionXpHelper.awardXp(player, StatType.WATER_AFFINITY.index, ActionXpHelper.XpTier.COMMON);

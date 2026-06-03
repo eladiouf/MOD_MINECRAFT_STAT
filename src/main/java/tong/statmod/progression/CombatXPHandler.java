@@ -1,16 +1,12 @@
 package tong.statmod.progression;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.stats.StatType;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
-import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +22,6 @@ public class CombatXPHandler {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
-
-        // ★ Common: weapon hit
-        awardWeaponXp(player);
 
         // ★★ Intermediate: combo (3 hits in 2s)
         trackCombo(player);
@@ -80,40 +73,6 @@ public class CombatXPHandler {
         if (player.getHealth() - event.getAmount() <= 1.0f && player.getHealth() > 0) {
             ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.RARE);
         }
-    }
-
-    private static void awardWeaponXp(ServerPlayer player) {
-        StatType stat = determinePrimaryStat(player);
-        if (stat == null) return;
-        ActionXpHelper.awardXp(player, stat.index, ActionXpHelper.XpTier.COMMON);
-    }
-
-    private static StatType determinePrimaryStat(ServerPlayer player) {
-        var cap = player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
-        if (cap.isPresent() && cap.resolve().isPresent()) {
-            Object patch = cap.resolve().get();
-            if (patch instanceof ServerPlayerPatch playerPatch) {
-                CapabilityItem itemCap = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
-                if (itemCap != null && !itemCap.isEmpty()) {
-                    var cat = itemCap.getWeaponCategory();
-                    if (cat == CapabilityItem.WeaponCategories.AXE || cat == CapabilityItem.WeaponCategories.GREATSWORD)
-                        return StatType.BRUTE_FORCE;
-                    if (cat == CapabilityItem.WeaponCategories.SWORD || cat == CapabilityItem.WeaponCategories.DAGGER
-                        || cat == CapabilityItem.WeaponCategories.UCHIGATANA || cat == CapabilityItem.WeaponCategories.TACHI
-                        || cat == CapabilityItem.WeaponCategories.TRIDENT || cat == CapabilityItem.WeaponCategories.LONGSWORD)
-                        return StatType.BLADE_TECHNIQUE;
-                    if (cat == CapabilityItem.WeaponCategories.BOW || cat == CapabilityItem.WeaponCategories.CROSSBOW)
-                        return StatType.PRECISION;
-                    if (cat == CapabilityItem.WeaponCategories.SPEAR)
-                        return StatType.AGILITY;
-                    if (cat == CapabilityItem.WeaponCategories.SHIELD)
-                        return StatType.PHYSICAL_ENDURANCE;
-                    if (cat == CapabilityItem.WeaponCategories.FIST)
-                        return StatType.RAPIDITE;
-                }
-            }
-        }
-        return null;
     }
 
     private static void trackRapidHit(ServerPlayer player) {

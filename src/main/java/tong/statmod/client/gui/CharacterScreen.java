@@ -129,7 +129,7 @@ public class CharacterScreen extends Screen {
                 }
                 return true;
             }
-            tabX += 60;
+            tabX += 52;
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

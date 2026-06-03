@@ -94,6 +94,29 @@ public class SkillRegistry {
     public static Skill BLADE_GOD;
     public static Skill SHADOW_DANCER;
 
+    // ========== NON-COMBAT SKILLS (17) ==========
+    // Magic (9)
+    public static Skill ARCANE_BOLT;
+    public static Skill WATER_HEAL;
+    public static Skill EARTH_SHIELD;
+    public static Skill FIREBALL;
+    public static Skill AIR_DASH;
+    public static Skill MAGIC_RESIST_SKILL;
+    public static Skill FAST_CAST;
+    public static Skill MANA_REGEN;
+    public static Skill STUDY;
+    // Survival (2)
+    public static Skill TRACK;
+    public static Skill SENSE_DANGER;
+    // Crafting (3)
+    public static Skill MASTER_FORGE;
+    public static Skill FEAST;
+    public static Skill POTION_BOOST;
+    // Mental (3)
+    public static Skill MEDITATE;
+    public static Skill INTIMIDATE;
+    public static Skill WILLPOWER_AURA;
+
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public static void onSkillBuild(SkillBuildEvent event) {
@@ -276,61 +299,61 @@ public class SkillRegistry {
 
         // ===== NON-COMBAT SKILLS (17) =====
         // Magic (9)
-        worker.build("arcane_bolt",
+        ARCANE_BOLT = worker.build("arcane_bolt",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.ARCANE_BOLT, 3000L),
             makeBuilder("arcane_bolt", SkillCategories.IDENTITY));
-        worker.build("water_heal",
+        WATER_HEAL = worker.build("water_heal",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.WATER_HEAL, 5000L),
             makeBuilder("water_heal", SkillCategories.IDENTITY));
-        worker.build("earth_shield",
+        EARTH_SHIELD = worker.build("earth_shield",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.EARTH_SHIELD, 5000L),
             makeBuilder("earth_shield", SkillCategories.IDENTITY));
-        worker.build("fireball",
+        FIREBALL = worker.build("fireball",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.FIREBALL, 4000L),
             makeBuilder("fireball", SkillCategories.IDENTITY));
-        worker.build("air_dash",
+        AIR_DASH = worker.build("air_dash",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.AIR_DASH, 3000L),
             makeBuilder("air_dash", SkillCategories.IDENTITY));
-        worker.build("magic_resist",
+        MAGIC_RESIST_SKILL = worker.build("magic_resist",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.MAGIC_RESIST, 8000L),
             makeBuilder("magic_resist", SkillCategories.IDENTITY));
-        worker.build("fast_cast",
+        FAST_CAST = worker.build("fast_cast",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.FAST_CAST, 5000L),
             makeBuilder("fast_cast", SkillCategories.IDENTITY));
-        worker.build("mana_regen",
+        MANA_REGEN = worker.build("mana_regen",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.MANA_REGEN, 5000L),
             makeBuilder("mana_regen", SkillCategories.IDENTITY));
-        worker.build("study",
+        STUDY = worker.build("study",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.STUDY, 5000L),
             makeBuilder("study", SkillCategories.IDENTITY));
 
         // Survival (2)
-        worker.build("track",
+        TRACK = worker.build("track",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.TRACK, 5000L),
             makeBuilder("track", SkillCategories.IDENTITY));
-        worker.build("sense_danger",
+        SENSE_DANGER = worker.build("sense_danger",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.SENSE_DANGER, 3000L),
             makeBuilder("sense_danger", SkillCategories.IDENTITY));
 
         // Crafting (3)
-        worker.build("master_forge",
+        MASTER_FORGE = worker.build("master_forge",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.MASTER_FORGE, 5000L),
             makeBuilder("master_forge", SkillCategories.IDENTITY));
-        worker.build("feast",
+        FEAST = worker.build("feast",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.FEAST, 5000L),
             makeBuilder("feast", SkillCategories.IDENTITY));
-        worker.build("potion_boost",
+        POTION_BOOST = worker.build("potion_boost",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.POTION_BOOST, 5000L),
             makeBuilder("potion_boost", SkillCategories.IDENTITY));
 
         // Mental (3)
-        worker.build("meditate",
+        MEDITATE = worker.build("meditate",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.MEDITATE, 10000L),
             makeBuilder("meditate", SkillCategories.IDENTITY));
-        worker.build("intimidate",
+        INTIMIDATE = worker.build("intimidate",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.INTIMIDATE, 5000L),
             makeBuilder("intimidate", SkillCategories.IDENTITY));
-        worker.build("willpower_aura",
+        WILLPOWER_AURA = worker.build("willpower_aura",
             builder -> new NonCombatSkill(builder, NonCombatSkill.SkillCategory.WILLPOWER_AURA, 8000L),
             makeBuilder("willpower_aura", SkillCategories.IDENTITY));
 

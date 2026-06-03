@@ -32,7 +32,6 @@ public class ClientSetup {
         event.register(OPEN_PERKS_KEY);
     }
 
-    @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT)
     public static class ClientEventHandler {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {

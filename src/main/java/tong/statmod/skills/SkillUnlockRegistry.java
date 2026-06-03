@@ -63,6 +63,30 @@ public class SkillUnlockRegistry {
         set(StatType.PRECISION, 1, SkillRegistry.PRECISION_ACCURACY);
         set(StatType.PRECISION, 2, SkillRegistry.PRECISION_DEADEYE);
         set(StatType.PRECISION, 3, SkillRegistry.PRECISION_SHOT);
+
+        // --- Magic (9) — active skills at tier 3 ---
+        set(StatType.ARCANE_POWER, 3, SkillRegistry.ARCANE_BOLT);
+        set(StatType.WATER_AFFINITY, 3, SkillRegistry.WATER_HEAL);
+        set(StatType.EARTH_AFFINITY, 3, SkillRegistry.EARTH_SHIELD);
+        set(StatType.FIRE_AFFINITY, 3, SkillRegistry.FIREBALL);
+        set(StatType.AIR_AFFINITY, 3, SkillRegistry.AIR_DASH);
+        set(StatType.MAGIC_RESISTANCE, 3, SkillRegistry.MAGIC_RESIST_SKILL);
+        set(StatType.CASTING_SPEED, 3, SkillRegistry.FAST_CAST);
+        set(StatType.MANA_POOL, 3, SkillRegistry.MANA_REGEN);
+        set(StatType.ERUDITION, 3, SkillRegistry.STUDY);
+
+        // --- Survival (2) — active skills at tier 3 ---
+        set(StatType.TRACKING, 3, SkillRegistry.TRACK);
+        set(StatType.KEEN_SENSES, 3, SkillRegistry.SENSE_DANGER);
+
+        // --- Crafting (3) — active skills at tier 3 ---
+        set(StatType.FORGING, 3, SkillRegistry.MASTER_FORGE);
+        set(StatType.COOKING, 3, SkillRegistry.FEAST);
+        set(StatType.ALCHEMY, 3, SkillRegistry.POTION_BOOST);
+
+        // --- Mental (2) — active skills at tier 3 ---
+        set(StatType.INTIMIDATION, 3, SkillRegistry.INTIMIDATE);
+        set(StatType.WILLPOWER, 3, SkillRegistry.WILLPOWER_AURA);
     }
 
     private static void set(StatType stat, int tier, Skill skill) {

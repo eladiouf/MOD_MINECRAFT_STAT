@@ -17,8 +17,8 @@ public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
         if (index < 0 || index >= WEAPON_COUNT) return;
         this.xp[index] += amount;
         while (this.xp[index] >= StatCalculator.getXpForNextLevel(levels[index]) && levels[index] < MAX_LEVEL) {
-            levels[index]++;
             this.xp[index] -= StatCalculator.getXpForNextLevel(levels[index]);
+            levels[index]++;
         }
     }
 

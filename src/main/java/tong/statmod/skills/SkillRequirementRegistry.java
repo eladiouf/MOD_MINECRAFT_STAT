@@ -68,6 +68,7 @@ public class SkillRequirementRegistry {
         // Physical Resistance
         register("statmod:resist_iron", StatType.PHYSICAL_RESISTANCE, 20);
         register("statmod:resist_steel", StatType.PHYSICAL_RESISTANCE, 50);
+        register("statmod:resist_diamond", StatType.PHYSICAL_RESISTANCE, 80);
 
         // --- WEAPON INNATE (7) — Active skills ---
         register("statmod:heavy_strike", StatType.BRUTE_FORCE, 25);
@@ -93,56 +94,6 @@ public class SkillRequirementRegistry {
         register("statmod:blade_god", StatType.BLADE_TECHNIQUE, 80, StatType.RAPIDITE, 50);
         register("statmod:shadow_dancer", StatType.AGILITY, 80, StatType.RAPIDITE, 50);
         register("statmod:meditation", StatType.WILLPOWER, 30, StatType.ERUDITION, 20);
-
-        // --- PASSIVE (15) — Tiers at Lv.20/50/80 ---
-        // Brute Force
-        register("statmod:brute_power", StatType.BRUTE_FORCE, 20);
-        register("statmod:brute_rage", StatType.BRUTE_FORCE, 50);
-        register("statmod:brute_fury", StatType.BRUTE_FORCE, 80);
-
-        // Blade Technique
-        register("statmod:blade_finesse", StatType.BLADE_TECHNIQUE, 20);
-        register("statmod:blade_mastery", StatType.BLADE_TECHNIQUE, 50);
-        register("statmod:blade_perfection", StatType.BLADE_TECHNIQUE, 80);
-
-        // Rapidité
-        register("statmod:rapid_surge", StatType.RAPIDITE, 20);
-        register("statmod:rapid_blitz", StatType.RAPIDITE, 50);
-        register("statmod:rapid_lightning", StatType.RAPIDITE, 80);
-
-        // Agility
-        register("statmod:agility_footwork", StatType.AGILITY, 20);
-        register("statmod:agility_evasion", StatType.AGILITY, 50);
-        register("statmod:agility_phantom", StatType.AGILITY, 80);
-
-        // Physical Resistance
-        register("statmod:resist_iron", StatType.PHYSICAL_RESISTANCE, 20);
-        register("statmod:resist_steel", StatType.PHYSICAL_RESISTANCE, 50);
-        register("statmod:resist_diamond", StatType.PHYSICAL_RESISTANCE, 80);
-
-        // --- WEAPON INNATE (7) — Active skills ---
-        register("statmod:heavy_strike", StatType.BRUTE_FORCE, 30);
-        register("statmod:blade_dance", StatType.BLADE_TECHNIQUE, 30);
-        register("statmod:blitz_assault", StatType.RAPIDITE, 30);
-        register("statmod:shadow_step", StatType.AGILITY, 30);
-        register("statmod:stone_skin", StatType.PHYSICAL_RESISTANCE, 30);
-        register("statmod:endurance_surge", StatType.PHYSICAL_ENDURANCE, 30);
-        register("statmod:precision_shot", StatType.PRECISION, 30);
-
-        // --- MOVER (3) — Movement skills ---
-        register("statmod:quick_step", StatType.AGILITY, 15);
-        register("statmod:shadow_leap", StatType.AGILITY, 40);
-        register("statmod:wind_dash", StatType.AGILITY, 60);
-
-        // --- GUARD (3) — Defense skills ---
-        register("statmod:parry", StatType.PHYSICAL_RESISTANCE, 20);
-        register("statmod:guard_fortress", StatType.PHYSICAL_RESISTANCE, 40);
-        register("statmod:guard_iron_wall", StatType.PHYSICAL_RESISTANCE, 60);
-
-        // --- IDENTITY (3) — Ultimate skills ---
-        register("statmod:berserker_rage", StatType.BRUTE_FORCE, 80, StatType.WILLPOWER, 50);
-        register("statmod:blade_god", StatType.BLADE_TECHNIQUE, 80, StatType.RAPIDITE, 50);
-        register("statmod:shadow_dancer", StatType.AGILITY, 80, StatType.RAPIDITE, 50);
 
         // --- NON-COMBAT (17) — Utility skills ---
         // Magic

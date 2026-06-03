@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStatsProvider;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
@@ -101,7 +100,10 @@ public class StatPassiveEffects {
         });
     }
 
-    // Alchemy: extend potion duration when drinking
+    // Casting Speed: applied via StatEffectApplier as attack speed bonus
+    // (item use speed requires complex Forge hooks — deferred)
+
+    // Alchemy: short beneficial buff when drinking potions (scales with level)
     @SubscribeEvent
     public static void onPotionDrink(LivingEntityUseItemEvent.Finish event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -111,16 +113,28 @@ public class StatPassiveEffects {
             int alchemyLevel = stats.getLevel(StatType.ALCHEMY.index);
             if (alchemyLevel <= 0) return;
 
-            float extension = StatCalculator.getPotionDurationBonus(alchemyLevel);
-            if (extension <= 0) return;
+            int duration = 100 + alchemyLevel * 2;
+            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, duration, 0, true, false));
+        });
+    }
 
-            for (Iterator<MobEffectInstance> it = player.getActiveEffectsMap().values().iterator(); it.hasNext();) {
-                MobEffectInstance effect = it.next();
-                if (effect.isAmbient() || effect.getDuration() <= 200) continue;
-                int extra = (int) (effect.getDuration() * extension);
-                player.addEffect(new MobEffectInstance(
-                    effect.getEffect(), effect.getDuration() + extra,
-                    effect.getAmplifier(), effect.isAmbient(), effect.isVisible()));
+    // Water Affinity: +swim speed when in water
+    @SubscribeEvent
+    public static void onSwimTick(LivingEvent.LivingTickEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (!player.isInWater() && !player.isUnderWater()) return;
+        if (player.tickCount % 10 != 0) return;
+
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            int waterLevel = stats.getLevel(StatType.WATER_AFFINITY.index);
+            if (waterLevel <= 0) return;
+            float swimBonus = StatCalculator.getSwimSpeedBonus(waterLevel);
+            if (swimBonus > 0) {
+                player.setDeltaMovement(player.getDeltaMovement().add(
+                    player.getLookAngle().x * swimBonus * 0.02,
+                    0,
+                    player.getLookAngle().z * swimBonus * 0.02
+                ));
             }
         });
     }

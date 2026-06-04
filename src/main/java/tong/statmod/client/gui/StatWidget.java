@@ -33,7 +33,7 @@ public class StatWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int level = ClientStatsCache.getLevel(stat);
         int xp = ClientStatsCache.getXp(stat);
-        int needed = (level + 1) * (level + 1) * 10;
+        int needed = tong.statmod.stats.StatCalculator.getXpForNextLevel(level);
 
         int right = getX() + 220;
         int bottom = getY() + WIDGET_HEIGHT;
@@ -52,8 +52,12 @@ public class StatWidget extends AbstractWidget {
         StatIconRenderer.renderIcon(graphics, stat.name(), getX() + 4, getY() + 5);
 
         // Name + Level
+        int levelColor;
+        if (level >= 100) levelColor = 0xFF55FF55;
+        else if (level >= 50) levelColor = 0xFFFFAA00;
+        else levelColor = TEXT_COLOR;
         drawInkText(graphics, font, stat.displayName, getX() + 24, getY() + 4, TEXT_COLOR);
-        drawInkText(graphics, font, "Niv. " + level, getX() + 160, getY() + 4, LEVEL_COLOR);
+        drawInkText(graphics, font, "Niv. " + level, getX() + 160, getY() + 4, levelColor);
 
         // XP bar
         int barX = getX() + 24;
@@ -73,6 +77,9 @@ public class StatWidget extends AbstractWidget {
             if (filled > 0) {
                 graphics.blit(xpFillTex, barX, barY, filled, barHeight, 0, 0, 64, 17, 64, 17);
             }
+            // XP percentage next to bar
+            String pctText = (int)(((float) xp / needed) * 100) + "%";
+            drawInkText(graphics, font, pctText, barX + barWidth + 2, barY - 2, XP_TEXT_COLOR);
         }
 
         // XP text right-aligned below bar
@@ -80,6 +87,43 @@ public class StatWidget extends AbstractWidget {
         if (!xpText.isEmpty()) {
             drawInkText(graphics, font, xpText, barX + barWidth - font.width(xpText), barY + 5, XP_TEXT_COLOR);
         }
+
+        // Tooltip on hover
+        if (mouseX >= getX() && mouseX <= getX() + 220 && mouseY >= getY() && mouseY <= getY() + WIDGET_HEIGHT) {
+            String effect = getStatEffectDescription(stat);
+            if (level >= 100) {
+                effect += " \u00a7a(MAXED)";
+            }
+            graphics.renderTooltip(font, Component.literal(effect), mouseX, mouseY);
+        }
+    }
+
+    private static String getStatEffectDescription(StatType stat) {
+        return switch (stat) {
+            case BRUTE_FORCE -> "+0.2% melee damage per level";
+            case BLADE_TECHNIQUE -> "+0.15% damage, +attack speed per level";
+            case RAPIDITE -> "+0.3% attack speed per level";
+            case AGILITY -> "+0.2% move speed per level";
+            case PHYSICAL_RESISTANCE -> "-0.3% damage taken per level";
+            case PHYSICAL_ENDURANCE -> "+0.2 hearts per level";
+            case PRECISION -> "+0.3% crit chance per level";
+            case ARCANE_POWER -> "+0.3% magic damage per level";
+            case WATER_AFFINITY -> "+0.5% swim speed per level";
+            case EARTH_AFFINITY -> "+0.3% mining speed per level";
+            case FIRE_AFFINITY -> "+0.5% fire damage per level";
+            case AIR_AFFINITY -> "+0.3% jump height per level";
+            case MAGIC_RESISTANCE -> "-0.3% magic damage taken per level";
+            case CASTING_SPEED -> "+0.3% item use speed per level";
+            case MANA_POOL -> "+1 max mana per level";
+            case ERUDITION -> "+0.5% XP bonus per level";
+            case TRACKING -> "+0.3% luck per level";
+            case KEEN_SENSES -> "+0.3 blocks detection per level";
+            case FORGING -> "+0.3% tool durability per level";
+            case COOKING -> "+0.3% food saturation per level";
+            case ALCHEMY -> "+0.3% potion duration per level";
+            case INTIMIDATION -> "+0.5 blocks fear range per level";
+            case WILLPOWER -> "-0.5% status duration per level";
+        };
     }
 
     @Override

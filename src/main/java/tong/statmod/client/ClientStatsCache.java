@@ -1,5 +1,7 @@
 package tong.statmod.client;
 
+import net.minecraft.client.Minecraft;
+import tong.statmod.client.feedback.CombatFeedbackRenderer;
 import tong.statmod.client.notification.LevelUpToast;
 import tong.statmod.stats.StatType;
 
@@ -12,19 +14,29 @@ public class ClientStatsCache {
     private static float mana = 0;
     private static int[] perkIds = new int[0];
     private static int perkPoints = 0;
+    private static boolean syncReceived = false;
 
     public static void updateAll(int[] newLevels, int[] newXp) {
         System.arraycopy(newLevels, 0, levels, 0, Math.min(newLevels.length, 23));
         System.arraycopy(newXp, 0, xp, 0, Math.min(newXp.length, 23));
+        syncReceived = true;
     }
 
     public static void updateStat(int index, int level, int statXp) {
         if (index >= 0 && index < 23) {
             int oldLevel = levels[index];
+            int oldXp = xp[index];
             levels[index] = level;
             xp[index] = statXp;
             if (level > oldLevel) {
                 LevelUpToast.onLevelUp(StatType.byIndex(index).displayName, level);
+            }
+            if (syncReceived && statXp > oldXp) {
+                int xpGained = statXp - oldXp;
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    CombatFeedbackRenderer.addXpPopup(mc.player, xpGained, StatType.byIndex(index).displayName);
+                }
             }
         }
     }

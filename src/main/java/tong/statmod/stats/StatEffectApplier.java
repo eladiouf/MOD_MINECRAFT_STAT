@@ -7,10 +7,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
@@ -30,6 +32,7 @@ public class StatEffectApplier {
     public static void onLivingHurt(LivingHurtEvent event) {
         // --- PLAYER ATTACKING ---
         if (event.getSource().getEntity() instanceof Player player) {
+            final boolean[] critHolder = new boolean[1];
             CapabilityHelper.withStats(player, stats -> {
                 float multiplier = 1.0f;
 
@@ -40,6 +43,7 @@ public class StatEffectApplier {
                 // Precision: critical hit
                 float critChance = StatCalculator.getCritChance(stats.getLevel(StatType.PRECISION.index));
                 boolean isCrit = player.getRandom().nextFloat() < critChance;
+                critHolder[0] = isCrit;
                 if (isCrit) multiplier *= 2.0f;
 
                 // Precision: arrow damage bonus (bow/crossbow)
@@ -67,20 +71,24 @@ public class StatEffectApplier {
                 }
 
                 // Intimidation: guaranteed debuff on direct hit
-                if (event.getEntity() instanceof LivingEntity) {
-                    LivingEntity target = (LivingEntity) event.getEntity();
-                    int intimid = stats.getLevel(StatType.INTIMIDATION.index);
-                    if (intimid > 0) {
-                        int dur = 40 + intimid;
+                LivingEntity target = event.getEntity();
+                int intimid = stats.getLevel(StatType.INTIMIDATION.index);
+                if (intimid > 0) {
+                    int dur = 40 + intimid;
+                    target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                        net.minecraft.world.effect.MobEffects.WEAKNESS, dur, Math.min(2, intimid / 30)));
+                    if (isCrit) {
                         target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                            net.minecraft.world.effect.MobEffects.WEAKNESS, dur, Math.min(2, intimid / 30)));
-                        if (isCrit) {
-                            target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                                net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, dur / 2, 0));
-                        }
+                            net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, dur / 2, 0));
                     }
                 }
             });
+            // Combat feedback: floating damage numbers
+            LivingEntity target = event.getEntity();
+            final float finalDamage = event.getAmount();
+            final boolean finalCrit = critHolder[0];
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                () -> () -> tong.statmod.client.feedback.CombatFeedbackRenderer.addDamageNumber(target, finalDamage, finalCrit));
         }
 
         // --- PLAYER BEING HIT ---

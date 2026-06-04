@@ -7,6 +7,7 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
+import tong.statmod.client.feedback.CombatFeedbackRenderer;
 import tong.statmod.client.hud.overlays.GlobalLevelOverlay;
 import tong.statmod.client.hud.overlays.SurvivalOverlay;
 
@@ -28,6 +29,16 @@ public class HUDManager {
             if (event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id()) ||
                 event.getOverlay().id().equals(VanillaGuiOverlay.FOOD_LEVEL.id())) {
                 event.setCanceled(true);
+            }
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT)
+    public static class CombatFeedbackLayer {
+        @SubscribeEvent
+        public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
+            if (event.getOverlay().id().equals(VanillaGuiOverlay.CHAT_PANEL.id())) {
+                CombatFeedbackRenderer.render(event.getGuiGraphics(), event.getPartialTick());
             }
         }
     }

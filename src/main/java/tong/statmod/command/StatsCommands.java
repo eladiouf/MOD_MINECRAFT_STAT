@@ -41,6 +41,12 @@ public class StatsCommands {
                 .then(Commands.argument("player", EntityArgument.player())
                     .requires(s -> s.hasPermission(2))
                     .executes(ctx -> listStats(ctx, EntityArgument.getPlayer(ctx, "player")))))
+            .then(Commands.literal("me")
+                .executes(ctx -> showMe(ctx, ctx.getSource().getPlayerOrException())))
+            .then(Commands.literal("help")
+                .executes(ctx -> showHelp(ctx)))
+            .then(Commands.literal("notifications")
+                .executes(ctx -> toggleNotifications(ctx, ctx.getSource().getPlayerOrException())))
             .then(Commands.literal("get")
                 .then(Commands.argument("stat", StringArgumentType.word())
                     .suggests(StatsCommands::suggestStats)
@@ -153,7 +159,27 @@ public class StatsCommands {
                 }))
             .executes(ctx -> {
                 ctx.getSource().sendSuccess(() -> Component.literal(
-                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset §8| §e/backup §8| §e/restore §8| §e/preset §8| §e/profile §8| §e/benchmark §8| §e/party §8| §e/challenge"), false);
+                    "\u00a76\u00a7lSTAT Mod \u00a77v1.0 \u00a7r\u00a7e- Commandes disponibles :"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod me \u00a77- Voir le r\u00e9sum\u00e9 de vos 5 meilleures stats"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod list \u00a77- Lister toutes vos stats"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod get <stat> \u00a77- Voir une stat sp\u00e9cifique"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod top <stat> \u00a77- Classement des joueurs"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod party \u00a77- Gestion de groupe (create/join/leave/members)"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod challenge \u00a77- Voir votre d\u00e9fi quotidien"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod notifications \u00a77- Activer/d\u00e9sactiver les notifications"), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7e/statmod help \u00a77- Afficher cette aide"), false);
+                if (ctx.getSource().hasPermission(2)) {
+                    ctx.getSource().sendSuccess(() -> Component.literal(
+                        "  \u00a78[Admin] \u00a7e/set, /xp, /reset, /backup, /restore, /preset, /profile, /benchmark"), false);
+                }
                 return 1;
             }));
     }
@@ -179,6 +205,80 @@ public class StatsCommands {
             builder.suggest(s.name().toLowerCase());
         }
         return builder.buildFuture();
+    }
+
+    private static int showMe(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        CapabilityHelper.withStats(player, stats -> {
+            // Collect all stats with their levels
+            List<StatType> sorted = new ArrayList<>();
+            for (StatType s : StatType.values()) sorted.add(s);
+            sorted.sort((a, b) -> Integer.compare(stats.getLevel(b.index), stats.getLevel(a.index)));
+
+            int global = 0;
+            for (StatType s : StatType.values()) global += stats.getLevel(s.index);
+            final int finalGlobal = global;
+            int avg = Math.round(finalGlobal / (float) PlayerStats.STAT_COUNT);
+
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a76\u00a7l=== " + player.getDisplayName().getString() + " \u00a7r\u00a76\u00a7l==="), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eNiveau Global: \u00a7f" + avg + " \u00a77(" + finalGlobal + " total)"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a76Top 5 Stats:"), false);
+            for (int i = 0; i < Math.min(5, sorted.size()); i++) {
+                StatType s = sorted.get(i);
+                int lvl = stats.getLevel(s.index);
+                int xp = stats.getXp(s.index);
+                String bar = getCompactBar(lvl);
+                String color = lvl >= 100 ? "\u00a7a" : lvl >= 50 ? "\u00a7e" : "\u00a77";
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  " + color + s.displayName + "\u00a78: \u00a7f" + lvl + " " + bar + " \u00a77(" + xp + " XP)"), false);
+            }
+        });
+        return 1;
+    }
+
+    private static String getCompactBar(int level) {
+        int blocks = level / 10;
+        StringBuilder sb = new StringBuilder("\u00a7a\u2588");
+        for (int i = 0; i < blocks; i++) sb.append("\u2588");
+        sb.append("\u00a78");
+        for (int i = blocks; i < 10; i++) sb.append("\u2591");
+        return sb.toString();
+    }
+
+    private static int showHelp(CommandContext<CommandSourceStack> ctx) {
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7lSTAT Mod \u00a77v1.0 \u00a7r\u00a7e- Commandes disponibles :"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod me \u00a77- Voir le r\u00e9sum\u00e9 de vos 5 meilleures stats"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod list \u00a77- Lister toutes vos stats"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod get <stat> \u00a77- Voir une stat sp\u00e9cifique"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod top <stat> \u00a77- Classement des joueurs"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod party \u00a77- Gestion de groupe (create/join/leave/members)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod challenge \u00a77- Voir votre d\u00e9fi quotidien"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod notifications \u00a77- Activer/d\u00e9sactiver les notifications"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/statmod help \u00a77- Afficher cette aide"), false);
+        if (ctx.getSource().hasPermission(2)) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  \u00a78[Admin] \u00a7e/set, /xp, /reset, /backup, /restore, /preset, /profile, /benchmark"), false);
+        }
+        return 1;
+    }
+
+    private static int toggleNotifications(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        boolean current = player.getPersistentData().getBoolean("statmod_hide_notifications");
+        player.getPersistentData().putBoolean("statmod_hide_notifications", !current);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a7aNotifications: " + (!current ? "\u00a7cOFF" : "\u00a7aON")), true);
+        return 1;
     }
 
     private static int listStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {

@@ -7,6 +7,7 @@ import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.party.PartyManager;
 import tong.statmod.stats.StatType;
+import tong.statmod.world.RandomEvents;
 
 import java.util.UUID;
 
@@ -37,6 +38,9 @@ public class ActionXpHelper {
         CapabilityHelper.withStats(player, stats -> {
             int oldLevel = stats.getLevel(statIndex);
             int xp = tier.minXp() + player.getRandom().nextInt(tier.maxXp() - tier.minXp() + 1);
+            if (RandomEvents.isBonusXpActive()) {
+                xp *= 2;
+            }
             stats.addXp(statIndex, xp);
             int newLevel = stats.getLevel(statIndex);
             if (newLevel > oldLevel && newLevel > 0) {

@@ -17,7 +17,7 @@ public class Config
     // ── XP Progression ──
     public static final ForgeConfigSpec.IntValue XP_PER_LEVEL_MULTIPLIER = BUILDER
             .comment("Multiplier for XP required per level. Formula: (level + 1) * multiplier")
-            .defineInRange("xpPerLevelMultiplier", 50, 10, 500);
+            .defineInRange("xpPerLevelMultiplier", 40, 10, 500);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_COMMON_MIN = BUILDER
             .comment("Minimum XP awarded for COMMON actions")
@@ -45,11 +45,11 @@ public class Config
 
     public static final ForgeConfigSpec.IntValue WEAPON_XP_MIN = BUILDER
             .comment("Minimum weapon mastery XP per hit")
-            .defineInRange("weaponXpMin", 5, 1, 100);
+            .defineInRange("weaponXpMin", 8, 1, 100);
 
     public static final ForgeConfigSpec.IntValue WEAPON_XP_MAX = BUILDER
             .comment("Maximum weapon mastery XP per hit (random between min and max)")
-            .defineInRange("weaponXpMax", 10, 1, 100);
+            .defineInRange("weaponXpMax", 15, 1, 100);
 
     public static final ForgeConfigSpec.IntValue WEAPON_MASTERY_MAX_LEVEL = BUILDER
             .comment("Maximum level for weapon mastery")
@@ -92,7 +92,7 @@ public class Config
     // ── Thirst System ──
     public static final ForgeConfigSpec.DoubleValue THIRST_BASE_DECAY = BUILDER
             .comment("Base thirst decay per tick")
-            .defineInRange("thirstBaseDecay", 0.003, 0.0, 1.0);
+            .defineInRange("thirstBaseDecay", 0.002, 0.0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_SPRINT_COST = BUILDER
             .comment("Additional thirst cost per tick while sprinting")
@@ -125,11 +125,11 @@ public class Config
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_DAY_RATE = BUILDER
             .comment("Passive fatigue accumulation per tick during day")
-            .defineInRange("fatigueDayRate", 0.0003, 0.0, 100.0);
+            .defineInRange("fatigueDayRate", 0.0002, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_NIGHT_RATE = BUILDER
             .comment("Passive fatigue accumulation per tick during night")
-            .defineInRange("fatigueNightRate", 0.0005, 0.0, 100.0);
+            .defineInRange("fatigueNightRate", 0.0003, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_UNDERGROUND_RATE = BUILDER
             .comment("Passive fatigue accumulation per tick underground")
@@ -141,7 +141,7 @@ public class Config
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_SPRINT_COST = BUILDER
             .comment("Fatigue added per sprint tick")
-            .defineInRange("fatigueSprintCost", 0.05, 0.0, 100.0);
+            .defineInRange("fatigueSprintCost", 0.03, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_JUMP_COST = BUILDER
             .comment("Fatigue added per jump")
@@ -157,7 +157,7 @@ public class Config
 
     public static final ForgeConfigSpec.IntValue FATIGUE_MAX_CAPACITY = BUILDER
             .comment("Base max fatigue capacity (endurance adds +5 per level)")
-            .defineInRange("fatigueMaxCapacity", 500, 50, 5000);
+            .defineInRange("fatigueMaxCapacity", 750, 50, 5000);
 
     public static final ForgeConfigSpec.IntValue FATIGUE_EXHAUSTED_DAMAGE_INTERVAL = BUILDER
             .comment("Ticks between damage ticks when exhausted (100% fatigue)")

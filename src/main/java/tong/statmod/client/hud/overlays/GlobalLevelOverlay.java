@@ -11,74 +11,69 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.client.ClientStatsCache;
-import tong.statmod.client.hud.components.HudBar;
-import tong.statmod.client.hud.animation.LerpedValue;
-import tong.statmod.client.texture.TextureCache;
-
-import static tong.statmod.client.texture.TextureCache.drawInkText;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GlobalLevelOverlay implements IGuiOverlay {
     public static final GlobalLevelOverlay INSTANCE = new GlobalLevelOverlay();
-
-    private static final int PANEL_BG = 0x66D4C494;
-    private static final int PANEL_BORDER = 0xFF8B4513;
-    private static final int XP_BG_COLOR = 0xFFB8965A;
-    private static final int XP_GRADIENT_START = 0xFF8B4513;
-    private static final int XP_GRADIENT_END = 0xFFD2691E;
-    private static final int LEVEL_COLOR = 0xFF3A1A00;
-
-    private static final int XP_BAR_WIDTH = 100;
-    private static final int XP_BAR_HEIGHT = 4;
-
-    private final HudBar xpBar = new HudBar(XP_BAR_WIDTH, XP_BAR_HEIGHT, 0.08f);
-    private final LerpedValue levelLerp = new LerpedValue(0, 0.1f);
-    private int lastLevel = -1;
+    private static final ResourceLocation XP_BAR = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "gui/xp_bar_fill");
+    private static final int BAR_WIDTH = 100;
+    private static final int BAR_HEIGHT = 6;
+    private static int lastGlobalLevel = -1;
+    private static long levelUpTime = 0;
+    private static int comboCount = 0;
+    private static long lastHitTime = 0;
 
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.options.hideGui) return;
+        if (mc == null || mc.player == null || mc.options.hideGui) return;
 
         int globalLevel = ClientStatsCache.getGlobalLevel();
-        float xpProgress = ClientStatsCache.getGlobalXpProgress();
+        float progress = ClientStatsCache.getGlobalXpProgress();
 
-        levelLerp.chase(globalLevel);
-        xpBar.setFill(xpProgress);
+        if (globalLevel > lastGlobalLevel && lastGlobalLevel != -1) {
+            levelUpTime = System.currentTimeMillis();
+        }
+        lastGlobalLevel = globalLevel;
 
-        int x = 4;
-        int y = 4;
-
-        // Panel background
-        graphics.fill(x - 2, y - 2, x + XP_BAR_WIDTH + 6, y + 26, PANEL_BG);
-        // Panel border
-        graphics.fill(x - 2, y - 2, x + XP_BAR_WIDTH + 6, y - 1, PANEL_BORDER);
-        graphics.fill(x - 2, y + 25, x + XP_BAR_WIDTH + 6, y + 26, PANEL_BORDER);
-        graphics.fill(x - 2, y - 2, x - 1, y + 26, PANEL_BORDER);
-        graphics.fill(x + XP_BAR_WIDTH + 5, y - 2, x + XP_BAR_WIDTH + 6, y + 26, PANEL_BORDER);
-
-        var font = Minecraft.getInstance().font;
-
-        // Level text
-        String levelText = "\u2726 Niveau " + globalLevel;
-        drawInkText(graphics, font, levelText, x, y, LEVEL_COLOR);
-
-        // XP bar background and fill
-        graphics.fill(x, y + 12, x + XP_BAR_WIDTH, y + 12 + XP_BAR_HEIGHT, XP_BG_COLOR);
-        ResourceLocation xpFillTex = TextureCache.get("xp_bar_fill.png");
-        int filledW = (int)(xpProgress * XP_BAR_WIDTH);
-        if (filledW > 0) {
-            graphics.blit(xpFillTex, x, y + 12, filledW, XP_BAR_HEIGHT, 0, 0, 64, 17, 64, 17);
+        long now = System.currentTimeMillis();
+        if (comboCount > 0 && now - lastHitTime > 3000) {
+            comboCount = 0;
         }
 
-        // XP percentage
-        String pctText = Math.round(xpProgress * 100) + "%";
-        drawInkText(graphics, font, pctText, x + XP_BAR_WIDTH + 4, y + 10, 0xFF6B4C1E);
+        int barX = screenWidth / 2 - BAR_WIDTH / 2;
+        int barY = 2;
+        graphics.fill(barX - 2, barY - 2, barX + BAR_WIDTH + 2, barY + BAR_HEIGHT + 2, 0x80000000);
 
-        if (globalLevel > lastLevel && lastLevel >= 0) {
-            graphics.fill(0, 0, screenWidth, screenHeight, 0x60FFFFFF);
+        graphics.fill(barX, barY, barX + BAR_WIDTH, barY + BAR_HEIGHT, 0xFF333333);
+        int fillWidth = (int)(BAR_WIDTH * progress);
+        int barColor = 0xFF44AA44;
+        if (progress >= 0.9f) barColor = 0xFFFFAA00;
+        if (progress >= 1.0f) barColor = 0xFF55FFFF;
+        graphics.fill(barX, barY, barX + fillWidth, barY + BAR_HEIGHT, barColor);
+
+        String levelText = "Lv." + globalLevel;
+        int textColor = globalLevel >= 80 ? 0xFFFFAA00 : globalLevel >= 50 ? 0xFFAAAAFF : 0xFFFFFFFF;
+        float animScale = 1.0f;
+        if (now - levelUpTime < 1000) {
+            animScale = 1.0f + (1.0f - (now - levelUpTime) / 1000.0f) * 0.5f;
+            textColor = 0xFF55FF55;
         }
-        lastLevel = globalLevel;
+        graphics.pose().pushPose();
+        graphics.pose().translate(barX, barY - 12, 0);
+        graphics.pose().scale(animScale, animScale, 1);
+        graphics.drawString(mc.font, levelText, (BAR_WIDTH - mc.font.width(levelText)) / 2, 0, textColor);
+        graphics.pose().popPose();
+
+        String pctText = (int)(progress * 100) + "%";
+        graphics.drawString(mc.font, pctText, barX + BAR_WIDTH + 4, barY, 0xFF888888);
+
+        if (comboCount > 0) {
+            String comboText = comboCount + "x COMBO";
+            int alpha = (int)(Math.max(0, (3000 - (now - lastHitTime)) / 3000.0) * 255);
+            int comboColor = (alpha << 24) | 0xFFFF5500;
+            graphics.drawString(mc.font, comboText, barX, barY + BAR_HEIGHT + 4, comboColor);
+        }
     }
 
     @SubscribeEvent
@@ -86,7 +81,12 @@ public class GlobalLevelOverlay implements IGuiOverlay {
         if (event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
-        INSTANCE.levelLerp.tick();
-        INSTANCE.xpBar.tick();
     }
+
+    public static void onHit() {
+        comboCount++;
+        lastHitTime = System.currentTimeMillis();
+    }
+
+    public static void resetCombo() { comboCount = 0; }
 }

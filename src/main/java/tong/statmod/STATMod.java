@@ -27,6 +27,7 @@ import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.integration.EpicParcoolCompat;
 import tong.statmod.integration.FtbRanksIntegration;
 import tong.statmod.integration.FtbTeamsIntegration;
+import tong.statmod.integration.ModCompatHandler;
 
 import tong.statmod.sound.ModSounds;
 import tong.statmod.item.CreativeTab;
@@ -97,6 +98,7 @@ public class STATMod
         SkillRequirementRegistry.init();
         PluginManager.loadPlugins();
         CompatibilityChecker.check();
+        ModCompatHandler.logLoadedMods();
         event.enqueueWork(() -> {
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(Potions.AWKWARD, Items.SUGAR, ModPotions.ADRENALINE.get()));
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.REDSTONE, ModPotions.LONG_ADRENALINE.get()));

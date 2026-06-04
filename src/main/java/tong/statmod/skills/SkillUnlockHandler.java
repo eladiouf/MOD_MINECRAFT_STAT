@@ -5,7 +5,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.stats.StatType;
 
@@ -37,7 +37,7 @@ public class SkillUnlockHandler {
     }
 
     public static void syncAllSkills(ServerPlayer player) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             for (StatType stat : StatType.values()) {
                 int level = stats.getLevel(stat.index);
                 for (int i = 0; i < TIERS.length; i++) {

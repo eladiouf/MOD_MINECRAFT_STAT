@@ -8,7 +8,7 @@ import yesman.epicfight.skill.SkillCategory;
  * CLASS_ARTS is a custom skill slot for our weapon innate skills.
  */
 public enum StatModSkillCategories implements SkillCategory {
-    CLASS_ARTS(true, true, true, new ResourceLocation("statmod", "textures/gui/skills/class_arts/class_arts.png"));
+    CLASS_ARTS(true, true, true, ResourceLocation.fromNamespaceAndPath("statmod", "textures/gui/skills/class_arts/class_arts.png"));
 
     private final boolean shouldSave;
     private final boolean shouldSynchronize;

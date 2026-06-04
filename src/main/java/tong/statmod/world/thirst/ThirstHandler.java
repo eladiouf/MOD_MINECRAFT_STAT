@@ -9,6 +9,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
 
@@ -26,7 +27,7 @@ public class ThirstHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(ThirstProvider.THIRST).ifPresent(thirst -> {
+        CapabilityHelper.withThirst(player, thirst -> {
             if (player.isCreative() || player.isSpectator()) return;
 
             float total = BASE_DECAY;
@@ -109,7 +110,7 @@ public class ThirstHandler {
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (!(event.getPlayer() instanceof ServerPlayer player)) return;
 
-        player.getCapability(ThirstProvider.THIRST).ifPresent(thirst -> {
+        CapabilityHelper.withThirst(player, thirst -> {
             thirst.reduceThirst(BLOCK_BREAK_COST);
             NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), player);
         });

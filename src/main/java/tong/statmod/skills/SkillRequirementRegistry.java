@@ -9,7 +9,7 @@ import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.stats.StatType;
 
 /**
@@ -346,12 +346,12 @@ public class SkillRequirementRegistry {
     // --- Registration helpers ---
 
     private static void register(String skillId, StatType stat, int level) {
-        REQUIREMENTS.computeIfAbsent(new ResourceLocation(skillId), k -> new ArrayList<>())
+        REQUIREMENTS.computeIfAbsent(ResourceLocation.parse(skillId), k -> new ArrayList<>())
             .add(new StatRequirement(stat, level));
     }
 
     private static void register(String skillId, StatType stat1, int level1, StatType stat2, int level2) {
-        List<StatRequirement> reqs = REQUIREMENTS.computeIfAbsent(new ResourceLocation(skillId), k -> new ArrayList<>());
+        List<StatRequirement> reqs = REQUIREMENTS.computeIfAbsent(ResourceLocation.parse(skillId), k -> new ArrayList<>());
         reqs.add(new StatRequirement(stat1, level1));
         reqs.add(new StatRequirement(stat2, level2));
     }
@@ -370,7 +370,7 @@ public class SkillRequirementRegistry {
         List<StatRequirement> reqs = getRequirements(skillId);
         if (reqs.isEmpty()) return true;
 
-        return player.getCapability(PlayerStatsProvider.PLAYER_STATS).map(stats -> {
+        return CapabilityHelper.getStats(player).map(stats -> {
             for (StatRequirement req : reqs) {
                 if (stats.getLevel(req.stat().index) < req.minLevel()) {
                     return false;

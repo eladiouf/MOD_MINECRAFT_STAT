@@ -53,7 +53,7 @@ public class MoverSkill extends Skill {
      * Play an Epic Fight animation on the player
      */
     private void playAnim(ServerPlayerPatch playerPatch, String animName) {
-        var accessor = AnimationManager.byKey(new ResourceLocation("epicfight", animName));
+        var accessor = AnimationManager.byKey(ResourceLocation.fromNamespaceAndPath("epicfight", animName));
         if (accessor != null) {
             playerPatch.playAnimation(accessor, 0.0F);
         }

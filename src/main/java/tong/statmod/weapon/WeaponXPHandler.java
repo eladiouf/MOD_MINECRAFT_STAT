@@ -6,9 +6,8 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.stats.StatType;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
@@ -23,13 +22,13 @@ public class WeaponXPHandler {
         WeaponType weaponType = determineWeaponType(player);
         if (weaponType == null) return;
 
-        player.getCapability(WeaponMasteryProvider.WEAPON_MASTERY).ifPresent(mastery -> {
+        CapabilityHelper.withWeaponMastery(player, mastery -> {
             int xp = 5 + player.getRandom().nextInt(6);
             mastery.addXp(weaponType.ordinal(), xp);
 
             StatType primaryStat = mapWeaponToStat(weaponType);
             if (primaryStat != null) {
-                player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                CapabilityHelper.withStats(player, stats -> {
                     stats.addXp(primaryStat.index, xp / 2);
                 });
             }
@@ -37,20 +36,22 @@ public class WeaponXPHandler {
     }
 
     private static WeaponType determineWeaponType(ServerPlayer player) {
-        var cap = player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
-        if (cap.isPresent() && cap.resolve().isPresent()) {
-            Object patch = cap.resolve().get();
-            if (patch instanceof ServerPlayerPatch playerPatch) {
+        var ref = new WeaponType[1];
+        CapabilityHelper.withEpicFight(player, cap -> {
+            if (cap instanceof ServerPlayerPatch playerPatch) {
                 CapabilityItem itemCap = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
                 if (itemCap != null && !itemCap.isEmpty()) {
                     WeaponCategory cat = itemCap.getWeaponCategory();
                     for (WeaponType type : WeaponType.values()) {
-                        if (type.epicFightCategory == cat) return type;
+                        if (type.epicFightCategory == cat) {
+                            ref[0] = type;
+                            return;
+                        }
                     }
                 }
             }
-        }
-        return null;
+        });
+        return ref[0];
     }
 
     private static StatType mapWeaponToStat(WeaponType weapon) {

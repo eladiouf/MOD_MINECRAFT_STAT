@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class StatEffectApplier {
     public static void onLivingHurt(LivingHurtEvent event) {
         // --- PLAYER ATTACKING ---
         if (event.getSource().getEntity() instanceof Player player) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            CapabilityHelper.withStats(player, stats -> {
                 float multiplier = 1.0f;
 
                 // Brute Force + Blade Technique
@@ -85,7 +85,7 @@ public class StatEffectApplier {
 
         // --- PLAYER BEING HIT ---
         if (event.getEntity() instanceof Player player) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            CapabilityHelper.withStats(player, stats -> {
                 // Physical Resistance
                 float reduction = StatCalculator.getDamageReduction(stats.getLevel(StatType.PHYSICAL_RESISTANCE.index));
                 event.setAmount(event.getAmount() * (1.0f - reduction));
@@ -110,7 +110,7 @@ public class StatEffectApplier {
     }
 
     public static void applyAllBonuses(ServerPlayer player) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             // Physical Endurance → bonus hearts
             AttributeInstance maxHealth = player.getAttribute(Attributes.MAX_HEALTH);
             if (maxHealth != null) {
@@ -183,7 +183,7 @@ public class StatEffectApplier {
     @SubscribeEvent
     public static void onXpDrop(LivingExperienceDropEvent event) {
         if (!(event.getAttackingPlayer() instanceof ServerPlayer player)) return;
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             float xpBonus = StatCalculator.getXpBonus(stats.getLevel(StatType.ERUDITION.index));
             if (xpBonus > 0) {
                 int extra = Math.round(event.getDroppedExperience() * xpBonus);

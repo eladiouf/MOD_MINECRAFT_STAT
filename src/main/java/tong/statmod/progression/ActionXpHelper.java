@@ -1,8 +1,7 @@
 package tong.statmod.progression;
 
 import net.minecraft.server.level.ServerPlayer;
-import tong.statmod.capability.PlayerStats;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.StatUpdatePacket;
 
@@ -23,7 +22,7 @@ public class ActionXpHelper {
     }
 
     public static void awardXp(ServerPlayer player, int statIndex, XpTier tier) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int oldLevel = stats.getLevel(statIndex);
             int xp = tier.minXp + player.getRandom().nextInt(tier.maxXp - tier.minXp + 1);
             stats.addXp(statIndex, xp);

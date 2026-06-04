@@ -16,7 +16,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tong.statmod.capability.PlayerStats;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.integration.EpicParcoolCompat;
@@ -31,12 +31,9 @@ import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.skill.SkillCategory;
 import tong.statmod.stats.StatRegistry;
 import tong.statmod.world.effect.ModEffects;
-import tong.statmod.fatigue.FatigueProvider;
 import tong.statmod.network.FatiguePacket;
 import tong.statmod.network.ThirstPacket;
 import tong.statmod.network.SyncPerksPacket;
-import tong.statmod.perks.PerkProvider;
-import tong.statmod.world.thirst.ThirstProvider;
 import net.minecraftforge.fml.config.ModConfig;
 
 @Mod(STATMod.MODID)
@@ -93,7 +90,7 @@ public class STATMod
         @SubscribeEvent
         public static void onPlayerLogin(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                serverPlayer.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                CapabilityHelper.withStats(serverPlayer, stats -> {
                     int[] levels = new int[PlayerStats.STAT_COUNT];
                     int[] xp = new int[PlayerStats.STAT_COUNT];
                     for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
@@ -102,11 +99,11 @@ public class STATMod
                     }
                     NetworkHandler.sendToPlayer(new SyncAllStatsPacket(levels, xp), serverPlayer);
                 });
-                serverPlayer.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue ->
+                CapabilityHelper.withFatigue(serverPlayer, fatigue ->
                     NetworkHandler.sendToPlayer(new FatiguePacket(fatigue.getFatigue(), fatigue.getMaxFatigue()), serverPlayer));
-                serverPlayer.getCapability(ThirstProvider.THIRST).ifPresent(thirst ->
+                CapabilityHelper.withThirst(serverPlayer, thirst ->
                     NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), serverPlayer));
-                serverPlayer.getCapability(PerkProvider.PERKS).ifPresent(perks -> {
+                CapabilityHelper.withPerks(serverPlayer, perks -> {
                     int[] ids = perks.getUnlockedPerks().stream().mapToInt(i -> i).toArray();
                     NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), serverPlayer);
                 });

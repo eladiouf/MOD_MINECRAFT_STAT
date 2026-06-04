@@ -2,10 +2,9 @@ package tong.statmod.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
-import tong.statmod.perks.PerkProvider;
-import tong.statmod.capability.PlayerStatsProvider;
 
 import java.util.function.Supplier;
 
@@ -35,10 +34,10 @@ public class UnlockPerkPacket {
             Perk perk = Perk.byId(packet.perkId);
             if (perk == null) return;
 
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            CapabilityHelper.withStats(player, stats -> {
                 int statLevel = stats.getLevel(perk.stat.index);
 
-                player.getCapability(PerkProvider.PERKS).ifPresent(perkManager -> {
+                CapabilityHelper.withPerks(player, perkManager -> {
                     boolean success = perkManager.unlockPerk(perk, statLevel);
                     if (success) {
                         int[] unlockedIds = perkManager.getUnlockedPerks().stream()

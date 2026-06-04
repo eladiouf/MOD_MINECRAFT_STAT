@@ -264,15 +264,15 @@ public class SkillRegistry {
         // ===== MOVER (3) =====
         QUICK_STEP = worker.build("quick_step",
             builder -> new MoverSkill(builder, MoverSkill.MoverType.QUICK_STEP),
-            Skill.createMoverBuilder().setRegistryName(new ResourceLocation(STATMod.MODID, "quick_step"))
+            Skill.createMoverBuilder().setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "quick_step"))
                 .setCategory(SkillCategories.MOVER));
         SHADOW_LEAP = worker.build("shadow_leap",
             builder -> new MoverSkill(builder, MoverSkill.MoverType.SHADOW_LEAP),
-            Skill.createMoverBuilder().setRegistryName(new ResourceLocation(STATMod.MODID, "shadow_leap"))
+            Skill.createMoverBuilder().setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "shadow_leap"))
                 .setCategory(SkillCategories.MOVER));
         WIND_DASH = worker.build("wind_dash",
             builder -> new MoverSkill(builder, MoverSkill.MoverType.WIND_DASH),
-            Skill.createMoverBuilder().setRegistryName(new ResourceLocation(STATMod.MODID, "wind_dash"))
+            Skill.createMoverBuilder().setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "wind_dash"))
                 .setCategory(SkillCategories.MOVER));
 
         // ===== GUARD (3) =====
@@ -370,7 +370,7 @@ public class SkillRegistry {
     @SuppressWarnings("unchecked")
     private static SkillBuilder<Skill> makeBuilder(String name, yesman.epicfight.skill.SkillCategory category) {
         SkillBuilder<Skill> builder = (SkillBuilder<Skill>) Skill.createBuilder();
-        builder.setRegistryName(new ResourceLocation(STATMod.MODID, name));
+        builder.setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, name));
         builder.setCategory(category);
         return builder;
     }
@@ -378,14 +378,14 @@ public class SkillRegistry {
     @SuppressWarnings("unchecked")
     private static SkillBuilder<PassiveSkill> makePassiveBuilder(String name) {
         SkillBuilder<PassiveSkill> builder = PassiveSkill.createPassiveBuilder();
-        builder.setRegistryName(new ResourceLocation(STATMod.MODID, name));
+        builder.setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, name));
         builder.setCategory(SkillCategories.PASSIVE);
         return builder;
     }
 
     private static GuardSkill.Builder makeGuardBuilder(String name) {
         GuardSkill.Builder builder = GuardSkill.createGuardBuilder();
-        builder.setRegistryName(new ResourceLocation(STATMod.MODID, name));
+        builder.setRegistryName(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, name));
         builder.setCategory(SkillCategories.GUARD);
         return builder;
     }

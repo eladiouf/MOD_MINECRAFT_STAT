@@ -14,7 +14,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.fatigue.FatigueManager;
 import tong.statmod.fatigue.FatigueProvider;
 import tong.statmod.network.FatiguePacket;
@@ -23,7 +23,6 @@ import tong.statmod.network.ThirstPacket;
 import tong.statmod.progression.ActionXpHelper;
 import tong.statmod.stats.StatType;
 import tong.statmod.world.thirst.ThirstManager;
-import tong.statmod.world.thirst.ThirstProvider;
 
 /**
  * Integration layer between STAT Mod and Epic Parcool / ParCool.
@@ -103,13 +102,13 @@ public class EpicParcoolCompat {
         }
 
         // 2. Consume thirst (STAT Mod) — float, works with tiny values
-        player.getCapability(ThirstProvider.THIRST).ifPresent(thirst -> {
+        CapabilityHelper.withThirst(player, thirst -> {
             thirst.reduceThirst(thirstCost);
             NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), player);
         });
 
         // 3. Increase fatigue (STAT Mod) — float, works with tiny values
-        player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+        CapabilityHelper.withFatigue(player, fatigue -> {
             fatigue.addFatigue(fatigueGain);
             NetworkHandler.sendToPlayer(new FatiguePacket(fatigue.getFatigue(), fatigue.getMaxFatigue()), player);
         });
@@ -119,7 +118,7 @@ public class EpicParcoolCompat {
      * Apply stat-based bonuses to a player for parkour.
      */
     public static void applyStatBonuses(ServerPlayer player) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int agility = stats.getLevel(StatType.AGILITY.index);
             int endurance = stats.getLevel(StatType.PHYSICAL_ENDURANCE.index);
 

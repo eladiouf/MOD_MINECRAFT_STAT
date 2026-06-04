@@ -11,7 +11,7 @@ import tong.statmod.STATMod;
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-        new ResourceLocation(STATMod.MODID, "main"),
+        ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals

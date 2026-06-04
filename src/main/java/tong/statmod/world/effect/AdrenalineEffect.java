@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.fatigue.FatigueProvider;
 
 public class AdrenalineEffect extends MobEffect {
@@ -14,7 +15,7 @@ public class AdrenalineEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity instanceof ServerPlayer player) {
-            player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+            CapabilityHelper.withFatigue(player, fatigue -> {
                 float rate = 1.0f + amplifier;
                 fatigue.reduceFatigue(rate);
             });

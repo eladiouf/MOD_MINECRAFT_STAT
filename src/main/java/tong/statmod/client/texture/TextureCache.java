@@ -14,7 +14,7 @@ public class TextureCache {
 
     public static ResourceLocation get(String path) {
         return textures.computeIfAbsent(path, p ->
-            new ResourceLocation(STATMod.MODID, GUI_PATH + p));
+            ResourceLocation.fromNamespaceAndPath(STATMod.MODID, GUI_PATH + p));
     }
 
     public static void drawNinePatch(GuiGraphics graphics, ResourceLocation tex,

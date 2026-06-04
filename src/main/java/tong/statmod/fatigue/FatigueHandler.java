@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.FatiguePacket;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
@@ -29,13 +29,13 @@ public class FatigueHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+        CapabilityHelper.withFatigue(player, fatigue -> {
             if (player.isSleeping()) {
                 return;
             }
 
             int[] levels = {0, 0};
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(s -> {
+            CapabilityHelper.withStats(player, s -> {
                 levels[0] = s.getLevel(5);
                 levels[1] = s.getLevel(22);
             });
@@ -95,7 +95,7 @@ public class FatigueHandler {
         float penalty = Config.FATIGUE_SLEEP_PENALTY_BASE.get().floatValue() * nights;
         // Willpower reduces penalty
         float[] adjusted = {penalty};
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int willpower = stats.getLevel(22);
             adjusted[0] = penalty * (1.0f - StatCalculator.getFatigueReduction(willpower));
         });
@@ -105,7 +105,7 @@ public class FatigueHandler {
     @SubscribeEvent
     public static void onLivingAttack(LivingDamageEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+            CapabilityHelper.withFatigue(player, fatigue -> {
                 fatigue.addFatigue(Config.FATIGUE_DAMAGE_COST.get().floatValue());
                 syncIfChanged(player, fatigue);
             });
@@ -116,7 +116,7 @@ public class FatigueHandler {
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player) {
-            player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+            CapabilityHelper.withFatigue(player, fatigue -> {
                 fatigue.addFatigue(Config.FATIGUE_BLOCK_BREAK_COST.get().floatValue());
                 syncIfChanged(player, fatigue);
             });
@@ -130,7 +130,7 @@ public class FatigueHandler {
         // Only reset fatigue on natural wake-up (at dawn), not on interrupted sleep
         if (event.wakeImmediately()) return;
 
-        player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+        CapabilityHelper.withFatigue(player, fatigue -> {
             fatigue.markSlept(player.level().getGameTime());
             syncIfChanged(player, fatigue);
         });
@@ -148,11 +148,11 @@ public class FatigueHandler {
             return;
         }
 
-        player.getCapability(ThirstProvider.THIRST).ifPresent(thirst -> {
+        CapabilityHelper.withThirst(player, thirst -> {
             thirst.addThirst(8);
             NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), player);
 
-            player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+            CapabilityHelper.withFatigue(player, fatigue -> {
                 // Base petit, scale avec fatigue
                 float base = 3.0f;
                 float fatiguePercent = fatigue.getFatigue() / fatigue.getMaxFatigue();
@@ -179,7 +179,7 @@ public class FatigueHandler {
         if (result.getItem().isEdible()) {
             FoodProperties food = result.getItem().getFoodProperties(result, player);
             if (food != null) {
-                player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+                CapabilityHelper.withFatigue(player, fatigue -> {
                     // Base: petit, scale avec la fatigue (plus fatigué = plus efficace)
                     float base = 1.0f + food.getNutrition() * 0.3f;
                     float fatiguePercent = fatigue.getFatigue() / fatigue.getMaxFatigue();
@@ -192,7 +192,7 @@ public class FatigueHandler {
     }
 
     private static void addThirstCost(ServerPlayer player, float amount) {
-        player.getCapability(ThirstProvider.THIRST).ifPresent(thirst -> {
+        CapabilityHelper.withThirst(player, thirst -> {
             thirst.reduceThirst(amount);
             // Sync handled by ThirstHandler.syncIfChanged — don't send packet here
         });

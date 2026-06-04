@@ -11,6 +11,7 @@ import tong.statmod.perks.PerkProvider;
 import tong.statmod.skills.SkillUnlockRegistry;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
+import tong.statmod.capability.CapabilityHelper;
 
 public class LevelUpHandler {
 
@@ -43,7 +44,7 @@ public class LevelUpHandler {
         int points = level == 100 ? 3 : (level == 50 || level % 20 == 0) ? 1 : 0;
         if (points > 0) {
             int p = points;
-            player.getCapability(PerkProvider.PERKS).ifPresent(perks -> perks.addPoints(p));
+            CapabilityHelper.withPerks(player, perks -> perks.addPoints(p));
         }
 
         // Grant Epic Fight skills at specific tiers (per spec: 20/50/80/100)

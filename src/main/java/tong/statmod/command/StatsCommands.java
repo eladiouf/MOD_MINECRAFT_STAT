@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import tong.statmod.STATMod;
 import tong.statmod.capability.PlayerStats;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.network.SyncAllStatsPacket;
@@ -81,7 +81,7 @@ public class StatsCommands {
     }
 
     private static int listStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             ctx.getSource().sendSuccess(() -> Component.literal(
                 "§6--- Stats de " + player.getDisplayName().getString() + " ---"), false);
             for (StatType s : StatType.values()) {
@@ -106,7 +106,7 @@ public class StatsCommands {
             ctx.getSource().sendFailure(Component.literal("§cStat inconnue. Utilise /stats list pour voir les stats disponibles."));
             return 0;
         }
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int level = stats.getLevel(stat.index);
             int xp = stats.getXp(stat.index);
             int needed = PlayerStats.getXpForNextLevel(level);
@@ -122,7 +122,7 @@ public class StatsCommands {
 
         // Handle "all" keyword - set all stats to the given level
         if (statInput.equalsIgnoreCase("all")) {
-            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            CapabilityHelper.withStats(player, stats -> {
                 for (StatType s : StatType.values()) {
                     stats.setLevel(s.index, newLevel);
                     stats.setXp(s.index, 0);
@@ -150,7 +150,7 @@ public class StatsCommands {
         }
         String name = stat.displayName;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             stats.setLevel(stat.index, newLevel);
             stats.setXp(stat.index, 0);
             NetworkHandler.sendToPlayer(new StatUpdatePacket(stat.index, newLevel, 0), player);
@@ -170,7 +170,7 @@ public class StatsCommands {
         int amount = IntegerArgumentType.getInteger(ctx, "amount");
         String name = stat.displayName;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int oldLevel = stats.getLevel(stat.index);
             stats.addXp(stat.index, amount);
             int newLevel = stats.getLevel(stat.index);
@@ -186,7 +186,7 @@ public class StatsCommands {
     }
 
     private static int resetStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
                 stats.setLevel(i, 0);
                 stats.setXp(i, 0);

@@ -17,6 +17,7 @@ import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.weapon.WeaponMasteryManager;
 import tong.statmod.weapon.WeaponMasteryProvider;
 import tong.statmod.world.thirst.ThirstManager;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.world.thirst.ThirstProvider;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
@@ -34,19 +35,19 @@ public class CapabilityHandler {
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(
-                new ResourceLocation(STATMod.MODID, "player_stats"),
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "player_stats"),
                 new PlayerStatsProvider());
             event.addCapability(
-                new ResourceLocation(STATMod.MODID, "fatigue"),
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "fatigue"),
                 new FatigueProvider());
             event.addCapability(
-                new ResourceLocation(STATMod.MODID, "thirst"),
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "thirst"),
                 new ThirstProvider());
             event.addCapability(
-                new ResourceLocation(STATMod.MODID, "perks"),
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "perks"),
                 new PerkProvider());
             event.addCapability(
-                new ResourceLocation(STATMod.MODID, "weapon_mastery"),
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "weapon_mastery"),
                 new WeaponMasteryProvider());
         }
     }
@@ -54,23 +55,23 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(oldStats -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(newStats -> {
+            CapabilityHelper.withStats((Player) event.getOriginal(), oldStats -> {
+                CapabilityHelper.withStats((Player) event.getEntity(), newStats -> {
                     newStats.copyFrom(oldStats);
                 });
             });
-            event.getOriginal().getCapability(FatigueProvider.FATIGUE).ifPresent(oldFatigue -> {
-                event.getEntity().getCapability(FatigueProvider.FATIGUE).ifPresent(newFatigue -> {
+            CapabilityHelper.withFatigue((Player) event.getOriginal(), oldFatigue -> {
+                CapabilityHelper.withFatigue((Player) event.getEntity(), newFatigue -> {
                     newFatigue.reset();
                 });
             });
-            event.getOriginal().getCapability(PerkProvider.PERKS).ifPresent(oldPerks -> {
-                event.getEntity().getCapability(PerkProvider.PERKS).ifPresent(newPerks -> {
+            CapabilityHelper.withPerks((Player) event.getOriginal(), oldPerks -> {
+                CapabilityHelper.withPerks((Player) event.getEntity(), newPerks -> {
                     newPerks.deserializeNBT(oldPerks.serializeNBT());
                 });
             });
-            event.getOriginal().getCapability(WeaponMasteryProvider.WEAPON_MASTERY).ifPresent(oldWeapon -> {
-                event.getEntity().getCapability(WeaponMasteryProvider.WEAPON_MASTERY).ifPresent(newWeapon -> {
+            CapabilityHelper.withWeaponMastery((Player) event.getOriginal(), oldWeapon -> {
+                CapabilityHelper.withWeaponMastery((Player) event.getEntity(), newWeapon -> {
                     newWeapon.deserializeNBT(oldWeapon.serializeNBT());
                 });
             });

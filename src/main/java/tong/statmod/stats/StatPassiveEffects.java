@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class StatPassiveEffects {
         tickCounter++;
         if (tickCounter % TICK_INTERVAL != 0) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             // Keen Senses: reveal nearby mobs when sneaking
             int keenLevel = stats.getLevel(StatType.KEEN_SENSES.index);
             if (keenLevel > 0 && player.isShiftKeyDown()) {
@@ -73,7 +73,7 @@ public class StatPassiveEffects {
         FoodProperties food = result.getItem().getFoodProperties(result, player);
         if (food == null) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int cookingLevel = stats.getLevel(StatType.COOKING.index);
             if (cookingLevel <= 0) return;
 
@@ -91,7 +91,7 @@ public class StatPassiveEffects {
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int forgingLevel = stats.getLevel(StatType.FORGING.index);
             if (forgingLevel <= 0) return;
 
@@ -109,7 +109,7 @@ public class StatPassiveEffects {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!event.getItem().is(Items.POTION)) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int alchemyLevel = stats.getLevel(StatType.ALCHEMY.index);
             if (alchemyLevel <= 0) return;
 
@@ -125,7 +125,7 @@ public class StatPassiveEffects {
         if (!player.isInWater() && !player.isUnderWater()) return;
         if (player.tickCount % 10 != 0) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int waterLevel = stats.getLevel(StatType.WATER_AFFINITY.index);
             if (waterLevel <= 0) return;
             float swimBonus = StatCalculator.getSwimSpeedBonus(waterLevel);
@@ -144,7 +144,7 @@ public class StatPassiveEffects {
     public static void onMobEffectAdded(MobEffectEvent.Added event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int willpowerLevel = stats.getLevel(StatType.WILLPOWER.index);
             if (willpowerLevel <= 0) return;
 
@@ -169,7 +169,7 @@ public class StatPassiveEffects {
     public static void onLivingHurtAoE(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+        CapabilityHelper.withStats(player, stats -> {
             int intimidationLevel = stats.getLevel(StatType.INTIMIDATION.index);
             if (intimidationLevel <= 0) return;
 

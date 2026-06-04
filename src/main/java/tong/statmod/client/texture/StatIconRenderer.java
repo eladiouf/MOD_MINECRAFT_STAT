@@ -8,7 +8,7 @@ import tong.statmod.STATMod;
 import java.util.*;
 
 public class StatIconRenderer {
-    public static final ResourceLocation ATLAS = new ResourceLocation(STATMod.MODID, "gui/stat_icons.png");
+    public static final ResourceLocation ATLAS = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "gui/stat_icons.png");
     public static final int ICON_SIZE = 128;
     public static final int COLS = 8;
     public static final int ROWS = 3;

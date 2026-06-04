@@ -7,6 +7,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.STATMod;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
@@ -16,7 +17,7 @@ public class FatigueEffects {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) return;
 
-        player.getCapability(FatigueProvider.FATIGUE).ifPresent(fatigue -> {
+        CapabilityHelper.withFatigue(player, fatigue -> {
             FatigueManager.FatigueThreshold threshold = fatigue.getThreshold();
 
             switch (threshold) {

@@ -12,9 +12,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import yesman.epicfight.skill.Skill;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 import yesman.epicfight.world.entity.eventlistener.SkillCastEvent;
@@ -37,7 +36,7 @@ public class SkillRequirementHandler {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+        CapabilityHelper.withEpicFight(player, cap -> {
             if (cap instanceof ServerPlayerPatch playerPatch) {
                 attachListener(playerPatch, player);
             }
@@ -52,7 +51,7 @@ public class SkillRequirementHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         attachedPlayers.remove(player.getUUID());
 
-        player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+        CapabilityHelper.withEpicFight(player, cap -> {
             if (cap instanceof ServerPlayerPatch playerPatch) {
                 attachListener(playerPatch, player);
             }

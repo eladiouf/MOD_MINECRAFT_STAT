@@ -20,7 +20,7 @@ import yesman.epicfight.skill.SkillBuilder;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
-import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.stats.StatType;
 
 /**
@@ -83,7 +83,7 @@ public class StatActiveSkill extends Skill {
      * Get the player's level in this skill's stat
      */
     private int getStatLevel(ServerPlayer player) {
-        return player.getCapability(PlayerStatsProvider.PLAYER_STATS)
+        return CapabilityHelper.getStats(player)
             .map(stats -> stats.getLevel(stat.index))
             .orElse(0);
     }
@@ -100,7 +100,7 @@ public class StatActiveSkill extends Skill {
      * Play an Epic Fight animation on the player
      */
     private void playAnim(ServerPlayerPatch playerPatch, String animName) {
-        var accessor = AnimationManager.byKey(new ResourceLocation("epicfight", animName));
+        var accessor = AnimationManager.byKey(ResourceLocation.fromNamespaceAndPath("epicfight", animName));
         if (accessor != null) {
             playerPatch.playAnimation(accessor, 0.0F);
         }

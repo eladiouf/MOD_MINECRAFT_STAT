@@ -6,7 +6,6 @@ import tong.statmod.stats.StatCalculator;
 
 public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
     public static final int WEAPON_COUNT = 13;
-    private static final int MAX_LEVEL = 50;
     private final int[] levels = new int[WEAPON_COUNT];
     private final int[] xp = new int[WEAPON_COUNT];
 
@@ -16,7 +15,8 @@ public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
     public void addXp(int index, int amount) {
         if (index < 0 || index >= WEAPON_COUNT) return;
         this.xp[index] += amount;
-        while (this.xp[index] >= StatCalculator.getXpForNextLevel(levels[index]) && levels[index] < MAX_LEVEL) {
+        int maxLevel = tong.statmod.Config.weaponMasteryMaxLevel;
+        while (this.xp[index] >= StatCalculator.getXpForNextLevel(levels[index]) && levels[index] < maxLevel) {
             this.xp[index] -= StatCalculator.getXpForNextLevel(levels[index]);
             levels[index]++;
         }

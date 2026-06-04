@@ -12,17 +12,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.util.LagDetector;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class PerkTickHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        long __start = System.nanoTime();
         if (event.phase != TickEvent.Phase.END) return;
         if (!(event.player instanceof ServerPlayer player)) return;
         if (player.tickCount % 20 != 0) return;
 
         CapabilityHelper.withPerks(player, perks -> {
+            if (perks.getAvailablePoints() == 0 && perks.getUnlockedPerks().isEmpty()) return;
+
             if (perks.isUnlocked(Perk.KEEN_NIGHT) && player.isShiftKeyDown()) {
                 player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 400, 0, false, false));
             }
@@ -101,5 +105,6 @@ public class PerkTickHandler {
                 }
             }
         });
+        LagDetector.check("PerkTickHandler", __start);
     }
 }

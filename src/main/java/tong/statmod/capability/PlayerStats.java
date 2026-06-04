@@ -2,6 +2,7 @@ package tong.statmod.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
+import tong.statmod.Config;
 import tong.statmod.STATMod;
 import tong.statmod.stats.StatCalculator;
 import tong.statmod.stats.StatType;
@@ -11,10 +12,15 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     private final int[] levels = new int[STAT_COUNT];
     private final int[] xp = new int[STAT_COUNT];
     private float currentMana;
-    private long manaBlockedUntil;
+    private long manaBlockedUntilTick;
+    private transient long serverGameTime;
 
     public int getLevel(int index) { return levels[index]; }
     public int getXp(int index) { return xp[index]; }
+
+    public void tickMana(net.minecraft.server.level.ServerPlayer player) {
+        this.serverGameTime = player.level().getGameTime();
+    }
 
     public void addXp(int index, int amount) {
         if (index < 0 || index >= STAT_COUNT) return;
@@ -29,7 +35,7 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     }
 
     public static int getXpForNextLevel(int level) {
-        return (level + 1) * 50;
+        return (level + 1) * Config.xpPerLevelMultiplier;
     }
 
     public void setLevel(int index, int level) { this.levels[index] = level; }
@@ -39,10 +45,8 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
         System.arraycopy(source.levels, 0, this.levels, 0, STAT_COUNT);
         System.arraycopy(source.xp, 0, this.xp, 0, STAT_COUNT);
         this.currentMana = source.currentMana;
-        this.manaBlockedUntil = source.manaBlockedUntil;
+        this.manaBlockedUntilTick = source.manaBlockedUntilTick;
     }
-
-    // ── Unified Mana ──
 
     public int getMaxMana() {
         return 50 + StatCalculator.getManaBonus(levels[StatType.MANA_POOL.index]);
@@ -66,15 +70,15 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     }
 
     public boolean isManaBlocked() {
-        return System.currentTimeMillis() < manaBlockedUntil;
+        return serverGameTime < manaBlockedUntilTick;
     }
 
     public void blockMana(long durationMs) {
-        this.manaBlockedUntil = System.currentTimeMillis() + durationMs;
+        this.manaBlockedUntilTick = serverGameTime + durationMs / 50;
     }
 
-    public long getManaBlockRemainingMs() {
-        return Math.max(0, manaBlockedUntil - System.currentTimeMillis());
+    public long getManaBlockRemainingTicks() {
+        return Math.max(0, manaBlockedUntilTick - serverGameTime);
     }
 
     @Override
@@ -83,7 +87,7 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
         tag.putIntArray("Levels", levels);
         tag.putIntArray("XP", xp);
         tag.putFloat("Mana", currentMana);
-        tag.putLong("ManaBlock", manaBlockedUntil);
+        tag.putLong("ManaBlockTick", manaBlockedUntilTick);
         return tag;
     }
 
@@ -94,6 +98,6 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
         System.arraycopy(loadedLevels, 0, levels, 0, Math.min(loadedLevels.length, STAT_COUNT));
         System.arraycopy(loadedXp, 0, xp, 0, Math.min(loadedXp.length, STAT_COUNT));
         this.currentMana = tag.getFloat("Mana");
-        this.manaBlockedUntil = tag.getLong("ManaBlock");
+        this.manaBlockedUntilTick = tag.getLong("ManaBlockTick");
     }
 }

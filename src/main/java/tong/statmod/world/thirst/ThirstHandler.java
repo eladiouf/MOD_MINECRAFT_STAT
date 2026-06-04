@@ -8,51 +8,44 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import tong.statmod.Config;
 import tong.statmod.STATMod;
+import tong.statmod.util.LagDetector;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class ThirstHandler {
-    private static final float BASE_DECAY = 0.003f;
-    private static final float SPRINT_COST = 0.05f;
-    private static final float JUMP_COST = 0.1f;
-    private static final float BLOCK_BREAK_COST = 0.5f;
-    private static final float ARMOR_COST_PER_PIECE = 0.005f;
-    private static final float HOT_BIOME_COST = 0.005f;
     private static final float HUNGER_MULTIPLIER = 1.0f;
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        long __start = System.nanoTime();
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         CapabilityHelper.withThirst(player, thirst -> {
             if (player.isCreative() || player.isSpectator()) return;
 
-            float total = BASE_DECAY;
+            float total = (float) Config.thirstBaseDecay;
 
-            // Sprint cost
             if (player.isSprinting()) {
-                total += SPRINT_COST;
+                total += (float) Config.thirstSprintCost;
             }
 
-            // Jump cost
             if (!player.onGround() && player.getDeltaMovement().y > 0.08) {
-                total += JUMP_COST;
+                total += (float) Config.thirstJumpCost;
             }
 
-            // Armor cost (per armor piece worn)
             for (ItemStack stack : player.getArmorSlots()) {
                 if (!stack.isEmpty()) {
-                    total += ARMOR_COST_PER_PIECE;
+                    total += (float) Config.thirstArmorCostPerPiece;
                 }
             }
 
-            // Hot biome cost (temperature > 1.0 = desert, badlands, nether, savanna)
             var biome = player.level().getBiome(player.blockPosition());
             if (biome.value().getBaseTemperature() > 1.0f) {
-                total += HOT_BIOME_COST;
+                total += (float) Config.thirstHotBiomeCost;
             }
 
             // Hunger multiplier (thirst decays faster when hungry)
@@ -86,6 +79,7 @@ public class ThirstHandler {
 
             syncIfChanged(player, thirst);
         });
+        LagDetector.check("ThirstHandler", __start);
     }
 
     private static final java.util.Map<java.util.UUID, Float> lastThirstSync = new java.util.HashMap<>();
@@ -111,7 +105,7 @@ public class ThirstHandler {
         if (!(event.getPlayer() instanceof ServerPlayer player)) return;
 
         CapabilityHelper.withThirst(player, thirst -> {
-            thirst.reduceThirst(BLOCK_BREAK_COST);
+            thirst.reduceThirst((float) Config.thirstBlockBreakCost);
             NetworkHandler.sendToPlayer(new ThirstPacket(thirst.getThirst()), player);
         });
     }

@@ -21,7 +21,7 @@ public class PerkManager implements INBTSerializable<CompoundTag> {
     public boolean unlockPerk(Perk perk, int currentStatLevel) {
         if (availablePoints <= 0) return false;
         if (unlockedPerks.contains(perk.id)) return false;
-        if (currentStatLevel < perk.levelRequired) return false;
+        if (currentStatLevel < perk.getEffectiveLevelRequired()) return false;
         unlockedPerks.add(perk.id);
         availablePoints--;
         return true;

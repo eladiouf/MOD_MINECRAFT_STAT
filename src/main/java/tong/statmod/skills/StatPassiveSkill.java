@@ -19,8 +19,7 @@ import tong.statmod.stats.StatType;
  */
 public class StatPassiveSkill extends PassiveSkill {
 
-    private static final UUID PASSIVE_UUID = UUID.fromString("f6a7b8c9-d0e1-2345-fabc-456789012345");
-
+    private final UUID passiveUuid;
     private final StatType stat;
     private final int tier;
 
@@ -28,6 +27,7 @@ public class StatPassiveSkill extends PassiveSkill {
         super(builder);
         this.stat = stat;
         this.tier = tier;
+        this.passiveUuid = UUID.nameUUIDFromBytes(("statmod:passive:" + stat.name() + ":tier" + tier).getBytes());
     }
 
     @Override
@@ -60,16 +60,16 @@ public class StatPassiveSkill extends PassiveSkill {
 
     private void removeEffect(ServerPlayer player) {
         AttributeInstance dmgAttr = player.getAttribute(Attributes.ATTACK_DAMAGE);
-        if (dmgAttr != null) dmgAttr.removeModifier(PASSIVE_UUID);
+        if (dmgAttr != null) dmgAttr.removeModifier(passiveUuid);
 
         AttributeInstance spdAttr = player.getAttribute(Attributes.ATTACK_SPEED);
-        if (spdAttr != null) spdAttr.removeModifier(PASSIVE_UUID);
+        if (spdAttr != null) spdAttr.removeModifier(passiveUuid);
 
         AttributeInstance movAttr = player.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (movAttr != null) movAttr.removeModifier(PASSIVE_UUID);
+        if (movAttr != null) movAttr.removeModifier(passiveUuid);
 
         AttributeInstance armAttr = player.getAttribute(Attributes.ARMOR);
-        if (armAttr != null) armAttr.removeModifier(PASSIVE_UUID);
+        if (armAttr != null) armAttr.removeModifier(passiveUuid);
     }
 
     // --- BRUTE FORCE: melee damage scaling ---
@@ -150,9 +150,9 @@ public class StatPassiveSkill extends PassiveSkill {
                                   double amount, String name) {
         AttributeInstance instance = player.getAttribute(attr);
         if (instance != null) {
-            instance.removeModifier(PASSIVE_UUID);
+            instance.removeModifier(passiveUuid);
             instance.addPermanentModifier(new AttributeModifier(
-                PASSIVE_UUID, "statmod:" + name, amount,
+                passiveUuid, "statmod:" + name, amount,
                 AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
     }

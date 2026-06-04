@@ -29,6 +29,8 @@ import tong.statmod.skills.StatModSkillCategories;
 import tong.statmod.skills.StatModSkillSlots;
 import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.skill.SkillCategory;
+import tong.statmod.api.PluginManager;
+import tong.statmod.compat.CompatibilityChecker;
 import tong.statmod.stats.StatRegistry;
 import tong.statmod.world.effect.ModEffects;
 import tong.statmod.network.FatiguePacket;
@@ -65,18 +67,20 @@ public class STATMod
         EpicParcoolCompat.init();
         SkillUnlockRegistry.init();
         SkillRequirementRegistry.init();
+        PluginManager.loadPlugins();
+        CompatibilityChecker.check();
         event.enqueueWork(() -> {
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(Potions.AWKWARD, Items.SUGAR, ModPotions.ADRENALINE.get()));
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.REDSTONE, ModPotions.LONG_ADRENALINE.get()));
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_ADRENALINE.get()));
         });
-        LOGGER.info("STAT Mod chargé !");
+        LOGGER.info("STAT Mod loaded!");
     }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        LOGGER.info("STAT Mod prêt sur le serveur");
+        LOGGER.info("STAT Mod ready on server");
     }
 
     @SubscribeEvent

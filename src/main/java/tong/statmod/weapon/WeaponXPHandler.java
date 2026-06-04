@@ -5,6 +5,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import tong.statmod.Config;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.stats.StatType;
@@ -23,7 +24,7 @@ public class WeaponXPHandler {
         if (weaponType == null) return;
 
         CapabilityHelper.withWeaponMastery(player, mastery -> {
-            int xp = 5 + player.getRandom().nextInt(6);
+            int xp = Config.weaponXpMin + player.getRandom().nextInt(Config.weaponXpMax - Config.weaponXpMin + 1);
             mastery.addXp(weaponType.ordinal(), xp);
 
             StatType primaryStat = mapWeaponToStat(weaponType);

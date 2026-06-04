@@ -72,10 +72,10 @@ public class EpicParcoolCompat {
         // Always register tick handler (it checks loaded flag internally)
         MinecraftForge.EVENT_BUS.register(EpicParcoolCompat.class);
         if (loaded) {
-            STATMod.LOGGER.info("Epic Parcool détecté — intégration STAT activée");
+            STATMod.LOGGER.info("Epic Parcool detected — STAT integration enabled");
             ParCoolHookRegistry.register();
         } else {
-            STATMod.LOGGER.info("Epic Parcool non détecté — intégration STAT désactivée");
+            STATMod.LOGGER.info("Epic Parcool not detected — STAT integration disabled");
         }
     }
 

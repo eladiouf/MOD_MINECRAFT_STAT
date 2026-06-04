@@ -8,23 +8,30 @@ import tong.statmod.network.StatUpdatePacket;
 public class ActionXpHelper {
 
     public enum XpTier {
-        COMMON(2, 3),
-        INTERMEDIATE(5, 8),
-        RARE(12, 20);
+        COMMON,
+        INTERMEDIATE,
+        RARE;
 
-        public final int minXp;
-        public final int maxXp;
-
-        XpTier(int min, int max) {
-            this.minXp = min;
-            this.maxXp = max;
+        public int minXp() {
+            return switch (this) {
+                case COMMON -> tong.statmod.Config.xpTierCommonMin;
+                case INTERMEDIATE -> tong.statmod.Config.xpTierIntermediateMin;
+                case RARE -> tong.statmod.Config.xpTierRareMin;
+            };
+        }
+        public int maxXp() {
+            return switch (this) {
+                case COMMON -> tong.statmod.Config.xpTierCommonMax;
+                case INTERMEDIATE -> tong.statmod.Config.xpTierIntermediateMax;
+                case RARE -> tong.statmod.Config.xpTierRareMax;
+            };
         }
     }
 
     public static void awardXp(ServerPlayer player, int statIndex, XpTier tier) {
         CapabilityHelper.withStats(player, stats -> {
             int oldLevel = stats.getLevel(statIndex);
-            int xp = tier.minXp + player.getRandom().nextInt(tier.maxXp - tier.minXp + 1);
+            int xp = tier.minXp() + player.getRandom().nextInt(tier.maxXp() - tier.minXp() + 1);
             stats.addXp(statIndex, xp);
             int newLevel = stats.getLevel(statIndex);
             if (newLevel > oldLevel && newLevel > 0) {

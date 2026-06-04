@@ -11,6 +11,7 @@ import tong.statmod.perks.PerkProvider;
 import tong.statmod.skills.SkillUnlockRegistry;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
+import tong.statmod.Config;
 import tong.statmod.capability.CapabilityHelper;
 
 public class LevelUpHandler {
@@ -40,22 +41,26 @@ public class LevelUpHandler {
         // Spawn particles
         spawnMilestoneParticles(player, level);
 
-        // Grant perk points: 20/40/50/60/80 → +1, 100 → +3
-        int points = level == 100 ? 3 : (level == 50 || level % 20 == 0) ? 1 : 0;
+        int tier1 = Config.perkTier1Level;
+        int tier2 = Config.perkTier2Level;
+        int tier3 = Config.perkTier3Level;
+        int points = level == 100 ? 3 : (level == tier1 || level == 40 || level == 50 || level == 60 || level == 80) ? 1 : 0;
         if (points > 0) {
             int p = points;
             CapabilityHelper.withPerks(player, perks -> perks.addPoints(p));
         }
 
-        // Grant Epic Fight skills at specific tiers (per spec: 20/50/80/100)
         StatType stat = StatType.byIndex(statIndex);
-        int skillTier = switch (level) {
-            case 20 -> 0;
-            case 50 -> 1;
-            case 80 -> 2;
-            case 100 -> 3;
-            default -> -1;
-        };
+        int s1 = Config.skillTier1Level;
+        int s2 = Config.skillTier2Level;
+        int s3 = Config.skillTier3Level;
+        int sa = Config.skillActiveLevel;
+        int skillTier;
+        if (level == s1) skillTier = 0;
+        else if (level == s2) skillTier = 1;
+        else if (level == s3) skillTier = 2;
+        else if (level == sa) skillTier = 3;
+        else skillTier = -1;
         if (skillTier >= 0) {
             var skill = SkillUnlockRegistry.getSkill(stat, skillTier);
             if (skill != null) {
@@ -74,7 +79,6 @@ public class LevelUpHandler {
 
         switch (level) {
             case 10 -> {
-                // ★ Swirl d'étoiles vertes autour du joueur
                 for (int i = 0; i < 20; i++) {
                     double angle = i * Math.PI * 2 / 20;
                     double px = x + Math.cos(angle) * 1.5;
@@ -83,13 +87,11 @@ public class LevelUpHandler {
                 }
             }
             case 20 -> {
-                // ★★ Colonne ascendante de END_ROD
                 for (int i = 0; i < 15; i++) {
                     levelWorld.sendParticles(ParticleTypes.END_ROD, x, y + i * 0.3, z, 2, 0.2, 0, 0.2, 0.02);
                 }
             }
             case 30 -> {
-                // ★★ Anneau de feu + ENCHANTED_HIT
                 for (int i = 0; i < 30; i++) {
                     double angle = i * Math.PI * 2 / 30;
                     double px = x + Math.cos(angle) * 2.0;
@@ -99,7 +101,6 @@ public class LevelUpHandler {
                 }
             }
             case 40 -> {
-                // ★★ Spirale d'âmes
                 for (int i = 0; i < 25; i++) {
                     double angle = i * Math.PI * 2 / 25;
                     double px = x + Math.cos(angle) * 1.2;
@@ -108,7 +109,6 @@ public class LevelUpHandler {
                 }
             }
             case 50 -> {
-                // ★★★ Grosse explosion + cercle GLOW + TOTEM
                 levelWorld.sendParticles(ParticleTypes.EXPLOSION, x, y + 0.5, z, 1, 0, 0, 0, 0);
                 for (int i = 0; i < 40; i++) {
                     double angle = i * Math.PI * 2 / 40;
@@ -119,7 +119,6 @@ public class LevelUpHandler {
                 levelWorld.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, x, y + 1.5, z, 15, 0.5, 0.5, 0.5, 0.5);
             }
             case 60 -> {
-                // ★★ Nuage de succès
                 for (int i = 0; i < 20; i++) {
                     double angle = i * Math.PI * 2 / 20;
                     double px = x + Math.cos(angle) * 1.8;
@@ -128,7 +127,6 @@ public class LevelUpHandler {
                 }
             }
             case 70 -> {
-                // ★★ Cercle de feu + sonic boom
                 for (int i = 0; i < 35; i++) {
                     double angle = i * Math.PI * 2 / 35;
                     double px = x + Math.cos(angle) * 2.2;
@@ -138,7 +136,6 @@ public class LevelUpHandler {
                 }
             }
             case 80 -> {
-                // ★★ Cercle de WAX_ON + poussière
                 for (int i = 0; i < 30; i++) {
                     double angle = i * Math.PI * 2 / 30;
                     double px = x + Math.cos(angle) * 2.0;
@@ -148,7 +145,6 @@ public class LevelUpHandler {
                 }
             }
             case 90 -> {
-                // ★★ Colonne d'électrons
                 for (int i = 0; i < 30; i++) {
                     double angle = i * Math.PI * 2 / 30;
                     double px = x + Math.cos(angle + i * 0.3) * 1.5;
@@ -157,10 +153,8 @@ public class LevelUpHandler {
                 }
             }
             case 100 -> {
-                // ★★★★ FEU D'ARTIFICE MASSIF
                 levelWorld.sendParticles(ParticleTypes.EXPLOSION_EMITTER, x, y + 2, z, 3, 0, 0, 0, 0);
                 levelWorld.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, x, y + 2, z, 30, 1.5, 1.0, 1.5, 1.0);
-                // Cercle de feu extérieur
                 for (int ring = 0; ring < 3; ring++) {
                     int count = 30 + ring * 10;
                     double radius = 2.0 + ring * 0.8;
@@ -172,7 +166,6 @@ public class LevelUpHandler {
                         levelWorld.sendParticles(ParticleTypes.GLOW, px, y + 1 + ring * 0.3, pz, 1, 0, 0, 0, 0.03);
                     }
                 }
-                // Pluie de coeurs
                 for (int i = 0; i < 20; i++) {
                     levelWorld.sendParticles(ParticleTypes.HEART,
                         x + (Math.random() - 0.5) * 4,

@@ -1,0 +1,4 @@
+# STAT Mod Plugin Service
+# Implement tong.statmod.api.IStatModPlugin and add your class name here to register.
+# Example: com.example.mymod.MyStatPlugin
+tong.statmod.compat.KubeJSPlugin

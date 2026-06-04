@@ -1,0 +1,27 @@
+name: Deploy Wiki
+
+on:
+  push:
+    branches: [experiment]
+    paths:
+      - 'src/main/java/**'
+      - 'tools/generate_wiki.py'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate wiki
+        run: python tools/generate_wiki.py
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/wiki
+          destination_dir: wiki

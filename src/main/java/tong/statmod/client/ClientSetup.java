@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tong.statmod.STATMod;
 import tong.statmod.client.gui.CharacterScreen;
+import tong.statmod.client.gui.DebugScreen;
 import tong.statmod.client.gui.PerkScreen;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -20,6 +21,8 @@ public class ClientSetup {
         "key.statmod.open_stats", InputConstants.KEY_P, "key.categories.statmod");
     public static final KeyMapping OPEN_PERKS_KEY = new KeyMapping(
         "key.statmod.open_perks", InputConstants.KEY_O, "key.categories.statmod");
+    public static final KeyMapping OPEN_DEBUG_KEY = new KeyMapping(
+        "key.statmod.open_debug", InputConstants.KEY_F8, "key.categories.statmod");
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
@@ -30,6 +33,7 @@ public class ClientSetup {
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(OPEN_STATS_KEY);
         event.register(OPEN_PERKS_KEY);
+        event.register(OPEN_DEBUG_KEY);
     }
 
     public static class ClientEventHandler {
@@ -40,6 +44,9 @@ public class ClientSetup {
             }
             if (OPEN_PERKS_KEY.consumeClick()) {
                 Minecraft.getInstance().setScreen(new PerkScreen());
+            }
+            if (OPEN_DEBUG_KEY.consumeClick()) {
+                Minecraft.getInstance().setScreen(new DebugScreen());
             }
         }
     }

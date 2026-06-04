@@ -135,6 +135,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
     // Epic Fight (local JAR)
     implementation fg.deobf("blank:epic-fight-20.14.17-mc1.20.1-forge:20.14.17")
 
@@ -220,5 +222,9 @@ publishing {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
 }

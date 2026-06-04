@@ -84,4 +84,13 @@ public enum Perk {
         }
         return null;
     }
+
+    public int getEffectiveLevelRequired() {
+        return switch (levelRequired) {
+            case 20 -> tong.statmod.Config.perkTier1Level;
+            case 50 -> tong.statmod.Config.perkTier2Level;
+            case 80 -> tong.statmod.Config.perkTier3Level;
+            default -> levelRequired;
+        };
+    }
 }

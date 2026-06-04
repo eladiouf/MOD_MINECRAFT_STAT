@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
 import tong.statmod.STATMod;
+import tong.statmod.util.LagDetector;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.FatiguePacket;
 import tong.statmod.network.NetworkHandler;
@@ -27,6 +28,7 @@ public class FatigueHandler {
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        long __start = System.nanoTime();
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         CapabilityHelper.withFatigue(player, fatigue -> {
@@ -43,40 +45,36 @@ public class FatigueHandler {
             int willpower = levels[1];
 
             // Set max fatigue capacity: base + endurance bonus
-            fatigue.setMaxFatigue(Config.FATIGUE_MAX_CAPACITY.get() + endurance * 5);
+            fatigue.setMaxFatigue(Config.fatigueMaxCapacity + endurance * 5);
 
             float enduranceMod = Math.max(0, 1.0f - endurance * 0.01f);
             float willpowerMod = Math.max(0, 1.0f - StatCalculator.getFatigueReduction(willpower));
 
-            // Passive fatigue accumulation by environment
             float baseRate;
             if (!player.level().dimensionType().hasCeiling() && player.level().canSeeSky(player.blockPosition())) {
                 long dayTime = player.level().getDayTime() % 24000;
                 boolean isNight = dayTime > 13000 || dayTime < 1000;
-                baseRate = (isNight ? Config.FATIGUE_NIGHT_RATE.get() : Config.FATIGUE_DAY_RATE.get()).floatValue();
+                baseRate = (float)(isNight ? Config.fatigueNightRate : Config.fatigueDayRate);
             } else {
-                baseRate = Config.FATIGUE_UNDERGROUND_RATE.get().floatValue();
+                baseRate = (float) Config.fatigueUndergroundRate;
             }
             fatigue.addFatigue(baseRate * enduranceMod);
 
-            // Sprint cost (once per second, not per tick)
             if (player.isSprinting() && player.tickCount % 20 == 0) {
-                fatigue.addFatigue(Config.FATIGUE_SPRINT_COST.get().floatValue() * willpowerMod);
+                fatigue.addFatigue((float) Config.fatigueSprintCost * willpowerMod);
                 addThirstCost(player, 0.03f);
             }
 
-            // Jump cost (once per jump, via wasOnGround tracking)
             boolean wasOnGround = wasOnGroundMap.getOrDefault(player.getUUID(), true);
             if (!player.onGround() && wasOnGround && player.getDeltaMovement().y > 0.0) {
-                fatigue.addFatigue(Config.FATIGUE_JUMP_COST.get().floatValue() * willpowerMod);
+                fatigue.addFatigue((float) Config.fatigueJumpCost * willpowerMod);
                 addThirstCost(player, 0.05f);
             }
-            wasOnGroundMap.put(player.getUUID(), player.onGround());
 
-            // Sneak recovery (only way to passively recover)
             if (player.isShiftKeyDown() && fatigue.getFatigue() > 0) {
-                fatigue.reduceFatigue(Config.FATIGUE_SNEAK_RECOVERY.get().floatValue());
+                fatigue.reduceFatigue((float) Config.fatigueSneakRecovery);
             }
+            wasOnGroundMap.put(player.getUUID(), player.onGround());
 
             // Apply sleep deprivation penalty at dawn
             long dayTime = player.level().getDayTime() % 24000;
@@ -88,11 +86,12 @@ public class FatigueHandler {
 
             syncIfChanged(player, fatigue);
         });
+        LagDetector.check("FatigueHandler", __start);
     }
 
     private static void applySleepPenalty(ServerPlayer player, FatigueManager fatigue) {
         int nights = fatigue.getSleeplessNights();
-        float penalty = Config.FATIGUE_SLEEP_PENALTY_BASE.get().floatValue() * nights;
+        float penalty = (float) Config.fatigueSleepPenaltyBase * nights;
         // Willpower reduces penalty
         float[] adjusted = {penalty};
         CapabilityHelper.withStats(player, stats -> {
@@ -106,7 +105,7 @@ public class FatigueHandler {
     public static void onLivingAttack(LivingDamageEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             CapabilityHelper.withFatigue(player, fatigue -> {
-                fatigue.addFatigue(Config.FATIGUE_DAMAGE_COST.get().floatValue());
+                fatigue.addFatigue((float) Config.fatigueDamageCost);
                 syncIfChanged(player, fatigue);
             });
             addThirstCost(player, 1.0f);
@@ -117,7 +116,7 @@ public class FatigueHandler {
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player) {
             CapabilityHelper.withFatigue(player, fatigue -> {
-                fatigue.addFatigue(Config.FATIGUE_BLOCK_BREAK_COST.get().floatValue());
+                fatigue.addFatigue((float) Config.fatigueBlockBreakCost);
                 syncIfChanged(player, fatigue);
             });
             addThirstCost(player, 0.3f);
@@ -154,7 +153,7 @@ public class FatigueHandler {
 
             CapabilityHelper.withFatigue(player, fatigue -> {
                 // Base petit, scale avec fatigue
-                float base = 3.0f;
+                float base = (float) Config.fatigueWaterBottleRecovery;
                 float fatiguePercent = fatigue.getFatigue() / fatigue.getMaxFatigue();
                 float multiplier = 1.0f + fatiguePercent * 2.0f;
                 fatigue.reduceFatigue(base * multiplier);

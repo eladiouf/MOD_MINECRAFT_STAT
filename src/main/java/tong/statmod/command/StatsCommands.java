@@ -19,6 +19,10 @@ import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.network.SyncAllStatsPacket;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
+import net.minecraft.nbt.TagParser;
+import tong.statmod.ConfigPresets;
+import tong.statmod.balance.BalanceBenchmark;
+import tong.statmod.profiling.Profiler;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -50,9 +54,41 @@ public class StatsCommands {
             .then(Commands.literal("reset")
                 .requires(s -> s.hasPermission(2))
                 .executes(ctx -> resetStats(ctx, ctx.getSource().getPlayerOrException())))
+            .then(Commands.literal("backup")
+                .requires(s -> s.hasPermission(2))
+                .executes(ctx -> backupStats(ctx, ctx.getSource().getPlayerOrException())))
+            .then(Commands.literal("restore")
+                .requires(s -> s.hasPermission(2))
+                .executes(ctx -> restoreStats(ctx, ctx.getSource().getPlayerOrException())))
+            .then(Commands.literal("preset")
+                .requires(s -> s.hasPermission(2))
+                .then(Commands.argument("preset", StringArgumentType.word())
+                    .suggests((ctx, builder) -> {
+                        for (ConfigPresets.Preset p : ConfigPresets.Preset.values()) {
+                            builder.suggest(p.name().toLowerCase());
+                        }
+                        return builder.buildFuture();
+                    })
+                    .executes(ctx -> applyPreset(ctx, ctx.getSource().getPlayerOrException()))))
+            .then(Commands.literal("profile")
+                .requires(s -> s.hasPermission(2))
+                .executes(ctx -> {
+                    Profiler.toggle();
+                    ctx.getSource().sendSuccess(() -> Component.literal(
+                        "§6Profile: §e" + (Profiler.isEnabled() ? "ENABLED" : "DISABLED — report saved")), true);
+                    return 1;
+                }))
+            .then(Commands.literal("benchmark")
+                .requires(s -> s.hasPermission(2))
+                .executes(ctx -> {
+                    BalanceBenchmark.run();
+                    ctx.getSource().sendSuccess(() -> Component.literal(
+                        "§aBenchmark complete — see config/statmod/balance-report.txt"), true);
+                    return 1;
+                }))
             .executes(ctx -> {
                 ctx.getSource().sendSuccess(() -> Component.literal(
-                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset"), false);
+                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset §8| §e/backup §8| §e/restore §8| §e/preset §8| §e/profile §8| §e/benchmark"), false);
                 return 1;
             }));
     }
@@ -198,5 +234,65 @@ public class StatsCommands {
             ctx.getSource().sendSuccess(() -> Component.literal("§aToutes les stats ont été réinitialisées."), true);
         });
         return 1;
+    }
+
+    private static int backupStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        CapabilityHelper.withStats(player, stats -> {
+            var tag = stats.serializeNBT();
+            String json = tag.toString();
+            java.io.File backupDir = new java.io.File("config/statmod/backups");
+            backupDir.mkdirs();
+            java.io.File file = new java.io.File(backupDir, player.getUUID() + "_" + System.currentTimeMillis() + ".nbt");
+            try (java.io.FileWriter fw = new java.io.FileWriter(file)) { fw.write(json); } catch (Exception ignored) {}
+            ctx.getSource().sendSuccess(() -> Component.literal("§aStats backup saved for §e" + player.getDisplayName().getString()), true);
+        });
+        return 1;
+    }
+
+    private static int restoreStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        java.io.File backupDir = new java.io.File("config/statmod/backups");
+        if (!backupDir.exists() || backupDir.listFiles() == null) {
+            ctx.getSource().sendFailure(Component.literal("§cNo backups found."));
+            return 0;
+        }
+        java.io.File[] files = backupDir.listFiles((d, n) -> n.startsWith(player.getUUID().toString()));
+        if (files == null || files.length == 0) {
+            ctx.getSource().sendFailure(Component.literal("§cNo backup found for this player."));
+            return 0;
+        }
+        java.io.File latest = files[files.length - 1];
+        try (java.io.FileReader fr = new java.io.FileReader(latest)) {
+            StringBuilder sb = new StringBuilder();
+            char[] buf = new char[1024]; int n;
+            while ((n = fr.read(buf)) != -1) sb.append(buf, 0, n);
+            net.minecraft.nbt.CompoundTag tag = TagParser.parseTag(sb.toString());
+            CapabilityHelper.withStats(player, stats -> {
+                stats.deserializeNBT(tag);
+                int[] levels = new int[PlayerStats.STAT_COUNT];
+                int[] xpArr = new int[PlayerStats.STAT_COUNT];
+                for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
+                    levels[i] = stats.getLevel(i);
+                    xpArr[i] = stats.getXp(i);
+                }
+                NetworkHandler.sendToPlayer(new SyncAllStatsPacket(levels, xpArr), player);
+                StatEffectApplier.applyAllBonuses(player);
+            });
+            ctx.getSource().sendSuccess(() -> Component.literal("§aStats restored from backup: §e" + latest.getName()), true);
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.literal("§cFailed to restore: " + e.getMessage()));
+        }
+        return 1;
+    }
+
+    private static int applyPreset(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        String presetName = StringArgumentType.getString(ctx, "preset").toUpperCase();
+        try {
+            ConfigPresets.Preset preset = ConfigPresets.Preset.valueOf(presetName);
+            ConfigPresets.applyPreset(player, preset);
+            return 1;
+        } catch (IllegalArgumentException e) {
+            ctx.getSource().sendFailure(Component.literal("§cUnknown preset. Use: easy, normal, hard"));
+            return 0;
+        }
     }
 }

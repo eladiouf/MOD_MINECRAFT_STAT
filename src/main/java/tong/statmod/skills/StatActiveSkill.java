@@ -30,17 +30,17 @@ import tong.statmod.stats.StatType;
  */
 public class StatActiveSkill extends Skill {
 
-    private static final Map<UUID, Long> cooldowns = new ConcurrentHashMap<>();
+    private static final Map<UUID, Long> cooldownEndTick = new ConcurrentHashMap<>();
     private static final Map<UUID, String> lastSkillUsed = new ConcurrentHashMap<>();
-    private static final Map<UUID, Long> lastSkillTime = new ConcurrentHashMap<>();
+    private static final Map<UUID, Long> lastSkillTick = new ConcurrentHashMap<>();
 
     private final StatType stat;
-    private final long cooldownMs;
+    private final long cooldownTicks;
 
     public StatActiveSkill(SkillBuilder<? extends Skill> builder, StatType stat, long cooldownMs) {
         super(builder);
         this.stat = stat;
-        this.cooldownMs = cooldownMs;
+        this.cooldownTicks = cooldownMs / 50;
     }
 
     @Override
@@ -49,8 +49,8 @@ public class StatActiveSkill extends Skill {
         if (!(container.getExecutor() instanceof ServerPlayerPatch playerPatch)) return false;
         ServerPlayer player = playerPatch.getOriginal();
 
-        Long lastUse = cooldowns.get(player.getUUID());
-        if (lastUse != null && System.currentTimeMillis() - lastUse < cooldownMs) return false;
+        Long endTick = cooldownEndTick.get(player.getUUID());
+        if (endTick != null && player.level().getGameTime() < endTick) return false;
         return true;
     }
 
@@ -60,9 +60,10 @@ public class StatActiveSkill extends Skill {
         if (!(container.getExecutor() instanceof ServerPlayerPatch playerPatch)) return;
         ServerPlayer player = playerPatch.getOriginal();
 
-        cooldowns.put(player.getUUID(), System.currentTimeMillis());
+        long gameTime = player.level().getGameTime();
+        cooldownEndTick.put(player.getUUID(), gameTime + cooldownTicks);
         lastSkillUsed.put(player.getUUID(), this.getRegistryName().getPath());
-        lastSkillTime.put(player.getUUID(), System.currentTimeMillis());
+        lastSkillTick.put(player.getUUID(), gameTime);
         container.setResource(container.getResource() - getConsumption());
 
         // Get stat level for scaling
@@ -395,21 +396,19 @@ public class StatActiveSkill extends Skill {
     }
 
     public StatType getStat() { return stat; }
-    public long getCooldownMs() { return cooldownMs; }
+    public long getCooldownTicks() { return cooldownTicks; }
 
     public static void clearCooldowns(UUID uuid) {
-        cooldowns.remove(uuid);
+        cooldownEndTick.remove(uuid);
         lastSkillUsed.remove(uuid);
-        lastSkillTime.remove(uuid);
+        lastSkillTick.remove(uuid);
     }
 
-    /**
-     * Check combo: if player used a specific skill recently
-     */
     public static boolean hasCombo(ServerPlayer player, String requiredSkill, long withinMs) {
         String last = lastSkillUsed.get(player.getUUID());
-        Long time = lastSkillTime.get(player.getUUID());
-        if (last == null || time == null) return false;
-        return last.equals(requiredSkill) && (System.currentTimeMillis() - time < withinMs);
+        Long tick = lastSkillTick.get(player.getUUID());
+        if (last == null || tick == null) return false;
+        long withinTicks = withinMs / 50;
+        return last.equals(requiredSkill) && (player.level().getGameTime() - tick < withinTicks);
     }
 }

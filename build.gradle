@@ -113,6 +113,10 @@ repositories {
     flatDir {
         dir 'libs'
     }
+    // JEI (optional - compile only)
+    maven { url "https://maven.blamejared.com" }
+    // REI (optional - compile only)
+    maven { url "https://maven.shedaniel.me" }
     maven {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
@@ -166,6 +170,11 @@ dependencies {
 
     // P1nero Bow (local JAR) - Epic Fight bow addon
     implementation fg.deobf("blank:p1nero_bow-forge1.20.1-20.14.1.6:20.14.1.6")
+
+    // JEI (optional - compile only)
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.3.0.8")
+    // REI (optional - compile only)
+    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.1.725")
 
 
 }

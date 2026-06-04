@@ -1,9 +1,12 @@
 package tong.statmod;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraft.server.level.ServerPlayer;
+import tong.statmod.advancement.StatAdvancementTrigger;
+import tong.statmod.anticheat.ServerValidator;
 import tong.statmod.world.effect.AdrenalineBrewingRecipe;
 import tong.statmod.world.effect.ModPotions;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +23,8 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.integration.EpicParcoolCompat;
+import tong.statmod.sound.ModSounds;
+import tong.statmod.item.ModItems;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncAllStatsPacket;
 import tong.statmod.skills.SkillRegistry;
@@ -56,12 +61,15 @@ public class STATMod
         bus.addListener(this::commonSetup);
         ModEffects.register(bus);
         ModPotions.register(bus);
+        ModSounds.register(bus);
+        ModItems.register(bus);
         NetworkHandler.register();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        CriteriaTriggers.register(StatAdvancementTrigger.INSTANCE);
         StatRegistry.init();
         EpicFightCompat.init();
         EpicParcoolCompat.init();
@@ -94,6 +102,7 @@ public class STATMod
         @SubscribeEvent
         public static void onPlayerLogin(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+                ServerValidator.validateAllStats(serverPlayer);
                 CapabilityHelper.withStats(serverPlayer, stats -> {
                     int[] levels = new int[PlayerStats.STAT_COUNT];
                     int[] xp = new int[PlayerStats.STAT_COUNT];

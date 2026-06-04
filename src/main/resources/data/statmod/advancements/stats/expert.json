@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:diamond_sword" },
+    "title": { "translate": "advancements.statmod.expert.title" },
+    "description": { "translate": "advancements.statmod.expert.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/adept",
+  "criteria": {
+    "global_level_75": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "global_level": 75 }
+    }
+  }
+}

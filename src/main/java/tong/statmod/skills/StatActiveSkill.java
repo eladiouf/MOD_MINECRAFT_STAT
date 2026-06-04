@@ -21,6 +21,7 @@ import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
 
 /**
@@ -65,6 +66,9 @@ public class StatActiveSkill extends Skill {
         lastSkillUsed.put(player.getUUID(), this.getRegistryName().getPath());
         lastSkillTick.put(player.getUUID(), gameTime);
         container.setResource(container.getResource() - getConsumption());
+
+        player.level().playSound(null, player.blockPosition(),
+            ModSounds.SKILL_CAST.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
         // Get stat level for scaling
         int statLevel = getStatLevel(player);

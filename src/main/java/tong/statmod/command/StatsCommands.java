@@ -24,6 +24,8 @@ import tong.statmod.ConfigPresets;
 import tong.statmod.balance.BalanceBenchmark;
 import tong.statmod.profiling.Profiler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class StatsCommands {
@@ -78,6 +80,10 @@ public class StatsCommands {
                         "§6Profile: §e" + (Profiler.isEnabled() ? "ENABLED" : "DISABLED — report saved")), true);
                     return 1;
                 }))
+            .then(Commands.literal("top")
+                .then(Commands.argument("stat", StringArgumentType.word())
+                    .suggests(StatsCommands::suggestStats)
+                    .executes(ctx -> showTop(ctx, StringArgumentType.getString(ctx, "stat")))))
             .then(Commands.literal("benchmark")
                 .requires(s -> s.hasPermission(2))
                 .executes(ctx -> {
@@ -283,6 +289,34 @@ public class StatsCommands {
         }
         return 1;
     }
+
+    private static int showTop(CommandContext<CommandSourceStack> ctx, String statName) {
+        StatType stat = resolveStat(statName);
+        if (stat == null) {
+            ctx.getSource().sendFailure(Component.literal("Unknown stat."));
+            return 0;
+        }
+        List<ServerPlayer> players = ctx.getSource().getServer().getPlayerList().getPlayers();
+        List<PlayerRank> ranks = new ArrayList<>();
+        for (ServerPlayer p : players) {
+            int[] level = {0};
+            CapabilityHelper.withStats(p, s -> level[0] = s.getLevel(stat.index));
+            ranks.add(new PlayerRank(p.getDisplayName().getString(), level[0]));
+        }
+        ranks.sort((a, b) -> Integer.compare(b.level, a.level));
+        String title = stat.displayName;
+        ctx.getSource().sendSuccess(() -> Component.literal("Top 10 - " + title), false);
+        for (int i = 0; i < Math.min(10, ranks.size()); i++) {
+            final int idx = i;
+            PlayerRank r = ranks.get(idx);
+            String color = idx == 0 ? "6" : idx < 3 ? "e" : "7";
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                (idx + 1) + ". " + r.name + " - Level " + r.level), false);
+        }
+        return 1;
+    }
+
+    private record PlayerRank(String name, int level) {}
 
     private static int applyPreset(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
         String presetName = StringArgumentType.getString(ctx, "preset").toUpperCase();

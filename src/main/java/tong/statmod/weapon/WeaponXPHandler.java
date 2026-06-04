@@ -1,6 +1,7 @@
 package tong.statmod.weapon;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
@@ -24,8 +26,14 @@ public class WeaponXPHandler {
         if (weaponType == null) return;
 
         CapabilityHelper.withWeaponMastery(player, mastery -> {
+            int prevLevel = mastery.getLevel(weaponType.ordinal());
             int xp = Config.weaponXpMin + player.getRandom().nextInt(Config.weaponXpMax - Config.weaponXpMin + 1);
             mastery.addXp(weaponType.ordinal(), xp);
+            int newLevel = mastery.getLevel(weaponType.ordinal());
+            if (newLevel > prevLevel) {
+                player.level().playSound(null, player.blockPosition(),
+                    ModSounds.WEAPON_LEVEL_UP.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
+            }
 
             StatType primaryStat = mapWeaponToStat(weaponType);
             if (primaryStat != null) {

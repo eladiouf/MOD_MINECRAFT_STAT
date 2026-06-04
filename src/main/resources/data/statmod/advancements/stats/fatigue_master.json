@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:red_bed" },
+    "title": { "translate": "advancements.statmod.fatigue_master.title" },
+    "description": { "translate": "advancements.statmod.fatigue_master.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:root",
+  "criteria": {
+    "fatigue_master": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "feature": "fatigue_master" }
+    }
+  }
+}

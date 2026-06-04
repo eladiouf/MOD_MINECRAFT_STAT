@@ -1,0 +1,15 @@
+{
+  "name": "Combat Overview",
+  "icon": "minecraft:diamond_sword",
+  "category": "statmod:combat",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Combat stats govern your physical prowess in battle. There are 7 combat stats:$(li)Brute Force - Heavy weapon damage$(li)Blade Technique - Finesse weapon damage$(li)Rapidit\u00e9 - Attack speed and flurry$(li)Agility - Dodge and movement$(li)Physical Resistance - Damage reduction$(li)Physical Endurance - Stamina and regeneration$(li)Precision - Ranged accuracy and damage"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "At level 100, each combat stat unlocks a powerful active skill:$(li)Heavy Strike (Brute Force)$(li)Blade Dance (Blade Technique)$(li)Blitz Assault (Rapidit\u00e9)$(li)Shadow Step (Agility)$(li)Stone Skin (Physical Resistance)$(li)Endurance Surge (Physical Endurance)$(li)Precision Shot (Precision)"
+    }
+  ]
+}

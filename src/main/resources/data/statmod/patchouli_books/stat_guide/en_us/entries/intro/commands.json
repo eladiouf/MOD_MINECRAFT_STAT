@@ -1,0 +1,15 @@
+{
+  "name": "Commands",
+  "icon": "minecraft:command_block",
+  "category": "statmod:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The STAT Mod provides several commands for managing your stats:$(br2)$(l)/statmod list$() - View all your stat levels$(br)$(l)/statmod set <stat> <level>$() - Set a stat to a specific level (admin)$(br)$(l)/statmod reset$() - Reset all stats to 0"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)/statmod fatigue$() - View current fatigue$(br)$(l)/statmod fatigue reset$() - Reset fatigue to 0 (admin)$(br)$(l)/statmod fatigue set <value>$() - Set fatigue percentage (admin)$(br)$(l)/statmod thirst$() - View current thirst$(br)$(l)/statmod thirst reset$() - Reset thirst (admin)$(br)$(l)/statmod thirst set <value>$() - Set thirst (admin)$(br)$(l)/statmod perks$() - View perk points and unlock"
+    }
+  ]
+}

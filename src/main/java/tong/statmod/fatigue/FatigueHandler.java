@@ -8,6 +8,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import tong.statmod.anticheat.ServerValidator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
@@ -213,6 +214,7 @@ public class FatigueHandler {
         if (event.getEntity() instanceof ServerPlayer player) {
             lastFatigueSync.remove(player.getUUID());
             wasOnGroundMap.remove(player.getUUID());
+            ServerValidator.cleanup(player.getUUID());
         }
     }
 }

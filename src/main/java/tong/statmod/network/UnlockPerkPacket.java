@@ -1,10 +1,12 @@
 package tong.statmod.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.network.NetworkEvent;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
+import tong.statmod.sound.ModSounds;
 
 import java.util.function.Supplier;
 
@@ -40,6 +42,8 @@ public class UnlockPerkPacket {
                 CapabilityHelper.withPerks(player, perkManager -> {
                     boolean success = perkManager.unlockPerk(perk, statLevel);
                     if (success) {
+                        player.level().playSound(null, player.blockPosition(),
+                            ModSounds.PERK_UNLOCK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
                         int[] unlockedIds = perkManager.getUnlockedPerks().stream()
                             .mapToInt(Integer::intValue)
                             .toArray();

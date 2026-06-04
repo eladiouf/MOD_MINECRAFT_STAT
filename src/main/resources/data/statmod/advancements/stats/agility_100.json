@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:leather_boots" },
+    "title": { "translate": "advancements.statmod.agility_100.title" },
+    "description": { "translate": "advancements.statmod.agility_100.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/beginner",
+  "criteria": {
+    "agility_100": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "stat": "AGILITY", "level": 100 }
+    }
+  }
+}

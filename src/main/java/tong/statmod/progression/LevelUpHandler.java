@@ -9,10 +9,13 @@ import net.minecraft.world.phys.Vec3;
 import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.perks.PerkProvider;
 import tong.statmod.skills.SkillUnlockRegistry;
+import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
+import tong.statmod.advancement.StatAdvancementTrigger;
 import tong.statmod.Config;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.capability.PlayerStats;
 
 public class LevelUpHandler {
 
@@ -26,16 +29,23 @@ public class LevelUpHandler {
 
         // Refresh passive bonuses on every level-up
         StatEffectApplier.applyAllBonuses(player);
+
+        CapabilityHelper.withStats(player, stats -> {
+            int global = 0;
+            for (int i = 0; i < PlayerStats.STAT_COUNT; i++) global += stats.getLevel(i);
+            int avgGlobal = Math.round(global / (float) PlayerStats.STAT_COUNT);
+            StatAdvancementTrigger.INSTANCE.trigger(player, avgGlobal);
+        });
     }
 
     private static void handleMilestone(ServerPlayer player, int statIndex, int level) {
         // Play sound
         if (level == 100) {
             player.level().playSound(null, player.blockPosition(),
-                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1.0f, 1.0f);
+                ModSounds.MILESTONE.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         } else {
             player.level().playSound(null, player.blockPosition(),
-                SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.0f);
+                ModSounds.LEVEL_UP.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         }
 
         // Spawn particles

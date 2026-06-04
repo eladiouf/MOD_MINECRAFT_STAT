@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:stone_sword" },
+    "title": { "translate": "advancements.statmod.novice.title" },
+    "description": { "translate": "advancements.statmod.novice.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/beginner",
+  "criteria": {
+    "global_level_25": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "global_level": 25 }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:iron_sword" },
+    "title": { "translate": "advancements.statmod.adept.title" },
+    "description": { "translate": "advancements.statmod.adept.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/novice",
+  "criteria": {
+    "global_level_50": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "global_level": 50 }
+    }
+  }
+}

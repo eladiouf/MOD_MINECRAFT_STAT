@@ -1,6 +1,7 @@
 package tong.statmod.fatigue;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.event.TickEvent;
@@ -8,6 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.sound.ModSounds;
 import tong.statmod.STATMod;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
@@ -35,6 +37,8 @@ public class FatigueEffects {
     private static void applyWarning(ServerPlayer player) {
         // -5% speed via slowness 0
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 0, true, false));
+        player.level().playSound(null, player.blockPosition(),
+            ModSounds.FATIGUE_WARNING.get(), SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     private static void applyLight(ServerPlayer player) {

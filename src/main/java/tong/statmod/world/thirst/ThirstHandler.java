@@ -1,6 +1,7 @@
 package tong.statmod.world.thirst;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,7 @@ import tong.statmod.util.LagDetector;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
+import tong.statmod.sound.ModSounds;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class ThirstHandler {
@@ -63,6 +65,8 @@ public class ThirstHandler {
             if (t <= 0) {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1, true, false));
                 player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 80, 0, true, false));
+                player.level().playSound(null, player.blockPosition(),
+                    ModSounds.THIRST_WARNING.get(), SoundSource.PLAYERS, 0.7f, 1.0f);
                 // 0.5 heart/sec damage every 20 ticks
                 if (player.tickCount % 20 == 0) {
                     player.hurt(player.damageSources().starve(), 1.0f);

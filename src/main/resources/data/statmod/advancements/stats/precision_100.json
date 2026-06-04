@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:bow" },
+    "title": { "translate": "advancements.statmod.precision_100.title" },
+    "description": { "translate": "advancements.statmod.precision_100.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/beginner",
+  "criteria": {
+    "precision_100": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "stat": "PRECISION", "level": 100 }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:enchanted_book" },
+    "title": { "translate": "advancements.statmod.weapon_master.title" },
+    "description": { "translate": "advancements.statmod.weapon_master.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "statmod:stats/beginner",
+  "criteria": {
+    "weapon_master": {
+      "trigger": "statmod:stat_level",
+      "conditions": { "feature": "weapon_mastery_50" }
+    }
+  }
+}

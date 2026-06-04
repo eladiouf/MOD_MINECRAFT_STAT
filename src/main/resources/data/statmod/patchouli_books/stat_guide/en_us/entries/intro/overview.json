@@ -1,0 +1,15 @@
+{
+  "name": "Overview",
+  "icon": "minecraft:nether_star",
+  "category": "statmod:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The STAT Mod adds a deep RPG progression system to Minecraft. You have 23 stats across 5 categories: Combat, Magic, Survival, Crafting, and Mental.$(br2)Each stat can be leveled from 0 to 100 by performing related actions."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Stats provide passive bonuses that scale with level. At levels 20, 50, and 80, you unlock perks and passive skills. At level 100, you unlock a powerful active skill.$(br2)Use /statmod list to see your current levels."
+    }
+  ]
+}

@@ -18,6 +18,10 @@ public class PerkManager implements INBTSerializable<CompoundTag> {
     public int getAvailablePoints() { return availablePoints; }
     public void addPoints(int amount) { this.availablePoints = Math.max(0, this.availablePoints + amount); }
 
+    public void resetPerks() {
+        unlockedPerks.clear();
+    }
+
     public boolean unlockPerk(Perk perk, int currentStatLevel) {
         if (availablePoints <= 0) return false;
         if (unlockedPerks.contains(perk.id)) return false;

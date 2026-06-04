@@ -9,6 +9,9 @@ public class ClientStatsCache {
     private static float fatigue = 0;
     private static int maxFatigue = 500;
     private static float thirst = 100;
+    private static float mana = 0;
+    private static int[] perkIds = new int[0];
+    private static int perkPoints = 0;
 
     public static void updateAll(int[] newLevels, int[] newXp) {
         System.arraycopy(newLevels, 0, levels, 0, Math.min(newLevels.length, 23));
@@ -42,6 +45,15 @@ public class ClientStatsCache {
     public static float getFatigue() { return fatigue; }
     public static int getMaxFatigue() { return maxFatigue; }
     public static float getThirst() { return thirst; }
+
+    public static void updateMana(float m) { mana = m; }
+    public static float getMana() { return mana; }
+    public static void updatePerks(int[] ids, int points) {
+        perkIds = ids;
+        perkPoints = points;
+    }
+    public static int[] getPerkIds() { return perkIds; }
+    public static int getPerkPoints() { return perkPoints; }
 
     public static int getGlobalLevel() {
         int sum = 0;

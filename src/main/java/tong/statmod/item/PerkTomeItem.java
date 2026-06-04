@@ -1,5 +1,6 @@
 package tong.statmod.item;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -7,13 +8,23 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncPerksPacket;
 
+import java.util.List;
+
 public class PerkTomeItem extends Item {
     public PerkTomeItem(Properties props) { super(props); }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("tooltip.statmod.perk_tome").withStyle(ChatFormatting.GOLD));
+        tooltip.add(Component.translatable("tooltip.statmod.perk_tome.desc").withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, level, tooltip, flag);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

@@ -1,5 +1,6 @@
 package tong.statmod.item;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -7,6 +8,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.weapon.WeaponXPHandler;
@@ -14,8 +16,17 @@ import tong.statmod.weapon.WeaponType;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
+import java.util.List;
+
 public class MasteryCrystalItem extends Item {
     public MasteryCrystalItem(Properties props) { super(props); }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("tooltip.statmod.mastery_crystal").withStyle(ChatFormatting.GOLD));
+        tooltip.add(Component.translatable("tooltip.statmod.mastery_crystal.desc").withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, level, tooltip, flag);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

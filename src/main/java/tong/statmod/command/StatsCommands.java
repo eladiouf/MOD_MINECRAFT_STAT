@@ -17,15 +17,19 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.StatUpdatePacket;
 import tong.statmod.network.SyncAllStatsPacket;
+import tong.statmod.network.SyncPerksPacket;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
 import net.minecraft.nbt.TagParser;
 import tong.statmod.ConfigPresets;
 import tong.statmod.balance.BalanceBenchmark;
+import tong.statmod.challenge.DailyChallenge;
+import tong.statmod.party.PartyManager;
 import tong.statmod.profiling.Profiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class StatsCommands {
@@ -62,6 +66,8 @@ public class StatsCommands {
             .then(Commands.literal("restore")
                 .requires(s -> s.hasPermission(2))
                 .executes(ctx -> restoreStats(ctx, ctx.getSource().getPlayerOrException())))
+            .then(Commands.literal("respec")
+                .executes(ctx -> respecPerks(ctx, ctx.getSource().getPlayerOrException())))
             .then(Commands.literal("preset")
                 .requires(s -> s.hasPermission(2))
                 .then(Commands.argument("preset", StringArgumentType.word())
@@ -92,9 +98,62 @@ public class StatsCommands {
                         "§aBenchmark complete — see config/statmod/balance-report.txt"), true);
                     return 1;
                 }))
+            .then(Commands.literal("party")
+                .then(Commands.literal("create")
+                    .executes(ctx -> {
+                        ServerPlayer player = ctx.getSource().getPlayerOrException();
+                        PartyManager.createParty(player);
+                        ctx.getSource().sendSuccess(() -> Component.literal("§aParty created! You are the leader."), true);
+                        return 1;
+                    }))
+                .then(Commands.literal("join")
+                    .then(Commands.argument("player", EntityArgument.player())
+                        .executes(ctx -> {
+                            ServerPlayer joiner = ctx.getSource().getPlayerOrException();
+                            ServerPlayer leader = EntityArgument.getPlayer(ctx, "player");
+                            PartyManager.joinParty(joiner, leader);
+                            ctx.getSource().sendSuccess(() -> Component.literal(
+                                "§aJoined " + leader.getDisplayName().getString() + "'s party!"), true);
+                            return 1;
+                        })))
+                .then(Commands.literal("leave")
+                    .executes(ctx -> {
+                        ServerPlayer player = ctx.getSource().getPlayerOrException();
+                        PartyManager.leaveParty(player);
+                        ctx.getSource().sendSuccess(() -> Component.literal("§aLeft the party."), true);
+                        return 1;
+                    }))
+                .then(Commands.literal("members")
+                    .executes(ctx -> {
+                        ServerPlayer player = ctx.getSource().getPlayerOrException();
+                        var members = PartyManager.getPartyMembers(player.getUUID());
+                        var list = player.getServer().getPlayerList();
+                        ctx.getSource().sendSuccess(() -> Component.literal("§6Party Members:"), false);
+                        for (UUID id : members) {
+                            ServerPlayer mp = list.getPlayer(id);
+                            String name = mp != null ? mp.getDisplayName().getString() : id.toString();
+                            ctx.getSource().sendSuccess(() -> Component.literal("  §e" + name), false);
+                        }
+                        return 1;
+                    })))
+            .then(Commands.literal("challenge")
+                .executes(ctx -> {
+                    ServerPlayer player = ctx.getSource().getPlayerOrException();
+                    DailyChallenge.ChallengeState state = DailyChallenge.getChallenge(player.getUUID());
+                    if (state == null) {
+                        ctx.getSource().sendSuccess(() -> Component.literal(
+                            "§cNo active daily challenge. Assigning one now..."), false);
+                        DailyChallenge.assignDaily(player);
+                        return 1;
+                    }
+                    ctx.getSource().sendSuccess(() -> Component.literal(
+                        "§6Daily Challenge: §eEarn " + state.target() + " XP in §b" +
+                        state.stat().displayName + " §6(§e" + state.progress() + "§8/§e" + state.target() + "§6)"), false);
+                    return 1;
+                }))
             .executes(ctx -> {
                 ctx.getSource().sendSuccess(() -> Component.literal(
-                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset §8| §e/backup §8| §e/restore §8| §e/preset §8| §e/profile §8| §e/benchmark"), false);
+                    "§6StatMod §7- §e/statmod list [player] §8| §e/get <stat> §8| §e/set <stat|all> <level> §8| §e/xp <stat> <amount> §8| §e/reset §8| §e/backup §8| §e/restore §8| §e/preset §8| §e/profile §8| §e/benchmark §8| §e/party §8| §e/challenge"), false);
                 return 1;
             }));
     }
@@ -317,6 +376,20 @@ public class StatsCommands {
     }
 
     private record PlayerRank(String name, int level) {}
+
+    private static int respecPerks(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
+        CapabilityHelper.withPerks(player, perks -> {
+            int count = perks.getUnlockedPerks().size();
+            int points = count + perks.getAvailablePoints();
+            perks.getUnlockedPerks().clear();
+            perks.addPoints(points);
+            int[] ids = {};
+            NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), player);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aPerks reset! \u00a7e" + points + " \u00a7apoints refunded."), true);
+        });
+        return 1;
+    }
 
     private static int applyPreset(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
         String presetName = StringArgumentType.getString(ctx, "preset").toUpperCase();

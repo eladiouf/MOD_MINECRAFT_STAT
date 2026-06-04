@@ -179,5 +179,18 @@
   "jei.statmod.skill.shadow_step": "Pas de l'Ombre (Agilité). Téléportation derrière la cible + bonus crit. Déblocage niveau 100.",
   "jei.statmod.skill.stone_skin": "Peau de Pierre (Résistance). Résistance III-V pendant 5-8 secondes. Déblocage niveau 100.",
   "jei.statmod.skill.endurance_surge": "Surge d'Endurance (Endurance). Saturation + Régénération + Vitesse. Déblocage niveau 100.",
-  "jei.statmod.skill.precision_shot": "Tir de Précision (Précision). 500-1000% dégâts de flèche + perçage. Déblocage niveau 100."
+  "jei.statmod.skill.precision_shot": "Tir de Précision (Précision). 500-1000% dégâts de flèche + perçage. Déblocage niveau 100.",
+
+  "itemGroup.statmod": "STAT Mod",
+
+  "tooltip.statmod.stat_scroll": "Parchemin de Stat",
+  "tooltip.statmod.stat_scroll.desc": "Clic-droit pour gagner +5 niveaux dans une stat aléatoire",
+  "tooltip.statmod.perk_tome": "Tome de Perk",
+  "tooltip.statmod.perk_tome.desc": "Clic-droit pour gagner 1 point de perk",
+  "tooltip.statmod.mastery_crystal": "Cristal de Maîtrise",
+  "tooltip.statmod.mastery_crystal.desc": "Clic-droit pour gagner +500 XP dans votre arme équipée",
+
+  "death.statmod.crushed": "%1$s a été écrasé par la force brute de %2$s",
+  "death.statmod.sniped": "%1$s a été abattu de loin par %2$s",
+  "death.statmod.dismantled": "%1$s a été démantelé par la technique de lame de %2$s"
 }

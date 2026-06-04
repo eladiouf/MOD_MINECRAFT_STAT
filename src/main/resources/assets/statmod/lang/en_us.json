@@ -179,5 +179,18 @@
   "jei.statmod.skill.shadow_step": "Shadow Step (Agility). Teleport behind target + crit boost. Level 100 unlock.",
   "jei.statmod.skill.stone_skin": "Stone Skin (Resistance). Resistance III-V for 5-8 seconds. Level 100 unlock.",
   "jei.statmod.skill.endurance_surge": "Endurance Surge (Endurance). Saturation + Regeneration + Speed. Level 100 unlock.",
-  "jei.statmod.skill.precision_shot": "Precision Shot (Precision). 500-1000% arrow damage + pierce. Level 100 unlock."
+  "jei.statmod.skill.precision_shot": "Precision Shot (Precision). 500-1000% arrow damage + pierce. Level 100 unlock.",
+
+  "itemGroup.statmod": "STAT Mod",
+
+  "tooltip.statmod.stat_scroll": "Stat Scroll",
+  "tooltip.statmod.stat_scroll.desc": "Right-click to gain +5 levels in a random stat",
+  "tooltip.statmod.perk_tome": "Perk Tome",
+  "tooltip.statmod.perk_tome.desc": "Right-click to gain 1 perk point",
+  "tooltip.statmod.mastery_crystal": "Mastery Crystal",
+  "tooltip.statmod.mastery_crystal.desc": "Right-click to gain +500 XP in your equipped weapon",
+
+  "death.statmod.crushed": "%1$s was crushed by %2$s's brute force",
+  "death.statmod.sniped": "%1$s was sniped from afar by %2$s",
+  "death.statmod.dismantled": "%1$s was dismantled by %2$s's blade technique"
 }

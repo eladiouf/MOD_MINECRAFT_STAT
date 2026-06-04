@@ -1,6 +1,7 @@
 package tong.statmod.party;
 
 import net.minecraft.server.level.ServerPlayer;
+import tong.statmod.integration.FtbTeamsIntegration;
 import java.util.*;
 
 public class PartyManager {
@@ -39,6 +40,14 @@ public class PartyManager {
     public static boolean isInParty(UUID playerId) {
         return parties.values().stream().anyMatch(p -> p.contains(playerId))
             || parties.containsKey(playerId);
+    }
+
+    public static boolean areAllied(ServerPlayer p1, ServerPlayer p2) {
+        if (FtbTeamsIntegration.isLoaded()) {
+            return FtbTeamsIntegration.areAllied(p1, p2);
+        }
+        Set<UUID> party = getPartyMembers(p1.getUUID());
+        return party.contains(p2.getUUID());
     }
 
     public static void disband(ServerPlayer leader) {

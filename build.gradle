@@ -176,6 +176,8 @@ dependencies {
     // REI (optional - compile only)
     compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.1.725")
 
+    // FTB mods use reflection (no compileOnly needed)
+
 
 }
 

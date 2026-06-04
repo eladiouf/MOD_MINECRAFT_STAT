@@ -1,0 +1,19 @@
+{
+    groups: [
+        {
+            id: 0
+            title: { text: "STAT Mod Progression" color: "gold" }
+            image: "minecraft:textures/item/nether_star.png"
+        }
+        {
+            id: 1
+            title: { text: "STAT Mod Magic" color: "dark_purple" }
+            image: "minecraft:textures/item/enchanting_table.png"
+        }
+        {
+            id: 2
+            title: { text: "STAT Mod Survival" color: "green" }
+            image: "minecraft:textures/item/compass.png"
+        }
+    ]
+}

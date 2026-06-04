@@ -25,6 +25,8 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.integration.EpicFightCompat;
 import tong.statmod.integration.EpicParcoolCompat;
+import tong.statmod.integration.FtbTeamsIntegration;
+
 import tong.statmod.sound.ModSounds;
 import tong.statmod.item.CreativeTab;
 import tong.statmod.item.ModItems;
@@ -88,6 +90,8 @@ public class STATMod
         StatRegistry.init();
         EpicFightCompat.init();
         EpicParcoolCompat.init();
+        FtbTeamsIntegration.init();
+        FtbTeamsIntegration.init();
         SkillUnlockRegistry.init();
         SkillRequirementRegistry.init();
         PluginManager.loadPlugins();

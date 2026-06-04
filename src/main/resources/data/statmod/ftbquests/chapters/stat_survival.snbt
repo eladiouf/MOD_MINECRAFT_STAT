@@ -1,0 +1,257 @@
+{
+    title: { text: "STAT Mod: Survival & Crafting" color: "green" }
+    icon: "minecraft:item/compass"
+    subtitle: [{ text: "Thrive in the wilderness and master your crafts" color: "gray" }]
+    default_hide: false
+    default_quest_shape: "circle"
+    group: 2
+    file: {}
+    quests: [
+        {
+            title: { text: "Pathfinder" color: "white" }
+            icon: "minecraft:item/compass"
+            description: [{ text: "Reach level 5 in Tracking to better locate mobs and structures." color: "gray" }]
+            x: 0.0d
+            y: 0.0d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 201L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 202L type: "command" command: "/statmod xp add tracking 50" title: "+50 Tracking XP" }
+            ]
+        }
+        {
+            title: { text: "Master Tracker" color: "yellow" }
+            icon: "minecraft:item/spyglass"
+            description: [{ text: "Reach level 25 in Tracking. Nothing escapes your notice." color: "gray" }]
+            x: 1.5d
+            y: 0.0d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 203L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 204L type: "command" command: "/statmod xp add tracking 250" title: "+250 Tracking XP" }
+                { id: 205L type: "item" item: { item: "statmod:stat_scroll" count: 2 } }
+            ]
+        }
+        {
+            title: { text: "Sharpened Senses" color: "white" }
+            icon: "minecraft:item/ender_eye"
+            description: [{ text: "Reach level 10 in Keen Senses to detect dangers early." color: "gray" }]
+            x: -1.5d
+            y: 0.0d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 206L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 207L type: "command" command: "/statmod xp add keen_senses 100" title: "+100 Keen Senses XP" }
+            ]
+        }
+        {
+            title: { text: "Eagle Eye" color: "yellow" }
+            icon: "minecraft:item/spyglass"
+            description: [{ text: "Reach level 30 in Keen Senses. See threats before they arrive." color: "gray" }]
+            x: -3.0d
+            y: 0.0d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 208L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 209L type: "command" command: "/statmod xp add keen_senses 300" title: "+300 Keen Senses XP" }
+                { id: 210L type: "item" item: { item: "statmod:perk_tome" count: 1 } }
+            ]
+        }
+        {
+            title: { text: "Iron Will" color: "dark_red" }
+            icon: "minecraft:item/netherite_ingot"
+            description: [{ text: "Reach level 15 in Willpower. Mental fortitude grows." color: "gray" }]
+            x: 0.0d
+            y: -1.5d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 211L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 212L type: "command" command: "/statmod xp add willpower 150" title: "+150 Willpower XP" }
+            ]
+        }
+        {
+            title: { text: "Unbreakable Spirit" color: "dark_purple" }
+            icon: "minecraft:item/totem_of_undying"
+            description: [{ text: "Reach level 50 in Willpower. Your resolve is legendary." color: "gray" }]
+            x: 0.0d
+            y: -3.0d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 213L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 214L type: "command" command: "/statmod xp add willpower 500" title: "+500 Willpower XP" }
+                { id: 215L type: "item" item: { item: "statmod:perk_tome" count: 3 } }
+            ]
+        }
+        {
+            title: { text: "Fearsome Presence" color: "dark_red" }
+            icon: "minecraft:item/wither_skeleton_skull"
+            description: [{ text: "Reach level 20 in Intimidation. Enemies fear your presence." color: "gray" }]
+            x: 1.5d
+            y: -1.5d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 216L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 217L type: "command" command: "/statmod xp add intimidation 200" title: "+200 Intimidation XP" }
+            ]
+        }
+        {
+            title: { text: "Legendary Dread" color: "dark_purple" }
+            icon: "minecraft:item/dragon_head"
+            description: [{ text: "Reach level 50 in Intimidation. Mob fear radius increased." color: "gray" }]
+            x: 3.0d
+            y: -1.5d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 218L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 219L type: "command" command: "/statmod xp add intimidation 500" title: "+500 Intimidation XP" }
+                { id: 220L type: "item" item: { item: "statmod:mastery_crystal" count: 10 } }
+            ]
+        }
+        {
+            title: { text: "Apprentice Smith" color: "white" }
+            icon: "minecraft:item/iron_ingot"
+            description: [{ text: "Reach level 10 in Forging by crafting and repairing gear." color: "gray" }]
+            x: -1.5d
+            y: -1.5d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 221L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 222L type: "command" command: "/statmod xp add forging 100" title: "+100 Forging XP" }
+            ]
+        }
+        {
+            title: { text: "Legendary Smith" color: "gold" }
+            icon: "minecraft:item/netherite_ingot"
+            description: [{ text: "Reach level 50 in Forging. Craft legendary equipment." color: "gray" }]
+            x: -3.0d
+            y: -1.5d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 223L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 224L type: "command" command: "/statmod xp add forging 500" title: "+500 Forging XP" }
+                { id: 225L type: "item" item: { item: "minecraft:netherite_ingot" count: 3 } }
+                { id: 226L type: "item" item: { item: "statmod:stat_scroll" count: 5 } }
+            ]
+        }
+        {
+            title: { text: "Camp Cook" color: "white" }
+            icon: "minecraft:item/bread"
+            description: [{ text: "Reach level 15 in Cooking. Nutritious meals await." color: "gray" }]
+            x: -1.5d
+            y: -3.0d
+            width: 1.0d
+            height: 1.0d
+            shape: "circle"
+            tasks: [{
+                id: 227L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 228L type: "command" command: "/statmod xp add cooking 150" title: "+150 Cooking XP" }
+                { id: 229L type: "item" item: { item: "minecraft:cooked_beef" count: 16 } }
+            ]
+        }
+        {
+            title: { text: "Master Alchemist" color: "dark_purple" }
+            icon: "minecraft:item/brewing_stand"
+            description: [{ text: "Reach level 30 in Alchemy by brewing potions." color: "gray" }]
+            x: -1.5d
+            y: -4.5d
+            width: 1.5d
+            height: 1.5d
+            shape: "diamond"
+            tasks: [{
+                id: 230L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 231L type: "command" command: "/statmod xp add alchemy 300" title: "+300 Alchemy XP" }
+                { id: 232L type: "item" item: { item: "minecraft:blaze_powder" count: 5 } }
+                { id: 233L type: "item" item: { item: "minecraft:nether_wart" count: 10 } }
+            ]
+        }
+        {
+            title: { text: "Wilderness Expert" color: "green" }
+            icon: "minecraft:item/leather_chestplate"
+            description: [{ text: "Reach combined Tracking + Keen Senses + Physical Endurance level 75." color: "gray" }]
+            x: 0.0d
+            y: -5.0d
+            width: 2.0d
+            height: 2.0d
+            shape: "hexagon"
+            tasks: [{
+                id: 234L
+                type: "checkmark"
+                value: 1L
+            }]
+            rewards: [
+                { id: 235L type: "command" command: "/statmod set tracking 50" title: "Tracking set to 50!" }
+                { id: 236L type: "command" command: "/statmod set keen_senses 50" title: "Keen Senses set to 50!" }
+                { id: 237L type: "item" item: { item: "statmod:mastery_crystal" count: 15 } }
+                { id: 238L type: "item" item: { item: "statmod:perk_tome" count: 5 } }
+            ]
+        }
+    ]
+}

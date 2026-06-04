@@ -15,5 +15,10 @@
             title: { text: "STAT Mod Survival" color: "green" }
             image: "minecraft:textures/item/compass.png"
         }
+        {
+            id: 3
+            title: { text: "STAT Mod Challenges" color: "dark_red" }
+            image: "minecraft:textures/item/nether_star.png"
+        }
     ]
 }

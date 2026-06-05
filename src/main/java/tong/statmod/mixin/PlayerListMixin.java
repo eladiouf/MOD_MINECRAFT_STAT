@@ -11,6 +11,8 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.capability.PlayerStats;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncAllStatsPacket;
+import tong.statmod.network.WeaponMasteryPacket;
+import tong.statmod.weapon.WeaponMasteryManager;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
@@ -25,6 +27,15 @@ public class PlayerListMixin {
                 xp[i] = stats.getXp(i);
             }
             NetworkHandler.sendToPlayer(new SyncAllStatsPacket(levels, xp), player);
+        });
+        CapabilityHelper.withWeaponMastery(player, mastery -> {
+            int[] wLevels = new int[WeaponMasteryManager.WEAPON_COUNT];
+            int[] wXp = new int[WeaponMasteryManager.WEAPON_COUNT];
+            for (int i = 0; i < WeaponMasteryManager.WEAPON_COUNT; i++) {
+                wLevels[i] = mastery.getLevel(i);
+                wXp[i] = mastery.getXp(i);
+            }
+            NetworkHandler.sendToPlayer(new WeaponMasteryPacket(wLevels, wXp), player);
         });
     }
 }

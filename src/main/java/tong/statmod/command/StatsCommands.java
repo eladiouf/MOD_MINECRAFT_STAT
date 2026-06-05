@@ -29,6 +29,7 @@ import tong.statmod.profiling.Profiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -405,27 +406,30 @@ public class StatsCommands {
         CapabilityHelper.withStats(player, stats -> {
             var tag = stats.serializeNBT();
             String json = tag.toString();
-            java.io.File backupDir = new java.io.File("config/statmod/backups");
-            backupDir.mkdirs();
-            java.io.File file = new java.io.File(backupDir, player.getUUID() + "_" + System.currentTimeMillis() + ".nbt");
-            try (java.io.FileWriter fw = new java.io.FileWriter(file)) { fw.write(json); } catch (Exception ignored) {}
-            ctx.getSource().sendSuccess(() -> Component.literal("§aStats backup saved for §e" + player.getDisplayName().getString()), true);
+            java.io.File backupDir = StatsBackupFiles.backupDirectory();
+            java.io.File file = StatsBackupFiles.backupFile(backupDir, player.getUUID(), System.currentTimeMillis());
+            try {
+                StatsBackupFiles.writeBackup(file, json);
+                ctx.getSource().sendSuccess(() -> Component.literal("§aStats backup saved for §e" + player.getDisplayName().getString()), true);
+            } catch (java.io.IOException e) {
+                ctx.getSource().sendFailure(Component.literal("§cFailed to save backup: " + e.getMessage()));
+            }
         });
         return 1;
     }
 
     private static int restoreStats(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
-        java.io.File backupDir = new java.io.File("config/statmod/backups");
-        if (!backupDir.exists() || backupDir.listFiles() == null) {
+        java.io.File backupDir = StatsBackupFiles.backupDirectory();
+        if (!backupDir.exists()) {
             ctx.getSource().sendFailure(Component.literal("§cNo backups found."));
             return 0;
         }
-        java.io.File[] files = backupDir.listFiles((d, n) -> n.startsWith(player.getUUID().toString()));
-        if (files == null || files.length == 0) {
+        Optional<java.io.File> latestBackup = StatsBackupFiles.findLatestBackup(backupDir, player.getUUID());
+        if (latestBackup.isEmpty()) {
             ctx.getSource().sendFailure(Component.literal("§cNo backup found for this player."));
             return 0;
         }
-        java.io.File latest = files[files.length - 1];
+        java.io.File latest = latestBackup.get();
         try (java.io.FileReader fr = new java.io.FileReader(latest)) {
             StringBuilder sb = new StringBuilder();
             char[] buf = new char[1024]; int n;
@@ -481,7 +485,7 @@ public class StatsCommands {
         CapabilityHelper.withPerks(player, perks -> {
             int count = perks.getUnlockedPerks().size();
             int points = count + perks.getAvailablePoints();
-            perks.getUnlockedPerks().clear();
+            perks.resetPerks();
             perks.addPoints(points);
             int[] ids = {};
             NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), player);

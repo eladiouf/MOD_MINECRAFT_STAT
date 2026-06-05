@@ -65,6 +65,14 @@ public class FatigueManager implements INBTSerializable<CompoundTag> {
         this.fatigue = tag.getFloat("Fatigue");
         this.sleeplessNights = tag.getInt("SleeplessNights");
         this.lastSleepTime = tag.getLong("LastSleepTime");
+        sanitizeState();
+    }
+
+    private void sanitizeState() {
+        this.maxFatigue = Math.max(50, this.maxFatigue);
+        this.fatigue = Math.max(0, Math.min(this.fatigue, this.maxFatigue));
+        this.sleeplessNights = Math.max(0, this.sleeplessNights);
+        this.lastSleepTime = Math.max(0, this.lastSleepTime);
     }
 
     public enum FatigueThreshold {

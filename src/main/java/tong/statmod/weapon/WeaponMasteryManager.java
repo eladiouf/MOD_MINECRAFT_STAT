@@ -9,8 +9,8 @@ public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
     private final int[] levels = new int[WEAPON_COUNT];
     private final int[] xp = new int[WEAPON_COUNT];
 
-    public int getLevel(int index) { return levels[index]; }
-    public int getXp(int index) { return xp[index]; }
+    public int getLevel(int index) { return index >= 0 && index < WEAPON_COUNT ? levels[index] : 0; }
+    public int getXp(int index) { return index >= 0 && index < WEAPON_COUNT ? xp[index] : 0; }
 
     public void addXp(int index, int amount) {
         if (index < 0 || index >= WEAPON_COUNT) return;
@@ -32,9 +32,25 @@ public class WeaponMasteryManager implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
+        java.util.Arrays.fill(levels, 0);
+        java.util.Arrays.fill(xp, 0);
         int[] loadedLevels = tag.getIntArray("WeaponLevels");
         int[] loadedXp = tag.getIntArray("WeaponXP");
         System.arraycopy(loadedLevels, 0, levels, 0, Math.min(loadedLevels.length, WEAPON_COUNT));
         System.arraycopy(loadedXp, 0, xp, 0, Math.min(loadedXp.length, WEAPON_COUNT));
+        sanitizeState();
+    }
+
+    private void sanitizeState() {
+        int maxLevel = Math.max(0, tong.statmod.Config.weaponMasteryMaxLevel);
+        for (int i = 0; i < WEAPON_COUNT; i++) {
+            levels[i] = Math.max(0, Math.min(levels[i], maxLevel));
+            if (levels[i] >= maxLevel) {
+                xp[i] = 0;
+            } else {
+                int maxXp = Math.max(0, StatCalculator.getXpForNextLevel(levels[i]) - 1);
+                xp[i] = Math.max(0, Math.min(xp[i], maxXp));
+            }
+        }
     }
 }

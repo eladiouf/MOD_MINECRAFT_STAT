@@ -27,6 +27,10 @@ public class ThirstProvider implements ICapabilityProvider, INBTSerializable<Com
         return cap == THIRST ? lazyOptional.cast() : LazyOptional.empty();
     }
 
+    public void invalidate() {
+        lazyOptional.invalidate();
+    }
+
     @Override
     public CompoundTag serializeNBT() { return getOrCreate().serializeNBT(); }
 

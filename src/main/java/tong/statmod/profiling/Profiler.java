@@ -1,7 +1,8 @@
 package tong.statmod.profiling;
 
 import tong.statmod.STATMod;
-import java.io.FileWriter;
+import tong.statmod.io.ReportFiles;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,10 +47,12 @@ public class Profiler {
     public static boolean isEnabled() { return enabled; }
 
     private static void generateReport() {
-        try (FileWriter fw = new FileWriter("config/statmod/perf-report.json")) {
+        try {
             StringBuilder sb = new StringBuilder("{\n  \"handlers\": [\n");
             boolean first = true;
-            for (String handler : totalTime.keySet()) {
+            List<String> handlers = new ArrayList<>(totalTime.keySet());
+            Collections.sort(handlers);
+            for (String handler : handlers) {
                 if (!first) sb.append(",\n");
                 first = false;
                 long total = totalTime.getOrDefault(handler, 0L);
@@ -60,7 +63,7 @@ public class Profiler {
                     handler, count, total / 1_000_000.0, avgMs, max / 1_000_000.0));
             }
             sb.append("\n  ]\n}");
-            fw.write(sb.toString());
+            ReportFiles.writeUtf8(new File("config/statmod/perf-report.json"), sb.toString());
             STATMod.LOGGER.info("Performance report saved to config/statmod/perf-report.json");
         } catch (IOException e) {
             STATMod.LOGGER.error("Failed to write profiler report", e);
@@ -69,13 +72,15 @@ public class Profiler {
 
     public static Map<String, String> getReportLines() {
         Map<String, String> lines = new LinkedHashMap<>();
-        for (String handler : totalTime.keySet()) {
+        List<String> handlers = new ArrayList<>(totalTime.keySet());
+        Collections.sort(handlers);
+        for (String handler : handlers) {
             long total = totalTime.getOrDefault(handler, 0L);
             int count = callCount.getOrDefault(handler, 0);
             double avgMs = count > 0 ? (total / (double) count) / 1_000_000.0 : 0;
             lines.put(handler, String.format("%d calls, avg %.3fms, max %.3fms",
                 count, avgMs, maxTime.getOrDefault(handler, 0L) / 1_000_000.0));
         }
-        return lines;
+        return Collections.unmodifiableMap(lines);
     }
 }

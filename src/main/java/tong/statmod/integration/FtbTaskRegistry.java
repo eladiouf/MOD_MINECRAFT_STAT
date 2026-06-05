@@ -2,34 +2,23 @@ package tong.statmod.integration;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.capability.PlayerStats;
 import tong.statmod.stats.StatType;
 
-@Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class FtbTaskRegistry {
-    private static boolean registered = false;
+    private static boolean ftbQuestsLoaded = false;
 
-    @SubscribeEvent
-    public static void onCustomTaskEvent(Object event) {
-        if (registered) return;
-        if (!ModList.get().isLoaded("ftbquests")) return;
-
-        try {
-            Class<?> eventClass = Class.forName("dev.ftb.mods.ftbquests.api.event.CustomTaskEvent");
-            if (!eventClass.isInstance(event)) return;
-
-            STATMod.LOGGER.info("FTB Quests CustomTaskEvent received — statmod tasks available");
-            registered = true;
-        } catch (Exception e) {
-            STATMod.LOGGER.warn("FTB Quests task registration skipped: {}", e.getMessage());
+    public static void init() {
+        ftbQuestsLoaded = ModList.get().isLoaded("ftbquests");
+        if (ftbQuestsLoaded) {
+            STATMod.LOGGER.info("FTB Quests detected - stat task helpers enabled");
         }
     }
+
+    public static boolean isLoaded() { return ftbQuestsLoaded; }
 
     public static int getStatLevel(Player player, String statName) {
         ServerPlayer sp = (ServerPlayer) player;

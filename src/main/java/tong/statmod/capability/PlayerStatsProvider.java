@@ -27,6 +27,10 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         return cap == PLAYER_STATS ? lazyOptional.cast() : LazyOptional.empty();
     }
 
+    public void invalidate() {
+        lazyOptional.invalidate();
+    }
+
     @Override
     public CompoundTag serializeNBT() {
         return getOrCreate().serializeNBT();

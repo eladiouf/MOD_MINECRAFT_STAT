@@ -34,7 +34,7 @@ public class PartyManager {
         if (members == null) return Collections.emptySet();
         Set<UUID> all = new HashSet<>(members);
         all.add(leaderId);
-        return all;
+        return Set.copyOf(all);
     }
 
     public static boolean isInParty(UUID playerId) {

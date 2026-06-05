@@ -19,6 +19,7 @@ import tong.statmod.network.FatiguePacket;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
 import tong.statmod.stats.StatCalculator;
+import tong.statmod.stats.StatType;
 import tong.statmod.world.thirst.ThirstProvider;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -39,8 +40,8 @@ public class FatigueHandler {
 
             int[] levels = {0, 0};
             CapabilityHelper.withStats(player, s -> {
-                levels[0] = s.getLevel(5);
-                levels[1] = s.getLevel(22);
+                levels[0] = s.getLevel(StatType.PHYSICAL_ENDURANCE.index);
+                levels[1] = s.getLevel(StatType.WILLPOWER.index);
             });
             int endurance = levels[0];
             int willpower = levels[1];
@@ -96,7 +97,7 @@ public class FatigueHandler {
         // Willpower reduces penalty
         float[] adjusted = {penalty};
         CapabilityHelper.withStats(player, stats -> {
-            int willpower = stats.getLevel(22);
+            int willpower = stats.getLevel(StatType.WILLPOWER.index);
             adjusted[0] = penalty * (1.0f - StatCalculator.getFatigueReduction(willpower));
         });
         fatigue.addFatigue(adjusted[0]);

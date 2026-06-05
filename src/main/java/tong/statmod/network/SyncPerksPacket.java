@@ -11,7 +11,7 @@ public class SyncPerksPacket {
     private final int points;
 
     public SyncPerksPacket(int[] unlockedPerkIds, int points) {
-        this.unlockedPerkIds = unlockedPerkIds;
+        this.unlockedPerkIds = NetworkPayloadRules.requirePerkArray(unlockedPerkIds, "unlockedPerkIds");
         this.points = points;
     }
 
@@ -21,7 +21,7 @@ public class SyncPerksPacket {
     }
 
     public static SyncPerksPacket decode(FriendlyByteBuf buf) {
-        return new SyncPerksPacket(buf.readVarIntArray(), buf.readInt());
+        return new SyncPerksPacket(buf.readVarIntArray(NetworkPayloadRules.MAX_PERK_COUNT), buf.readInt());
     }
 
     public static void handle(SyncPerksPacket packet, Supplier<NetworkEvent.Context> ctx) {

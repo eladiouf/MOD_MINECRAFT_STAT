@@ -2,10 +2,15 @@ package tong.statmod.challenge;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.stats.StatType;
 import java.util.*;
 
+@Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class DailyChallenge {
     private static final Map<UUID, ChallengeState> challenges = new HashMap<>();
     private static final Random RANDOM = new Random();
@@ -41,4 +46,9 @@ public class DailyChallenge {
     public static ChallengeState getChallenge(UUID id) { return challenges.get(id); }
 
     public static void cleanup(UUID uuid) { challenges.remove(uuid); }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        cleanup(event.getEntity().getUUID());
+    }
 }

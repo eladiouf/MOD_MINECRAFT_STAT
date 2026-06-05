@@ -27,6 +27,10 @@ public class WeaponMasteryProvider implements ICapabilityProvider, INBTSerializa
         return cap == WEAPON_MASTERY ? lazyOptional.cast() : LazyOptional.empty();
     }
 
+    public void invalidate() {
+        lazyOptional.invalidate();
+    }
+
     @Override
     public CompoundTag serializeNBT() { return getOrCreate().serializeNBT(); }
 

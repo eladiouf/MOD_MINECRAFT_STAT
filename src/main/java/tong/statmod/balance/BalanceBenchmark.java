@@ -1,8 +1,9 @@
 package tong.statmod.balance;
 
 import tong.statmod.STATMod;
+import tong.statmod.io.ReportFiles;
 import tong.statmod.stats.*;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 
 public class BalanceBenchmark {
@@ -53,8 +54,8 @@ public class BalanceBenchmark {
         report.append("Precision 80: +24% crit chance\n");
         report.append("Endurance 100: +20 hearts\n");
 
-        try (FileWriter fw = new FileWriter("config/statmod/balance-report.txt")) {
-            fw.write(report.toString());
+        try {
+            ReportFiles.writeUtf8(new File("config/statmod/balance-report.txt"), report.toString());
             STATMod.LOGGER.info("Balance benchmark report saved to config/statmod/balance-report.txt");
         } catch (IOException e) {
             STATMod.LOGGER.error("Failed to write balance report", e);

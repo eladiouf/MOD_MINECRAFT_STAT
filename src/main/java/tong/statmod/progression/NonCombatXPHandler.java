@@ -164,4 +164,9 @@ public class NonCombatXPHandler {
             ActionXpHelper.awardXp(player, StatType.AIR_AFFINITY.index, ActionXpHelper.XpTier.COMMON);
         }
     }
+
+    @SubscribeEvent
+    public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+        lastPositions.remove(event.getEntity().getUUID());
+    }
 }

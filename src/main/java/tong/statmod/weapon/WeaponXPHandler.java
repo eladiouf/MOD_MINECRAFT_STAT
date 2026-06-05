@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 import tong.statmod.Config;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.network.NetworkHandler;
+import tong.statmod.network.WeaponMasteryPacket;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -41,6 +43,14 @@ public class WeaponXPHandler {
                     stats.addXp(primaryStat.index, xp / 2);
                 });
             }
+
+            int[] wLevels = new int[WeaponMasteryManager.WEAPON_COUNT];
+            int[] wXp = new int[WeaponMasteryManager.WEAPON_COUNT];
+            for (int i = 0; i < WeaponMasteryManager.WEAPON_COUNT; i++) {
+                wLevels[i] = mastery.getLevel(i);
+                wXp[i] = mastery.getXp(i);
+            }
+            NetworkHandler.sendToPlayer(new WeaponMasteryPacket(wLevels, wXp), player);
         });
     }
 

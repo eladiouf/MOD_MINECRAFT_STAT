@@ -3,8 +3,8 @@ package tong.statmod.compat;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import tong.statmod.STATMod;
+import tong.statmod.io.ReportFiles;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -65,18 +65,19 @@ public class CompatibilityChecker {
 
     private static void generateReport() {
         File dir = new File("config/statmod");
-        dir.mkdirs();
         File report = new File(dir, "compatibility-report.txt");
-        try (FileWriter fw = new FileWriter(report)) {
-            fw.write("=== STAT Mod Compatibility Report ===\n");
-            fw.write("Generated: " + new Date() + "\n\n");
-            fw.write("--- ISSUES (" + issues.size() + ") ---\n");
-            for (String s : issues) fw.write("[ISSUE] " + s + "\n");
-            fw.write("\n--- WARNINGS (" + warnings.size() + ") ---\n");
-            for (String s : warnings) fw.write("[WARN] " + s + "\n");
-            fw.write("\n--- INFO (" + infos.size() + ") ---\n");
-            for (String s : infos) fw.write("[INFO] " + s + "\n");
-            fw.write("\nReport complete.\n");
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append("=== STAT Mod Compatibility Report ===\n");
+            sb.append("Generated: ").append(new Date()).append("\n\n");
+            sb.append("--- ISSUES (").append(issues.size()).append(") ---\n");
+            for (String s : issues) sb.append("[ISSUE] ").append(s).append('\n');
+            sb.append("\n--- WARNINGS (").append(warnings.size()).append(") ---\n");
+            for (String s : warnings) sb.append("[WARN] ").append(s).append('\n');
+            sb.append("\n--- INFO (").append(infos.size()).append(") ---\n");
+            for (String s : infos) sb.append("[INFO] ").append(s).append('\n');
+            sb.append("\nReport complete.\n");
+            ReportFiles.writeUtf8(report, sb.toString());
         } catch (IOException e) {
             STATMod.LOGGER.error("Failed to write compatibility report", e);
         }

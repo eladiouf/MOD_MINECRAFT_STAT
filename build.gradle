@@ -134,6 +134,13 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        name = "BlameJared"
+        url = "https://maven.blamejared.com"
+        content {
+            includeGroup "vazkii.patchouli"
+        }
+    }
 }
 
 dependencies {
@@ -144,32 +151,33 @@ dependencies {
     // Epic Fight (local JAR)
     implementation fg.deobf("blank:epic-fight-20.14.17-mc1.20.1-forge:20.14.17")
 
-    // ParCool (CurseMaven)
-    implementation fg.deobf("curse.maven:parcool-482378:6612358")
+    // ParCool toolchain (optional compat - compile only, not forced into dedicated-server runtime)
+    compileOnly fg.deobf("curse.maven:parcool-482378:6612358")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-85-FORGE")
 
-    // Epic Parcool - Epic Fight x ParCool compatibility (local JAR)
-    implementation fg.deobf("blank:epicparcool-20.12.0.1-1.20.1:20.12.0.1")
+    // Epic Parcool - Epic Fight x ParCool compatibility (optional compat - compile only)
+    compileOnly fg.deobf("blank:epicparcool-20.12.0.1-1.20.1:20.12.0.1")
 
-    // AAA Particles (local JAR)
-    implementation fg.deobf("blank:aaa_particles-forge-1.20.1-2.2.1-beta.2:2.2.1-beta.2")
+    // AAA Particles (local JAR) - optional compat/content
+    compileOnly fg.deobf("blank:aaa_particles-forge-1.20.1-2.2.1-beta.2:2.2.1-beta.2")
 
     // Invincible Lib - JSON-based skill creation framework (local JAR)
     implementation fg.deobf("blank:epic-fight-invincible-lib-20.14.8.2-mc1.20.1-forge:20.14.8.2")
 
-    // EpicFight Nightfall v3.3.3 (local JAR in libs/)
-    implementation fg.deobf("blank:epicfight-nightfall-3.3.3-all:3.3.3")
+    // EpicFight Nightfall v3.3.3 (local JAR in libs/) - optional compat/content
+    compileOnly fg.deobf("blank:epicfight-nightfall-3.3.3-all:3.3.3")
 
-    // EpicFight Extra v1.2 (Modrinth) - animations, weapons, scythe
-    implementation fg.deobf("maven.modrinth:epicfight-extra:1.2")
+    // EpicFight Extra v1.2 (Modrinth) - optional compat/content
+    compileOnly fg.deobf("maven.modrinth:epicfight-extra:1.2")
 
-    // Epic Fight Avalon (CurseMaven) - animation/combat library required by Nightfall
-    implementation fg.deobf("curse.maven:epic-fight-avalon-1268823:7619938")
+    // Epic Fight Avalon (CurseMaven) - optional compat/content
+    compileOnly fg.deobf("curse.maven:epic-fight-avalon-1268823:7619938")
 
-    // Weapons of Miracles (local JAR) - custom weapons and skills
-    implementation fg.deobf("blank:WeaponsOfMiracles-2.0.15-mc1.20.1-forge:2.0.15")
+    // Weapons of Miracles (local JAR) - optional compat/content
+    compileOnly fg.deobf("blank:WeaponsOfMiracles-2.0.15-mc1.20.1-forge:2.0.15")
 
-    // P1nero Bow (local JAR) - Epic Fight bow addon
-    implementation fg.deobf("blank:p1nero_bow-forge1.20.1-20.14.1.6:20.14.1.6")
+    // P1nero Bow (local JAR) - Epic Fight bow addon (optional compat - compile only)
+    compileOnly fg.deobf("blank:p1nero_bow-forge1.20.1-20.14.1.6:20.14.1.6")
 
     // JEI (optional - compile only)
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.3.0.8")
@@ -238,4 +246,207 @@ tasks.withType(JavaCompile).configureEach {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('validateStatModPackaging') {
+    group = 'verification'
+    description = 'Guards STAT Mod against server-side regressions, forced optional runtimes, and unfinished production markers.'
+
+    doLast {
+        def errors = []
+        def mainJavaDir = file('src/main/java')
+
+        def requireText = { File sourceFile, String expected, String label ->
+            if (!sourceFile.text.contains(expected)) {
+                errors << "${label} is missing required text: ${expected}"
+            }
+        }
+
+        def forbidText = { File sourceFile, String forbidden, String label ->
+            if (sourceFile.text.contains(forbidden)) {
+                errors << "${label} contains forbidden text: ${forbidden}"
+            }
+        }
+
+        fileTree(mainJavaDir).matching { include '**/*.java' }.files.each { sourceFile ->
+            sourceFile.eachLine { line, number ->
+                if (line.contains('TODO') || line.contains('FIXME')) {
+                    errors << "${sourceFile.name}:${number} contains unfinished marker in production source"
+                }
+            }
+        }
+
+        def statModSource = file('src/main/java/tong/statmod/STATMod.java')
+        requireText(statModSource, 'FtbTaskRegistry.init();', 'STATMod common setup')
+
+        def ftbTaskRegistryFile = file('src/main/java/tong/statmod/integration/FtbTaskRegistry.java')
+        requireText(ftbTaskRegistryFile, 'public static void init()', 'FtbTaskRegistry')
+        forbidText(ftbTaskRegistryFile, '@SubscribeEvent', 'FtbTaskRegistry')
+        forbidText(ftbTaskRegistryFile, '@Mod.EventBusSubscriber', 'FtbTaskRegistry')
+        forbidText(ftbTaskRegistryFile, 'onCustomTaskEvent(Object event)', 'FtbTaskRegistry')
+
+        def implementationDeps = configurations.implementation.allDependencies
+        def runtimeOnlyDeps = configurations.runtimeOnly.allDependencies
+        def compileOnlyDeps = configurations.compileOnly.allDependencies
+        def requireCompileOnlyOptionalDependency = { String group, String name, String label ->
+            def inCompileOnly = compileOnlyDeps.any { dep -> dep.group == group && dep.name == name }
+            def inImplementation = implementationDeps.any { dep -> dep.group == group && dep.name == name }
+            def inRuntimeOnly = runtimeOnlyDeps.any { dep -> dep.group == group && dep.name == name }
+
+            if (!inCompileOnly) {
+                errors << "${label} must stay compileOnly because it is optional compat"
+            }
+            if (inImplementation || inRuntimeOnly) {
+                errors << "${label} must not be forced into the dev runtime"
+            }
+        }
+
+        requireCompileOnlyOptionalDependency('curse.maven', 'parcool-482378', 'ParCool dependency')
+        requireCompileOnlyOptionalDependency('vazkii.patchouli', 'Patchouli', 'Patchouli dependency')
+        requireCompileOnlyOptionalDependency('blank', 'epicparcool-20.12.0.1-1.20.1', 'EpicParcool dependency')
+        requireCompileOnlyOptionalDependency('blank', 'aaa_particles-forge-1.20.1-2.2.1-beta.2', 'AAA Particles dependency')
+        requireCompileOnlyOptionalDependency('blank', 'epicfight-nightfall-3.3.3-all', 'EpicFight Nightfall dependency')
+        requireCompileOnlyOptionalDependency('maven.modrinth', 'epicfight-extra', 'EpicFight Extra dependency')
+        requireCompileOnlyOptionalDependency('curse.maven', 'epic-fight-avalon-1268823', 'Epic Fight Avalon dependency')
+        requireCompileOnlyOptionalDependency('blank', 'WeaponsOfMiracles-2.0.15-mc1.20.1-forge', 'Weapons of Miracles dependency')
+        requireCompileOnlyOptionalDependency('blank', 'p1nero_bow-forge1.20.1-20.14.1.6', 'P1nero Bow dependency')
+
+        def keyMappingsFile = file('src/main/java/tong/statmod/client/StatModKeyMappings.java')
+        requireText(keyMappingsFile, '@Mod.EventBusSubscriber(modid = STATMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)', 'StatModKeyMappings')
+
+        def statModSkillCategoriesFile = file('src/main/java/tong/statmod/skills/StatModSkillCategories.java')
+        requireText(statModSkillCategoriesFile, 'ResourceLocation.fromNamespaceAndPath("statmod", "class_arts")', 'StatModSkillCategories book icon')
+        forbidText(statModSkillCategoriesFile, 'textures/gui/skills/class_arts/class_arts.png', 'StatModSkillCategories texture-as-model icon')
+
+        ['stat_scroll', 'perk_tome', 'mastery_crystal', 'class_arts'].each { modelName ->
+            def modelFile = file("src/main/resources/assets/statmod/models/item/${modelName}.json")
+            if (!modelFile.isFile()) {
+                errors << "Missing item model: assets/statmod/models/item/${modelName}.json"
+            }
+        }
+
+        def networkRulesFile = file('src/main/java/tong/statmod/network/NetworkPayloadRules.java')
+        requireText(networkRulesFile, 'MAX_STAT_COUNT = PlayerStats.STAT_COUNT', 'NetworkPayloadRules')
+        requireText(networkRulesFile, 'MAX_PERK_COUNT = Perk.values().length', 'NetworkPayloadRules')
+        requireText(networkRulesFile, 'MAX_WEAPON_COUNT = WeaponMasteryManager.WEAPON_COUNT', 'NetworkPayloadRules')
+        requireText(networkRulesFile, 'MAX_STAT_UPDATE_VALUES = PlayerStats.STAT_COUNT * 3', 'NetworkPayloadRules')
+
+        fileTree('src/main/java/tong/statmod/network').matching { include '**/*Packet.java' }.files.each { sourceFile ->
+            def sourceText = sourceFile.text
+            if (sourceText.contains('readVarIntArray()')) {
+                errors << "${sourceFile.name} must bound every FriendlyByteBuf.readVarIntArray call"
+            }
+        }
+
+        def playerStatsFile = file('src/main/java/tong/statmod/capability/PlayerStats.java')
+        requireText(playerStatsFile, 'sanitizeState();', 'PlayerStats sanitation')
+        requireText(playerStatsFile, 'java.util.Arrays.fill(levels, 0);', 'PlayerStats sanitation')
+        requireText(playerStatsFile, 'this.currentMana = Math.max(0, Math.min(this.currentMana, getMaxMana()));', 'PlayerStats mana clamp')
+
+        def perkManagerFile = file('src/main/java/tong/statmod/perks/PerkManager.java')
+        requireText(perkManagerFile, 'Set.copyOf(unlockedPerks)', 'PerkManager immutable view')
+        requireText(perkManagerFile, 'if (Perk.byId(id) != null)', 'PerkManager perk id filter')
+        forbidText(perkManagerFile, 'return unlockedPerks;', 'PerkManager mutable view')
+
+        def weaponMasteryFile = file('src/main/java/tong/statmod/weapon/WeaponMasteryManager.java')
+        requireText(weaponMasteryFile, 'sanitizeState();', 'WeaponMasteryManager sanitation')
+        requireText(weaponMasteryFile, 'java.util.Arrays.fill(levels, 0);', 'WeaponMasteryManager sanitation')
+
+        def fatigueManagerFile = file('src/main/java/tong/statmod/fatigue/FatigueManager.java')
+        requireText(fatigueManagerFile, 'sanitizeState();', 'FatigueManager sanitation')
+        requireText(fatigueManagerFile, 'this.fatigue = Math.max(0, Math.min(this.fatigue, this.maxFatigue));', 'FatigueManager clamp')
+
+        def thirstManagerFile = file('src/main/java/tong/statmod/world/thirst/ThirstManager.java')
+        requireText(thirstManagerFile, 'sanitizeState();', 'ThirstManager sanitation')
+        requireText(thirstManagerFile, 'this.thirst = Math.max(0, Math.min(this.thirst, MAX_THIRST));', 'ThirstManager clamp')
+
+        def statsCommandsFile = file('src/main/java/tong/statmod/command/StatsCommands.java')
+        forbidText(statsCommandsFile, 'getUnlockedPerks().clear()', 'StatsCommands perk respec')
+        requireText(statsCommandsFile, 'perks.resetPerks();', 'StatsCommands perk respec')
+        forbidText(statsCommandsFile, 'catch (Exception ignored)', 'StatsCommands backup error handling')
+        forbidText(statsCommandsFile, 'files[files.length - 1]', 'StatsCommands backup selection')
+        requireText(statsCommandsFile, 'StatsBackupFiles.findLatestBackup', 'StatsCommands backup selection')
+        requireText(statsCommandsFile, 'StatsBackupFiles.writeBackup', 'StatsCommands backup writing')
+
+        def statsBackupFiles = file('src/main/java/tong/statmod/command/StatsBackupFiles.java')
+        requireText(statsBackupFiles, 'static Optional<File> findLatestBackup', 'StatsBackupFiles helper')
+        requireText(statsBackupFiles, 'Comparator.comparingLong', 'StatsBackupFiles ordering')
+
+        def reportFiles = file('src/main/java/tong/statmod/io/ReportFiles.java')
+        requireText(reportFiles, 'Files.createDirectories(parent.toPath());', 'ReportFiles directory creation')
+        requireText(reportFiles, 'Files.writeString(target.toPath(), contents, StandardCharsets.UTF_8);', 'ReportFiles utf8 writing')
+
+        ['src/main/java/tong/statmod/profiling/Profiler.java',
+         'src/main/java/tong/statmod/compat/CompatibilityChecker.java',
+         'src/main/java/tong/statmod/balance/BalanceBenchmark.java'].each { path ->
+            def reportSource = file(path)
+            forbidText(reportSource, 'FileWriter', reportSource.name)
+            requireText(reportSource, 'ReportFiles.writeUtf8', reportSource.name)
+        }
+
+        def capabilityHandlerFile = file('src/main/java/tong/statmod/capability/CapabilityHandler.java')
+        requireText(capabilityHandlerFile, 'DailyChallenge.cleanup(uuid);', 'CapabilityHandler logout cleanup')
+        requireText(capabilityHandlerFile, 'PartyManager.cleanup(uuid);', 'CapabilityHandler logout cleanup')
+        requireText(capabilityHandlerFile, 'NonCombatSkill.clearCooldowns(uuid);', 'CapabilityHandler logout cleanup')
+        requireText(capabilityHandlerFile, 'IdentitySkill.clearCooldowns(uuid);', 'CapabilityHandler logout cleanup')
+        requireText(capabilityHandlerFile, 'StatActiveSkill.clearCooldowns(uuid);', 'CapabilityHandler logout cleanup')
+
+        def partyManagerFile = file('src/main/java/tong/statmod/party/PartyManager.java')
+        requireText(partyManagerFile, 'return Set.copyOf(all);', 'PartyManager immutable snapshot')
+
+        def profilerFile = file('src/main/java/tong/statmod/profiling/Profiler.java')
+        requireText(profilerFile, 'return Collections.unmodifiableMap(lines);', 'Profiler immutable report lines')
+
+        def nonCombatXpHandlerFile = file('src/main/java/tong/statmod/progression/NonCombatXPHandler.java')
+        requireText(nonCombatXpHandlerFile, 'lastPositions.remove(event.getEntity().getUUID());', 'NonCombatXPHandler logout cleanup')
+
+        def dailyChallengeFile = file('src/main/java/tong/statmod/challenge/DailyChallenge.java')
+        requireText(dailyChallengeFile, 'cleanup(event.getEntity().getUUID());', 'DailyChallenge logout cleanup')
+
+        def skillUnlockHandlerFile = file('src/main/java/tong/statmod/skills/SkillUnlockHandler.java')
+        forbidText(skillUnlockHandlerFile, 'processed.add(player.getUUID());', 'SkillUnlockHandler dead processed state')
+
+        def perkStateFile = file('src/main/java/tong/statmod/perks/PerkState.java')
+        requireText(perkStateFile, 'effectProcessing.remove(uuid);', 'PerkState player cleanup')
+        requireText(perkStateFile, 'private static final Map<UUID, Map<Integer, Long>> cooldowns', 'PerkState private cooldowns')
+        requireText(perkStateFile, 'public static int recordComboHit(UUID uuid, long now, long resetWindowMs)', 'PerkState combo api')
+        requireText(perkStateFile, 'public static boolean tryBeginEffectProcessing(UUID uuid)', 'PerkState effect api')
+        forbidText(perkStateFile, 'public static final Map<UUID, Map<Integer, Long>> cooldowns', 'PerkState mutable public cooldowns')
+        forbidText(perkStateFile, 'public static final Map<UUID, Integer> comboCounter', 'PerkState mutable public combo counter')
+        forbidText(perkStateFile, 'public static final Map<UUID, Set<Integer>> hitMobTracker', 'PerkState mutable public hit tracker')
+        forbidText(perkStateFile, 'public static final Set<UUID> effectProcessing', 'PerkState mutable public effect set')
+
+        def perkDamageHandlerFile = file('src/main/java/tong/statmod/perks/PerkDamageHandler.java')
+        requireText(perkDamageHandlerFile, 'PerkState.recordComboHit', 'PerkDamageHandler combo state api')
+        requireText(perkDamageHandlerFile, 'PerkState.noteTrackedHit', 'PerkDamageHandler tracked hit api')
+        forbidText(perkDamageHandlerFile, 'PerkState.comboCounter', 'PerkDamageHandler raw combo state')
+        forbidText(perkDamageHandlerFile, 'PerkState.hitMobTracker', 'PerkDamageHandler raw hit tracker')
+
+        def perkStatusHandlerFile = file('src/main/java/tong/statmod/perks/PerkStatusHandler.java')
+        requireText(perkStatusHandlerFile, 'PerkState.tryBeginEffectProcessing', 'PerkStatusHandler effect api')
+        forbidText(perkStatusHandlerFile, 'PerkState.effectProcessing', 'PerkStatusHandler raw effect state')
+
+        def globalLootModifiersFile = file('src/main/resources/data/forge/loot_modifiers/global_loot_modifiers.json')
+        requireText(globalLootModifiersFile, '"entries": ["statmod:stat_loot"]', 'Global loot modifiers registration')
+
+        def statLootModifierDataFile = file('src/main/resources/data/statmod/loot_modifiers/stat_loot.json')
+        requireText(statLootModifierDataFile, '"type": "statmod:stat_loot"', 'Stat loot modifier data')
+        requireText(statLootModifierDataFile, '"conditions": []', 'Stat loot modifier conditions')
+
+        def epicParcoolCompatFile = file('src/main/java/tong/statmod/integration/EpicParcoolCompat.java')
+        requireText(epicParcoolCompatFile, 'static void cleanupPlayerCooldowns(UUID uuid)', 'EpicParcoolCompat cooldown cleanup')
+        requireText(epicParcoolCompatFile, 'cleanupPlayerCooldowns(event.getEntity().getUUID());', 'EpicParcoolCompat logout cleanup')
+        requireText(epicParcoolCompatFile, 'xpCooldowns.entrySet().removeIf(e -> e.getKey().startsWith(prefix));', 'EpicParcoolCompat cooldown cleanup')
+        requireText(epicParcoolCompatFile, 'resourceCooldowns.entrySet().removeIf(e -> e.getKey().startsWith(prefix));', 'EpicParcoolCompat cooldown cleanup')
+
+        if (!errors.isEmpty()) {
+            throw new GradleException("STAT Mod packaging validation failed:\n - " + errors.join('\n - '))
+        }
+
+        println 'STAT Mod packaging validation passed.'
+    }
+}
+
+tasks.named('check').configure {
+    dependsOn 'validateStatModPackaging'
 }

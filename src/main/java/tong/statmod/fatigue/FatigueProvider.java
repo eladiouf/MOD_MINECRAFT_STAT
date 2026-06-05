@@ -27,6 +27,10 @@ public class FatigueProvider implements ICapabilityProvider, INBTSerializable<Co
         return cap == FATIGUE ? lazyOptional.cast() : LazyOptional.empty();
     }
 
+    public void invalidate() {
+        lazyOptional.invalidate();
+    }
+
     @Override
     public CompoundTag serializeNBT() { return getOrCreate().serializeNBT(); }
 

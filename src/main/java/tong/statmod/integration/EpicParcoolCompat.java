@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import tong.statmod.STATMod;
@@ -81,6 +82,11 @@ public class EpicParcoolCompat {
 
     public static boolean isLoaded() {
         return loaded;
+    }
+
+    static void cleanupPlayerCooldowns(UUID uuid) {
+        if (!loaded) return;
+        ParCoolHookRegistry.cleanupPlayer(uuid);
     }
 
     /**
@@ -228,6 +234,12 @@ public class EpicParcoolCompat {
                 resourceCooldowns.entrySet().removeIf(e -> now - e.getValue() > 200);
             }
         }
+
+        static void cleanupPlayer(UUID uuid) {
+            String prefix = uuid + ":";
+            xpCooldowns.entrySet().removeIf(e -> e.getKey().startsWith(prefix));
+            resourceCooldowns.entrySet().removeIf(e -> e.getKey().startsWith(prefix));
+        }
     }
 
     /**
@@ -243,5 +255,10 @@ public class EpicParcoolCompat {
         if (serverPlayer.tickCount % 20 != 0) return;
 
         applyStatBonuses(serverPlayer);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        cleanupPlayerCooldowns(event.getEntity().getUUID());
     }
 }

@@ -17,9 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
 
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class PerkDamageHandler {
@@ -37,19 +35,13 @@ public class PerkDamageHandler {
             }
 
             if (perks.isUnlocked(Perk.TRACKING_PACK)) {
-                PerkState.hitMobTracker.computeIfAbsent(player.getUUID(), k -> ConcurrentHashMap.newKeySet())
-                    .add(event.getTarget().getId());
+                PerkState.noteTrackedHit(player.getUUID(), event.getTarget().getId());
             }
 
             if (perks.isUnlocked(Perk.BLADE_COMBO)) {
                 UUID uuid = player.getUUID();
                 long now = System.currentTimeMillis();
-                Long lastCombo = PerkState.comboTimer.get(uuid);
-                int count = PerkState.comboCounter.getOrDefault(uuid, 0);
-                if (lastCombo == null || (now - lastCombo) > 3000) count = 0;
-                count++;
-                PerkState.comboCounter.put(uuid, count);
-                PerkState.comboTimer.put(uuid, now);
+                PerkState.recordComboHit(uuid, now, 3000);
             }
         });
     }
@@ -70,10 +62,10 @@ public class PerkDamageHandler {
                 if (perks.isUnlocked(Perk.BRUTE_DEMOLITION)) multiplier += 0.5f;
 
                 if (perks.isUnlocked(Perk.BLADE_COMBO)) {
-                    int count = PerkState.comboCounter.getOrDefault(attacker.getUUID(), 0);
+                    int count = PerkState.getComboCount(attacker.getUUID());
                     if (count >= 5) {
                         multiplier += 0.5f;
-                        PerkState.comboCounter.put(attacker.getUUID(), 0);
+                        PerkState.resetCombo(attacker.getUUID());
                     }
                 }
 
@@ -101,8 +93,7 @@ public class PerkDamageHandler {
                 }
 
                 if (perks.isUnlocked(Perk.TRACKING_PACK)) {
-                    Set<Integer> hitMobs = PerkState.hitMobTracker.get(attacker.getUUID());
-                    if (hitMobs != null && hitMobs.contains(target.getId())) {
+                    if (PerkState.hasTrackedHit(attacker.getUUID(), target.getId())) {
                         multiplier += 0.15f;
                     }
                 }

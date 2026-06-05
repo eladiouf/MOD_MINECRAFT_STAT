@@ -14,7 +14,7 @@ public class StatUpdatePacket {
     }
 
     public StatUpdatePacket(int[] updates) {
-        this.updates = updates;
+        this.updates = NetworkPayloadRules.requireStatUpdateValues(updates);
     }
 
     public static void encode(StatUpdatePacket packet, FriendlyByteBuf buf) {
@@ -22,7 +22,7 @@ public class StatUpdatePacket {
     }
 
     public static StatUpdatePacket decode(FriendlyByteBuf buf) {
-        return new StatUpdatePacket(buf.readVarIntArray());
+        return new StatUpdatePacket(buf.readVarIntArray(NetworkPayloadRules.MAX_STAT_UPDATE_VALUES));
     }
 
     public static void handle(StatUpdatePacket packet, Supplier<NetworkEvent.Context> ctx) {

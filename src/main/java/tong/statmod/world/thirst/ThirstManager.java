@@ -30,5 +30,10 @@ public class ThirstManager implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         this.thirst = tag.getFloat("Thirst");
+        sanitizeState();
+    }
+
+    private void sanitizeState() {
+        this.thirst = Math.max(0, Math.min(this.thirst, MAX_THIRST));
     }
 }

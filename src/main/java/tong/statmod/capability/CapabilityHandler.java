@@ -9,10 +9,15 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
+import tong.statmod.challenge.DailyChallenge;
 import tong.statmod.fatigue.FatigueManager;
 import tong.statmod.fatigue.FatigueProvider;
 import tong.statmod.perks.PerkManager;
 import tong.statmod.perks.PerkProvider;
+import tong.statmod.party.PartyManager;
+import tong.statmod.skills.IdentitySkill;
+import tong.statmod.skills.NonCombatSkill;
+import tong.statmod.skills.StatActiveSkill;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.weapon.WeaponMasteryManager;
 import tong.statmod.weapon.WeaponMasteryProvider;
@@ -81,8 +86,25 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            // Re-apply attribute bonuses after respawn (player entity is recreated)
             StatEffectApplier.applyAllBonuses(serverPlayer);
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player player) {
+            java.util.UUID uuid = player.getUUID();
+            DailyChallenge.cleanup(uuid);
+            PartyManager.cleanup(uuid);
+            NonCombatSkill.clearCooldowns(uuid);
+            IdentitySkill.clearCooldowns(uuid);
+            StatActiveSkill.clearCooldowns(uuid);
+        }
+        entity.getCapability(PlayerStatsProvider.PLAYER_STATS).invalidate();
+        entity.getCapability(FatigueProvider.FATIGUE).invalidate();
+        entity.getCapability(ThirstProvider.THIRST).invalidate();
+        entity.getCapability(PerkProvider.PERKS).invalidate();
+        entity.getCapability(WeaponMasteryProvider.WEAPON_MASTERY).invalidate();
     }
 }

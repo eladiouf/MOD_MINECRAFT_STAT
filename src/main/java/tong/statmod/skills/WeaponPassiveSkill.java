@@ -3,9 +3,11 @@ package tong.statmod.skills;
 import java.util.UUID;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.common.ForgeMod;
 import yesman.epicfight.skill.SkillBuilder;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.passive.PassiveSkill;
@@ -23,6 +25,7 @@ public class WeaponPassiveSkill extends PassiveSkill {
     private static final UUID MOVE_UUID = UUID.fromString("c3d4e5f6-a7b8-9012-cdef-123456789012");
     private static final UUID ARMOR_UUID = UUID.fromString("d4e5f6a7-b8c9-0123-defa-234567890123");
     private static final UUID CRIT_UUID = UUID.fromString("e5f6a7b8-c9d0-1234-efab-345678901234");
+    private static final UUID REACH_UUID = UUID.fromString("f6a7b8c9-d0e1-2345-fabc-456789012345");
 
     private final WeaponStyle style;
 
@@ -80,10 +83,11 @@ public class WeaponPassiveSkill extends PassiveSkill {
                 addModifier(player, Attributes.ATTACK_SPEED, SPEED_UUID, -0.05, "longsword_speed");
             }
             case SPEAR -> {
-                // Zone control: +10% damage, -15% attack speed
+                // Zone control: +10% damage, -15% attack speed, +3 entity reach
                 addModifier(player, Attributes.ATTACK_DAMAGE, DAMAGE_UUID, 0.10, "spear_damage");
                 addModifier(player, Attributes.ATTACK_SPEED, SPEED_UUID, -0.15, "spear_speed");
-                // TODO: +3 reach via custom attribute or mixin
+                addModifier(player, ForgeMod.ENTITY_REACH.get(), REACH_UUID, 3.0, "spear_reach",
+                    AttributeModifier.Operation.ADDITION);
             }
             case TACHI -> {
                 // Vitesse élégante: +25% attack speed, -15% damage
@@ -124,15 +128,19 @@ public class WeaponPassiveSkill extends PassiveSkill {
         removeModifier(player, Attributes.ATTACK_SPEED, SPEED_UUID);
         removeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_UUID);
         removeModifier(player, Attributes.ARMOR, ARMOR_UUID);
+        removeModifier(player, ForgeMod.ENTITY_REACH.get(), REACH_UUID);
     }
 
-    private void addModifier(ServerPlayer player, net.minecraft.world.entity.ai.attributes.Attribute attr,
-                             UUID uuid, double amount, String name) {
+    private void addModifier(ServerPlayer player, Attribute attr, UUID uuid, double amount, String name) {
+        addModifier(player, attr, uuid, amount, name, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    }
+
+    private void addModifier(ServerPlayer player, Attribute attr, UUID uuid, double amount, String name,
+                             AttributeModifier.Operation op) {
         AttributeInstance instance = player.getAttribute(attr);
         if (instance != null) {
             instance.removeModifier(uuid);
-            instance.addPermanentModifier(new AttributeModifier(uuid, "statmod:" + name, amount,
-                AttributeModifier.Operation.MULTIPLY_TOTAL));
+            instance.addPermanentModifier(new AttributeModifier(uuid, "statmod:" + name, amount, op));
         }
     }
 

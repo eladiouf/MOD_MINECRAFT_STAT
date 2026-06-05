@@ -14,7 +14,7 @@ public class PerkManager implements INBTSerializable<CompoundTag> {
 
     public boolean isUnlocked(Perk perk) { return unlockedPerks.contains(perk.id); }
     public boolean isUnlocked(int id) { return unlockedPerks.contains(id); }
-    public Set<Integer> getUnlockedPerks() { return unlockedPerks; }
+    public Set<Integer> getUnlockedPerks() { return Set.copyOf(unlockedPerks); }
     public int getAvailablePoints() { return availablePoints; }
     public void addPoints(int amount) { this.availablePoints = Math.max(0, this.availablePoints + amount); }
 
@@ -45,11 +45,14 @@ public class PerkManager implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        this.availablePoints = tag.getInt("Points");
+        this.availablePoints = Math.max(0, tag.getInt("Points"));
         unlockedPerks.clear();
         ListTag list = tag.getList("UnlockedPerks", 3);
         for (int i = 0; i < list.size(); i++) {
-            unlockedPerks.add(list.getInt(i));
+            int id = list.getInt(i);
+            if (Perk.byId(id) != null) {
+                unlockedPerks.add(id);
+            }
         }
     }
 }

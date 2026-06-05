@@ -9,14 +9,15 @@ import tong.statmod.stats.StatType;
 
 public class PlayerStats implements INBTSerializable<CompoundTag> {
     public static final int STAT_COUNT = 23;
+    private static final int MAX_LEVEL = 100;
     private final int[] levels = new int[STAT_COUNT];
     private final int[] xp = new int[STAT_COUNT];
     private float currentMana;
     private long manaBlockedUntilTick;
     private transient long serverGameTime;
 
-    public int getLevel(int index) { return levels[index]; }
-    public int getXp(int index) { return xp[index]; }
+    public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
+    public int getXp(int index) { return index >= 0 && index < STAT_COUNT ? xp[index] : 0; }
 
     public void tickMana(net.minecraft.server.level.ServerPlayer player) {
         this.serverGameTime = player.level().getGameTime();
@@ -38,14 +39,24 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
         return (level + 1) * Config.xpPerLevelMultiplier;
     }
 
-    public void setLevel(int index, int level) { this.levels[index] = level; }
-    public void setXp(int index, int xp) { this.xp[index] = xp; }
+    public void setLevel(int index, int level) {
+        if (index < 0 || index >= STAT_COUNT) return;
+        this.levels[index] = level;
+        sanitizeProgress(index);
+    }
+
+    public void setXp(int index, int xp) {
+        if (index < 0 || index >= STAT_COUNT) return;
+        this.xp[index] = xp;
+        sanitizeProgress(index);
+    }
 
     public void copyFrom(PlayerStats source) {
         System.arraycopy(source.levels, 0, this.levels, 0, STAT_COUNT);
         System.arraycopy(source.xp, 0, this.xp, 0, STAT_COUNT);
         this.currentMana = source.currentMana;
         this.manaBlockedUntilTick = source.manaBlockedUntilTick;
+        sanitizeState();
     }
 
     public int getMaxMana() {
@@ -93,11 +104,32 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
+        java.util.Arrays.fill(levels, 0);
+        java.util.Arrays.fill(xp, 0);
         int[] loadedLevels = tag.getIntArray("Levels");
         int[] loadedXp = tag.getIntArray("XP");
         System.arraycopy(loadedLevels, 0, levels, 0, Math.min(loadedLevels.length, STAT_COUNT));
         System.arraycopy(loadedXp, 0, xp, 0, Math.min(loadedXp.length, STAT_COUNT));
         this.currentMana = tag.getFloat("Mana");
         this.manaBlockedUntilTick = tag.getLong("ManaBlockTick");
+        sanitizeState();
+    }
+
+    private void sanitizeState() {
+        for (int i = 0; i < STAT_COUNT; i++) {
+            sanitizeProgress(i);
+        }
+        this.currentMana = Math.max(0, Math.min(this.currentMana, getMaxMana()));
+        this.manaBlockedUntilTick = Math.max(0, this.manaBlockedUntilTick);
+    }
+
+    private void sanitizeProgress(int index) {
+        levels[index] = Math.max(0, Math.min(levels[index], MAX_LEVEL));
+        if (levels[index] >= MAX_LEVEL) {
+            xp[index] = 0;
+            return;
+        }
+        int maxXp = Math.max(0, getXpForNextLevel(levels[index]) - 1);
+        xp[index] = Math.max(0, Math.min(xp[index], maxXp));
     }
 }

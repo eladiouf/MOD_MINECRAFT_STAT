@@ -11,8 +11,9 @@ public class SyncAllStatsPacket {
     private final int[] xp;
 
     public SyncAllStatsPacket(int[] levels, int[] xp) {
-        this.levels = levels;
-        this.xp = xp;
+        this.levels = NetworkPayloadRules.requireStatArray(levels, "levels");
+        this.xp = NetworkPayloadRules.requireStatArray(xp, "xp");
+        NetworkPayloadRules.requireMatchingStatArrays(this.levels, this.xp, "sync all stats");
     }
 
     public static void encode(SyncAllStatsPacket packet, FriendlyByteBuf buf) {
@@ -21,7 +22,10 @@ public class SyncAllStatsPacket {
     }
 
     public static SyncAllStatsPacket decode(FriendlyByteBuf buf) {
-        return new SyncAllStatsPacket(buf.readVarIntArray(), buf.readVarIntArray());
+        return new SyncAllStatsPacket(
+            buf.readVarIntArray(NetworkPayloadRules.MAX_STAT_COUNT),
+            buf.readVarIntArray(NetworkPayloadRules.MAX_STAT_COUNT)
+        );
     }
 
     public static void handle(SyncAllStatsPacket packet, Supplier<NetworkEvent.Context> ctx) {

@@ -1,0 +1,4 @@
+{
+  WeaponLevels: [I; 999, -2, 4],
+  WeaponXP: [I; 9999, -8, 9999]
+}

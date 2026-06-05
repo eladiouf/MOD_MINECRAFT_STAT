@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import tong.statmod.client.hud.overlays.GlobalLevelOverlay;
 
 import java.util.*;
 
@@ -19,7 +18,6 @@ public class CombatFeedbackRenderer {
         floatingTexts.add(new FloatingText(text, color,
             entity.position().add(0, entity.getBbHeight() / 2, 0),
             System.currentTimeMillis(), 0.05f));
-        GlobalLevelOverlay.onHit();
     }
 
     public static void addXpPopup(LivingEntity entity, int xp, String statName) {

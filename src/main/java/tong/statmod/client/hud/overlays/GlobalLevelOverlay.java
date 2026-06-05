@@ -2,7 +2,6 @@ package tong.statmod.client.hud.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -11,17 +10,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
 import tong.statmod.client.ClientStatsCache;
+import tong.statmod.client.hud.components.HudBar;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GlobalLevelOverlay implements IGuiOverlay {
     public static final GlobalLevelOverlay INSTANCE = new GlobalLevelOverlay();
-    private static final ResourceLocation XP_BAR = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "gui/xp_bar_fill");
-    private static final int BAR_WIDTH = 100;
-    private static final int BAR_HEIGHT = 6;
+
+    private static final int TITLE_COLOR = 0xFFF6E7A8;
+    private static final int TEXT_COLOR = 0xFFDDDDEE;
+    private static final int PANEL_COLOR = 0xCC111018;
+    private static final int PANEL_BORDER = 0xFF34223E;
+    private static final int BORDER_ACCENT = 0xFFAA6DFF;
+    private static final int XP_START = 0xFF4A00E0;
+    private static final int XP_END = 0xFF8E2DE2;
+
+    private final HudBar xpBar = new HudBar(GlobalLevelHudLayout.BAR_WIDTH, GlobalLevelHudLayout.BAR_HEIGHT, 0.18f);
     private static int lastGlobalLevel = -1;
     private static long levelUpTime = 0;
-    private static int comboCount = 0;
-    private static long lastHitTime = 0;
 
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
@@ -29,7 +34,7 @@ public class GlobalLevelOverlay implements IGuiOverlay {
         if (mc == null || mc.player == null || mc.options.hideGui) return;
 
         int globalLevel = ClientStatsCache.getGlobalLevel();
-        float progress = ClientStatsCache.getGlobalXpProgress();
+        float progress = Math.max(0f, Math.min(1f, ClientStatsCache.getGlobalXpProgress()));
 
         if (globalLevel > lastGlobalLevel && lastGlobalLevel != -1) {
             levelUpTime = System.currentTimeMillis();
@@ -37,43 +42,34 @@ public class GlobalLevelOverlay implements IGuiOverlay {
         lastGlobalLevel = globalLevel;
 
         long now = System.currentTimeMillis();
-        if (comboCount > 0 && now - lastHitTime > 3000) {
-            comboCount = 0;
-        }
+        int x = GlobalLevelHudLayout.X;
+        int y = GlobalLevelHudLayout.Y;
 
-        int barX = screenWidth / 2 - BAR_WIDTH / 2;
-        int barY = 2;
-        graphics.fill(barX - 2, barY - 2, barX + BAR_WIDTH + 2, barY + BAR_HEIGHT + 2, 0x80000000);
+        graphics.fill(x - 2, y - 2, x + GlobalLevelHudLayout.BAR_WIDTH + 2, y + GlobalLevelHudLayout.PANEL_HEIGHT, PANEL_COLOR);
+        graphics.fill(x - 1, y - 1, x + GlobalLevelHudLayout.BAR_WIDTH + 1, y, PANEL_BORDER);
+        graphics.fill(x - 1, y, x, y + GlobalLevelHudLayout.PANEL_HEIGHT, PANEL_BORDER);
+        graphics.fill(x + GlobalLevelHudLayout.BAR_WIDTH, y, x + GlobalLevelHudLayout.BAR_WIDTH + 1, y + GlobalLevelHudLayout.PANEL_HEIGHT, PANEL_BORDER);
+        graphics.fill(x - 1, y + GlobalLevelHudLayout.PANEL_HEIGHT, x + GlobalLevelHudLayout.BAR_WIDTH + 1, y + GlobalLevelHudLayout.PANEL_HEIGHT + 1, PANEL_BORDER);
 
-        graphics.fill(barX, barY, barX + BAR_WIDTH, barY + BAR_HEIGHT, 0xFF333333);
-        int fillWidth = (int)(BAR_WIDTH * progress);
-        int barColor = 0xFF44AA44;
-        if (progress >= 0.9f) barColor = 0xFFFFAA00;
-        if (progress >= 1.0f) barColor = 0xFF55FFFF;
-        graphics.fill(barX, barY, barX + fillWidth, barY + BAR_HEIGHT, barColor);
-
-        String levelText = "Lv." + globalLevel;
-        int textColor = globalLevel >= 80 ? 0xFFFFAA00 : globalLevel >= 50 ? 0xFFAAAAFF : 0xFFFFFFFF;
-        float animScale = 1.0f;
         if (now - levelUpTime < 1000) {
-            animScale = 1.0f + (1.0f - (now - levelUpTime) / 1000.0f) * 0.5f;
-            textColor = 0xFF55FF55;
+            int alpha = (int)(120 * (1f - (now - levelUpTime) / 1000.0f));
+            graphics.fill(x - 2, y - 2, x + GlobalLevelHudLayout.BAR_WIDTH + 2, y + GlobalLevelHudLayout.PANEL_HEIGHT + 1,
+                (alpha << 24) | 0xFFE8D27A);
         }
-        graphics.pose().pushPose();
-        graphics.pose().translate(barX, barY - 12, 0);
-        graphics.pose().scale(animScale, animScale, 1);
-        graphics.drawString(mc.font, levelText, (BAR_WIDTH - mc.font.width(levelText)) / 2, 0, textColor);
-        graphics.pose().popPose();
 
-        String pctText = (int)(progress * 100) + "%";
-        graphics.drawString(mc.font, pctText, barX + BAR_WIDTH + 4, barY, 0xFF888888);
-
-        if (comboCount > 0) {
-            String comboText = comboCount + "x COMBO";
-            int alpha = (int)(Math.max(0, (3000 - (now - lastHitTime)) / 3000.0) * 255);
-            int comboColor = (alpha << 24) | 0xFFFF5500;
-            graphics.drawString(mc.font, comboText, barX, barY + BAR_HEIGHT + 4, comboColor);
+        String levelText = "Niveau " + globalLevel;
+        int textColor = globalLevel >= 80 ? 0xFFF6C35C : globalLevel >= 50 ? 0xFFDDDDEE : TITLE_COLOR;
+        if (now - levelUpTime < 1000) {
+            textColor = 0xFFFFF0A8;
         }
+        graphics.drawString(mc.font, levelText, x + 4, y + GlobalLevelHudLayout.TITLE_Y, textColor, false);
+
+        xpBar.setFill(progress);
+        xpBar.renderGradient(graphics, x, y + GlobalLevelHudLayout.BAR_Y, XP_START, XP_END);
+        graphics.fill(x - 1, y + GlobalLevelHudLayout.BAR_Y - 1, x + GlobalLevelHudLayout.BAR_WIDTH + 1, y + GlobalLevelHudLayout.BAR_Y, BORDER_ACCENT);
+
+        String pctText = Math.round(progress * 100) + "%";
+        graphics.drawString(mc.font, pctText, x + GlobalLevelHudLayout.BAR_WIDTH + 4, y + GlobalLevelHudLayout.BAR_Y - 1, TEXT_COLOR, false);
     }
 
     @SubscribeEvent
@@ -81,12 +77,6 @@ public class GlobalLevelOverlay implements IGuiOverlay {
         if (event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
+        INSTANCE.xpBar.tick();
     }
-
-    public static void onHit() {
-        comboCount++;
-        lastHitTime = System.currentTimeMillis();
-    }
-
-    public static void resetCombo() { comboCount = 0; }
 }

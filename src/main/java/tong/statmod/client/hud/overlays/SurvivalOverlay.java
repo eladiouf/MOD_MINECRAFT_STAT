@@ -19,6 +19,7 @@ import static tong.statmod.client.texture.TextureCache.drawInkText;
 @Mod.EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SurvivalOverlay implements IGuiOverlay {
     public static final SurvivalOverlay INSTANCE = new SurvivalOverlay();
+    public static final int PANEL_START_Y = 32;
 
     private static final int BAR_WIDTH = 80;
     private static final int BAR_HEIGHT = 6;
@@ -47,7 +48,7 @@ public class SurvivalOverlay implements IGuiOverlay {
         thirstBar.setFill(thirst);
 
         int x = 4;
-        int y = 32;
+        int y = PANEL_START_Y;
 
         renderBarWithIcon(graphics, x, y, healthBar, "hud_heart.png", 0xFF4444, (int)(health * 100) + "%", 228);
         y += 10;

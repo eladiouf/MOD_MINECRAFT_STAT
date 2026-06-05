@@ -51,8 +51,8 @@ public class CombatXPHandler {
         // ★ Common: take damage
         ActionXpHelper.awardXp(player, StatType.PHYSICAL_RESISTANCE.index, ActionXpHelper.XpTier.COMMON);
 
-        // ★★ Intermediate: survive with <4 hearts
-        if (player.getHealth() / player.getMaxHealth() < 0.2f) {
+        // ★★ Intermediate: survive with <4 hearts after the hit lands
+        if (CombatXpRules.isLowHealthAfterHit(player.getHealth(), event.getAmount(), player.getMaxHealth(), 0.2f)) {
             ActionXpHelper.awardXp(player, StatType.PHYSICAL_RESISTANCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
         }
 
@@ -64,13 +64,13 @@ public class CombatXPHandler {
         // ★★ Intermediate: take damage from multiple sources
         trackDamageSources(player, event.getSource().getMsgId());
 
-        // ★ Common: low hp willpower
-        if (player.getHealth() / player.getMaxHealth() < 0.3f) {
+        // ★ Common: low hp willpower after the hit lands
+        if (CombatXpRules.isLowHealthAfterHit(player.getHealth(), event.getAmount(), player.getMaxHealth(), 0.3f)) {
             ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.COMMON);
         }
 
         // ★★★ Rare: survive with 1/2 heart
-        if (player.getHealth() - event.getAmount() <= 1.0f && player.getHealth() > 0) {
+        if (CombatXpRules.survivesAtHalfHeart(player.getHealth(), event.getAmount())) {
             ActionXpHelper.awardXp(player, StatType.WILLPOWER.index, ActionXpHelper.XpTier.RARE);
         }
     }

@@ -324,6 +324,12 @@ tasks.register('validateStatModPackaging') {
                 errors << "Missing item model: assets/statmod/models/item/${modelName}.json"
             }
         }
+        def classArtsModelFile = file('src/main/resources/assets/statmod/models/item/class_arts.json')
+        requireText(classArtsModelFile, '"layer0": "statmod:item/class_arts"', 'class_arts item model')
+        def classArtsTextureFile = file('src/main/resources/assets/statmod/textures/item/class_arts.png')
+        if (!classArtsTextureFile.isFile()) {
+            errors << 'Missing item texture: assets/statmod/textures/item/class_arts.png'
+        }
 
         def networkRulesFile = file('src/main/java/tong/statmod/network/NetworkPayloadRules.java')
         requireText(networkRulesFile, 'MAX_STAT_COUNT = PlayerStats.STAT_COUNT', 'NetworkPayloadRules')

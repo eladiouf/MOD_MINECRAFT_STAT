@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -149,7 +150,7 @@ public class StatPassiveSkill extends PassiveSkill {
     // --- Shared helper ---
 
     private void addModifier(ServerPlayer player,
-                              net.minecraft.world.entity.ai.attributes.Attribute attr,
+                              Attribute attr,
                               double amount, String name) {
         AttributeInstance instance = player.getAttribute(attr);
         if (instance != null) {
@@ -162,7 +163,8 @@ public class StatPassiveSkill extends PassiveSkill {
 
     // --- Test helpers (package-private) ---
 
-    static void validateStatHasCase(StatType stat) {
+    /** Runtime null-check; exhaustive switch coverage is enforced by the compiler. */
+    static void assertStatIsNonNull(StatType stat) {
         if (stat == null) throw new IllegalArgumentException("stat cannot be null");
     }
 

@@ -8,11 +8,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class StatPassiveSkillTest {
 
     @Test
-    void allStatTypesHaveACaseInApplyEffect() {
+    void allStatTypeValuesAreNonNull() {
         for (StatType stat : StatType.values()) {
             assertDoesNotThrow(
-                () -> StatPassiveSkill.validateStatHasCase(stat),
-                "Stat " + stat.name() + " doit avoir un case dans applyEffect()"
+                () -> StatPassiveSkill.assertStatIsNonNull(stat),
+                "StatType." + stat.name() + " should be a valid non-null enum constant"
             );
         }
     }
@@ -20,6 +20,10 @@ class StatPassiveSkillTest {
     @Test
     void removeEffectCoversAllAttributeModifiers() {
         var removed = StatPassiveSkill.getRemoveEffectAttributes();
+        assertTrue(removed.contains("ATTACK_DAMAGE"),        "ATTACK_DAMAGE must be removed");
+        assertTrue(removed.contains("ATTACK_SPEED"),         "ATTACK_SPEED must be removed");
+        assertTrue(removed.contains("MOVEMENT_SPEED"),       "MOVEMENT_SPEED must be removed");
+        assertTrue(removed.contains("ARMOR"),                "ARMOR must be removed");
         assertTrue(removed.contains("MAX_HEALTH"),           "MAX_HEALTH must be removed");
         assertTrue(removed.contains("JUMP_STRENGTH"),        "JUMP_STRENGTH must be removed");
         assertTrue(removed.contains("ARMOR_TOUGHNESS"),      "ARMOR_TOUGHNESS must be removed");

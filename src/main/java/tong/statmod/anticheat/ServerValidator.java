@@ -16,7 +16,16 @@ public class ServerValidator {
     private static final int MAX_XP_PER_SECOND = 500;
     private static final int MAX_LEVEL = 100;
 
+    public static boolean isValidStatIndex(int statIndex) {
+        return statIndex >= 0 && statIndex < PlayerStats.STAT_COUNT;
+    }
+
     public static boolean validateSetLevel(ServerPlayer player, int statIndex, int newLevel) {
+        if (!isValidStatIndex(statIndex)) {
+            warn(player, "Invalid stat index " + statIndex
+                + " (must be 0-" + (PlayerStats.STAT_COUNT - 1) + ")");
+            return false;
+        }
         if (newLevel < 0 || newLevel > MAX_LEVEL) {
             warn(player, "Invalid level " + newLevel + " for stat " + statIndex);
             return false;

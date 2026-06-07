@@ -22,6 +22,7 @@ import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.weapon.WeaponMasteryManager;
 import tong.statmod.weapon.WeaponMasteryProvider;
 import tong.statmod.world.thirst.ThirstManager;
+import tong.statmod.anticheat.ServerValidator;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.world.thirst.ThirstProvider;
 
@@ -100,6 +101,7 @@ public class CapabilityHandler {
             NonCombatSkill.clearCooldowns(uuid);
             IdentitySkill.clearCooldowns(uuid);
             StatActiveSkill.clearCooldowns(uuid);
+            ServerValidator.cleanup(uuid);
         }
         entity.getCapability(PlayerStatsProvider.PLAYER_STATS).invalidate();
         entity.getCapability(FatigueProvider.FATIGUE).invalidate();

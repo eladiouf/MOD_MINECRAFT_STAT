@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import tong.statmod.Config;
 import tong.statmod.STATMod;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.capability.PlayerStats;
@@ -31,22 +32,42 @@ public class MobScalingHandler {
             globalLevel[0] = sum / PlayerStats.STAT_COUNT;
         });
 
-        if (globalLevel[0] <= 10) return;
+        float healthScale = computeHealthScale(globalLevel[0],
+            (float) Config.MOB_HEALTH_SCALE_MAX.get().doubleValue());
+        float damageScale = computeDamageScale(globalLevel[0],
+            (float) Config.MOB_DAMAGE_SCALE_MAX.get().doubleValue());
 
-        float scale = 1.0f + globalLevel[0] * 0.005f;
-
-        var healthAttr = mob.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttr != null) {
-            healthAttr.setBaseValue(healthAttr.getBaseValue() * scale);
-            mob.setHealth(mob.getMaxHealth());
+        if (healthScale > 1.0f) {
+            var healthAttr = mob.getAttribute(Attributes.MAX_HEALTH);
+            if (healthAttr != null) {
+                healthAttr.setBaseValue(healthAttr.getBaseValue() * healthScale);
+                mob.setHealth(mob.getMaxHealth());
+            }
         }
 
-        var damageAttr = mob.getAttribute(Attributes.ATTACK_DAMAGE);
-        if (damageAttr != null) {
-            damageAttr.setBaseValue(damageAttr.getBaseValue() * (1.0f + globalLevel[0] * 0.003f));
+        if (damageScale > 1.0f) {
+            var damageAttr = mob.getAttribute(Attributes.ATTACK_DAMAGE);
+            if (damageAttr != null) {
+                damageAttr.setBaseValue(damageAttr.getBaseValue() * damageScale);
+            }
         }
 
-        mob.getPersistentData().putFloat("statmod_xp_multiplier", 1.0f + globalLevel[0] * 0.01f);
+        mob.getPersistentData().putFloat("statmod_xp_multiplier",
+            1.0f + globalLevel[0] * 0.01f);
+    }
+
+    /** Returns scale in [1.0, maxScale] for health. Level <= 10 → no scaling. */
+    static float computeHealthScale(int globalLevel, float maxScale) {
+        if (globalLevel <= 10) return 1.0f;
+        float raw = 1.0f + globalLevel * 0.005f;
+        return Math.min(raw, maxScale);
+    }
+
+    /** Returns scale in [1.0, maxScale] for damage. Level <= 10 → no scaling. */
+    static float computeDamageScale(int globalLevel, float maxScale) {
+        if (globalLevel <= 10) return 1.0f;
+        float raw = 1.0f + globalLevel * 0.003f;
+        return Math.min(raw, maxScale);
     }
 
     public static float getXpMultiplier(Mob mob) {

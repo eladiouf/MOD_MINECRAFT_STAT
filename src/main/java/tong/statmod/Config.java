@@ -167,6 +167,15 @@ public class Config
             .comment("Damage dealt per tick when exhausted (hearts)")
             .defineInRange("fatigueExhaustedDamage", 1.0, 0.0, 20.0);
 
+    // ── Mob Scaling ──
+    public static final ForgeConfigSpec.DoubleValue MOB_HEALTH_SCALE_MAX = BUILDER
+            .comment("Maximum health scale multiplier for mob scaling (default 2.5 = mobs can be at most 2.5x stronger)")
+            .defineInRange("mobHealthScaleMax", 2.5, 1.0, 10.0);
+
+    public static final ForgeConfigSpec.DoubleValue MOB_DAMAGE_SCALE_MAX = BUILDER
+            .comment("Maximum attack damage scale multiplier for mob scaling")
+            .defineInRange("mobDamageScaleMax", 2.0, 1.0, 10.0);
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     // ── Cached runtime values (updated on config load/reload) ──
@@ -218,6 +227,10 @@ public class Config
     public static double fatigueExhaustedDamage;
     public static int fatigueMaxCapacity;
 
+    // Mob Scaling
+    public static double mobHealthScaleMax;
+    public static double mobDamageScaleMax;
+
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
@@ -263,6 +276,9 @@ public class Config
         fatigueExhaustedDamageInterval = FATIGUE_EXHAUSTED_DAMAGE_INTERVAL.get();
         fatigueExhaustedDamage = FATIGUE_EXHAUSTED_DAMAGE.get();
         fatigueMaxCapacity = FATIGUE_MAX_CAPACITY.get();
+
+        mobHealthScaleMax = MOB_HEALTH_SCALE_MAX.get();
+        mobDamageScaleMax = MOB_DAMAGE_SCALE_MAX.get();
     }
 
     // ── Helper for computing effective cooldown ──

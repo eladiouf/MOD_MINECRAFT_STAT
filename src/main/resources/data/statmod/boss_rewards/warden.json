@@ -1,0 +1,10 @@
+{
+  "entity_type": "minecraft:warden",
+  "items": [
+    { "item": "statmod:stat_scroll", "count": 2 },
+    { "item": "statmod:perk_tome",   "count": 1 },
+    { "item": "statmod:mastery_crystal", "count": 2 }
+  ],
+  "xp_per_stat": 100,
+  "message": "§5Warden Vanquished! §6+100 XP all stats!"
+}

@@ -12,6 +12,7 @@ import tong.statmod.world.effect.ModPotions;
 import net.minecraft.SharedConstants;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.versions.forge.ForgeVersion;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -130,6 +131,12 @@ public class STATMod
     public void onRegisterCommands(RegisterCommandsEvent event)
     {
         StatsCommands.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void onAddReloadListeners(AddReloadListenerEvent event)
+    {
+        event.addListener(tong.statmod.reload.BossRewardReloadListener.INSTANCE);
     }
 
     @Mod.EventBusSubscriber(modid = STATMod.MODID)

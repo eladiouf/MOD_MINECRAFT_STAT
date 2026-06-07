@@ -1,0 +1,7 @@
+{
+  "entity_type": "minecraft:pillager",
+  "category": "ranged",
+  "base_levels": {
+    "PRECISION": 25, "AGILITY": 12, "PHYSICAL_ENDURANCE": 8, "TRACKING": 18
+  }
+}

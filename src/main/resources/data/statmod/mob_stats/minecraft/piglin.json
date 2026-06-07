@@ -1,0 +1,7 @@
+{
+  "entity_type": "minecraft:piglin",
+  "category": "melee",
+  "base_levels": {
+    "BRUTE_FORCE": 12, "AGILITY": 10, "PHYSICAL_RESISTANCE": 8, "TRACKING": 12
+  }
+}

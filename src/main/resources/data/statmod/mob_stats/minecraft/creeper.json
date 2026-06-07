@@ -1,0 +1,7 @@
+{
+  "entity_type": "minecraft:creeper",
+  "category": "melee",
+  "base_levels": {
+    "AGILITY": 8, "TRACKING": 12, "WILLPOWER": 20
+  }
+}

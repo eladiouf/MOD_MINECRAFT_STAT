@@ -137,6 +137,7 @@ public class STATMod
     public void onAddReloadListeners(AddReloadListenerEvent event)
     {
         event.addListener(tong.statmod.reload.BossRewardReloadListener.INSTANCE);
+        event.addListener(tong.statmod.reload.MobStatReloadListener.INSTANCE);
     }
 
     @Mod.EventBusSubscriber(modid = STATMod.MODID)

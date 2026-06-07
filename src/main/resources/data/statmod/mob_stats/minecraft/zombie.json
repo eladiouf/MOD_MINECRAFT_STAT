@@ -1,0 +1,8 @@
+{
+  "entity_type": "minecraft:zombie",
+  "category": "melee",
+  "base_levels": {
+    "BRUTE_FORCE": 15, "PHYSICAL_ENDURANCE": 12, "AGILITY": 5,
+    "PHYSICAL_RESISTANCE": 8, "TRACKING": 10
+  }
+}

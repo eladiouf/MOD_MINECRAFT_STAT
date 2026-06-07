@@ -36,7 +36,7 @@ public class BossRewardReloadListener extends SimpleJsonResourceReloadListener {
                 String message = obj.get("message").getAsString();
                 rewards.put(entityType, new BossReward(entityType, items, xpPerStat, message));
             } catch (Exception e) {
-                STATMod.LOGGER.error("[BossRewards] Failed to load {}: {}", entry.getKey(), e.getMessage());
+                STATMod.LOGGER.error("[BossRewards] Failed to load {}", entry.getKey(), e);
             }
         }
         STATMod.LOGGER.info("[BossRewards] Loaded {} boss reward entries", rewards.size());
@@ -55,7 +55,7 @@ public class BossRewardReloadListener extends SimpleJsonResourceReloadListener {
                 STATMod.LOGGER.warn("[BossRewards] Unknown item: {}", itemId);
             }
         }
-        return result;
+        return List.copyOf(result);
     }
 
     public Optional<BossReward> getReward(ResourceLocation entityType) {

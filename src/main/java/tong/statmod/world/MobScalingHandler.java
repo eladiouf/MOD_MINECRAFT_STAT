@@ -32,10 +32,8 @@ public class MobScalingHandler {
             globalLevel[0] = sum / PlayerStats.STAT_COUNT;
         });
 
-        float healthScale = computeHealthScale(globalLevel[0],
-            (float) Config.MOB_HEALTH_SCALE_MAX.get().doubleValue());
-        float damageScale = computeDamageScale(globalLevel[0],
-            (float) Config.MOB_DAMAGE_SCALE_MAX.get().doubleValue());
+        float healthScale = computeHealthScale(globalLevel[0], (float) Config.mobHealthScaleMax);
+        float damageScale = computeDamageScale(globalLevel[0], (float) Config.mobDamageScaleMax);
 
         if (healthScale > 1.0f) {
             var healthAttr = mob.getAttribute(Attributes.MAX_HEALTH);

@@ -102,6 +102,10 @@ public class STATMod
         PluginManager.loadPlugins();
         CompatibilityChecker.check();
         ModCompatHandler.logLoadedMods();
+        if (net.minecraftforge.fml.ModList.get().isLoaded("l2hostility")) {
+            MinecraftForge.EVENT_BUS.register(tong.statmod.integration.L2HostilityMobSync.class);
+            LOGGER.info("[STAT Mod] L2Hostility detected — mob stat sync enabled");
+        }
         event.enqueueWork(() -> {
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(Potions.AWKWARD, Items.SUGAR, ModPotions.ADRENALINE.get()));
             BrewingRecipeRegistry.addRecipe(new AdrenalineBrewingRecipe(ModPotions.ADRENALINE.get(), Items.REDSTONE, ModPotions.LONG_ADRENALINE.get()));

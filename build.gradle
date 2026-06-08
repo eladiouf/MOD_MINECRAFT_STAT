@@ -186,6 +186,11 @@ dependencies {
 
     // FTB mods use reflection (no compileOnly needed)
 
+    // L2Hostility (local JAR) - optional mob difficulty integration
+    compileOnly fg.deobf("blank:l2hostility-2.5.19:2.5.19")
+    // L2Hostility transitive deps required to compile against MobTraitCap
+    compileOnly fg.deobf("blank:l2library-2.5.0-slim:2.5.0")
+    compileOnly fg.deobf("blank:l2serial-1.2.2:1.2.2")
 
 }
 

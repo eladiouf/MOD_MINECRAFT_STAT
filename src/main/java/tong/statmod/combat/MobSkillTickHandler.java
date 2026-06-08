@@ -66,7 +66,13 @@ public class MobSkillTickHandler {
         if (entityType == null) return;
 
         MobSkillLoadout loadout = MobSkillReloadListener.INSTANCE.get(entityType).orElse(null);
-        if (loadout == null) return;
+        if (loadout == null) {
+            if (!net.minecraftforge.fml.ModList.get().isLoaded("l2hostility")) return;
+            loadout = new MobSkillLoadout(entityType, 20, java.util.List.of());
+        }
+        if (net.minecraftforge.fml.ModList.get().isLoaded("l2hostility")) {
+            loadout = tong.statmod.integration.L2HostilityMobSkillSync.augment(mob, loadout);
+        }
         if (loadout.entries().isEmpty()) return;
 
         List<Candidate> castable = new ArrayList<>();

@@ -1,0 +1,7 @@
+{
+  "entity_type": "minecraft:pillager",
+  "global_cooldown_ticks": 50,
+  "skills": [
+    { "id": "statmod:lunge", "weight": 100 }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "entity_type": "minecraft:witch",
+  "global_cooldown_ticks": 60,
+  "skills": [
+    { "id": "statmod:curse", "weight": 80 },
+    { "id": "statmod:magic_missile", "weight": 100 }
+  ]
+}

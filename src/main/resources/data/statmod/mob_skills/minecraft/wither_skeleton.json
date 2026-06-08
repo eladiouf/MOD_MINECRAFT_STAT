@@ -1,0 +1,9 @@
+{
+  "entity_type": "minecraft:wither_skeleton",
+  "global_cooldown_ticks": 50,
+  "skills": [
+    { "id": "statmod:charge", "weight": 60 },
+    { "id": "statmod:whirlwind", "weight": 50 },
+    { "id": "statmod:reflect", "weight": 100 }
+  ]
+}

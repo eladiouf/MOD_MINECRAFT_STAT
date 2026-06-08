@@ -1,0 +1,7 @@
+{
+  "entity_type": "minecraft:blaze",
+  "global_cooldown_ticks": 40,
+  "skills": [
+    { "id": "statmod:fireball", "weight": 100 }
+  ]
+}

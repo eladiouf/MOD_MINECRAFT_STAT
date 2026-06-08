@@ -1,0 +1,9 @@
+{
+  "entity_type": "minecraft:evoker",
+  "global_cooldown_ticks": 70,
+  "skills": [
+    { "id": "statmod:curse", "weight": 70 },
+    { "id": "statmod:magic_missile", "weight": 100 },
+    { "id": "statmod:battle_cry", "weight": 40 }
+  ]
+}

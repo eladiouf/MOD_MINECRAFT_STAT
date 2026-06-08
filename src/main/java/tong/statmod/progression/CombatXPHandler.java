@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.STATMod;
+import tong.statmod.integration.L2HostilityScaling;
 import tong.statmod.stats.StatType;
 
 import java.util.HashMap;
@@ -23,23 +24,25 @@ public class CombatXPHandler {
     public static void onLivingHurt(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
+        float l2hMult = L2HostilityScaling.getXpMultiplier(event.getEntity());
+
         // ★★ Intermediate: combo (3 hits in 2s)
-        trackCombo(player);
+        trackCombo(player, l2hMult);
 
         // ★★ Intermediate: overkill (would kill with >20 damage)
         if (event.getEntity().getHealth() - event.getAmount() <= 0 && event.getAmount() > 20) {
-            ActionXpHelper.awardXp(player, StatType.BRUTE_FORCE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            ActionXpHelper.awardXp(player, StatType.BRUTE_FORCE.index, ActionXpHelper.XpTier.INTERMEDIATE, l2hMult);
         }
 
         // ★★ Intermediate: hit without being touched for 5s
         long now = System.currentTimeMillis();
         Long lastHit = lastDamageTime.get(player.getUUID());
         if (lastHit != null && now - lastHit > 5000) {
-            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE, l2hMult);
         }
 
         // ★★ Intermediate: rapid hits (5 hits in 2s)
-        trackRapidHit(player);
+        trackRapidHit(player, l2hMult);
     }
 
     @SubscribeEvent
@@ -75,22 +78,22 @@ public class CombatXPHandler {
         }
     }
 
-    private static void trackRapidHit(ServerPlayer player) {
+    private static void trackRapidHit(ServerPlayer player, float multiplier) {
         long now = System.currentTimeMillis();
         HitTracker tracker = hitTrackers.computeIfAbsent(player.getUUID(), k -> new HitTracker());
         tracker.addHit(now);
         if (tracker.getHitCount(2000) >= 5) {
-            ActionXpHelper.awardXp(player, StatType.RAPIDITE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            ActionXpHelper.awardXp(player, StatType.RAPIDITE.index, ActionXpHelper.XpTier.INTERMEDIATE, multiplier);
             tracker.reset();
         }
     }
 
-    private static void trackCombo(ServerPlayer player) {
+    private static void trackCombo(ServerPlayer player, float multiplier) {
         long now = System.currentTimeMillis();
         ComboTracker combo = comboTrackers.computeIfAbsent(player.getUUID(), k -> new ComboTracker());
         combo.addHit(now);
         if (combo.getHitCount(2000) >= 3) {
-            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE);
+            ActionXpHelper.awardXp(player, StatType.BLADE_TECHNIQUE.index, ActionXpHelper.XpTier.INTERMEDIATE, multiplier);
             combo.reset();
         }
     }

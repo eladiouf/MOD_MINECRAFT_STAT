@@ -34,11 +34,19 @@ public class ActionXpHelper {
     }
 
     public static void awardXp(ServerPlayer player, int statIndex, XpTier tier) {
+        awardXp(player, statIndex, tier, 1.0f);
+    }
+
+    /** Award XP with an external multiplier (e.g. L2Hostility level scaling). */
+    public static void awardXp(ServerPlayer player, int statIndex, XpTier tier, float multiplier) {
         CapabilityHelper.withStats(player, stats -> {
             int oldLevel = stats.getLevel(statIndex);
             int xp = tier.minXp() + player.getRandom().nextInt(tier.maxXp() - tier.minXp() + 1);
             if (RandomEvents.isBonusXpActive()) {
                 xp *= 2;
+            }
+            if (multiplier != 1.0f) {
+                xp = Math.max(1, Math.round(xp * multiplier));
             }
             stats.addXp(statIndex, xp);
             int newLevel = stats.getLevel(statIndex);

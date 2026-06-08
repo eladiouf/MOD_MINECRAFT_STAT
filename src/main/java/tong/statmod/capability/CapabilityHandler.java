@@ -2,12 +2,17 @@ package tong.statmod.capability;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import tong.statmod.stats.MobStatEffectApplier;
+import tong.statmod.stats.MobStatInitializer;
 import tong.statmod.STATMod;
 import tong.statmod.challenge.DailyChallenge;
 import tong.statmod.fatigue.FatigueManager;
@@ -35,6 +40,7 @@ public class CapabilityHandler {
         event.register(WeaponMasteryManager.class);
         event.register(ThirstManager.class);
         event.register(PerkManager.class);
+        event.register(MobStats.class);
     }
 
     @SubscribeEvent
@@ -56,6 +62,25 @@ public class CapabilityHandler {
                 ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "weapon_mastery"),
                 new WeaponMasteryProvider());
         }
+        if (event.getObject() instanceof Mob) {
+            event.addCapability(
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "mob_stats"),
+                new MobStatsProvider());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMobJoin(EntityJoinLevelEvent event) {
+        if (!(event.getEntity() instanceof Mob mob)) return;
+        if (mob.level().isClientSide()) return;
+        if (mob.getPersistentData().getBoolean("statmod_stats_initialized")) return;
+        mob.getPersistentData().putBoolean("statmod_stats_initialized", true);
+
+        // When L2H is present, L2HostilityMobSync handles initialization.
+        if (ModList.get().isLoaded("l2hostility")) return;
+
+        MobStatInitializer.applyDefaults(mob);
+        MobStatEffectApplier.applyAllBonuses(mob);
     }
 
     @SubscribeEvent

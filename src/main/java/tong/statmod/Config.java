@@ -176,6 +176,19 @@ public class Config
             .comment("Maximum attack damage scale multiplier for mob scaling")
             .defineInRange("mobDamageScaleMax", 2.0, 1.0, 10.0);
 
+    // ── Mob Skills (Phase 2) ──
+    public static final ForgeConfigSpec.BooleanValue MOB_SKILLS_ENABLED = BUILDER
+            .comment("Enable Phase 2 mob skill engine. False = mobs use only Phase 1 stat bonuses.")
+            .define("mobSkillsEnabled", true);
+
+    public static final ForgeConfigSpec.DoubleValue MOB_SKILL_COOLDOWN_MULT = BUILDER
+            .comment("Global cooldown multiplier on all mob skills (lower = mobs cast more often)")
+            .defineInRange("mobSkillCooldownMult", 1.0, 0.1, 5.0);
+
+    public static final ForgeConfigSpec.IntValue MOB_SKILL_TICK_INTERVAL = BUILDER
+            .comment("How often the mob skill tick handler runs, in ticks (10 = twice per second)")
+            .defineInRange("mobSkillTickInterval", 10, 1, 200);
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     // ── Cached runtime values (updated on config load/reload) ──
@@ -231,6 +244,11 @@ public class Config
     public static double mobHealthScaleMax;
     public static double mobDamageScaleMax;
 
+    // Mob Skills (Phase 2)
+    public static boolean mobSkillsEnabled;
+    public static double mobSkillCooldownMult;
+    public static int mobSkillTickInterval;
+
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
@@ -279,6 +297,10 @@ public class Config
 
         mobHealthScaleMax = MOB_HEALTH_SCALE_MAX.get();
         mobDamageScaleMax = MOB_DAMAGE_SCALE_MAX.get();
+
+        mobSkillsEnabled = MOB_SKILLS_ENABLED.get();
+        mobSkillCooldownMult = MOB_SKILL_COOLDOWN_MULT.get();
+        mobSkillTickInterval = MOB_SKILL_TICK_INTERVAL.get();
     }
 
     // ── Helper for computing effective cooldown ──

@@ -102,6 +102,18 @@ public class STATMod
         PluginManager.loadPlugins();
         CompatibilityChecker.check();
         ModCompatHandler.logLoadedMods();
+
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.ChargeSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.WhirlwindSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.LungeSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.ReflectSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.FireballSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.CurseSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.MagicMissileSkill());
+        tong.statmod.combat.skills.MobSkillRegistry.register(new tong.statmod.combat.skills.impl.BattleCrySkill());
+        LOGGER.info("[MobSkills] Registered {} skills",
+            tong.statmod.combat.skills.MobSkillRegistry.values().size());
+
         if (net.minecraftforge.fml.ModList.get().isLoaded("l2hostility")) {
             MinecraftForge.EVENT_BUS.register(tong.statmod.integration.L2HostilityMobSync.class);
             MinecraftForge.EVENT_BUS.register(tong.statmod.combat.L2HPlayerResistance.class);
@@ -143,6 +155,7 @@ public class STATMod
     {
         event.addListener(tong.statmod.reload.BossRewardReloadListener.INSTANCE);
         event.addListener(tong.statmod.reload.MobStatReloadListener.INSTANCE);
+        event.addListener(tong.statmod.reload.MobSkillReloadListener.INSTANCE);
     }
 
     @Mod.EventBusSubscriber(modid = STATMod.MODID)

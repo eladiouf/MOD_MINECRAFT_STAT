@@ -41,6 +41,7 @@ public class CapabilityHandler {
         event.register(ThirstManager.class);
         event.register(PerkManager.class);
         event.register(MobStats.class);
+        event.register(MobSkillState.class);
     }
 
     @SubscribeEvent
@@ -66,6 +67,9 @@ public class CapabilityHandler {
             event.addCapability(
                 ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "mob_stats"),
                 new MobStatsProvider());
+            event.addCapability(
+                ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "mob_skill_state"),
+                new MobSkillStateProvider());
         }
     }
 

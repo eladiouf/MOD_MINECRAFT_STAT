@@ -52,15 +52,7 @@ public class FatigueHandler {
             float enduranceMod = Math.max(0, 1.0f - endurance * 0.01f);
             float willpowerMod = Math.max(0, 1.0f - StatCalculator.getFatigueReduction(willpower));
 
-            float baseRate;
-            if (!player.level().dimensionType().hasCeiling() && player.level().canSeeSky(player.blockPosition())) {
-                long dayTime = player.level().getDayTime() % 24000;
-                boolean isNight = dayTime > 13000 || dayTime < 1000;
-                baseRate = (float)(isNight ? Config.fatigueNightRate : Config.fatigueDayRate);
-            } else {
-                baseRate = (float) Config.fatigueUndergroundRate;
-            }
-            fatigue.addFatigue(baseRate * enduranceMod);
+            // Passive fatigue accumulation removed — fatigue only increases through actions
 
             if (player.isSprinting() && player.tickCount % 20 == 0) {
                 fatigue.addFatigue((float) Config.fatigueSprintCost * willpowerMod);
@@ -74,7 +66,17 @@ public class FatigueHandler {
             }
 
             if (player.isShiftKeyDown() && fatigue.getFatigue() > 0) {
-                fatigue.reduceFatigue((float) Config.fatigueSneakRecovery);
+                float[] recovery = {(float) Config.fatigueSneakRecovery};
+                CapabilityHelper.withStats(player, s -> {
+                    int endLvl = s.getLevel(StatType.PHYSICAL_ENDURANCE.index);
+                    recovery[0] *= (1.0f + endLvl * 0.005f);
+                });
+                fatigue.reduceFatigue(recovery[0]);
+            }
+
+            // Recovery when standing still (idle regen)
+            if (!player.isSprinting() && player.getDeltaMovement().lengthSqr() < 0.001 && fatigue.getFatigue() > 0) {
+                fatigue.reduceFatigue(0.1f);
             }
             wasOnGroundMap.put(player.getUUID(), player.onGround());
 
@@ -182,7 +184,7 @@ public class FatigueHandler {
             if (food != null) {
                 CapabilityHelper.withFatigue(player, fatigue -> {
                     // Base: petit, scale avec la fatigue (plus fatigué = plus efficace)
-                    float base = 1.0f + food.getNutrition() * 0.3f;
+                    float base = 3.0f + food.getNutrition() * 2.0f;
                     float fatiguePercent = fatigue.getFatigue() / fatigue.getMaxFatigue();
                     float multiplier = 1.0f + fatiguePercent * 2.0f; // x1 à faible fatigue, x3 à 100% fatigue
                     fatigue.reduceFatigue(base * multiplier);

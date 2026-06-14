@@ -15,41 +15,45 @@ public class Config
             .define("enableDebug", false);
 
     // ── XP Progression ──
-    public static final ForgeConfigSpec.IntValue XP_PER_LEVEL_MULTIPLIER = BUILDER
-            .comment("Multiplier for XP required per level. Formula: (level + 1) * multiplier")
-            .defineInRange("xpPerLevelMultiplier", 40, 10, 500);
+    public static final ForgeConfigSpec.IntValue XP_BASE_COST = BUILDER
+            .comment("Base XP cost for level 0→1. Formula: baseCost * (growthFactor ^ level)")
+            .defineInRange("xpBaseCost", 25, 5, 200);
+
+    public static final ForgeConfigSpec.DoubleValue XP_GROWTH_FACTOR = BUILDER
+            .comment("Exponential growth factor per level. 1.08 = ~8% more XP per level")
+            .defineInRange("xpGrowthFactor", 1.08, 1.01, 1.15);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_COMMON_MIN = BUILDER
             .comment("Minimum XP awarded for COMMON actions")
-            .defineInRange("xpTierCommonMin", 2, 1, 100);
+            .defineInRange("xpTierCommonMin", 3, 1, 200);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_COMMON_MAX = BUILDER
             .comment("Maximum XP awarded for COMMON actions")
-            .defineInRange("xpTierCommonMax", 3, 1, 100);
+            .defineInRange("xpTierCommonMax", 6, 1, 200);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_INTERMEDIATE_MIN = BUILDER
             .comment("Minimum XP awarded for INTERMEDIATE actions")
-            .defineInRange("xpTierIntermediateMin", 5, 1, 100);
+            .defineInRange("xpTierIntermediateMin", 8, 1, 200);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_INTERMEDIATE_MAX = BUILDER
             .comment("Maximum XP awarded for INTERMEDIATE actions")
-            .defineInRange("xpTierIntermediateMax", 8, 1, 100);
+            .defineInRange("xpTierIntermediateMax", 16, 1, 200);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_RARE_MIN = BUILDER
             .comment("Minimum XP awarded for RARE actions")
-            .defineInRange("xpTierRareMin", 12, 1, 100);
+            .defineInRange("xpTierRareMin", 20, 1, 200);
 
     public static final ForgeConfigSpec.IntValue XP_TIER_RARE_MAX = BUILDER
             .comment("Maximum XP awarded for RARE actions")
-            .defineInRange("xpTierRareMax", 20, 1, 100);
+            .defineInRange("xpTierRareMax", 40, 1, 200);
 
     public static final ForgeConfigSpec.IntValue WEAPON_XP_MIN = BUILDER
             .comment("Minimum weapon mastery XP per hit")
-            .defineInRange("weaponXpMin", 8, 1, 100);
+            .defineInRange("weaponXpMin", 4, 1, 100);
 
     public static final ForgeConfigSpec.IntValue WEAPON_XP_MAX = BUILDER
             .comment("Maximum weapon mastery XP per hit (random between min and max)")
-            .defineInRange("weaponXpMax", 15, 1, 100);
+            .defineInRange("weaponXpMax", 8, 1, 100);
 
     public static final ForgeConfigSpec.IntValue WEAPON_MASTERY_MAX_LEVEL = BUILDER
             .comment("Maximum level for weapon mastery")
@@ -92,48 +96,48 @@ public class Config
     // ── Thirst System ──
     public static final ForgeConfigSpec.DoubleValue THIRST_BASE_DECAY = BUILDER
             .comment("Base thirst decay per tick")
-            .defineInRange("thirstBaseDecay", 0.002, 0.0, 1.0);
+            .defineInRange("thirstBaseDecay", 0.0003, 0.0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_SPRINT_COST = BUILDER
             .comment("Additional thirst cost per tick while sprinting")
-            .defineInRange("thirstSprintCost", 0.05, 0.0, 1.0);
+            .defineInRange("thirstSprintCost", 0.015, 0.0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_JUMP_COST = BUILDER
             .comment("Thirst cost per jump")
-            .defineInRange("thirstJumpCost", 0.1, 0.0, 1.0);
+            .defineInRange("thirstJumpCost", 0.02, 0.0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_BLOCK_BREAK_COST = BUILDER
             .comment("Thirst cost per block broken")
-            .defineInRange("thirstBlockBreakCost", 0.5, 0.0, 10.0);
+            .defineInRange("thirstBlockBreakCost", 0.1, 0.0, 10.0);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_ARMOR_COST_PER_PIECE = BUILDER
             .comment("Thirst cost per tick per armor piece worn")
-            .defineInRange("thirstArmorCostPerPiece", 0.005, 0.0, 0.1);
+            .defineInRange("thirstArmorCostPerPiece", 0.001, 0.0, 0.1);
 
     public static final ForgeConfigSpec.DoubleValue THIRST_HOT_BIOME_COST = BUILDER
             .comment("Additional thirst cost per tick in hot biomes")
-            .defineInRange("thirstHotBiomeCost", 0.005, 0.0, 0.1);
+            .defineInRange("thirstHotBiomeCost", 0.001, 0.0, 0.1);
 
     // ── Fatigue System ──
     public static final ForgeConfigSpec.DoubleValue FATIGUE_SNEAK_RECOVERY = BUILDER
             .comment("Fatigue recovered per tick while sneaking")
-            .defineInRange("fatigueSneakRecovery", 0.5, 0.0, 10.0);
+            .defineInRange("fatigueSneakRecovery", 2.0, 0.0, 20.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_WATER_BOTTLE_RECOVERY = BUILDER
             .comment("Fatigue reduction per water bottle consumed")
-            .defineInRange("fatigueWaterBottleRecovery", 20.0, 0.0, 100.0);
+            .defineInRange("fatigueWaterBottleRecovery", 30.0, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_DAY_RATE = BUILDER
-            .comment("Passive fatigue accumulation per tick during day")
-            .defineInRange("fatigueDayRate", 0.0002, 0.0, 100.0);
+            .comment("Passive fatigue accumulation per tick during day (currently unused)")
+            .defineInRange("fatigueDayRate", 0.0, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_NIGHT_RATE = BUILDER
-            .comment("Passive fatigue accumulation per tick during night")
-            .defineInRange("fatigueNightRate", 0.0003, 0.0, 100.0);
+            .comment("Passive fatigue accumulation per tick during night (currently unused)")
+            .defineInRange("fatigueNightRate", 0.0, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_UNDERGROUND_RATE = BUILDER
-            .comment("Passive fatigue accumulation per tick underground")
-            .defineInRange("fatigueUndergroundRate", 0.0002, 0.0, 100.0);
+            .comment("Passive fatigue accumulation per tick underground (currently unused)")
+            .defineInRange("fatigueUndergroundRate", 0.0, 0.0, 100.0);
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_DAMAGE_COST = BUILDER
             .comment("Fatigue added when player takes damage")
@@ -165,16 +169,16 @@ public class Config
 
     public static final ForgeConfigSpec.DoubleValue FATIGUE_EXHAUSTED_DAMAGE = BUILDER
             .comment("Damage dealt per tick when exhausted (hearts)")
-            .defineInRange("fatigueExhaustedDamage", 1.0, 0.0, 20.0);
+            .defineInRange("fatigueExhaustedDamage", 0.5, 0.0, 20.0);
 
     // ── Mob Scaling ──
     public static final ForgeConfigSpec.DoubleValue MOB_HEALTH_SCALE_MAX = BUILDER
-            .comment("Maximum health scale multiplier for mob scaling (default 2.5 = mobs can be at most 2.5x stronger)")
-            .defineInRange("mobHealthScaleMax", 2.5, 1.0, 10.0);
+            .comment("Maximum health scale multiplier for mob scaling")
+            .defineInRange("mobHealthScaleMax", 1.75, 1.0, 5.0);
 
     public static final ForgeConfigSpec.DoubleValue MOB_DAMAGE_SCALE_MAX = BUILDER
             .comment("Maximum attack damage scale multiplier for mob scaling")
-            .defineInRange("mobDamageScaleMax", 2.0, 1.0, 10.0);
+            .defineInRange("mobDamageScaleMax", 1.5, 1.0, 5.0);
 
     // ── Mob Skills (Phase 2) ──
     public static final ForgeConfigSpec.BooleanValue MOB_SKILLS_ENABLED = BUILDER
@@ -196,7 +200,8 @@ public class Config
     public static boolean enableDebug;
 
     // XP
-    public static int xpPerLevelMultiplier;
+    public static int xpBaseCost;
+    public static double xpGrowthFactor;
     public static int xpTierCommonMin;
     public static int xpTierCommonMax;
     public static int xpTierIntermediateMin;
@@ -254,7 +259,8 @@ public class Config
     {
         enableDebug = ENABLE_DEBUG.get();
 
-        xpPerLevelMultiplier = XP_PER_LEVEL_MULTIPLIER.get();
+        xpBaseCost = XP_BASE_COST.get();
+        xpGrowthFactor = XP_GROWTH_FACTOR.get();
         xpTierCommonMin = XP_TIER_COMMON_MIN.get();
         xpTierCommonMax = XP_TIER_COMMON_MAX.get();
         xpTierIntermediateMin = XP_TIER_INTERMEDIATE_MIN.get();

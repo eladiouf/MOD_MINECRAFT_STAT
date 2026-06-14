@@ -37,10 +37,10 @@ class StatCalculatorTest {
     }
 
     @Test
-    void manaBonus_linear() {
+    void manaBonus_sqrt() {
         assertEquals(0, StatCalculator.getManaBonus(0));
-        assertEquals(50, StatCalculator.getManaBonus(50));
-        assertEquals(100, StatCalculator.getManaBonus(100));
+        assertEquals(141, StatCalculator.getManaBonus(50));
+        assertEquals(200, StatCalculator.getManaBonus(100));
     }
 
     @Test

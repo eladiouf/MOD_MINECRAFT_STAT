@@ -184,7 +184,7 @@
   "itemGroup.statmod": "STAT Mod",
 
   "tooltip.statmod.stat_scroll": "Stat Scroll",
-  "tooltip.statmod.stat_scroll.desc": "Right-click to gain +5 levels in a random stat",
+  "tooltip.statmod.stat_scroll.desc": "Right-click to boost your lowest stat (+5 levels)",
   "tooltip.statmod.perk_tome": "Perk Tome",
   "tooltip.statmod.perk_tome.desc": "Right-click to gain 1 perk point",
   "tooltip.statmod.mastery_crystal": "Mastery Crystal",

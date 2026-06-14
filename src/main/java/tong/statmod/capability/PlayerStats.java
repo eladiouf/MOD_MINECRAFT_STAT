@@ -36,7 +36,7 @@ public class PlayerStats implements INBTSerializable<CompoundTag> {
     }
 
     public static int getXpForNextLevel(int level) {
-        return (level + 1) * Config.xpPerLevelMultiplier;
+        return StatCalculator.getXpForNextLevel(level);
     }
 
     public void setLevel(int index, int level) {

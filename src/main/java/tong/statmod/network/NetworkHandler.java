@@ -36,6 +36,8 @@ public class NetworkHandler {
             BatchSyncPacket::encode, BatchSyncPacket::decode, BatchSyncPacket::handle);
         CHANNEL.registerMessage(packetId++, WeaponMasteryPacket.class,
             WeaponMasteryPacket::encode, WeaponMasteryPacket::decode, WeaponMasteryPacket::handle);
+        CHANNEL.registerMessage(packetId++, ManaSyncPacket.class,
+            ManaSyncPacket::encode, ManaSyncPacket::decode, ManaSyncPacket::handle);
     }
 
     public static void sendToPlayer(Object packet, ServerPlayer player) {

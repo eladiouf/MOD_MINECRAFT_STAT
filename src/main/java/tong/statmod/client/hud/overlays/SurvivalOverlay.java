@@ -26,11 +26,13 @@ public class SurvivalOverlay implements IGuiOverlay {
     private static final int BAR_BORDER_COLOR = 0xFF8B4513;
     private static final int LABEL_COLOR = 0xFF3A1A00;
     private static final int VALUE_COLOR = 0xFF6B4C1E;
+    private static final int MANA_COLOR = 0xFF00BFFF;
 
     private final HudBar healthBar = new HudBar(BAR_WIDTH, BAR_HEIGHT, 0.12f);
     private final HudBar foodBar = new HudBar(BAR_WIDTH, BAR_HEIGHT, 0.10f);
     private final HudBar fatigueBar = new HudBar(BAR_WIDTH, BAR_HEIGHT, 0.15f);
     private final HudBar thirstBar = new HudBar(BAR_WIDTH, BAR_HEIGHT, 0.15f);
+    private final HudBar manaBar = new HudBar(BAR_WIDTH, BAR_HEIGHT, 0.12f);
 
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
@@ -41,11 +43,14 @@ public class SurvivalOverlay implements IGuiOverlay {
         float food = mc.player.getFoodData().getFoodLevel() / 20.0f;
         float fatigue = ClientStatsCache.getFatigue() / (float) ClientStatsCache.getMaxFatigue();
         float thirst = ClientStatsCache.getThirst() / 100.0f;
+        float maxMana = ClientStatsCache.getMaxMana();
+        float manaPct = maxMana > 0 ? ClientStatsCache.getMana() / maxMana : 0;
 
         healthBar.setFill(health);
         foodBar.setFill(food);
         fatigueBar.setFill(fatigue);
         thirstBar.setFill(thirst);
+        manaBar.setFill(manaPct);
 
         int x = 4;
         int y = PANEL_START_Y;
@@ -57,6 +62,8 @@ public class SurvivalOverlay implements IGuiOverlay {
         renderBarWithIcon(graphics, x, y, fatigueBar, "hud_fatigue.png", getFatigueColor(fatigue), (int)(fatigue * 100) + "%", 32);
         y += 10;
         renderBarWithIcon(graphics, x, y, thirstBar, "hud_thirst.png", 0x3399FF, (int) ClientStatsCache.getThirst() + "/100", 32);
+        y += 10;
+        renderManaBar(graphics, x, y, manaPct, (int) ClientStatsCache.getMana() + "/" + (int) maxMana);
     }
 
     private void renderBarWithIcon(GuiGraphics graphics, int x, int y, HudBar bar,
@@ -65,6 +72,13 @@ public class SurvivalOverlay implements IGuiOverlay {
         graphics.blit(tex, x, y, 7, 7, 0, 0, texSize, texSize, texSize, texSize);
         int darkColor = darken(fillColor, 0.5f);
         bar.renderGradientWithBorder(graphics, x + 10, y, fillColor, darkColor, BAR_BORDER_COLOR);
+        drawInkText(graphics, Minecraft.getInstance().font, label, x + 10 + BAR_WIDTH + 4, y, VALUE_COLOR);
+    }
+
+    private void renderManaBar(GuiGraphics graphics, int x, int y, float pct, String label) {
+        int darkMana = darken(MANA_COLOR, 0.5f);
+        graphics.drawString(Minecraft.getInstance().font, "♢", x, y, MANA_COLOR, false);
+        manaBar.renderGradientWithBorder(graphics, x + 10, y, MANA_COLOR, darkMana, BAR_BORDER_COLOR);
         drawInkText(graphics, Minecraft.getInstance().font, label, x + 10 + BAR_WIDTH + 4, y, VALUE_COLOR);
     }
 
@@ -91,5 +105,6 @@ public class SurvivalOverlay implements IGuiOverlay {
         INSTANCE.foodBar.tick();
         INSTANCE.fatigueBar.tick();
         INSTANCE.thirstBar.tick();
+        INSTANCE.manaBar.tick();
     }
 }

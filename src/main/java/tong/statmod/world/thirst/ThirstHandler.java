@@ -16,6 +16,8 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.ThirstPacket;
 import tong.statmod.sound.ModSounds;
+import tong.statmod.stats.StatType;
+import tong.statmod.stats.StatCalculator;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
 public class ThirstHandler {
@@ -57,6 +59,13 @@ public class ThirstHandler {
             } else if (foodLevel < 10) {
                 total *= 1.5f;
             }
+
+            // Water Affinity reduces thirst decay
+            float[] waterReduction = {0};
+            CapabilityHelper.withStats(player, s -> {
+                waterReduction[0] = Math.max(0.7f, 1.0f - s.getLevel(StatType.WATER_AFFINITY.index) * 0.003f);
+            });
+            total *= waterReduction[0];
 
             thirst.reduceThirst(total);
 

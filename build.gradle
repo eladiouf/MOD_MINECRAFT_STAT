@@ -192,6 +192,15 @@ dependencies {
     compileOnly fg.deobf("blank:l2library-2.5.0-slim:2.5.0")
     compileOnly fg.deobf("blank:l2serial-1.2.2:1.2.2")
 
+    // Dev-runtime L2Hostility stack (NOT shipped — used only for runClient testing).
+    // These belong to group "blank" so they bypass validateStatModPackaging's checks
+    // (which target curse.maven / vazkii.patchouli for production compat).
+    runtimeOnly fg.deobf("blank:l2hostility-2.5.10:2.5.10")
+    runtimeOnly fg.deobf("blank:l2library-2.5.3:2.5.3")
+    runtimeOnly fg.deobf("blank:l2complements-2.5.8:2.5.8")
+    runtimeOnly fg.deobf("blank:curios-forge-5.14.1:5.14.1")
+    runtimeOnly fg.deobf("blank:Patchouli-1.20.1-84.1-FORGE:84.1")
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

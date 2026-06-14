@@ -33,12 +33,18 @@ public class StatScrollItem extends Item {
         if (!(player instanceof ServerPlayer sp)) return InteractionResultHolder.pass(stack);
 
         CapabilityHelper.withStats(sp, stats -> {
-            StatType randomStat = StatType.values()[sp.getRandom().nextInt(StatType.values().length)];
-            int before = stats.getLevel(randomStat.index);
-            stats.addXp(randomStat.index, stats.getXpForNextLevel(before) * 5);
-            int after = stats.getLevel(randomStat.index);
-            NetworkHandler.sendToPlayer(new StatUpdatePacket(randomStat.index, after, stats.getXp(randomStat.index)), sp);
-            sp.sendSystemMessage(Component.literal("\u00a7a+" + (after - before) + " levels in " + randomStat.displayName));
+            int lowestIdx = 0;
+            int lowestLevel = stats.getLevel(0);
+            for (int i = 1; i < StatType.values().length; i++) {
+                int lvl = stats.getLevel(i);
+                if (lvl < lowestLevel) { lowestLevel = lvl; lowestIdx = i; }
+            }
+            StatType targetStat = StatType.values()[lowestIdx];
+            int before = stats.getLevel(targetStat.index);
+            stats.addXp(targetStat.index, stats.getXpForNextLevel(before) * 5);
+            int after = stats.getLevel(targetStat.index);
+            NetworkHandler.sendToPlayer(new StatUpdatePacket(targetStat.index, after, stats.getXp(targetStat.index)), sp);
+            sp.sendSystemMessage(Component.literal("\u00a7a+" + (after - before) + " niveaux en " + targetStat.displayName + " \u00a78(stat la plus faible)"));
         });
 
         if (!player.isCreative()) stack.shrink(1);

@@ -83,6 +83,22 @@ public class StatPassiveEffects {
             if (extraSat > 0 || extraNut > 0) {
                 player.getFoodData().eat(extraNut, extraSat);
             }
+            // Cooking also extends active food-related buff durations
+            float buffDur = StatCalculator.getFoodBuffDuration(cookingLevel);
+            if (buffDur > 1.0f) {
+                var toExtend = new java.util.ArrayList<MobEffectInstance>();
+                for (var effect : player.getActiveEffects()) {
+                    if (effect.getEffect().isBeneficial()) {
+                        toExtend.add(effect);
+                    }
+                }
+                for (var effect : toExtend) {
+                    int extended = Math.min((int)(effect.getDuration() * buffDur), 12000);
+                    player.addEffect(new MobEffectInstance(
+                        effect.getEffect(), extended,
+                        effect.getAmplifier(), effect.isAmbient(), effect.isVisible()));
+                }
+            }
         });
     }
 
@@ -118,7 +134,7 @@ public class StatPassiveEffects {
         });
     }
 
-    // Water Affinity: +swim speed when in water
+    // Water Affinity: +swim speed + extended breath when in water
     @SubscribeEvent
     public static void onSwimTick(LivingEvent.LivingTickEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -135,6 +151,11 @@ public class StatPassiveEffects {
                     0,
                     player.getLookAngle().z * swimBonus * 0.02
                 ));
+                // Extra oxygen: +15s at lvl 100
+                int extraAir = (int) (waterLevel * 3);
+                if (player.getAirSupply() < player.getMaxAirSupply() + extraAir) {
+                    player.setAirSupply(player.getAirSupply() + 10);
+                }
             }
         });
     }

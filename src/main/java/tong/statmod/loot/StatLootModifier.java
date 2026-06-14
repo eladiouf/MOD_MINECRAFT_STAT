@@ -28,6 +28,9 @@ public class StatLootModifier extends LootModifier {
         if (context.getRandom().nextFloat() < 0.08f) {
             generatedLoot.add(new ItemStack(ModItems.MASTERY_CRYSTAL.get()));
         }
+        if (context.getRandom().nextFloat() < 0.05f) {
+            generatedLoot.add(new ItemStack(ModItems.RESPEC_STONE.get()));
+        }
         return generatedLoot;
     }
 

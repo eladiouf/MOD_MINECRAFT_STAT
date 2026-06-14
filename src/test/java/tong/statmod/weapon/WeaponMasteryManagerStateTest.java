@@ -12,7 +12,8 @@ class WeaponMasteryManagerStateTest {
 
     @BeforeEach
     void configureDefaults() {
-        Config.xpPerLevelMultiplier = 40;
+        Config.xpBaseCost = 25;
+Config.xpGrowthFactor = 1.08;
         Config.weaponMasteryMaxLevel = 50;
     }
 

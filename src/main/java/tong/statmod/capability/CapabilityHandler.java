@@ -29,6 +29,7 @@ import tong.statmod.weapon.WeaponMasteryProvider;
 import tong.statmod.world.thirst.ThirstManager;
 import tong.statmod.anticheat.ServerValidator;
 import tong.statmod.capability.CapabilityHelper;
+import tong.statmod.item.ModItems;
 import tong.statmod.world.thirst.ThirstProvider;
 
 @Mod.EventBusSubscriber(modid = STATMod.MODID)
@@ -117,6 +118,17 @@ public class CapabilityHandler {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             StatEffectApplier.applyAllBonuses(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerFirstJoin(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
+            var data = player.getPersistentData();
+            if (!data.getBoolean("statmod_received_book")) {
+                data.putBoolean("statmod_received_book", true);
+                player.addItem(new net.minecraft.world.item.ItemStack(ModItems.WELCOME_BOOK.get()));
+            }
         }
     }
 

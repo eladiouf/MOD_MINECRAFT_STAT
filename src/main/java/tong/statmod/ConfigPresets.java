@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 public class ConfigPresets {
     public enum Preset {
         EASY("Easy", "XP x1.5, Fatigue x0.5, Thirst x0.5", p -> {
-            Config.xpPerLevelMultiplier = (int)(Config.xpPerLevelMultiplier * 0.67);
+            Config.xpBaseCost = Math.max(5, (int)(Config.xpBaseCost * 0.67));
             Config.fatigueDayRate *= 0.5;
             Config.fatigueNightRate *= 0.5;
             Config.fatigueUndergroundRate *= 0.5;
@@ -19,7 +19,7 @@ public class ConfigPresets {
         }),
         NORMAL("Normal", "Default values", p -> {}),
         HARD("Hard", "XP x0.5, Fatigue x2, Thirst x2, Cooldown x1.5", p -> {
-            Config.xpPerLevelMultiplier *= 2;
+            Config.xpBaseCost = Math.min(200, Config.xpBaseCost * 2);
             Config.fatigueDayRate *= 2.0;
             Config.fatigueNightRate *= 2.0;
             Config.fatigueUndergroundRate *= 2.0;

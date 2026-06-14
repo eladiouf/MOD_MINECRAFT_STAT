@@ -184,7 +184,7 @@
   "itemGroup.statmod": "STAT Mod",
 
   "tooltip.statmod.stat_scroll": "Parchemin de Stat",
-  "tooltip.statmod.stat_scroll.desc": "Clic-droit pour gagner +5 niveaux dans une stat aléatoire",
+  "tooltip.statmod.stat_scroll.desc": "Clic-droit pour booster votre stat la plus faible (+5 niveaux)",
   "tooltip.statmod.perk_tome": "Tome de Perk",
   "tooltip.statmod.perk_tome.desc": "Clic-droit pour gagner 1 point de perk",
   "tooltip.statmod.mastery_crystal": "Cristal de Maîtrise",

@@ -15,8 +15,8 @@ public class StatRegistry {
             STATMod.LOGGER.debug("  {}: {} stats", cat.name(), count);
         }
         STATMod.LOGGER.info("Stat scaling formulas initialized");
-        STATMod.LOGGER.info("  XP curve: (level+1)*{} — Level 100 requires {} XP",
-            Config.xpPerLevelMultiplier, (100 + 1) * Config.xpPerLevelMultiplier);
+        STATMod.LOGGER.info("  XP curve: {} * {}^level — Level 100 requires {} XP",
+            Config.xpBaseCost, Config.xpGrowthFactor, StatCalculator.getXpForNextLevel(100));
         STATMod.LOGGER.info("  Damage bonus range: {}% - {}%",
             Math.round(StatCalculator.getDamageBonus(1) * 100),
             Math.round(StatCalculator.getDamageBonus(100) * 100));

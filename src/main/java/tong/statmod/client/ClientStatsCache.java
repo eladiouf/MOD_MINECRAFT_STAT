@@ -68,6 +68,10 @@ public class ClientStatsCache {
 
     public static void updateMana(float m) { mana = m; }
     public static float getMana() { return mana; }
+    public static float getMaxMana() {
+        int manaPoolLevel = getLevel(StatType.MANA_POOL);
+        return 50.0f + tong.statmod.stats.StatCalculator.getManaBonus(manaPoolLevel);
+    }
     public static void updatePerks(int[] ids, int points) {
         perkIds = Arrays.copyOf(ids, ids.length);
         perkPoints = points;

@@ -25,7 +25,8 @@ public class ConfigScreen extends Screen {
     private void buildRows() {
         rows.clear();
         rows.add(row("Debug", "enableDebug", Config.enableDebug, "Enable debug logging"));
-        rows.add(intRow("XP Multiplier", "xpPerLevelMultiplier", Config.xpPerLevelMultiplier, "XP per level = (level+1)*value"));
+        rows.add(intRow("XP Base Cost", "xpBaseCost", Config.xpBaseCost, "Base XP cost for level 0→1"));
+        rows.add(dRow("XP Growth", "xpGrowthFactor", Config.xpGrowthFactor, "Exponential growth factor per level"));
         rows.add(intRow("XP Tier Common Min", "xpTierCommonMin", Config.xpTierCommonMin, "Min XP for common actions"));
         rows.add(intRow("XP Tier Common Max", "xpTierCommonMax", Config.xpTierCommonMax, "Max XP for common actions"));
         rows.add(intRow("XP Tier Int. Min", "xpTierIntermediateMin", Config.xpTierIntermediateMin, "Min XP for intermediate actions"));

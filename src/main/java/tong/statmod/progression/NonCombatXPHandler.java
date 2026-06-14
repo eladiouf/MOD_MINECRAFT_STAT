@@ -88,6 +88,15 @@ public class NonCombatXPHandler {
         }
     }
 
+    // ---- Forging: extra XP when mining with pickaxe (below y=0 = deep) ----
+    @SubscribeEvent
+    public static void onMineForging(BlockEvent.BreakEvent event) {
+        if (!(event.getPlayer() instanceof ServerPlayer player)) return;
+        if (event.getState().is(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE) && event.getPos().getY() < 0) {
+            ActionXpHelper.awardXp(player, StatType.FORGING.index, ActionXpHelper.XpTier.COMMON);
+        }
+    }
+
     // ---- Earth Affinity (mining) + Brute Force (hard blocks) ----
 
     @SubscribeEvent
@@ -121,8 +130,6 @@ public class NonCombatXPHandler {
         if (event.getSource().getEntity() instanceof ServerPlayer caster) {
             ActionXpHelper.awardXp(caster, StatType.ARCANE_POWER.index, ActionXpHelper.XpTier.COMMON);
             ActionXpHelper.awardXp(caster, StatType.MANA_POOL.index, ActionXpHelper.XpTier.COMMON);
-            ActionXpHelper.awardXp(caster, StatType.CASTING_SPEED.index, ActionXpHelper.XpTier.COMMON);
-            ActionXpHelper.awardXp(caster, StatType.ERUDITION.index, ActionXpHelper.XpTier.COMMON);
             if (event.getAmount() >= 15) {
                 ActionXpHelper.awardXp(caster, StatType.ARCANE_POWER.index, ActionXpHelper.XpTier.INTERMEDIATE);
                 ActionXpHelper.awardXp(caster, StatType.MANA_POOL.index, ActionXpHelper.XpTier.INTERMEDIATE);
@@ -147,7 +154,7 @@ public class NonCombatXPHandler {
     public static void onTick(net.minecraftforge.event.TickEvent.PlayerTickEvent event) {
         if (!(event.player instanceof ServerPlayer player) || event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
 
-        if (player.tickCount % 100 != 0) return;
+        if (player.tickCount % 400 != 0) return;
 
         // Anti-AFK: only award XP if player has moved since last check
         BlockPos currentPos = player.blockPosition();

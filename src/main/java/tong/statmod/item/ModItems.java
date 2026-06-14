@@ -17,6 +17,10 @@ public class ModItems {
         () -> new PerkTomeItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> MASTERY_CRYSTAL = ITEMS.register("mastery_crystal",
         () -> new MasteryCrystalItem(new Item.Properties().stacksTo(32)));
+    public static final RegistryObject<Item> WELCOME_BOOK = ITEMS.register("welcome_book",
+        () -> new WelcomeBookItem());
+    public static final RegistryObject<Item> RESPEC_STONE = ITEMS.register("respec_stone",
+        () -> new RespecStoneItem());
 
     public static void register(IEventBus bus) {
         ITEMS.register(bus);

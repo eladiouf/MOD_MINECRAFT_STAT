@@ -16,8 +16,6 @@ public class ClientStatsCache {
     private static int maxFatigue = 500;
     private static float thirst = 100;
     private static float mana = 0;
-    private static int[] perkIds = new int[0];
-    private static int perkPoints = 0;
     private static boolean syncReceived = false;
     private static final int[] weaponLevels = new int[WeaponMasteryManager.WEAPON_COUNT];
     private static final int[] weaponXp = new int[WeaponMasteryManager.WEAPON_COUNT];
@@ -72,12 +70,6 @@ public class ClientStatsCache {
         int manaPoolLevel = getLevel(StatType.MANA_POOL);
         return 50.0f + tong.statmod.stats.StatCalculator.getManaBonus(manaPoolLevel);
     }
-    public static void updatePerks(int[] ids, int points) {
-        perkIds = Arrays.copyOf(ids, ids.length);
-        perkPoints = points;
-    }
-    public static int[] getPerkIds() { return Arrays.copyOf(perkIds, perkIds.length); }
-    public static int getPerkPoints() { return perkPoints; }
 
     public static void updateWeaponMastery(int[] levels, int[] xp) {
         Arrays.fill(weaponLevels, 0);

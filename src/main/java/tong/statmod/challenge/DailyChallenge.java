@@ -39,7 +39,7 @@ public class DailyChallenge {
 
         if (newProgress >= state.target && state.progress < state.target) {
             player.sendSystemMessage(Component.literal("\u00a7aChallenge Complete! \u00a7e+3 bonus perk points!"));
-            CapabilityHelper.withPerks(player, perks -> perks.addPoints(3));
+            CapabilityHelper.withPerks(player, perks -> perks.addPointsForStat(stat, 3));
         }
     }
 

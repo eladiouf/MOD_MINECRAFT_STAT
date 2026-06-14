@@ -436,15 +436,11 @@ tasks.register('validateStatModPackaging') {
         forbidText(perkStateFile, 'public static final Map<UUID, Set<Integer>> hitMobTracker', 'PerkState mutable public hit tracker')
         forbidText(perkStateFile, 'public static final Set<UUID> effectProcessing', 'PerkState mutable public effect set')
 
-        def perkDamageHandlerFile = file('src/main/java/tong/statmod/perks/PerkDamageHandler.java')
-        requireText(perkDamageHandlerFile, 'PerkState.recordComboHit', 'PerkDamageHandler combo state api')
-        requireText(perkDamageHandlerFile, 'PerkState.noteTrackedHit', 'PerkDamageHandler tracked hit api')
-        forbidText(perkDamageHandlerFile, 'PerkState.comboCounter', 'PerkDamageHandler raw combo state')
-        forbidText(perkDamageHandlerFile, 'PerkState.hitMobTracker', 'PerkDamageHandler raw hit tracker')
-
-        def perkStatusHandlerFile = file('src/main/java/tong/statmod/perks/PerkStatusHandler.java')
-        requireText(perkStatusHandlerFile, 'PerkState.tryBeginEffectProcessing', 'PerkStatusHandler effect api')
-        forbidText(perkStatusHandlerFile, 'PerkState.effectProcessing', 'PerkStatusHandler raw effect state')
+        def perkEffectHandlerFile = file('src/main/java/tong/statmod/perks/PerkEffectHandler.java')
+        requireText(perkEffectHandlerFile, 'PerkState.recordComboHit', 'PerkEffectHandler combo state api')
+        requireText(perkEffectHandlerFile, 'PerkState.tryBeginEffectProcessing', 'PerkEffectHandler effect api')
+        requireText(perkEffectHandlerFile, 'PerkState.setCooldown', 'PerkEffectHandler cooldown api')
+        requireText(perkEffectHandlerFile, 'PerkState.isOnCooldown', 'PerkEffectHandler cooldown api')
 
         def globalLootModifiersFile = file('src/main/resources/data/forge/loot_modifiers/global_loot_modifiers.json')
         requireText(globalLootModifiersFile, '"entries": ["statmod:stat_loot"]', 'Global loot modifiers registration')

@@ -15,8 +15,8 @@ class PerkManagerStateTest {
     @Test
     void unlockedPerks_viewIsImmutable() {
         PerkManager manager = new PerkManager();
-        manager.addPoints(1);
-        manager.unlockPerk(Perk.BRUTE_DEMOLITION, 100);
+        manager.addPointsForStat(Perk.BRUTE_CORE.stat, 1);
+        manager.unlockPerk(Perk.BRUTE_CORE);
 
         assertThrows(UnsupportedOperationException.class, () -> manager.getUnlockedPerks().clear());
     }
@@ -25,16 +25,17 @@ class PerkManagerStateTest {
     void deserializeNBT_filtersInvalidPerksAndNegativePoints() {
         PerkManager manager = new PerkManager();
         CompoundTag tag = new CompoundTag();
-        tag.putInt("Points", -4);
+        int[] emptyPoints = new int[23];
+        tag.putIntArray("PerStatPoints", emptyPoints);
         ListTag list = new ListTag();
-        list.add(IntTag.valueOf(Perk.BRUTE_DEMOLITION.id));
+        list.add(IntTag.valueOf(Perk.BRUTE_CORE.id));
         list.add(IntTag.valueOf(999));
         tag.put("UnlockedPerks", list);
 
         manager.deserializeNBT(tag);
 
-        assertEquals(0, manager.getAvailablePoints());
-        assertTrue(manager.isUnlocked(Perk.BRUTE_DEMOLITION));
+        assertEquals(0, manager.getAvailablePointsForStat(Perk.BRUTE_CORE.stat));
+        assertTrue(manager.isUnlocked(Perk.BRUTE_CORE));
         assertFalse(manager.isUnlocked(999));
     }
 }

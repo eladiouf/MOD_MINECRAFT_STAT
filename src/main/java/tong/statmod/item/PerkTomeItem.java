@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.network.NetworkHandler;
 import tong.statmod.network.SyncPerksPacket;
+import tong.statmod.stats.StatType;
 
 import java.util.List;
 
@@ -32,10 +33,12 @@ public class PerkTomeItem extends Item {
         if (!(player instanceof ServerPlayer sp)) return InteractionResultHolder.pass(stack);
 
         CapabilityHelper.withPerks(sp, perks -> {
-            perks.addPoints(1);
+            for (StatType stat : StatType.values()) {
+                perks.addPointsForStat(stat, 1);
+            }
             int[] ids = perks.getUnlockedPerks().stream().mapToInt(i -> i).toArray();
-            NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), sp);
-            sp.sendSystemMessage(Component.literal("\u00a7a+1 perk point"));
+            NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getPerStatPoints()), sp);
+            sp.sendSystemMessage(Component.literal("\u00a7a+1 perk point pour chaque stat!"));
         });
 
         if (!player.isCreative()) stack.shrink(1);

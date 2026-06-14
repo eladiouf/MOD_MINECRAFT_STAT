@@ -210,7 +210,6 @@ public class StatsCommands {
 
     private static int showMe(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
         CapabilityHelper.withStats(player, stats -> {
-            // Collect all stats with their levels
             List<StatType> sorted = new ArrayList<>();
             for (StatType s : StatType.values()) sorted.add(s);
             sorted.sort((a, b) -> Integer.compare(stats.getLevel(b.index), stats.getLevel(a.index)));
@@ -322,14 +321,12 @@ public class StatsCommands {
         String statInput = StringArgumentType.getString(ctx, "stat");
         int newLevel = IntegerArgumentType.getInteger(ctx, "level");
 
-        // Handle "all" keyword - set all stats to the given level
         if (statInput.equalsIgnoreCase("all")) {
             CapabilityHelper.withStats(player, stats -> {
                 for (StatType s : StatType.values()) {
                     stats.setLevel(s.index, newLevel);
                     stats.setXp(s.index, 0);
                 }
-                // Sync all stats to client
                 int[] levels = new int[PlayerStats.STAT_COUNT];
                 int[] xp = new int[PlayerStats.STAT_COUNT];
                 for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
@@ -344,7 +341,6 @@ public class StatsCommands {
             return 1;
         }
 
-        // Handle single stat
         StatType stat = resolveStat(statInput);
         if (stat == null) {
             ctx.getSource().sendFailure(Component.literal("§cStat inconnue. Utilise 'all' pour toutes les stats."));
@@ -483,14 +479,12 @@ public class StatsCommands {
 
     private static int respecPerks(CommandContext<CommandSourceStack> ctx, ServerPlayer player) {
         CapabilityHelper.withPerks(player, perks -> {
-            int count = perks.getUnlockedPerks().size();
-            int points = count + perks.getAvailablePoints();
+            int[] refounded = perks.getPerStatPoints().clone();
             perks.resetPerks();
-            perks.addPoints(points);
             int[] ids = {};
-            NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, perks.getAvailablePoints()), player);
+            NetworkHandler.sendToPlayer(new SyncPerksPacket(ids, refounded), player);
             ctx.getSource().sendSuccess(() -> Component.literal(
-                "\u00a7aPerks reset! \u00a7e" + points + " \u00a7apoints refunded."), true);
+                "\u00a7aPerks reset! Points conserv\u00e9s pour chaque stat."), true);
         });
         return 1;
     }

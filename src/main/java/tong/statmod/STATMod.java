@@ -183,13 +183,13 @@ public class STATMod
                 float[] mana = {0};
                 CapabilityHelper.withStats(serverPlayer, s -> mana[0] = s.getMana());
                 int[][] perkIds = {new int[0]};
-                int[] perkPoints = {0};
+                int[][] perStatPoints = {new int[23]};
                 CapabilityHelper.withPerks(serverPlayer, perks -> {
                     perkIds[0] = perks.getUnlockedPerks().stream().mapToInt(i -> i).toArray();
-                    perkPoints[0] = perks.getAvailablePoints();
+                    perStatPoints[0] = perks.getPerStatPoints();
                 });
                 NetworkHandler.sendToPlayer(new BatchSyncPacket(levels, xp,
-                    fatigue[0], maxFatigue[0], thirst[0], mana[0], perkIds[0], perkPoints[0]), serverPlayer);
+                    fatigue[0], maxFatigue[0], thirst[0], mana[0], perkIds[0], perStatPoints[0]), serverPlayer);
             }
         }
     }

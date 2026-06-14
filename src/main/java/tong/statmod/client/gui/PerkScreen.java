@@ -52,7 +52,6 @@ public class PerkScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        // Parchment background
         ResourceLocation bgTex = TextureCache.get("bg_parchment.png");
         for (int x = 0; x < this.width; x += 256) {
             for (int y = 0; y < this.height; y += 256) {
@@ -65,26 +64,19 @@ public class PerkScreen extends Screen {
 
         var font = Minecraft.getInstance().font;
 
-        // Title
         String title = "\u2764 ARBRE DE TALENTS \u2764";
         int titleX = this.width / 2 - font.width(title) / 2;
         drawInkText(graphics, font, title, titleX, 8, TEXT_COLOR);
 
-        // Flanking lines
         int lineEnd = titleX - 10;
         if (lineEnd > PANEL_PADDING) graphics.fill(PANEL_PADDING, 12, lineEnd, 13, SEPARATOR_COLOR);
         int lineStart = titleX + font.width(title) + 10;
         if (lineStart < this.width - PANEL_PADDING) graphics.fill(lineStart, 12, this.width - PANEL_PADDING, 13, SEPARATOR_COLOR);
 
-        // Points display
-        String pointsText = "Points: " + ClientPerkCache.getAvailablePoints();
-        drawInkText(graphics, font, pointsText, this.width - PANEL_PADDING - font.width(pointsText), 8, POINTS_COLOR);
-
         // Tabs
         int tabX = this.width / 2 - (TAB_COUNT * 52) / 2;
         for (int i = 0; i < TAB_COUNT; i++) {
             boolean active = i == selectedTab;
-
             ResourceLocation tabTex = TextureCache.get(active ? "tab_active.png" : "tab_inactive.png");
             graphics.blit(tabTex, tabX, 22, 0, 0, 48, 24, 48, 24);
 
@@ -95,17 +87,14 @@ public class PerkScreen extends Screen {
             tabX += 52;
         }
 
-        // Separator below tabs
         graphics.fill(PANEL_PADDING, 48, this.width - PANEL_PADDING, 49, SEPARATOR_COLOR);
 
-        // Render tree panel
         treePanel.setScrollOffset(scrollOffset);
         treePanel.renderWidget(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // Tab click handling
         int tabX = this.width / 2 - (TAB_COUNT * 52) / 2;
         for (int i = 0; i < TAB_COUNT; i++) {
             if (mouseX >= tabX && mouseX <= tabX + 48 && mouseY >= 22 && mouseY <= 46) {
@@ -119,13 +108,15 @@ public class PerkScreen extends Screen {
             tabX += 52;
         }
 
-        // Perk node click handling
         if (treePanel != null) {
             Perk clickedPerk = treePanel.getPerkAt(mouseX, mouseY);
-            if (clickedPerk != null && ClientPerkCache.getAvailablePoints() > 0
-                    && !ClientPerkCache.isUnlocked(clickedPerk)) {
-                NetworkHandler.CHANNEL.sendToServer(new UnlockPerkPacket(clickedPerk.id));
-                return true;
+            if (clickedPerk != null && !ClientPerkCache.isUnlocked(clickedPerk)) {
+                int statIndex = clickedPerk.stat.index;
+                int available = ClientPerkCache.getAvailablePointsForStat(statIndex);
+                if (available >= clickedPerk.tier.cost) {
+                    NetworkHandler.CHANNEL.sendToServer(new UnlockPerkPacket(clickedPerk.id));
+                    return true;
+                }
             }
         }
 

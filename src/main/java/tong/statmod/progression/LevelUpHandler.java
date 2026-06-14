@@ -7,14 +7,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 import tong.statmod.integration.EpicFightCompat;
-import tong.statmod.perks.PerkProvider;
+import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.skills.SkillUnlockRegistry;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatEffectApplier;
 import tong.statmod.stats.StatType;
 import tong.statmod.advancement.StatAdvancementTrigger;
-import tong.statmod.Config;
-import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.capability.PlayerStats;
 
 public class LevelUpHandler {
@@ -22,12 +20,10 @@ public class LevelUpHandler {
     public static void onLevelUp(ServerPlayer player, int statIndex, int newLevel) {
         if (newLevel <= 0) return;
 
-        // Check if this is a milestone (every 10 levels)
-        if (newLevel % 10 == 0) {
+        if (newLevel % 10 == 0 && newLevel <= 100) {
             handleMilestone(player, statIndex, newLevel);
         }
 
-        // Refresh passive bonuses on every level-up
         StatEffectApplier.applyAllBonuses(player);
 
         CapabilityHelper.withStats(player, stats -> {
@@ -39,7 +35,6 @@ public class LevelUpHandler {
     }
 
     private static void handleMilestone(ServerPlayer player, int statIndex, int level) {
-        // Play sound
         if (level == 100) {
             player.level().playSound(null, player.blockPosition(),
                 ModSounds.MILESTONE.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -48,23 +43,15 @@ public class LevelUpHandler {
                 ModSounds.LEVEL_UP.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         }
 
-        // Spawn particles
         spawnMilestoneParticles(player, level);
 
-        int tier1 = Config.perkTier1Level;
-        int tier2 = Config.perkTier2Level;
-        int tier3 = Config.perkTier3Level;
-        int points = level == 100 ? 3 : (level == tier1 || level == 40 || level == 50 || level == 60 || level == 80) ? 1 : 0;
-        if (points > 0) {
-            int p = points;
-            CapabilityHelper.withPerks(player, perks -> perks.addPoints(p));
-        }
-
         StatType stat = StatType.byIndex(statIndex);
-        int s1 = Config.skillTier1Level;
-        int s2 = Config.skillTier2Level;
-        int s3 = Config.skillTier3Level;
-        int sa = Config.skillActiveLevel;
+        CapabilityHelper.withPerks(player, perks -> perks.addPointsForStat(stat, 1));
+
+        int s1 = 25;
+        int s2 = 50;
+        int s3 = 75;
+        int sa = 35;
         int skillTier;
         if (level == s1) skillTier = 0;
         else if (level == s2) skillTier = 1;

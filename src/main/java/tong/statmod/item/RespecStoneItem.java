@@ -14,6 +14,7 @@ import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.capability.PlayerStats;
 import tong.statmod.network.BatchSyncPacket;
 import tong.statmod.network.NetworkHandler;
+import tong.statmod.network.SyncPerksPacket;
 import tong.statmod.perks.PerkProvider;
 import tong.statmod.stats.StatEffectApplier;
 
@@ -36,22 +37,16 @@ public class RespecStoneItem extends Item {
             });
 
             sp.getCapability(PerkProvider.PERKS).ifPresent(pm -> {
-                int totalRefund = pm.getUnlockedPerks().size();
                 pm.resetPerks();
-                pm.addPoints(totalRefund);
             });
 
             int[] emptyLevels = new int[PlayerStats.STAT_COUNT];
             int[] emptyXp = new int[PlayerStats.STAT_COUNT];
-            for (int i = 0; i < PlayerStats.STAT_COUNT; i++) {
-                emptyLevels[i] = 0;
-                emptyXp[i] = 0;
-            }
 
             NetworkHandler.sendToPlayer(new BatchSyncPacket(
                 emptyLevels, emptyXp,
                 0, 750, 100, 0,
-                new int[0], 0
+                new int[0], new int[23]
             ), sp);
 
             if (!sp.isCreative()) {
@@ -59,7 +54,7 @@ public class RespecStoneItem extends Item {
             }
 
             player.displayClientMessage(
-                Component.literal("§6§l✨ Toutes tes stats ont été réinitialisées !"), true);
+                Component.literal("§6§l✨ Toutes tes stats et perks ont été réinitialisées !"), true);
 
             StatEffectApplier.applyAllBonuses(sp);
         }

@@ -29,7 +29,7 @@ class LegacyCapabilityMigrationTest {
     @BeforeEach
     void configureDefaults() {
         Config.xpBaseCost = 25;
-Config.xpGrowthFactor = 1.08;
+        Config.xpGrowthFactor = 1.08;
         Config.weaponMasteryMaxLevel = 50;
     }
 
@@ -65,14 +65,13 @@ Config.xpGrowthFactor = 1.08;
 
         manager.deserializeNBT(loadFixture("fixtures/migration/perk-manager-legacy.snbt"));
 
-        assertEquals(0, manager.getAvailablePoints());
-        assertTrue(manager.isUnlocked(Perk.BRUTE_DEMOLITION));
-        assertTrue(manager.isUnlocked(Perk.BLADE_PARRY));
+        assertEquals(0, manager.getPointsForStat(Perk.BRUTE_CORE.stat));
+        assertTrue(manager.isUnlocked(Perk.BRUTE_CORE));
+        assertTrue(manager.isUnlocked(3));
         assertFalse(manager.isUnlocked(999));
 
         CompoundTag migrated = manager.serializeNBT();
-        assertEquals(0, migrated.getInt("Points"));
-        assertEquals(Set.of(Perk.BRUTE_DEMOLITION.id, Perk.BLADE_PARRY.id), readIntSet(migrated.getList("UnlockedPerks", 3)));
+        assertEquals(Set.of(Perk.BRUTE_CORE.id, 3), readIntSet(migrated.getList("UnlockedPerks", 3)));
     }
 
     @Test

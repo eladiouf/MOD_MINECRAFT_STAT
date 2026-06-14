@@ -3,17 +3,19 @@ package tong.statmod.client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tong.statmod.capability.PlayerStats;
+import tong.statmod.perks.Perk;
 import tong.statmod.weapon.WeaponMasteryManager;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientStatsCacheTest {
 
     @BeforeEach
     void resetCaches() {
         ClientStatsCache.updateAll(new int[PlayerStats.STAT_COUNT], new int[PlayerStats.STAT_COUNT]);
-        ClientStatsCache.updatePerks(new int[0], 0);
+        ClientPerkCache.update(new int[0], new int[23]);
         ClientStatsCache.updateWeaponMastery(
             new int[WeaponMasteryManager.WEAPON_COUNT],
             new int[WeaponMasteryManager.WEAPON_COUNT]
@@ -22,22 +24,14 @@ class ClientStatsCacheTest {
 
     @Test
     void updatePerks_copiesInputArray() {
-        int[] source = {1, 2, 3};
+        int[] source = {Perk.BRUTE_CORE.id, Perk.BLADE_CORE.id, Perk.RAPID_CORE.id};
 
-        ClientStatsCache.updatePerks(source, 4);
+        ClientPerkCache.update(source, new int[23]);
         source[0] = 99;
 
-        assertArrayEquals(new int[] {1, 2, 3}, ClientStatsCache.getPerkIds());
-    }
-
-    @Test
-    void getPerkIds_returnsDefensiveCopy() {
-        ClientStatsCache.updatePerks(new int[] {4, 5}, 1);
-
-        int[] exported = ClientStatsCache.getPerkIds();
-        exported[0] = 99;
-
-        assertArrayEquals(new int[] {4, 5}, ClientStatsCache.getPerkIds());
+        assertTrue(ClientPerkCache.isUnlocked(Perk.BRUTE_CORE));
+        assertTrue(ClientPerkCache.isUnlocked(Perk.BLADE_CORE));
+        assertTrue(ClientPerkCache.isUnlocked(Perk.RAPID_CORE));
     }
 
     @Test

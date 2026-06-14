@@ -63,7 +63,7 @@ public class StatModGameTests {
     public static void perkRequiresLevel(GameTestHelper helper) {
         helper.startSequence().thenExecute(() -> {
             Player player = helper.makeMockPlayer();
-            Perk perk = Perk.BRUTE_DEMOLITION;
+            Perk perk = Perk.BRUTE_CORE;
             var opt = player.getCapability(PerkProvider.PERKS).resolve();
             if (opt.isEmpty()) {
                 helper.assertTrue(false, "PerkManager capability missing");
@@ -72,7 +72,7 @@ public class StatModGameTests {
             }
             var perkManager = opt.get();
             CapabilityHelper.withStats(player, stats -> stats.setLevel(perk.stat.index, 0));
-            boolean canUnlock = perkManager.unlockPerk(perk, 0);
+            boolean canUnlock = perkManager.unlockPerk(perk);
             helper.assertTrue(!canUnlock, "Should not unlock at stat level 0");
             helper.succeed();
         });

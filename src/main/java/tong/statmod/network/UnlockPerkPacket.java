@@ -6,13 +6,11 @@ import net.minecraftforge.network.NetworkEvent;
 import tong.statmod.capability.CapabilityHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
+import tong.statmod.perks.PerkTier;
 import tong.statmod.sound.ModSounds;
 
 import java.util.function.Supplier;
 
-/**
- * Client-to-server packet to request a perk unlock.
- */
 public class UnlockPerkPacket {
     private final int perkId;
 
@@ -39,8 +37,15 @@ public class UnlockPerkPacket {
             CapabilityHelper.withStats(player, stats -> {
                 int statLevel = stats.getLevel(perk.stat.index);
 
+                if (statLevel < perk.tier.levelRequired) return;
+
+                if (perk.tier == PerkTier.SYNERGY && perk.synergyStat != null) {
+                    int synergyLevel = stats.getLevel(perk.synergyStat.index);
+                    if (synergyLevel < 40) return;
+                }
+
                 CapabilityHelper.withPerks(player, perkManager -> {
-                    boolean success = perkManager.unlockPerk(perk, statLevel);
+                    boolean success = perkManager.unlockPerk(perk);
                     if (success) {
                         player.level().playSound(null, player.blockPosition(),
                             ModSounds.PERK_UNLOCK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -48,7 +53,7 @@ public class UnlockPerkPacket {
                             .mapToInt(Integer::intValue)
                             .toArray();
                         NetworkHandler.sendToPlayer(
-                            new SyncPerksPacket(unlockedIds, perkManager.getAvailablePoints()),
+                            new SyncPerksPacket(unlockedIds, perkManager.getPerStatPoints()),
                             player
                         );
                     }

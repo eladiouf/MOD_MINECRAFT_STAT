@@ -1,35 +1,32 @@
 package tong.statmod.client;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import tong.statmod.perks.Perk;
 
-import java.util.HashSet;
-import java.util.Set;
+@OnlyIn(Dist.CLIENT)
+public final class ClientPerkCache {
+    private static boolean[] unlocked = new boolean[84];
+    private static int[] perStatPoints = new int[0];
 
-public class ClientPerkCache {
-    private static final Set<Integer> unlockedPerks = new HashSet<>();
-    private static int[] perStatPoints = new int[23];
+    private ClientPerkCache() {}
 
     public static void update(int[] perkIds, int[] points) {
-        unlockedPerks.clear();
-        for (int id : perkIds) unlockedPerks.add(id);
+        boolean[] next = new boolean[84];
+        for (int id : perkIds) {
+            if (id >= 0 && id < 84) next[id] = true;
+        }
+        unlocked = next;
         perStatPoints = points.clone();
     }
 
-    public static boolean isUnlocked(Perk perk) { return unlockedPerks.contains(perk.id); }
-    public static boolean isUnlocked(int perkId) { return unlockedPerks.contains(perkId); }
+    public static boolean isUnlocked(Perk perk) {
+        return perk != null && perk.id < unlocked.length && unlocked[perk.id];
+    }
+
     public static int getPointsForStat(int statIndex) {
-        if (statIndex < 0 || statIndex >= perStatPoints.length) return 0;
-        return perStatPoints[statIndex];
+        return statIndex >= 0 && statIndex < perStatPoints.length ? perStatPoints[statIndex] : 0;
     }
-    public static int getSpentPointsInStat(int statIndex) {
-        int spent = 0;
-        for (int id : unlockedPerks) {
-            Perk p = Perk.byId(id);
-            if (p != null && p.stat.index == statIndex) spent += p.tier.cost;
-        }
-        return spent;
-    }
-    public static int getAvailablePointsForStat(int statIndex) {
-        return Math.max(0, getPointsForStat(statIndex) - getSpentPointsInStat(statIndex));
-    }
+
+    public static int[] getPerStatPoints() { return perStatPoints.clone(); }
 }

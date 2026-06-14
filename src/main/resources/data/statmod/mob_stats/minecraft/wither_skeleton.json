@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:wither_skeleton",
-  "category": "melee",
-  "base_levels": {
-    "BRUTE_FORCE": 25, "PHYSICAL_ENDURANCE": 20, "PHYSICAL_RESISTANCE": 15,
-    "WILLPOWER": 18, "INTIMIDATION": 12
-  }
-}

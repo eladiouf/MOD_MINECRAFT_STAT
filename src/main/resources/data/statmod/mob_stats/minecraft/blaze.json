@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:blaze",
-  "category": "magic",
-  "base_levels": {
-    "FIRE_AFFINITY": 50, "ARCANE_POWER": 20, "MAGIC_RESISTANCE": 15,
-    "PHYSICAL_RESISTANCE": 10
-  }
-}

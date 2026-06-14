@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:evoker",
-  "category": "magic",
-  "base_levels": {
-    "ARCANE_POWER": 35, "CASTING_SPEED": 20, "MAGIC_RESISTANCE": 25,
-    "ERUDITION": 20, "INTIMIDATION": 15
-  }
-}

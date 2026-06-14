@@ -1,7 +1,0 @@
-{
-  "entity_type": "minecraft:spider",
-  "category": "melee",
-  "base_levels": {
-    "AGILITY": 18, "RAPIDITE": 12, "TRACKING": 14, "KEEN_SENSES": 15
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:enderman",
-  "category": "melee",
-  "base_levels": {
-    "ARCANE_POWER": 25, "AGILITY": 20, "PHYSICAL_ENDURANCE": 15,
-    "TRACKING": 30, "WILLPOWER": 20
-  }
-}

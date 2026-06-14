@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:wither",
-  "global_cooldown_ticks": 50,
-  "skills": [
-    { "id": "statmod:fireball", "weight": 100 },
-    { "id": "statmod:battle_cry", "weight": 80 }
-  ]
-}

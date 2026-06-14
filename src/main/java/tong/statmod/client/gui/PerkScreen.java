@@ -4,131 +4,73 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import tong.statmod.client.ClientPerkCache;
-import tong.statmod.client.texture.TextureCache;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
+import tong.statmod.client.ClientStatCache;
 import tong.statmod.client.gui.perks.TalentTreePanel;
-import tong.statmod.network.NetworkHandler;
-import tong.statmod.network.UnlockPerkPacket;
-import tong.statmod.perks.Perk;
-import tong.statmod.stats.StatCategory;
+import tong.statmod.network.UnlockPerkPayload;
+import tong.statmod.stats.StatType;
 
-import static tong.statmod.client.texture.TextureCache.drawInkText;
+import java.util.ArrayList;
+import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class PerkScreen extends Screen {
-    private static final int TAB_COUNT = 5;
-    private int selectedTab = 0;
-    private final String[] tabNames = {"Combat", "Magie", "Survie", "Artisanat", "Mental"};
-    private final StatCategory[] tabCategories = {
-        StatCategory.COMBAT, StatCategory.MAGIC, StatCategory.SURVIVAL,
-        StatCategory.CRAFTING, StatCategory.MENTAL};
-    private static final int BG_COLOR = 0xC0E8D5A3;
-    private static final int TEXT_COLOR = 0xFF3A1A00;
-    private static final int POINTS_COLOR = 0xFFC49A3C;
-    private static final int SEPARATOR_COLOR = 0xFF8B4513;
-    private static final int PANEL_PADDING = 20;
-
-    private TalentTreePanel treePanel;
-    private int scrollOffset = 0;
+    private static final int PANEL_WIDTH = 130;
+    private static final int PANEL_HEIGHT = 200;
+    private static final int COLS = 4;
+    private final List<TalentTreePanel> panels = new ArrayList<>();
 
     public PerkScreen() {
-        super(Component.translatable("screen.statmod.perks"));
+        super(Component.literal("Perks"));
     }
 
     @Override
     protected void init() {
-        super.init();
-        rebuildTree();
-    }
+        panels.clear();
+        int startX = (width - COLS * (PANEL_WIDTH + 10)) / 2;
+        int startY = 40;
+        int col = 0;
+        int row = 0;
 
-    private void rebuildTree() {
-        StatCategory category = tabCategories[selectedTab];
-        int panelX = PANEL_PADDING;
-        int panelY = 53;
-        int panelW = this.width - 40;
-        int panelH = this.height - panelY - 20;
-        treePanel = new TalentTreePanel(category, panelX, panelY, panelW, panelH);
+        for (StatType stat : StatType.values()) {
+            if (!stat.hasPerks()) continue;
+            int x = startX + col * (PANEL_WIDTH + 10);
+            int y = startY + row * (PANEL_HEIGHT + 10);
+            TalentTreePanel panel = new TalentTreePanel(x, y, PANEL_WIDTH, PANEL_HEIGHT, stat,
+                    perk -> PacketDistributor.sendToServer(new UnlockPerkPayload(perk.id)));
+            panels.add(panel);
+            addRenderableWidget(panel);
+
+            col++;
+            if (col >= COLS) {
+                col = 0;
+                row++;
+            }
+        }
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation bgTex = TextureCache.get("bg_parchment.png");
-        for (int x = 0; x < this.width; x += 256) {
-            for (int y = 0; y < this.height; y += 256) {
-                graphics.blit(bgTex, x, y, 0, 0, 256, 256, 256, 256);
-            }
-        }
-        graphics.fill(0, 0, this.width, this.height, BG_COLOR);
-
         super.render(graphics, mouseX, mouseY, partialTick);
 
-        var font = Minecraft.getInstance().font;
-
-        String title = "\u2764 ARBRE DE TALENTS \u2764";
-        int titleX = this.width / 2 - font.width(title) / 2;
-        drawInkText(graphics, font, title, titleX, 8, TEXT_COLOR);
-
-        int lineEnd = titleX - 10;
-        if (lineEnd > PANEL_PADDING) graphics.fill(PANEL_PADDING, 12, lineEnd, 13, SEPARATOR_COLOR);
-        int lineStart = titleX + font.width(title) + 10;
-        if (lineStart < this.width - PANEL_PADDING) graphics.fill(lineStart, 12, this.width - PANEL_PADDING, 13, SEPARATOR_COLOR);
-
-        // Tabs
-        int tabX = this.width / 2 - (TAB_COUNT * 52) / 2;
-        for (int i = 0; i < TAB_COUNT; i++) {
-            boolean active = i == selectedTab;
-            ResourceLocation tabTex = TextureCache.get(active ? "tab_active.png" : "tab_inactive.png");
-            graphics.blit(tabTex, tabX, 22, 0, 0, 48, 24, 48, 24);
-
-            int textColor = active ? 0xFF3A1A00 : 0xFF5A3A10;
-            drawInkText(graphics, font, tabNames[i],
-                tabX + 24 - font.width(tabNames[i]) / 2,
-                27, textColor);
-            tabX += 52;
-        }
-
-        graphics.fill(PANEL_PADDING, 48, this.width - PANEL_PADDING, 49, SEPARATOR_COLOR);
-
-        treePanel.setScrollOffset(scrollOffset);
-        treePanel.renderWidget(graphics, mouseX, mouseY, partialTick);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        int tabX = this.width / 2 - (TAB_COUNT * 52) / 2;
-        for (int i = 0; i < TAB_COUNT; i++) {
-            if (mouseX >= tabX && mouseX <= tabX + 48 && mouseY >= 22 && mouseY <= 46) {
-                if (selectedTab != i) {
-                    selectedTab = i;
-                    scrollOffset = 0;
-                    rebuildTree();
-                }
-                return true;
-            }
-            tabX += 52;
-        }
-
-        if (treePanel != null) {
-            Perk clickedPerk = treePanel.getPerkAt(mouseX, mouseY);
-            if (clickedPerk != null && !ClientPerkCache.isUnlocked(clickedPerk)) {
-                int statIndex = clickedPerk.stat.index;
-                int available = ClientPerkCache.getAvailablePointsForStat(statIndex);
-                if (available >= clickedPerk.tier.cost) {
-                    NetworkHandler.CHANNEL.sendToServer(new UnlockPerkPacket(clickedPerk.id));
-                    return true;
-                }
+        int global = 0;
+        int count = 0;
+        for (StatType s : StatType.values()) {
+            if (s.hasPerks()) {
+                global += ClientStatCache.getLevel(s.index);
+                count++;
             }
         }
-
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-        scrollOffset = Math.max(0, scrollOffset - (int)(scrollDelta * 20));
-        return true;
+        String levelText = "Global Level: " + (count > 0 ? global / count : 0);
+        graphics.drawString(font, levelText, 10, 10, 0xFFD4FF00);
     }
 
     @Override
     public boolean isPauseScreen() { return false; }
+
+    public static void open() {
+        Minecraft.getInstance().setScreen(new PerkScreen());
+    }
 }

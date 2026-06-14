@@ -1,9 +1,0 @@
-{
-  "entity_type": "minecraft:wither",
-  "category": "boss",
-  "base_levels": {
-    "BRUTE_FORCE": 60, "PHYSICAL_ENDURANCE": 70, "ARCANE_POWER": 50,
-    "MAGIC_RESISTANCE": 40, "PHYSICAL_RESISTANCE": 45, "WILLPOWER": 60,
-    "INTIMIDATION": 50, "AIR_AFFINITY": 30
-  }
-}

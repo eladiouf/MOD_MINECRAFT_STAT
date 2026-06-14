@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:witch",
-  "category": "magic",
-  "base_levels": {
-    "ARCANE_POWER": 30, "ALCHEMY": 35, "MAGIC_RESISTANCE": 20,
-    "CASTING_SPEED": 15, "ERUDITION": 10
-  }
-}

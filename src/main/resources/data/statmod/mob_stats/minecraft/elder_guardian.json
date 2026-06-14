@@ -1,8 +1,0 @@
-{
-  "entity_type": "minecraft:elder_guardian",
-  "category": "boss",
-  "base_levels": {
-    "PHYSICAL_ENDURANCE": 55, "MAGIC_RESISTANCE": 45, "TRACKING": 50,
-    "PHYSICAL_RESISTANCE": 40, "WILLPOWER": 35, "WATER_AFFINITY": 60
-  }
-}

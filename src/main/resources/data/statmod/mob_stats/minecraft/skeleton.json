@@ -1,7 +1,0 @@
-{
-  "entity_type": "minecraft:skeleton",
-  "category": "ranged",
-  "base_levels": {
-    "PRECISION": 20, "AGILITY": 10, "TRACKING": 15, "PHYSICAL_ENDURANCE": 5
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "entity_type": "minecraft:spider",
-  "global_cooldown_ticks": 40,
-  "skills": [
-    { "id": "statmod:lunge", "weight": 100 }
-  ]
-}

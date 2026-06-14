@@ -1,7 +1,0 @@
-{
-  "entity_type": "minecraft:zombie",
-  "global_cooldown_ticks": 60,
-  "skills": [
-    { "id": "statmod:charge", "weight": 100 }
-  ]
-}

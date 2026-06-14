@@ -1,630 +1,251 @@
-```markdown
-# Epic Fight Combat Leveling Addon – Implementation Guide for Claude
+# STAT MOD — CLAUDE.md
 
-This document provides a **step-by-step, executable plan** to create a Minecraft Forge mod (1.20.1) that adds a deep leveling system with custom stats to the **Epic Fight** mod. Follow each step precisely.
-
-**Target:** Claude (AI coder) – you will generate code, place files, and run gradle tasks.
+> Ce fichier est lu automatiquement par Claude à chaque session dans la branche `neoforge-1.21.1`.
 
 ---
 
-## 1. Prerequisites & Setup
+## 🎯 Objectif Global
 
-### 1.1 Environment
-- JDK 17
-- IntelliJ IDEA (or any IDE with Gradle support)
-- Git
+STAT MOD → **Standalone Stats System sur NeoForge 1.21.1**, sans Epic Fight, pour intégration future avec **Tensura Reincarnated**.
 
-### 1.2 Create Project from Epic Fight Skill Tree Template
+**Roadmap :**
+1. MVP : Stats (22) + XP/Leveling + Perks (84) sur NeoForge 1.21.1 standalone
+2. Intégration Tensura Reincarnated (hooks dans leurs systèmes de race/skill/level)
 
-The official template already contains the correct dependencies and build scripts.
+---
+
+## 📦 Stack Technique
+
+| Stack | Version |
+|---|---|
+| Minecraft | 1.21.1 |
+| NeoForge | 21.1.133+ |
+| JDK | 21 |
+| Mappings | Official Mojang |
+| Build | NeoGradle 7.x (`net.neoforged.gradle.userdev`) |
+| Tests | JUnit Jupiter 5.10 |
+
+**Absolument PAS :**
+- ❌ Epic Fight ou ses addons
+- ❌ ForgeGradle / Parchment Librarian
+- ❌ Forge Capabilities (→ NeoForge Attachments)
+- ❌ Forge SimpleChannel (→ NeoForge CustomPacketPayload)
+
+---
+
+## 📁 Architecture du Code (État Actuel)
+
+La branche contient encore le code Forge 1.20.1. Voici ce qui doit être porté, réécrit, ou supprimé :
+
+### 🔵 À PORTER (conversion Forge → NeoForge)
+
+| Package | Fichiers | Statut |
+|---|---|---|
+| `stats/` | `StatType.java` (enum 22 stats) | ✅ Pur Java, port direct |
+| `stats/` | `StatEffectApplier.java` | 🔧 Remplacer events Forge → NeoForge |
+| `stats/` | `StatCalculator.java` | ✅ Pur Java |
+| `perks/` | `PerkTier.java` | ✅ Créé, pur Java |
+| `perks/` | `Perk.java` (84 entries) | ✅ Créé, pur Java |
+| `perks/` | `PerkManager.java` | 🔧 Adapter pour NeoForge attachments |
+| `perks/` | `PerkState.java` | ✅ Créé, pur Java |
+| `perks/` | `PerkEffectHandler.java` | 🔧 Créé, à adapter (events vanilla) |
+| `progression/` | `LevelUpHandler.java` | 🔧 Adapter events |
+| `progression/` | `CombatXPHandler.java` | 🔧 Remplacer Epic Fight events |
+| `command/` | `StatsCommands.java` | 🔧 Adapter CommandSourceStack NeoForge |
+| `client/` | `ClientPerkCache.java` | 🔧 Adapter payloads |
+| `client/` | `ClientStatsCache.java` | 🔧 Adapter payloads |
+| `client/gui/` | `PerkScreen.java`, `TalentTreePanel.java`, `PerkNodeWidget.java` | 🔧 Adapter GuiGraphics API |
+| `network/` | Tous les packets | 🔧 Remplacer SimpleChannel → CustomPacketPayload |
+| `mixin/` | `PlayerListMixin.java` | 🔧 Adapter au login sync NeoForge |
+
+### 🟢 À GARDER TEL QUEL
+
+Ces fichiers sont purs Java (Forge-indépendants) et peuvent être copiés sans changement :
+- `stats/StatType.java`
+- `perks/PerkTier.java`
+- `perks/Perk.java`
+- `perks/PerkState.java`
+- `capability/PlayerStats.java` → à réécrire en `PlayerStatData.java` (attachment)
+- `fatigue/`, `thirst/` → décision ultérieure
+
+### 🔴 À SUPPRIMER (dépendent d'Epic Fight)
+
+Supprimer complètement (pas de port) :
+- `integration/EpicFightCompat.java`
+- `integration/EpicParcoolCompat.java`
+- `integration/L2Hostility*.java`
+- `integration/Ftb*.java`
+- `skills/` (tout le package — lié aux SkillSlots Epic Fight)
+- `weapon/` (lié aux WeaponCategories Epic Fight)
+- `combat/MobSkill*.java`
+- `capability/MobSkillState*.java`
+- `capability/MobStats*.java`
+- `reload/MobSkillReloadListener.java`
+
+---
+
+## 📁 Architecture CIBLE (après MVP)
+
+```
+src/main/java/tong/statmod/
+├── STATMod.java                    ← @Mod entry point (NeoForge)
+├── storage/
+│   ├── PlayerStatData.java         ← int[23] levels, xp, perkPoints
+│   └── ModAttachments.java         ← AttachmentType<PlayerStatData> registration
+├── stats/
+│   ├── StatType.java               ← Enum 22 stats (0-22)
+│   ├── StatEffectApplier.java      ← Applique effets via events vanilla
+│   └── StatCommands.java           ← /statlevel command
+├── progression/
+│   ├── LevelUpHandler.java         ← Milestones, perk points grants
+│   ├── CombatXPHandler.java        ← Gain d'XP via events de combat
+│   ├── NonCombatXPHandler.java     ← Gain d'XP via craft/minage/etc
+│   └── ActionType.java             ← Enum des actions XP
+├── perks/
+│   ├── PerkTier.java               ← 6 tiers (CORE → TRANSCENDENCE)
+│   ├── Perk.java                   ← 84 entries
+│   ├── PerkManager.java            ← Unlock logic, per-stat points
+│   ├── PerkState.java              ← Runtime tracking maps
+│   └── PerkEffectHandler.java      ← 84 effets
+├── network/
+│   ├── SyncPerksPayload.java       ← CustomPacketPayload
+│   ├── UnlockPerkPayload.java
+│   ├── BatchSyncPayload.java
+│   ├── StatUpdatePayload.java
+│   └── NetworkHandler.java         ← PayloadRegistrar
+├── client/
+│   ├── ClientStatCache.java
+│   ├── ClientPerkCache.java
+│   ├── StatModKeyMappings.java
+│   └── gui/
+│       ├── PerkScreen.java         ← Multitab perk tree
+│       ├── StatsOverviewScreen.java← Liste stats + niveaux
+│       └── perks/
+│           ├── PerkNodeWidget.java ← Widget nœud avec couleurs
+│           └── TalentTreePanel.java← 6 nœuds par stat
+├── item/
+│   ├── ModItems.java               ← Items registration
+│   ├── PerkTomeItem.java           ← +1 point de perk
+│   └── RespecStoneItem.java        ← Reset perks
+├── mixin/
+│   └── PlayerListMixin.java        ← Sync data on join
+├── sound/
+│   ├── ModSounds.java
+│   └── SoundHelper.java
+├── config/
+│   ├── Config.java
+│   └── ConfigPresets.java
+└── api/
+    ├── IStatModPlugin.java
+    └── PluginManager.java
+```
+
+---
+
+## 🧠 Règles de Code
+
+### TypeScript-strict pour Java
+- ❌ **Pas de `Object`** sans cast typé
+- ❌ **Pas de `List` brute** — toujours `List<T>`
+- ❌ **Pas de suppression de warnings** sans justification
+- ✅ Types explicites partout
+
+### NeoForge API (vs Forge)
+```
+Forge                          → NeoForge
+──────────────────────────────────────────────────
+net.minecraftforge             → net.neoforged.neoforge
+MinecraftForge.EVENT_BUS       → NeoForge.EVENT_BUS
+@Mod("modid")                  → @Mod(STATMod.MODID)
+Capability + Provider          → AttachmentType<T>
+SimpleChannel                  → CustomPacketPayload
+PoseStack                      → GuiGraphics (avec pose())
+ResourceLocation(ns, path)     → ResourceLocation.fromNamespaceAndPath(ns, path)
+DeferredRegister.create(..., "modid") → DeferredRegister.create(Registry, MODID)
+Mod.EventBusSubscriber         → @EventBusSubscriber
+FMLJavaModLoadingContext       → @Mod constructor param (IEventBus modBus)
+```
+
+### Conventions
+- Noms variables : anglais `camelCase`
+- Classes : `PascalCase`
+- Commentaires métier : français
+- Commentaires techniques : anglais
+- Indentation : 4 espaces
+- `@Override` toujours présent
+- `LOGGER` = `LoggerFactory.getLogger(STATMod.class)` (SLF4J, pas Log4J)
+
+### Server Components (côté Minecraft)
+- Toute logique de jeu → serveur uniquement (`!player.level().isClientSide`)
+- Client → uniquement rendu, cache, input
+- Network → payloads sérialisés, pas d'objets Minecraft directs
+
+---
+
+## 🛤️ Design Doc & Plan
+
+Deux documents ont été créés pour guider l'implémentation :
+
+1. **Design spec** : `docs/superpowers/specs/2026-06-14-neoforge-standalone-stats-design.md`
+   - Architecture complète, décisions, mapping des stats, ordre d'implémentation
+
+2. **Implementation plan** : `docs/superpowers/plans/2026-06-14-neoforge-standalone-stats.md`
+   - 11 tasks détaillées avec code complet, de la scaffold à la vérification
+
+---
+
+## 🔧 Commandes
 
 ```bash
-# Clone the template
-git clone https://github.com/Antikythera-Studios/epicskills.git YourModName
-cd YourModName
+# Build (dans la branche neoforge-1.21.1)
+./gradlew build
 
-# Remove the original git history
-rm -rf .git
-git init
-```
-
-### 1.3 Configure Mod Metadata
-
-Open `src/main/resources/META-INF/mods.toml`. Change:
-- `modId` → `"yourmodid"`
-- `displayName` → `"Your Combat Leveling"`
-- `description` → `"Adds custom combat leveling and stats to Epic Fight."`
-
-Also update the `[[dependencies.YourModId]]` section to require Epic Fight:
-
-```toml
-[[dependencies.yourmodid]]
-    modId="epicfight"
-    mandatory=true
-    versionRange="[20.9.5,)"
-    ordering="NONE"
-    side="BOTH"
-```
-
-### 1.4 Update `gradle.properties`
-
-Set your mod’s base package and version:
-
-```properties
-mod_id=yourmodid
-mod_version=1.0.0
-mod_group=com.yourname.yourmodid
-minecraft_version=1.20.1
-forge_version=47.3.0
-epicfight_version=20.9.5   # stable version for 1.20.1
-```
-
-### 1.5 Main Mod Class
-
-Create `src/main/java/com/yourname/yourmodid/YourMod.java`:
-
-```java
-package com.yourname.yourmodid;
-
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-@Mod(YourMod.MODID)
-public class YourMod {
-    public static final String MODID = "yourmodid";
-    public static final Logger LOGGER = LogManager.getLogger();
-
-    public YourMod() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        // Registration of stats will happen here (Step 2)
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-}
-```
-
----
-
-## 2. Register Custom Stats with Epic Fight
-
-Epic Fight uses `AttributeStat` objects that are registered via a `DeferredRegister`. We will create a class that holds all your stats.
-
-### 2.1 Create `ModStats.java`
-
-Path: `src/main/java/com/yourname/yourmodid/ModStats.java`
-
-```java
-package com.yourname.yourmodid;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
-import yesman.epicfight.api.utils.math.ValueCorrector;
-import yesman.epicfight.world.entity.ai.attribute.AttributeStat;
-import yesman.epicfight.main.EpicFightMod;
-
-public class ModStats {
-    // Use Epic Fight's own attribute registry
-    public static final DeferredRegister<AttributeStat> STATS = DeferredRegister.create(
-            new ResourceLocation(EpicFightMod.MODID, "attributes"), YourMod.MODID);
-
-    // ---------- Combat (8) ----------
-    public static final RegistryObject<AttributeStat> BRUTE_FORCE = register("brute_force", 0, 100);
-    public static final RegistryObject<AttributeStat> BLADE_TECHNIQUE = register("blade_technique", 0, 100);
-    public static final RegistryObject<AttributeStat> RAPIDITE = register("rapidite", 0, 100);
-    public static final RegistryObject<AttributeStat> AGILITY = register("agility", 0, 100);
-    public static final RegistryObject<AttributeStat> PHYSICAL_RESISTANCE = register("physical_resistance", 0, 100);
-    public static final RegistryObject<AttributeStat> PHYSICAL_ENDURANCE = register("physical_endurance", 0, 100);
-    public static final RegistryObject<AttributeStat> PRECISION = register("precision", 0, 100);
-
-    // ---------- Magic (7) ----------
-    public static final RegistryObject<AttributeStat> ARCANE_POWER = register("arcane_power", 0, 100);
-    public static final RegistryObject<AttributeStat> WATER_AFFINITY = register("water_affinity", 0, 100);
-    public static final RegistryObject<AttributeStat> EARTH_AFFINITY = register("earth_affinity", 0, 100);
-    public static final RegistryObject<AttributeStat> FIRE_AFFINITY = register("fire_affinity", 0, 100);
-    public static final RegistryObject<AttributeStat> AIR_AFFINITY = register("air_affinity", 0, 100);
-    public static final RegistryObject<AttributeStat> MAGIC_RESISTANCE = register("magic_resistance", 0, 100);
-    public static final RegistryObject<AttributeStat> CASTING_SPEED = register("casting_speed", 0, 100);
-    public static final RegistryObject<AttributeStat> MANA_POOL = register("mana_pool", 0, 100);
-    public static final RegistryObject<AttributeStat> ERUDITION = register("erudition", 0, 100);
-
-    // ---------- Survival (2) ----------
-    public static final RegistryObject<AttributeStat> TRACKING = register("tracking", 0, 100);
-    public static final RegistryObject<AttributeStat> KEEN_SENSES = register("keen_senses", 0, 100);
-
-    // ---------- Crafting (3) ----------
-    public static final RegistryObject<AttributeStat> FORGING = register("forging", 0, 100);
-    public static final RegistryObject<AttributeStat> COOKING = register("cooking", 0, 100);
-    public static final RegistryObject<AttributeStat> ALCHEMY = register("alchemy", 0, 100);
-
-    // ---------- Mental (2) ----------
-    public static final RegistryObject<AttributeStat> INTIMIDATION = register("intimidation", 0, 100);
-    public static final RegistryObject<AttributeStat> WILLPOWER = register("willpower", 0, 100);
-
-    private static RegistryObject<AttributeStat> register(String name, int min, int max) {
-        // Initial ValueCorrector is null – we will add effects later in Step 4
-        return STATS.register(name, () -> new AttributeStat(
-                new ResourceLocation(YourMod.MODID, name),
-                0.0, min, max, null));
-    }
-
-    public static void register(IEventBus modEventBus) {
-        STATS.register(modEventBus);
-        YourMod.LOGGER.info("Registered {} custom stats for Epic Fight", STATS.getEntries().size());
-    }
-}
-```
-
-### 2.2 Call Registration in Main Mod Class
-
-In `YourMod.java` constructor:
-
-```java
-public YourMod() {
-    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    ModStats.register(modEventBus);   // <-- ADD THIS LINE
-    MinecraftForge.EVENT_BUS.register(this);
-}
-```
-
-**At this point, the stats exist but do nothing yet.** They appear in player data but have no effects.
-
----
-
-## 3. Player Data: XP and Level Tracking
-
-We need a **capability** to store per‑player XP and levels for each skill.
-
-### 3.1 Create the Capability Interface and Implementation
-
-Create `src/main/java/com/yourname/yourmodid/capability/ICombatLevels.java`:
-
-```java
-package com.yourname.yourmodid.capability;
-
-public interface ICombatLevels {
-    int getSkillLevel(int skillIndex);
-    int getSkillXP(int skillIndex);
-    void addXP(int skillIndex, int amount);
-    void setSkillLevel(int skillIndex, int level);
-    void setSkillXP(int skillIndex, int xp);
-    void copyFrom(ICombatLevels source);
-}
-```
-
-Create `src/main/java/com/yourname/yourmodid/capability/CombatLevels.java`:
-
-```java
-package com.yourname.yourmodid.capability;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
-
-public class CombatLevels implements ICombatLevels, INBTSerializable<CompoundTag> {
-    private static final int SKILL_COUNT = 22; // 8+7+2+3+2 = 22 stats
-    private int[] levels = new int[SKILL_COUNT];
-    private int[] xp = new int[SKILL_COUNT];
-
-    @Override
-    public int getSkillLevel(int index) { return levels[index]; }
-    @Override
-    public int getSkillXP(int index) { return xp[index]; }
-
-    @Override
-    public void addXP(int index, int amount) {
-        this.xp[index] += amount;
-        int required = getXPForNextLevel(levels[index]);
-        while (this.xp[index] >= required && levels[index] < 100) {
-            levels[index]++;
-            this.xp[index] -= required;
-            required = getXPForNextLevel(levels[index]);
-            // TODO: Fire an event or call a method to apply stat effect
-        }
-    }
-
-    private int getXPForNextLevel(int level) {
-        // Quadratic XP curve: level 1 requires 10 XP, level 2 requires 40 XP, etc.
-        return (level + 1) * (level + 1) * 10;
-    }
-
-    @Override
-    public void setSkillLevel(int index, int level) { this.levels[index] = level; }
-    @Override
-    public void setSkillXP(int index, int xp) { this.xp[index] = xp; }
-
-    @Override
-    public void copyFrom(ICombatLevels source) {
-        for (int i = 0; i < SKILL_COUNT; i++) {
-            this.levels[i] = source.getSkillLevel(i);
-            this.xp[i] = source.getSkillXP(i);
-        }
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putIntArray("Levels", levels);
-        tag.putIntArray("XP", xp);
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        this.levels = tag.getIntArray("Levels");
-        if (this.levels.length < SKILL_COUNT) this.levels = new int[SKILL_COUNT];
-        this.xp = tag.getIntArray("XP");
-        if (this.xp.length < SKILL_COUNT) this.xp = new int[SKILL_COUNT];
-    }
-}
-```
-
-### 3.2 Attach Capability to Player
-
-Create `src/main/java/com/yourname/yourmodid/capability/CombatLevelsProvider.java`:
-
-```java
-package com.yourname.yourmodid.capability;
-
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class CombatLevelsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-    public static final Capability<ICombatLevels> COMBAT_LEVELS = CapabilityManager.get(new CapabilityToken<>() {});
-
-    private CombatLevels levels = null;
-    private final LazyOptional<ICombatLevels> lazyOptional = LazyOptional.of(this::getOrCreate);
-
-    private CombatLevels getOrCreate() {
-        if (this.levels == null) this.levels = new CombatLevels();
-        return this.levels;
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == COMBAT_LEVELS ? lazyOptional.cast() : LazyOptional.empty();
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        return getOrCreate().serializeNBT();
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        getOrCreate().deserializeNBT(nbt);
-    }
-}
-```
-
-### 3.3 Register the Capability
-
-In `YourMod.java` constructor, add:
-
-```java
-public YourMod() {
-    // ... existing code ...
-    CapabilityManager.INSTANCE.register(ICombatLevels.class, new Capability.IStorage<ICombatLevels>() {
-        @Override
-        public CompoundTag writeNBT(Capability<ICombatLevels> capability, ICombatLevels instance, Direction side) {
-            return ((CombatLevels)instance).serializeNBT();
-        }
-        @Override
-        public void readNBT(Capability<ICombatLevels> capability, ICombatLevels instance, Direction side, CompoundTag nbt) {
-            ((CombatLevels)instance).deserializeNBT(nbt);
-        }
-    }, () -> new CombatLevels());
-}
-```
-
-### 3.4 Attach to Player via Event
-
-Create `src/main/java/com/yourname/yourmodid/AttachCapabilityHandler.java`:
-
-```java
-package com.yourname.yourmodid;
-
-import com.yourname.yourmodid.capability.CombatLevelsProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
-@Mod.EventBusSubscriber(modid = YourMod.MODID)
-public class AttachCapabilityHandler {
-    @SubscribeEvent
-    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player) {
-            event.addCapability(new ResourceLocation(YourMod.MODID, "combat_levels"), new CombatLevelsProvider());
-        }
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(CombatLevelsProvider.COBAT_LEVELS);
-    }
-}
-```
-
----
-
-## 4. Grant XP from Combat
-
-We will listen to Epic Fight’s attack event and award XP based on weapon type.
-
-Create `src/main/java/com/yourname/yourmodid/CombatXPHandler.java`:
-
-```java
-package com.yourname.yourmodid;
-
-import com.yourname.yourmodid.capability.CombatLevelsProvider;
-import com.yourname.yourmodid.capability.ICombatLevels;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import yesman.epicfight.api.forgeevent.PlayerEvent;
-import yesman.epicfight.world.capabilities.item.CapabilityItem;
-import yesman.epicfight.world.capabilities.item.WeaponCategory;
-
-@Mod.EventBusSubscriber(modid = YourMod.MODID)
-public class CombatXPHandler {
-    @SubscribeEvent
-    public static void onAttack(PlayerEvent.ServerPlayerOnAttackEvent event) {
-        Player player = event.getPlayerPatch().getOriginal();
-        player.getCapability(CombatLevelsProvider.COMBAT_LEVELS).ifPresent(cap -> {
-            CapabilityItem itemCap = event.getPlayerPatch().getHoldingItemCapability();
-            WeaponCategory category = itemCap.getWeaponCategory();
-
-            // Map weapon categories to skill indices
-            int skillIndex = -1;
-            if (category == WeaponCategory.SWORD) skillIndex = 1; // Blade Technique
-            else if (category == WeaponCategory.GREATSWORD) skillIndex = 1;
-            else if (category == WeaponCategory.AXE) skillIndex = 0; // Brute Force
-            else if (category == WeaponCategory.DAGGER) skillIndex = 2; // Rapidité
-            else if (category == WeaponCategory.BOW) skillIndex = 6; // Precision
-            else if (category == WeaponCategory.FIST) skillIndex = 3; // Agility
-
-            if (skillIndex != -1) {
-                // Base XP: 5 + random up to 5
-                int xp = 5 + player.getRandom().nextInt(6);
-                cap.addXP(skillIndex, xp);
-                YourMod.LOGGER.debug("Awarded {} XP to skill {}", xp, skillIndex);
-            }
-        });
-    }
-}
-```
-
----
-
-## 5. Apply Stat Effects
-
-Now we need to make the stats affect gameplay. Epic Fight allows **ValueCorrector** to modify attributes like damage, speed, and resistance.
-
-### 5.1 Modify Damage based on Brute Force / Blade Technique
-
-Go back to `ModStats.java` and replace the `register` helper to attach a `ValueCorrector` for each stat. However, because `ValueCorrector` needs access to the player’s stat value, the correct approach is to **listen to an event** and read the stat level directly.
-
-**Better approach:** Use `PlayerEvent.ModifyDamageEvent` (or similar from Epic Fight) to scale damage.
-
-Create `src/main/java/com/yourname/yourmodid/StatEffectApplier.java`:
-
-```java
-package com.yourname.yourmodid;
-
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.api.client.model.ClientModel;
-
-@Mod.EventBusSubscriber(modid = YourMod.MODID)
-public class StatEffectApplier {
-    @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
-        if (!(event.getSource().getEntity() instanceof Player player)) return;
-
-        player.getCapability(CombatLevelsProvider.COMBAT_LEVELS).ifPresent(cap -> {
-            int bruteForce = cap.getSkillLevel(0);   // index 0 = Brute Force
-            int bladeTech = cap.getSkillLevel(1);    // index 1 = Blade Technique
-
-            float multiplier = 1.0f + (bruteForce + bladeTech) / 200.0f;
-            event.setAmount(event.getAmount() * multiplier);
-        });
-    }
-}
-```
-
-### 5.2 Modify Attack Speed (Rapidité, Agility)
-
-Epic Fight handles attack speed through its own animation system. You can modify the player’s `AttackSpeed` attribute via Minecraft’s attributes.
-
-```java
-// Inside StatEffectApplier, listen to PlayerEvent.PlayerLoggedInEvent
-@SubscribeEvent
-public static void onPlayerJoin(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
-    event.getEntity().getCapability(CombatLevelsProvider.COMBAT_LEVELS).ifPresent(cap -> {
-        int rapidite = cap.getSkillLevel(2);
-        int agility = cap.getSkillLevel(3);
-        double speedBonus = (rapidite + agility) / 100.0; // up to +200% at level 100 each
-        // Apply attribute modifier
-        var attribute = event.getEntity().getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED);
-        if (attribute != null) {
-            attribute.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                new ResourceLocation(YourMod.MODID, "speed_bonus"), speedBonus,
-                net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
-    });
-}
-```
-
-### 5.3 Physical Resistance
-
-Modify incoming damage to the player:
-
-```java
-@SubscribeEvent
-public static void onPlayerHurt(LivingHurtEvent event) {
-    if (!(event.getEntity() instanceof Player player)) return;
-    player.getCapability(CombatLevelsProvider.COMBAT_LEVELS).ifPresent(cap -> {
-        int physRes = cap.getSkillLevel(4); // Physical Resistance
-        float reduction = physRes / 200.0f; // max 50% reduction
-        event.setAmount(event.getAmount() * (1 - reduction));
-    });
-}
-```
-
-**Note:** For stats like `Mana Pool`, you must implement a separate mana system (not covered here but you can reference `AuraSkills` for inspiration).
-
----
-
-## 6. UI: Display Stats and Levels (Optional but Recommended)
-
-Create a simple GUI screen that shows each skill name, level, and XP progress.
-
-Create `src/main/java/com/yourname/yourmodid/client/StatsScreen.java`:
-
-```java
-package com.yourname.yourmodid.client;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.yourname.yourmodid.YourMod;
-import com.yourname.yourmodid.capability.CombatLevelsProvider;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-
-public class StatsScreen extends Screen {
-    private static final int START_X = 20;
-    private static final int START_Y = 20;
-    private static final int LINE_HEIGHT = 12;
-
-    protected StatsScreen() {
-        super(Component.translatable("screen.yourmod.stats"));
-    }
-
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
-
-        var player = Minecraft.getInstance().player;
-        if (player == null) return;
-
-        player.getCapability(CombatLevelsProvider.COMBAT_LEVELS).ifPresent(cap -> {
-            int y = START_Y;
-            String[] skillNames = {
-                "Brute Force", "Blade Technique", "Rapidité", "Agility",
-                "Physical Resistance", "Physical Endurance", "Precision",
-                "Arcane Power", "Water Affinity", "Earth Affinity", "Fire Affinity", "Air Affinity",
-                "Magic Resistance", "Casting Speed", "Mana Pool", "Erudition",
-                "Tracking", "Keen Senses",
-                "Forging", "Cooking", "Alchemy",
-                "Intimidation", "Willpower"
-            };
-            for (int i = 0; i < skillNames.length; i++) {
-                int level = cap.getSkillLevel(i);
-                int xp = cap.getSkillXP(i);
-                int needed = (level + 1) * (level + 1) * 10;
-                String text = String.format("%s: Lv.%d (%d/%d XP)", skillNames[i], level, xp, needed);
-                this.font.draw(poseStack, text, START_X, y, 0xFFFFFF);
-                y += LINE_HEIGHT;
-                if (y > this.height - 20) break;
-            }
-        });
-    }
-
-    @Override
-    public boolean isPauseScreen() { return false; }
-}
-```
-
-Register a keybinding to open the screen. In `YourMod.java`:
-
-```java
-@SubscribeEvent
-public static void onClientSetup(FMLClientSetupEvent event) {
-    event.enqueueWork(() -> {
-        ClientRegistry.registerKeyBinding(new KeyMapping(
-            "key.yourmod.open_stats", InputConstants.KEY_P, "key.categories.gameplay"));
-    });
-}
-
-// In a client event handler class
-@SubscribeEvent
-public static void onKeyInput(InputEvent.KeyInputEvent event) {
-    if (Minecraft.getInstance().screen == null && 
-        KeyBindingRegistry.OPEN_STATS.consumeClick()) {
-        Minecraft.getInstance().setScreen(new StatsScreen());
-    }
-}
-```
-
----
-
-## 7. Testing & Debugging
-
-Run the mod with:
-
-```bash
+# Run client
 ./gradlew runClient
+
+# Tests
+./gradlew test
+
+# Lancer un build complet avec tests
+./gradlew check
 ```
-
-Create a new world, give yourself a sword, and attack mobs. Check the console for XP messages (debug level). Then press `P` to open the stats screen.
-
-**If stats are not increasing:**
-- Ensure the capability is attached (put a log in `AttachCapabilityHandler.attachCapabilities`).
-- Ensure the event `ServerPlayerOnAttackEvent` is being fired (Epic Fight must be loaded).
-
-**If damage is not scaling:**
-- Verify that `LivingHurtEvent` is being called and the player is the attacker.
-- Check that `bruteForce` and `bladeTech` values are >0.
 
 ---
 
-## 8. Reference: AuraSkills for Advanced Features
+## 🎮 Intégration Tensura Reincarnated (FUTUR)
 
-The repository `https://github.com/Archy-X/AuraSkills.git` is a complete skill system. Use it as a reference for:
+Après le MVP, on intégrera STAT MOD avec Tensura Reincarnated.
 
-- **Skill trees** with multiple branches
-- **Configuration** (defining skills in JSON)
-- **Party sharing** (XP distribution)
-- **PlaceholderAPI integration** (if you later support Spigot)
+**Pistes d'intégration :**
+- Races Tensura → stats de base modifiées (ex: Dragon → +Brute Force, Slime → +Agility)
+- Compétences Tensura (Unique/Extra/Résistance) → débloquées via perks
+- Niveau d'âme Tensura → niveau global STAT MOD
+- Magie Tensura → stats magiques (ARCANE_POWER, AFFINITÉS)
+- Artisanat Tensura → stats FORGING/COOKING/ALCHEMY
+- L'XP se gagne via les actions du jeu (combat, craft, minage) — comme dans l'original Tensura
 
-You can examine its `SkillManager` and `SkillRegistry` classes to see how to manage a large number of skills dynamically.
+**Dépendance :** Tensura Reincarnated sur NeoForge 1.21.1 (à confirmer)
 
 ---
 
-## 9. Final Deliverables
+## ❗ Points d'Attention
 
-After completing the steps above, you will have:
+1. **NeoForge 1.21.1 utilise JDK 21** — pas JDK 17 comme le Forge 1.20.1
+2. **Les mappings sont Mojang officiel** — pas Parchment
+3. **Les mixins** nécessitent `statmod.mixins.json` + déclaration dans `neoforge.mods.toml`
+4. **Payload réseau** : `StreamCodec` + `CustomPacketPayload` — plus de simple channel
+5. **GuiGraphics** remplace `PoseStack` direct — l'API de rendu a changé
+6. **ResourceLocation** : utiliser `fromNamespaceAndPath()` au lieu du constructeur direct
+7. **Le pack_format pour 1.21** est `34` (pas `15` comme 1.20.1)
+8. **Les enregistrements** (registries) : `DeferredRegister<AttachmentType<?>>` via `NeoForgeRegistries.Keys.ATTACHMENT_TYPES`
 
-1. A Forge mod that adds 22 custom stats to Epic Fight.
-2. A leveling system where each stat can be leveled from 0 to 100 via combat XP.
-3. Functional effects for **damage increase** (Brute Force + Blade Technique) and **damage reduction** (Physical Resistance).
-4. A basic UI screen to view stats.
-5. Extensible code to implement the remaining stat effects (magic, survival, crafting, mental).
+---
 
-**Next steps for you (Claude):**
-- Copy the code blocks exactly into the correct file paths.
-- Run `./gradlew build` to compile.
-- Fix any import errors (Epic Fight internal classes may have changed – adjust imports accordingly).
-- If you get stuck, search the Epic Fight source code for the exact names of events like `ServerPlayerOnAttackEvent`.
+## 📝 Décisions Techniques
 
-Happy coding!
-```
+1. **Pourquoi NeoForge et pas Forge 1.21.1 ?** Tensura Reincarnated n'existe que sur NeoForge 1.21.1
+2. **Pourquoi supprimer Epic Fight ?** Epic Fight n'a pas de version NeoForge
+3. **Pourquoi des attachments et pas des capabilities ?** NeoForge a remplacé les capabilities par des attachments — plus simples, sans provider boilerplate
+4. **Pourquoi 22 stats ?** Conservation des stats existantes, dont 8 sans perks (stats magiques) pour le futur système de magie
+5. **84 perks ?** 6 perks × 14 stats actives, exactement comme dans la refonte récente
+6. **Pas d'XP gagnée dans le MVP ?** L'architecture data-driven est prioritaire, les events d'acquisition d'XP seront branchés après

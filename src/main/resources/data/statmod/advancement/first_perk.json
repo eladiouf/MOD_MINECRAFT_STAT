@@ -1,0 +1,19 @@
+{
+  "display": {
+    "title": "Perk Beginner",
+    "description": "Unlock your first perk",
+    "icon": {
+      "item": "statmod:respec_stone"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "statmod:root",
+  "criteria": {
+    "unlock_perk": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

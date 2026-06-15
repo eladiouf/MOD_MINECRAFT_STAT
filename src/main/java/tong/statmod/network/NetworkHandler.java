@@ -21,5 +21,8 @@ public class NetworkHandler {
 
         registrar.playToServer(UnlockPerkPayload.TYPE, UnlockPerkPayload.CODEC,
                 ServerPayloadHandler::handleUnlockPerk);
+
+        registrar.playToClient(StatUpdatePayload.TYPE, StatUpdatePayload.CODEC,
+                ClientPayloadHandler::handleStatUpdate);
     }
 }

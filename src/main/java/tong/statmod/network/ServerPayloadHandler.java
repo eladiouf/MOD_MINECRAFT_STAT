@@ -6,6 +6,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.STATMod;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
+import tong.statmod.sound.SoundHelper;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -20,12 +21,11 @@ public final class ServerPayloadHandler {
 
             PlayerStatData data = player.getData(ModAttachments.STATS);
             PerkManager manager = new PerkManager(data);
-            manager.setFromIds(SyncBus.cachedUnlockedIds(player));
 
-            if (manager.unlock(perk)) {
-                SyncBus.cacheUnlockedIds(player, manager.getUnlockedIds());
+            if (manager.unlock(perk, player)) {
                 PacketDistributor.sendToPlayer(player,
-                        new SyncPerksPayload(manager.getUnlockedIds(), data.getPerkPoints()));
+                        new SyncPerksPayload(data.getUnlockedPerks(), data.getPerkPoints()));
+                SoundHelper.playPerkUnlock(player);
                 STATMod.LOGGER.debug("{} unlocked perk {}", player.getName().getString(), perk.name);
             }
         });

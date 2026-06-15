@@ -41,6 +41,9 @@ public class ModAttachments {
                 if (i < xp.length) data.setXp(i, xp[i]);
                 if (i < points.length) data.setPerkPoints(i, points[i]);
             }
+            int[] unlocked = tag.getIntArray("UnlockedPerks");
+            if (unlocked.length > 0) data.setUnlockedPerks(unlocked);
+            if (tag.contains("SoulLevel")) data.setSoulLevel(tag.getInt("SoulLevel"));
             return data;
         }
 
@@ -50,6 +53,8 @@ public class ModAttachments {
             tag.putIntArray("Levels", data.getLevels());
             tag.putIntArray("Xp", data.getXp());
             tag.putIntArray("PerkPoints", data.getPerkPoints());
+            tag.putIntArray("UnlockedPerks", data.getUnlockedPerks());
+            tag.putInt("SoulLevel", data.getSoulLevel());
             return tag;
         }
     }

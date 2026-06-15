@@ -1,0 +1,18 @@
+{
+  "level_up": {
+    "subtitle": "sound.statmod.level_up",
+    "sounds": ["random/levelup"]
+  },
+  "perk_unlock": {
+    "subtitle": "sound.statmod.perk_unlock",
+    "sounds": ["random/orb"]
+  },
+  "perk_tree_open": {
+    "subtitle": "sound.statmod.perk_tree_open",
+    "sounds": ["random/click"]
+  },
+  "stat_up": {
+    "subtitle": "sound.statmod.stat_up",
+    "sounds": ["random/anvil_land"]
+  }
+}

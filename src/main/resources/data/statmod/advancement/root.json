@@ -1,0 +1,27 @@
+{
+  "display": {
+    "title": "STAT Mod",
+    "description": "Begin your journey with STAT Mod",
+    "icon": {
+      "item": "statmod:perk_tome"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_tome": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["statmod:perk_tome"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tome"]]
+}

@@ -1,12 +1,13 @@
 package tong.statmod.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.STATMod;
 
-public record BatchSyncPayload(int[] levels, int[] xp, int[] perStatPoints, int[] perkIds)
+public record BatchSyncPayload(int[] levels, int[] xp, int[] perStatPoints, int[] perkIds, int soulLevel)
         implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<BatchSyncPayload> TYPE =
@@ -18,6 +19,7 @@ public record BatchSyncPayload(int[] levels, int[] xp, int[] perStatPoints, int[
                     NetCodecs.INT_ARRAY, BatchSyncPayload::xp,
                     NetCodecs.INT_ARRAY, BatchSyncPayload::perStatPoints,
                     NetCodecs.INT_ARRAY, BatchSyncPayload::perkIds,
+                    ByteBufCodecs.VAR_INT, BatchSyncPayload::soulLevel,
                     BatchSyncPayload::new
             );
 

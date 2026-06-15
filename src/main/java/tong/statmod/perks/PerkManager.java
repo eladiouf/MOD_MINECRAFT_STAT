@@ -1,12 +1,11 @@
 package tong.statmod.perks;
 
+import net.minecraft.world.entity.player.Player;
+import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.integration.SkillPerkGate;
 import tong.statmod.storage.PlayerStatData;
 
-import java.util.BitSet;
-
 public class PerkManager {
-    private static final int PERK_COUNT = 84;
-    private final BitSet unlocked = new BitSet(PERK_COUNT);
     private final PlayerStatData statData;
 
     public PerkManager(PlayerStatData statData) {
@@ -14,29 +13,11 @@ public class PerkManager {
     }
 
     public boolean isUnlocked(Perk perk) {
-        return perk != null && unlocked.get(perk.id);
-    }
-
-    public boolean[] getUnlockedArray() {
-        boolean[] arr = new boolean[PERK_COUNT];
-        for (int i = 0; i < PERK_COUNT; i++) arr[i] = unlocked.get(i);
-        return arr;
-    }
-
-    public void setFromArray(boolean[] arr) {
-        unlocked.clear();
-        for (int i = 0; i < Math.min(arr.length, PERK_COUNT); i++) {
-            if (arr[i]) unlocked.set(i);
-        }
+        return perk != null && statData.isPerkUnlocked(perk.id);
     }
 
     public int[] getUnlockedIds() {
-        return unlocked.stream().toArray();
-    }
-
-    public void setFromIds(int[] ids) {
-        unlocked.clear();
-        for (int id : ids) if (id >= 0 && id < PERK_COUNT) unlocked.set(id);
+        return statData.getUnlockedPerks();
     }
 
     public int getPointsForStat(int statIndex) {
@@ -44,6 +25,10 @@ public class PerkManager {
     }
 
     public boolean canUnlock(Perk perk) {
+        return canUnlock(perk, null);
+    }
+
+    public boolean canUnlock(Perk perk, Player player) {
         if (perk == null || isUnlocked(perk)) return false;
         int statLevel = statData.getLevel(perk.stat.index);
         if (statLevel < perk.tier.requiredStatLevel) return false;
@@ -52,17 +37,22 @@ public class PerkManager {
             int synergyLevel = statData.getLevel(perk.synergyStat.index);
             if (synergyLevel < PerkTier.SYNERGY.requiredStatLevel) return false;
         }
+        if (player != null && !SkillPerkGate.canUnlock(player, perk)) return false;
         return true;
     }
 
     public boolean unlock(Perk perk) {
-        if (!canUnlock(perk)) return false;
-        unlocked.set(perk.id);
+        return unlock(perk, null);
+    }
+
+    public boolean unlock(Perk perk, Player player) {
+        if (!canUnlock(perk, player)) return false;
+        statData.addUnlockedPerk(perk.id);
         statData.addPerkPointsForStat(perk.stat.index, -perk.tier.cost);
         return true;
     }
 
     public void resetAll() {
-        unlocked.clear();
+        statData.clearUnlockedPerks();
     }
 }

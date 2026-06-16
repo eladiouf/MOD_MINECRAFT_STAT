@@ -1,6 +1,7 @@
 {
   "entries": [
-    "statmod:chest_loot"
+    "statmod:chest_loot",
+    "statmod:overgeared_bonus_loot"
   ],
   "replace": false
 }

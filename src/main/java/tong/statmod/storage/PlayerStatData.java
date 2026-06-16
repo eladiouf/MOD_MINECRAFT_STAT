@@ -38,6 +38,24 @@ public class PlayerStatData {
 
     public void clearUnlockedPerks() { unlockedPerks = new int[0]; }
 
+    public void removeUnlockedPerk(int perkId) {
+        if (unlockedPerks.length == 0) return;
+
+        int count = 0;
+        for (int id : unlockedPerks) {
+            if (id != perkId) count++;
+        }
+        if (count == unlockedPerks.length) return;
+
+        int[] next = new int[count];
+        int idx = 0;
+        for (int id : unlockedPerks) {
+            if (id == perkId) continue;
+            next[idx++] = id;
+        }
+        unlockedPerks = next;
+    }
+
     public int getSoulLevel() { return soulLevel; }
 
     public void setSoulLevel(int level) { soulLevel = Math.max(0, level); }

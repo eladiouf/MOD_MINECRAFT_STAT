@@ -11,6 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -36,10 +37,10 @@ public class StatAttributeHandler {
         UUID uuid = player.getUUID();
 
         applyModifier(player, Attributes.ATTACK_SPEED, RAPIDITE_ID,
-                data.getLevel(StatType.RAPIDITE.index), lastRapidite, uuid, 0.002);
+                RaceEffectApplier.getEffectiveLevel(player, StatType.RAPIDITE.index), lastRapidite, uuid, 0.002);
 
         applyModifier(player, Attributes.MOVEMENT_SPEED, AGILITY_ID,
-                data.getLevel(StatType.AGILITY.index), lastAgility, uuid, 0.001);
+                RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index), lastAgility, uuid, 0.001);
     }
 
     private static void applyModifier(Player player, Holder<Attribute> attribute,

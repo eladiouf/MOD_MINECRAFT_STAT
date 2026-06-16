@@ -1,8 +1,11 @@
 package tong.statmod.progression;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -12,25 +15,38 @@ import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
 
 @EventBusSubscriber(modid = STATMod.MODID)
 public class CombatXPHandler {
 
     @SubscribeEvent
     public static void onKill(LivingDeathEvent event) {
-        if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (player.level().isClientSide) return;
+        Player player = resolveAttacker(event.getSource().getEntity(), event.getSource().getDirectEntity());
+        if (player == null || player.level().isClientSide) return;
 
         LivingEntity target = event.getEntity();
-        float health = target.getMaxHealth();
-        int xp = Math.max(1, Math.round(health * 1.5f));
+        int xp = Math.max(1, Math.round(target.getMaxHealth() * 1.5f));
+        StatType stat = resolveWeaponStat(player.getMainHandItem());
 
-        PlayerStatData data = player.getData(ModAttachments.STATS);
-        boolean leveled = RaceEffectApplier.addScaledXp(player, StatType.BRUTE_FORCE.index, xp, data);
-        leveled |= RaceEffectApplier.addScaledXp(player, StatType.BLADE_TECHNIQUE.index, xp / 2, data);
-        leveled |= RaceEffectApplier.addScaledXp(player, StatType.RAPIDITE.index, xp / 4, data);
-        SyncHelper.syncStats((ServerPlayer) player);
+        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, player.getData(ModAttachments.STATS));
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
+        SyncHelper.syncStats((ServerPlayer) player);
+    }
+
+    private static Player resolveAttacker(Entity source, Entity direct) {
+        if (source instanceof Player player) {
+            return player;
+        }
+        if (source instanceof Projectile projectile && projectile.getOwner() instanceof Player player) {
+            return player;
+        }
+        if (direct instanceof Projectile projectile && projectile.getOwner() instanceof Player player) {
+            return player;
+        }
+        return null;
+    }
+
+    private static StatType resolveWeaponStat(ItemStack stack) {
+        return WeaponResolver.statFor(stack);
     }
 }

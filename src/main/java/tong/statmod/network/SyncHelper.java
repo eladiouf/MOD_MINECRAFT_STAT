@@ -13,4 +13,15 @@ public final class SyncHelper {
         PacketDistributor.sendToPlayer(player,
                 new StatUpdatePayload(data.getLevels(), data.getXp(), data.getSoulLevel()));
     }
+
+    public static void syncPerks(ServerPlayer player) {
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PacketDistributor.sendToPlayer(player,
+                new SyncPerksPayload(data.getUnlockedPerks(), data.getPerkPoints()));
+    }
+
+    public static void syncAll(ServerPlayer player) {
+        syncStats(player);
+        syncPerks(player);
+    }
 }

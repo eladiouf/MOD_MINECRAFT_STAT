@@ -1,0 +1,38 @@
+{
+  "type": "statmod:add_overgeared_loot",
+  "conditions": [
+    {
+      "condition": "minecraft:alternative",
+      "terms": [
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/smithing_anvil"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/drafting_table"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/casting_furnace"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/alloy_furnace"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/nether_alloy_furnace"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/tier_a_smithing_anvil"
+        },
+        {
+          "condition": "neoforge:loot_table_id",
+          "loot_table_id": "overgeared:blocks/tier_b_smithing_anvil"
+        }
+      ]
+    }
+  ]
+}

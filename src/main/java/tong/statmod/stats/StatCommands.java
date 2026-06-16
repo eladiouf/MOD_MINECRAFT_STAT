@@ -6,6 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -23,8 +24,9 @@ public class StatCommands {
                                         data.addLevels(index, amount);
                                         StatType stat = StatType.byIndex(index);
                                         String name = stat != null ? stat.displayName : ("#" + index);
+                                        int effective = RaceEffectApplier.getEffectiveLevel(player, index);
                                         ctx.getSource().sendSuccess(() ->
-                                                Component.literal(name + " → Lv." + data.getLevel(index)), true);
+                                                Component.literal(name + " → Lv." + effective), true);
                                     }
                                     return 1;
                                 }))));

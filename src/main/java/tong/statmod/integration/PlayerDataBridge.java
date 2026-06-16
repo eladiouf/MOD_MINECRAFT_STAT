@@ -6,6 +6,7 @@ import io.github.manasmods.manascore.storage.api.StorageHolder;
 import io.github.manasmods.manascore.storage.impl.StorageManager;
 import io.github.manasmods.tensura.storage.ep.ExistenceStorage;
 import io.github.manasmods.tensura.storage.ep.IExistence;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
@@ -13,8 +14,8 @@ import java.util.Optional;
 public final class PlayerDataBridge {
     private PlayerDataBridge() {}
 
-    private static StorageHolder holder(Player player) {
-        return (StorageHolder) player;
+    private static StorageHolder holder(LivingEntity entity) {
+        return (StorageHolder) entity;
     }
 
     public static int getSoulLevel(Player player) {
@@ -22,8 +23,12 @@ public final class PlayerDataBridge {
         return es != null ? es.getSoulPoints() : 0;
     }
 
+    public static IExistence getExistence(LivingEntity entity) {
+        return StorageManager.getStorage(holder(entity), ExistenceStorage.getKey());
+    }
+
     public static IExistence getExistence(Player player) {
-        return StorageManager.getStorage(holder(player), ExistenceStorage.getKey());
+        return getExistence((LivingEntity) player);
     }
 
     public static Optional<ManasRaceInstance> getRaceInstance(Player player) {

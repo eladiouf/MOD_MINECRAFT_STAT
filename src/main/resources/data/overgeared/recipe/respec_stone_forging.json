@@ -1,0 +1,28 @@
+{
+  "type": "overgeared:forging",
+  "category": "misc",
+  "hammering": 4,
+  "has_quality": false,
+  "needs_minigame": false,
+  "need_quenching": false,
+  "pattern": [
+    "s#",
+    " g"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stone"
+    },
+    "#": {
+      "item": "overgeared:steel_plate"
+    },
+    "g": {
+      "item": "minecraft:ghast_tear"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:respec_stone"
+  },
+  "show_notification": true
+}

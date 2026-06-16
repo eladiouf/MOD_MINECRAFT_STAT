@@ -5,6 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "statmod.refmap.json",
   "client": [],
-  "mixins": ["PlayerListMixin"],
+  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin"],
   "server": []
 }

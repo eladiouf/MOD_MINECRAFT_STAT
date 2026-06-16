@@ -22,11 +22,15 @@ public final class RaceModifierRegistry {
         put("tensura:human",            List.of(), List.of());
         put("tensura:enlightened_human",List.of(), List.of());
         put("tensura:human_saint",      List.of(
-                mod(22, 1, 1.0)   // +WILLPOWER
+                mod(22, 1, 1.0),  // +WILLPOWER
+                mod(13, 1, 1.0),  // +CASTING_SPEED
+                mod(14, 1, 1.0)   // +MANA_POOL
         ), List.of());
         put("tensura:divine_human",     List.of(
                 mod(22, 2, 1.0),  // +WILLPOWER
-                mod(15, 1, 1.0)   // +ERUDITION
+                mod(15, 1, 1.0),  // +ERUDITION
+                mod(13, 1, 1.0),  // +CASTING_SPEED
+                mod(14, 1, 1.0)   // +MANA_POOL
         ), List.of());
 
         // ── OGRE family (warriors) ────────────────────────
@@ -37,7 +41,9 @@ public final class RaceModifierRegistry {
         put("tensura:kijin",             List.of(
                 mod(0, 3, 1.3),
                 mod(1, 2, 1.2),   // +BLADE_TECHNIQUE
-                mod(4, 2, 1.1)
+                mod(4, 2, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:enlightened_ogre",  List.of(
                 mod(0, 4, 1.4),
@@ -48,7 +54,9 @@ public final class RaceModifierRegistry {
                 mod(0, 5, 1.5),
                 mod(1, 4, 1.4),
                 mod(4, 4, 1.3),
-                mod(7, 2, 1.2)    // +ARCANE_POWER
+                mod(7, 2, 1.2),   // +ARCANE_POWER
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:wicked_oni",        List.of(
                 mod(0, 6, 1.6),
@@ -61,21 +69,27 @@ public final class RaceModifierRegistry {
                 mod(1, 6, 1.6),
                 mod(4, 6, 1.5),
                 mod(7, 4, 1.3),
-                mod(11, 2, 1.2)   // +AIR_AFFINITY
+                mod(11, 2, 1.2),  // +AIR_AFFINITY
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:death_oni",         List.of(
                 mod(0, 8, 1.8),
                 mod(1, 7, 1.7),
                 mod(4, 7, 1.6),
                 mod(21, 5, 1.4),
-                mod(22, 3, 1.3)   // +WILLPOWER
+                mod(22, 3, 1.3),  // +WILLPOWER
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:divine_oni",        List.of(
                 mod(0, 9, 2.0),
                 mod(1, 8, 1.8),
                 mod(4, 8, 1.7),
                 mod(21, 6, 1.5),
-                mod(22, 4, 1.4)
+                mod(22, 4, 1.4),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:divine_fighter",    List.of(
                 mod(0, 10, 2.5),
@@ -88,24 +102,32 @@ public final class RaceModifierRegistry {
         // ── ELF family (magic users) ──────────────────────
         put("tensura:elf",               List.of(
                 mod(6, 2, 1.2),
-                mod(12, 1, 1.1)
+                mod(12, 1, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:enlightened_elf",   List.of(
                 mod(6, 3, 1.3),
                 mod(12, 2, 1.2),
-                mod(7, 1, 1.1)
+                mod(7, 1, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:elf_saint",         List.of(
                 mod(6, 4, 1.4),
                 mod(12, 3, 1.3),
                 mod(7, 2, 1.2),
-                mod(15, 2, 1.2)   // +ERUDITION
+                mod(15, 2, 1.2),  // +ERUDITION
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:divine_elf",        List.of(
                 mod(6, 5, 1.5),
                 mod(12, 4, 1.4),
                 mod(7, 3, 1.3),
-                mod(15, 3, 1.3)
+                mod(15, 3, 1.3),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
 
         // ── DWARF family (crafters) ───────────────────────
@@ -134,24 +156,32 @@ public final class RaceModifierRegistry {
         // ── SLIME family (tanks) ──────────────────────────
         put("tensura:slime",             List.of(
                 mod(5, 2, 1.2),   // +PHYSICAL_ENDURANCE
-                mod(22, 1, 1.1)   // +WILLPOWER
+                mod(22, 1, 1.1),  // +WILLPOWER
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:metal_slime",       List.of(
                 mod(5, 3, 1.3),
                 mod(22, 2, 1.2),
-                mod(4, 2, 1.2)    // +PHYSICAL_RESISTANCE
+                mod(4, 2, 1.2),   // +PHYSICAL_RESISTANCE
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:demon_slime",       List.of(
                 mod(5, 4, 1.4),
                 mod(22, 3, 1.3),
                 mod(4, 3, 1.3),
-                mod(7, 2, 1.2)    // +ARCANE_POWER
+                mod(7, 2, 1.2),   // +ARCANE_POWER
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:god_slime",         List.of(
                 mod(5, 5, 1.5),
                 mod(22, 4, 1.4),
                 mod(4, 4, 1.4),
-                mod(7, 3, 1.3)
+                mod(7, 3, 1.3),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
 
         // ── LIZARDMAN / DRAGON family ─────────────────────
@@ -164,14 +194,18 @@ public final class RaceModifierRegistry {
                 mod(0, 3, 1.3),
                 mod(4, 2, 1.2),
                 mod(10, 2, 1.2),
-                mod(5, 1, 1.1)    // +PHYSICAL_ENDURANCE
+                mod(5, 1, 1.1),   // +PHYSICAL_ENDURANCE
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:true_dragonewt",    List.of(
                 mod(0, 4, 1.4),
                 mod(4, 3, 1.3),
                 mod(10, 3, 1.3),
                 mod(5, 2, 1.2),
-                mod(11, 1, 1.1)   // +AIR_AFFINITY
+                mod(11, 1, 1.1),  // +AIR_AFFINITY
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:divine_dragon",     List.of(
                 mod(0, 5, 1.5),
@@ -179,7 +213,9 @@ public final class RaceModifierRegistry {
                 mod(10, 4, 1.4),
                 mod(5, 3, 1.3),
                 mod(11, 2, 1.2),
-                mod(22, 2, 1.2)
+                mod(22, 2, 1.2),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
 
         // ── BEASTFOLK family (scouts) ─────────────────────
@@ -339,55 +375,73 @@ public final class RaceModifierRegistry {
         put("tensura:vampire",           List.of(
                 mod(21, 3, 1.3),
                 mod(2, 2, 1.2),
-                mod(22, 1, 1.1)
+                mod(22, 1, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:vampire_overcomer", List.of(
                 mod(21, 4, 1.4),
                 mod(2, 3, 1.3),
                 mod(22, 2, 1.2),
-                mod(7, 1, 1.1)
+                mod(7, 1, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:vampire_lord",      List.of(
                 mod(21, 5, 1.5),
                 mod(2, 4, 1.4),
                 mod(22, 3, 1.3),
                 mod(7, 2, 1.2),
-                mod(21, 6, 1.5)
+                mod(21, 6, 1.5),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:divine_vampire",    List.of(
                 mod(21, 7, 1.7),
                 mod(2, 5, 1.5),
                 mod(22, 4, 1.4),
-                mod(7, 3, 1.3)
+                mod(7, 3, 1.3),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
 
         // ── DAEMON family (dark magic) ────────────────────
         put("tensura:lesser_daemon",     List.of(
                 mod(7, 2, 1.3),   // +ARCANE_POWER
-                mod(21, 1, 1.2)
+                mod(21, 1, 1.2),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:greater_daemon",    List.of(
                 mod(7, 3, 1.5),
                 mod(21, 2, 1.3),
-                mod(22, 1, 1.1)
+                mod(22, 1, 1.1),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:arch_daemon",       List.of(
                 mod(7, 4, 1.7),
                 mod(21, 3, 1.4),
                 mod(22, 2, 1.2),
-                mod(12, 2, 1.2)   // +MAGIC_RESISTANCE
+                mod(12, 2, 1.2),  // +MAGIC_RESISTANCE
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:daemon_lord",       List.of(
                 mod(7, 5, 2.0),
                 mod(21, 4, 1.5),
                 mod(22, 3, 1.3),
-                mod(12, 3, 1.3)
+                mod(12, 3, 1.3),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
         put("tensura:devil_lord",        List.of(
                 mod(7, 6, 2.5),
                 mod(21, 5, 1.7),
                 mod(22, 4, 1.4),
-                mod(12, 4, 1.4)
+                mod(12, 4, 1.4),
+                mod(13, 1, 1.0),
+                mod(14, 1, 1.0)
         ), List.of());
 
         // ── WIGHT / UNDEAD family ─────────────────────────

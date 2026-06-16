@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import tong.statmod.network.SyncHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -40,6 +41,9 @@ public class RespecStoneItem extends Item {
 
         data.clearUnlockedPerks();
         player.sendSystemMessage(Component.literal("All perks reset! " + totalRefund + " points refunded."));
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            SyncHelper.syncPerks(serverPlayer);
+        }
         player.getItemInHand(hand).shrink(1);
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }

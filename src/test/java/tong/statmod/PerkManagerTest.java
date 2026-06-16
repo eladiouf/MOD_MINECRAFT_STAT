@@ -115,4 +115,26 @@ class PerkManagerTest {
         assertFalse(mgr.canUnlock(null));
         assertFalse(mgr.unlock(null));
     }
+
+    @Test
+    void testGrantDoesNotDeductPoints() {
+        PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(0, 5);
+        PerkManager mgr = new PerkManager(data);
+
+        assertTrue(mgr.grant(Perk.BRUTE_TRANSCENDENCE));
+        assertTrue(data.isPerkUnlocked(Perk.BRUTE_TRANSCENDENCE.id));
+        assertEquals(5, data.getPerkPointsForStat(0));
+    }
+
+    @Test
+    void testRevokeRefundsPoints() {
+        PlayerStatData data = new PlayerStatData();
+        data.addUnlockedPerk(Perk.BRUTE_CORE.id);
+        PerkManager mgr = new PerkManager(data);
+
+        assertTrue(mgr.revoke(Perk.BRUTE_CORE, true));
+        assertFalse(data.isPerkUnlocked(Perk.BRUTE_CORE.id));
+        assertEquals(1, data.getPerkPointsForStat(0));
+    }
 }

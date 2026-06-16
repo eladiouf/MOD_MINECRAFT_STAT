@@ -3,18 +3,23 @@ package tong.statmod.progression;
 import tong.statmod.stats.StatType;
 
 public enum ActionType {
-    COMBAT(StatType.BRUTE_FORCE, StatType.BLADE_TECHNIQUE, StatType.RAPIDITE),
     MINING(StatType.FORGING),
-    CRAFTING(StatType.FORGING, StatType.ALCHEMY),
+    CRAFTING(StatType.FORGING),
     SMELTING(StatType.FORGING),
-    FARMING(StatType.COOKING),
+    COOKING(StatType.COOKING),
     FISHING(StatType.PRECISION),
     ENCHANTING(StatType.ALCHEMY),
-    BREWING(StatType.ALCHEMY, StatType.ERUDITION);
+    BREWING(StatType.ALCHEMY),
+    PARKOUR(StatType.AGILITY),
+    SWIMMING(StatType.PHYSICAL_ENDURANCE);
 
-    public final StatType[] primaryStats;
+    private final StatType primaryStat;
 
-    ActionType(StatType... primaryStats) {
-        this.primaryStats = primaryStats;
+    ActionType(StatType primaryStat) {
+        this.primaryStat = primaryStat;
+    }
+
+    public StatType primaryStat() {
+        return primaryStat;
     }
 }

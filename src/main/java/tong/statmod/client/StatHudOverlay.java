@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import tong.statmod.integration.PlayerDataBridge;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
@@ -66,7 +67,7 @@ public final class StatHudOverlay {
         int shown = 0;
         for (StatType stat : StatType.values()) {
             if (shown >= maxLines - 1) break;
-            int level = ClientStatCache.getLevel(stat.index);
+            int level = RaceEffectApplier.getEffectiveLevel(player, stat.index);
             int xp = ClientStatCache.getXp(stat.index);
             int needed = PlayerStatData.requiredXp(level);
             int color = stat.hasPerks() ? 0xFFFFFFFF : 0xFF808080;

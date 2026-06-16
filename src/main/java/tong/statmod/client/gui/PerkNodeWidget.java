@@ -9,8 +9,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkTier;
+import net.minecraft.client.Minecraft;
 import tong.statmod.network.UnlockPerkPayload;
 
 @OnlyIn(Dist.CLIENT)
@@ -42,7 +44,10 @@ public class PerkNodeWidget {
         if (perk == null) return false;
         boolean unlocked = ClientPerkCache.isUnlocked(perk);
         if (unlocked) return false;
-        int statLevel = ClientStatCache.getLevel(perk.stat.index);
+        var player = Minecraft.getInstance().player;
+        int statLevel = player != null
+                ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
+                : ClientStatCache.getLevel(perk.stat.index);
         int points = ClientPerkCache.getPointsForStat(perk.stat.index);
         if (statLevel < perk.tier.requiredStatLevel) return false;
         if (points < perk.tier.cost) return false;
@@ -54,7 +59,10 @@ public class PerkNodeWidget {
         if (perk == null) return;
 
         boolean unlocked = ClientPerkCache.isUnlocked(perk);
-        int statLevel = ClientStatCache.getLevel(perk.stat.index);
+        var player = Minecraft.getInstance().player;
+        int statLevel = player != null
+                ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
+                : ClientStatCache.getLevel(perk.stat.index);
         int points = ClientPerkCache.getPointsForStat(perk.stat.index);
         boolean meetsLevel = statLevel >= perk.tier.requiredStatLevel;
         boolean canAfford = points >= perk.tier.cost;

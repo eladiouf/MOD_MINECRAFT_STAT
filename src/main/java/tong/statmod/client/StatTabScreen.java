@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import tong.statmod.client.gui.PerkScreen;
 import tong.statmod.integration.PlayerDataBridge;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
@@ -59,7 +60,7 @@ public class StatTabScreen extends Screen {
                 if (idx >= totalStats) continue;
                 StatType stat = StatType.values()[idx];
 
-                int level = ClientStatCache.getLevel(stat.index);
+                int level = RaceEffectApplier.getEffectiveLevel(player, stat.index);
                 int xp = ClientStatCache.getXp(stat.index);
                 int needed = PlayerStatData.requiredXp(level);
                 int color = stat.hasPerks() ? (level >= maxStat ? 0xFFFFAA00 : 0xFFFFFFFF) : 0xFF808080;

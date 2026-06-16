@@ -5,7 +5,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.client.Minecraft;
 import tong.statmod.client.ClientStatCache;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkTier;
 import tong.statmod.stats.StatType;
@@ -62,7 +64,10 @@ public class TalentTreePanel {
         int centerX = x + panelWidth / 2;
         graphics.drawString(font, Component.literal("\u00a7l" + stat.displayName + "\u00a7r"), centerX - font.width(stat.displayName) / 2, y + 6, 0xFFFFFFFF);
 
-        int statLevel = ClientStatCache.getLevel(stat.index);
+        var player = Minecraft.getInstance().player;
+        int statLevel = player != null
+                ? RaceEffectApplier.getEffectiveLevel(player, stat.index)
+                : ClientStatCache.getLevel(stat.index);
         int cap = ClientStatCache.getSoulLevel() > 0 ? Math.min(ClientStatCache.getSoulLevel(), 100) : 100;
         String levelText = "Lv." + statLevel + "/" + cap;
         graphics.drawString(font, Component.literal("\u00a77" + levelText + "\u00a7r"), centerX - font.width(levelText) / 2, y + 16, 0xFFAAAAAA);

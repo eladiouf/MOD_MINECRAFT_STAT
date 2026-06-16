@@ -27,6 +27,7 @@ import tong.statmod.loot.ModLootModifiers;
 import tong.statmod.progression.CombatXPHandler;
 import tong.statmod.progression.NonCombatXPHandler;
 import tong.statmod.sound.ModSounds;
+import tong.statmod.stamina.StaminaEvents;
 import tong.statmod.stats.StatAttributeHandler;
 import tong.statmod.stats.StatCommands;
 import tong.statmod.storage.ModAttachments;
@@ -48,6 +49,7 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(CombatXPHandler.class);
         NeoForge.EVENT_BUS.register(NonCombatXPHandler.class);
         NeoForge.EVENT_BUS.register(StatAttributeHandler.class);
+        NeoForge.EVENT_BUS.register(StaminaEvents.class);
         NeoForge.EVENT_BUS.register(SoulLevelSyncHandler.class);
         if (ModList.get().isLoaded("tensura")) {
             TensuraEventSubscriber.register();

@@ -22,4 +22,15 @@ public final class StaminaRules {
         if (ratio <= LOW_THRESHOLD_RATIO) return StaminaThreshold.LOW;
         return StaminaThreshold.NORMAL;
     }
+
+    public static float passiveRecoveryPerTick(boolean meditating) {
+        return meditating ? 0.18f : 0.02f;
+    }
+
+    public static float passiveDrainPerTick(boolean sprinting, boolean airborne) {
+        float drain = 0.0025f;
+        if (sprinting) drain += 0.08f;
+        if (airborne) drain += 0.02f;
+        return drain;
+    }
 }

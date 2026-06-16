@@ -12,6 +12,8 @@ import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
 import tong.statmod.progression.WeaponResolver;
+import tong.statmod.stamina.StaminaManager;
+import tong.statmod.stamina.StaminaRules;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 import yesman.epicfight.api.event.EpicFightEventHooks;
@@ -32,6 +34,7 @@ import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.registry.entries.EpicFightAttributes;
+import yesman.epicfight.skill.Skill;
 
 import java.util.Map;
 import java.util.UUID;
@@ -149,6 +152,7 @@ public final class EpicFightCompat {
         if (player.tickCount % 20 != 0) return;
 
         UUID uuid = player.getUUID();
+        syncEpicFightStaminaDisplay(player);
         applyAttribute(player, EpicFightAttributes.WEIGHT, ResourceIds.WEIGHT,
                 RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index),
                 lastWeight, uuid, weightModifierAmount(
@@ -232,6 +236,11 @@ public final class EpicFightCompat {
                 + precision * 0.004f
                 + rapidite * 0.003f;
 
+        int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+        float statModMax = StaminaRules.maxStamina(endurance);
+        multiplier *= EpicFightStaminaBridge.damageMultiplier(
+                StaminaRules.threshold(player.getData(ModAttachments.STAMINA).currentStamina(), statModMax));
+
         event.attachValueModifier(ValueModifier.multiplier(multiplier));
     }
 
@@ -242,6 +251,10 @@ public final class EpicFightCompat {
         int rapidite = RaceEffectApplier.getEffectiveLevel(player, StatType.RAPIDITE.index);
         int agility = RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index);
         float multiplier = 1.0f + rapidite * 0.004f + agility * 0.002f;
+        int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+        float statModMax = StaminaRules.maxStamina(endurance);
+        multiplier *= EpicFightStaminaBridge.attackSpeedMultiplier(
+                StaminaRules.threshold(player.getData(ModAttachments.STAMINA).currentStamina(), statModMax));
         event.setAttackSpeed(event.getAttackSpeed() * multiplier);
     }
 
@@ -300,7 +313,36 @@ public final class EpicFightCompat {
                 RaceEffectApplier.getEffectiveLevel(player, StatType.CASTING_SPEED.index),
                 RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index),
                 event.getResourceType());
-        event.setAmount(event.getAmount() * multiplier);
+        float adjustedAmount = event.getAmount() * multiplier;
+        if (event.getResourceType() == Skill.Resource.STAMINA) {
+            int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+            float statModMax = StaminaRules.maxStamina(endurance);
+            var stamina = player.getData(ModAttachments.STAMINA);
+            var threshold = StaminaRules.threshold(stamina.currentStamina(), statModMax);
+            if (!EpicFightStaminaBridge.canUseSkill(threshold, stamina.currentStamina(), adjustedAmount)) {
+                event.cancel();
+                return;
+            }
+            StaminaManager.consume(stamina, adjustedAmount);
+            event.setAmount(0.0f);
+            SyncHelper.syncStamina((ServerPlayer) player);
+            return;
+        }
+        event.setAmount(adjustedAmount);
+    }
+
+    private static void syncEpicFightStaminaDisplay(Player player) {
+        var patch = EpicFightCapabilities.getPlayerPatch(player);
+        if (patch == null) {
+            return;
+        }
+        int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+        float statModMax = StaminaRules.maxStamina(endurance);
+        float display = EpicFightStaminaBridge.patchDisplayStamina(
+                player.getData(ModAttachments.STAMINA).currentStamina(),
+                statModMax,
+                patch.getMaxStamina());
+        patch.setStamina(display);
     }
 
     public static float airAttackMultiplier(int agility, boolean airborne) {

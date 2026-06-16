@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
+import tong.statmod.stamina.StaminaData;
 
 public final class SyncHelper {
     private SyncHelper() {}
@@ -20,8 +21,15 @@ public final class SyncHelper {
                 new SyncPerksPayload(data.getUnlockedPerks(), data.getPerkPoints()));
     }
 
+    public static void syncStamina(ServerPlayer player) {
+        StaminaData data = player.getData(ModAttachments.STAMINA);
+        PacketDistributor.sendToPlayer(player,
+                new StaminaSyncPayload(data.currentStamina(), data.fatigueDebt(), data.meditating()));
+    }
+
     public static void syncAll(ServerPlayer player) {
         syncStats(player);
         syncPerks(player);
+        syncStamina(player);
     }
 }

@@ -24,5 +24,8 @@ public class NetworkHandler {
 
         registrar.playToClient(StatUpdatePayload.TYPE, StatUpdatePayload.CODEC,
                 ClientPayloadHandler::handleStatUpdate);
+
+        registrar.playToClient(StaminaSyncPayload.TYPE, StaminaSyncPayload.CODEC,
+                ClientPayloadHandler::handleStaminaSync);
     }
 }

@@ -5,6 +5,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
+import tong.statmod.client.ClientStaminaCache;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientPayloadHandler {
@@ -23,5 +24,12 @@ public final class ClientPayloadHandler {
 
     public static void handleStatUpdate(StatUpdatePayload payload, IPayloadContext context) {
         context.enqueueWork(() -> ClientStatCache.updateAll(payload.levels(), payload.xp(), payload.soulLevel()));
+    }
+
+    public static void handleStaminaSync(StaminaSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ClientStaminaCache.update(
+                payload.currentStamina(),
+                payload.fatigueDebt(),
+                payload.meditating()));
     }
 }

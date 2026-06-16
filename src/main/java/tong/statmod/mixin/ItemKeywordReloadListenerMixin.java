@@ -12,6 +12,7 @@ import yesman.epicfight.world.capabilities.item.ItemKeywordReloadListener;
 import yesman.epicfight.world.capabilities.provider.CommonItemCapabilityProvider;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -38,6 +39,7 @@ public class ItemKeywordReloadListenerMixin {
     );
     private static Constructor<?> ITEM_REGEX_CTOR;
     private static Method REGEXES_GETTER;
+    private static Field REGEXES_FIELD;
     private static boolean READY;
 
     static {
@@ -61,6 +63,8 @@ public class ItemKeywordReloadListenerMixin {
                 "yesman.epicfight.world.capabilities.item.ItemKeywordReloadListener$ItemRegex");
             ITEM_REGEX_CTOR = cls.getDeclaredConstructor(List.class);
             REGEXES_GETTER = cls.getMethod("regexes");
+            REGEXES_FIELD = ItemKeywordReloadListener.class.getDeclaredField("REGEXES");
+            REGEXES_FIELD.setAccessible(true);
             READY = true;
         } catch (Exception e) {
             STATMod.LOGGER.error("Failed to init ItemRegex reflection", e);
@@ -71,7 +75,10 @@ public class ItemKeywordReloadListenerMixin {
     private static void injectPatterns() {
         if (!READY) return;
         try {
-            Map<ResourceLocation, Object> regexes = (Map<ResourceLocation, Object>) (Map<?, ?>) ItemKeywordReloadListener.getRegexes();
+            Map<ResourceLocation, Object> regexes = (Map<ResourceLocation, Object>) REGEXES_FIELD.get(null);
+            if (regexes == null) {
+                return;
+            }
 
             for (Map.Entry<String, List<String>> entry : EXTRA_PATTERNS.entrySet()) {
                 ResourceLocation key = ResourceLocation.parse(entry.getKey());

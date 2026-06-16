@@ -41,4 +41,9 @@ class StaminaManagerTest {
 
         assertTrue(meditation > passive);
     }
+
+    @Test
+    void foodRecoveryScalesWithNutrition() {
+        assertTrue(StaminaRules.foodRecoveryAmount(6, 0.6f) > StaminaRules.foodRecoveryAmount(2, 0.1f));
+    }
 }

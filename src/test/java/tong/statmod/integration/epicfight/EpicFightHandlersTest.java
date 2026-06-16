@@ -1,6 +1,7 @@
 package tong.statmod.integration.epicfight;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stamina.StaminaThreshold;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.world.damagesource.StunType;
 
@@ -44,5 +45,11 @@ class EpicFightHandlersTest {
     void weightAndImpactScalingFollowThePlanRatios() {
         assertEquals(-0.2d, EpicFightCompat.weightModifierAmount(10), 0.0001d);
         assertEquals(0.2d, EpicFightCompat.impactModifierAmount(10), 0.0001d);
+    }
+
+    @Test
+    void lowAndCriticalThresholdsChangeCombatMultipliers() {
+        assertEquals(0.9f, EpicFightStaminaBridge.damageMultiplier(StaminaThreshold.LOW), 0.0001f);
+        assertEquals(0.8f, EpicFightStaminaBridge.damageMultiplier(StaminaThreshold.CRITICAL), 0.0001f);
     }
 }

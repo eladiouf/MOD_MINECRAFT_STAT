@@ -33,4 +33,8 @@ public final class StaminaRules {
         if (airborne) drain += 0.02f;
         return drain;
     }
+
+    public static float foodRecoveryAmount(int nutrition, float saturationModifier) {
+        return Math.max(0.0f, nutrition * 1.5f + saturationModifier * 4.0f);
+    }
 }

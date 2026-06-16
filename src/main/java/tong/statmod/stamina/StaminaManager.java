@@ -23,6 +23,11 @@ public final class StaminaManager {
     }
 
     public static void tickPassive(StaminaData data, int enduranceLevel, boolean meditating, boolean sleeping) {
+        tickPassive(data, enduranceLevel, meditating, sleeping, false, false);
+    }
+
+    public static void tickPassive(StaminaData data, int enduranceLevel, boolean meditating, boolean sleeping,
+                                   boolean sprinting, boolean airborne) {
         if (data == null) {
             return;
         }
@@ -31,7 +36,7 @@ public final class StaminaManager {
             return;
         }
         restore(data, StaminaRules.passiveRecoveryPerTick(meditating), enduranceLevel);
-        consumeUnchecked(data, StaminaRules.passiveDrainPerTick(false, false));
+        consumeUnchecked(data, StaminaRules.passiveDrainPerTick(sprinting, airborne));
     }
 
     public static void consumeUnchecked(StaminaData data, float amount) {

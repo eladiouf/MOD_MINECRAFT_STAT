@@ -31,6 +31,8 @@ import tong.statmod.stamina.StaminaEvents;
 import tong.statmod.stats.StatAttributeHandler;
 import tong.statmod.stats.StatCommands;
 import tong.statmod.storage.ModAttachments;
+import tong.statmod.time.OverworldTimeController;
+import tong.statmod.time.SleepRecoveryHandler;
 
 @Mod(STATMod.MODID)
 public class STATMod {
@@ -51,6 +53,8 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(StatAttributeHandler.class);
         NeoForge.EVENT_BUS.register(StaminaEvents.class);
         NeoForge.EVENT_BUS.register(SoulLevelSyncHandler.class);
+        NeoForge.EVENT_BUS.register(OverworldTimeController.class);
+        NeoForge.EVENT_BUS.register(SleepRecoveryHandler.class);
         if (ModList.get().isLoaded("tensura")) {
             TensuraEventSubscriber.register();
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);

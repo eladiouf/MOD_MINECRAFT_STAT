@@ -30,6 +30,7 @@ Two local source files also contain user-side edits and should be treated carefu
 - `1.2 Soul level XP multiplier`: implemented in `RaceEffectApplier.scaleXpAmount`
 - `1.3 Intrinsic skills -> free perks`: implemented in `TensuraEventSubscriber`
 - `1.4 Parallel Existence -> double XP`: implemented in `RaceEffectApplier.hasParallelExistence`
+- `1.4a Learned Tensura skills are now consulted via SkillStorage in PlayerDataBridge.hasSkill`
 - `1.5 MAGIC_RESISTANCE reduces magic damage`: implemented in `StatEffectApplier`
 
 Status: implemented, partially unit-tested, runtime still needs in-game proof
@@ -96,7 +97,7 @@ Status: implemented and unit-tested, runtime still needs in-game proof
 
 - `.\gradlew.bat test`: PASS
 - `.\gradlew.bat build`: PASS
-- `.\gradlew.bat runClient`: `STAT Mod` integrations all initialize:
+- `.\gradlew.bat runClient`: `STAT Mod` integrations all initialize and the client reaches the in-game runtime loop until timeout:
   - `Tensura EP integration loaded`
   - `Tensura race integration loaded`
   - `Epic Fight integration loaded`
@@ -104,18 +105,22 @@ Status: implemented and unit-tested, runtime still needs in-game proof
   - `ParCool integration loaded`
   - `Overgeared integration loaded`
   - `STAT Mod initialized on NeoForge 1.21.1`
+- targeted regression verification after the learned-skill lookup fix:
+  - `.\gradlew.bat test --tests tong.statmod.integration.PlayerDataBridgeTest --tests tong.statmod.integration.RaceEffectApplierTest --tests tong.statmod.integration.TensuraIntrinsicPerkTest --tests tong.statmod.integration.tensura.TensuraEventSubscriberTest`: PASS
+  - `.\gradlew.bat build`: PASS
+  - `.\gradlew.bat runClient`: reaches timeout with no `FATAL`, `NoSuchMethodError`, or `NoClassDefFoundError`
 
-## Current runtime blocker
+## Current runtime state
 
-The current `runClient` failure is not caused by `tong.statmod`.
+The current `runClient` baseline is no longer blocked by the earlier `sword_soaring` / Epic Fight API mismatch.
 
-The first fatal root cause in `runs/client/logs/latest.log` is:
+What remains in `runs/client/logs/latest.log` is mostly third-party content noise and addon data issues, for example:
 
-- mod loading failure in `sword_soaring`
-- `java.lang.NoClassDefFoundError: yesman/epicfight/api/client/event/types/BuildCameraTransform$Post`
-- caused by `ClassNotFoundException`
+- `ClassNotFoundException: reascer.wom.skill.guard.DreadFullBusterSkill`
+- many Epic Fight datapack animation errors such as `No constructor information has provided: epicfight_dd:...`
+- subtitle / sound / skin warnings from addon mods
 
-This puts NeoForge into a broken mod state before later client events finish loading, which then cascades into many follow-up loader errors.
+These warnings may still impact addon behavior, but they do not currently prevent the game from launching with `STAT Mod` active.
 
 ## Audit conclusion
 
@@ -124,12 +129,12 @@ The codebase currently appears to contain the planned integration units for all 
 What is still missing for a full completion claim is stronger runtime proof across the current mod baseline, because:
 
 - the user-added mod set changed after earlier verification work
-- `runClient` is now blocked by an external `sword_soaring` / Epic Fight API mismatch
 - several plan items are only proven by helper-level tests, not by live gameplay validation
+- third-party addon warnings remain in the runtime baseline and should be separated from true `STAT Mod` regressions during validation
 
 ## Recommended next step
 
-Resolve or isolate the external runtime blocker introduced by the new mod baseline, then re-run gameplay validation for:
+Use the now-stable `runClient` baseline to re-run gameplay validation for:
 
 - Tensura race / intrinsic / awakening / EP / summon flow
 - Epic Fight combat flow

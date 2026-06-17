@@ -5,6 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "statmod.refmap.json",
   "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "SwordSoaringClientModEventsMixin"],
-  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin"],
+  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin"],
   "server": []
 }

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import tong.statmod.client.gui.PerkScreen;
+import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.stats.StatType;
@@ -98,7 +98,7 @@ public class StatTabScreen extends Screen {
             int btnX = cx + Math.min(colW * cols / 2 - 20, 100);
             int btnY = 20;
             if (mouseX >= btnX && mouseX < btnX + btnW && mouseY >= btnY && mouseY < btnY + btnH) {
-                Minecraft.getInstance().setScreen(new PerkScreen());
+                PerkUiRouter.openFromClient(PuffishSkillsCompat.isLoaded());
                 return true;
             }
         }

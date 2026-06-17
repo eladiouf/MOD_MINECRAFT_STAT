@@ -32,6 +32,16 @@ class TensuraRaceHandlerTest {
     }
 
     @Test
+    void magicalRacesExposeCastingSpeedAndManaPoolBonuses() {
+        assertHasMagicRaceBonuses("tensura:human_saint");
+        assertHasMagicRaceBonuses("tensura:elf");
+        assertHasMagicRaceBonuses("tensura:slime");
+        assertHasMagicRaceBonuses("tensura:vampire");
+        assertHasMagicRaceBonuses("tensura:lesser_daemon");
+        assertHasMagicRaceBonuses("tensura:divine_dragon");
+    }
+
+    @Test
     void autoRespecRefundsPerksThatNoLongerMatchRace() {
         PlayerStatData data = new PlayerStatData();
         data.addUnlockedPerk(Perk.BLADE_TRANSCENDENCE.id);
@@ -54,5 +64,13 @@ class TensuraRaceHandlerTest {
 
         assertEquals(0, refunded);
         assertTrue(data.isPerkUnlocked(Perk.BLADE_TRANSCENDENCE.id));
+    }
+
+    private static void assertHasMagicRaceBonuses(String raceId) {
+        RaceData race = RaceModifierRegistry.get(raceId);
+        assertTrue(race.modifiers().stream().anyMatch(mod -> mod.statIndex() == 13 && mod.flatBonus() >= 1),
+                () -> raceId + " should grant CASTING_SPEED");
+        assertTrue(race.modifiers().stream().anyMatch(mod -> mod.statIndex() == 14 && mod.flatBonus() >= 1),
+                () -> raceId + " should grant MANA_POOL");
     }
 }

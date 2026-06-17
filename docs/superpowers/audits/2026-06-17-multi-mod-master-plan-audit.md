@@ -97,6 +97,7 @@ Status: implemented and unit-tested, runtime still needs in-game proof
 
 - `.\gradlew.bat test`: PASS
 - `.\gradlew.bat build`: PASS
+- latest integration fix included in the baseline: commit `1afc83c` (`Canonicalize Tensura skill ids across integrations`)
 - `.\gradlew.bat runClient`: `STAT Mod` integrations all initialize and the client reaches the in-game runtime loop until timeout:
   - `Tensura EP integration loaded`
   - `Tensura race integration loaded`
@@ -109,6 +110,18 @@ Status: implemented and unit-tested, runtime still needs in-game proof
   - `.\gradlew.bat test --tests tong.statmod.integration.PlayerDataBridgeTest --tests tong.statmod.integration.RaceEffectApplierTest --tests tong.statmod.integration.TensuraIntrinsicPerkTest --tests tong.statmod.integration.tensura.TensuraEventSubscriberTest`: PASS
   - `.\gradlew.bat build`: PASS
   - `.\gradlew.bat runClient`: reaches timeout with no `FATAL`, `NoSuchMethodError`, or `NoClassDefFoundError`
+- refreshed full-baseline verification after the Tensura skill-id canonicalization work and the user-added mod changes:
+  - `.\gradlew.bat test`: PASS
+  - `.\gradlew.bat build`: PASS
+  - `.\gradlew.bat runClient`: timed out after the client remained alive; `runs/client/logs/latest.log` updated at `2026-06-17 08:08` and contains:
+    - `Tensura EP integration loaded`
+    - `Tensura race integration loaded`
+    - `Epic Fight integration loaded`
+    - `Mahou Tsukai integration loaded`
+    - `ParCool integration loaded`
+    - `Overgeared integration loaded`
+    - `STAT Mod initialized on NeoForge 1.21.1`
+    - no `FATAL`, `NoSuchMethodError`, or `NoClassDefFoundError`
 
 ## Current runtime state
 

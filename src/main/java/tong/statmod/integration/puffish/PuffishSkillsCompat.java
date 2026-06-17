@@ -1,0 +1,113 @@
+package tong.statmod.integration.puffish;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.fml.ModList;
+import tong.statmod.STATMod;
+import tong.statmod.network.SyncHelper;
+import tong.statmod.sound.SoundHelper;
+import tong.statmod.storage.ModAttachments;
+import tong.statmod.storage.PlayerStatData;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+public final class PuffishSkillsCompat {
+    private static final String SKILLS_API_CLASS = "net.puffish.skillsmod.api.SkillsAPI";
+    private static boolean loaded;
+    private static final Set<UUID> SYNC_GUARD = ConcurrentHashMap.newKeySet();
+
+    private PuffishSkillsCompat() {}
+
+    public static void init() {
+        loaded = ModList.get().isLoaded("puffish_skills");
+        if (!loaded) {
+            STATMod.LOGGER.info("Puffish Skills not detected, skipping PuffishSkillsCompat");
+            return;
+        }
+
+        try {
+            registerEvent("net.puffish.skillsmod.api.Events$SkillUnlock", "registerSkillUnlockEvent",
+                    (player, categoryId, skillId) -> {
+                        if (isSyncing(player)) {
+                            return;
+                        }
+                        PlayerStatData data = player.getData(ModAttachments.STATS);
+                        if (PuffishUnlockService.tryUnlock(data, categoryId, skillId, player)) {
+                            SoundHelper.playPerkUnlock(player);
+                        }
+                        SyncHelper.syncPerks(player);
+                    });
+            registerEvent("net.puffish.skillsmod.api.Events$SkillLock", "registerSkillLockEvent",
+                    (player, categoryId, skillId) -> {
+                        if (isSyncing(player)) {
+                            return;
+                        }
+                        SyncHelper.syncPerks(player);
+                    });
+            STATMod.LOGGER.info("Puffish Skills integration loaded");
+        } catch (ReflectiveOperationException e) {
+            loaded = false;
+            STATMod.LOGGER.warn("Puffish Skills reflection failed: {}", e.getMessage());
+        }
+    }
+
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    public static void sync(ServerPlayer player, PlayerStatData data) {
+        if (!loaded) {
+            return;
+        }
+
+        UUID uuid = player.getUUID();
+        SYNC_GUARD.add(uuid);
+        try {
+            PuffishSyncService.sync(data, new PuffishReflectionGateway(player));
+        } finally {
+            SYNC_GUARD.remove(uuid);
+        }
+    }
+
+    public static void openScreen(ServerPlayer player) {
+        if (!loaded) {
+            return;
+        }
+        try {
+            Class<?> skillsApi = Class.forName(SKILLS_API_CLASS);
+            Method openScreen = skillsApi.getMethod("openScreen", ServerPlayer.class);
+            openScreen.invoke(null, player);
+        } catch (ReflectiveOperationException e) {
+            STATMod.LOGGER.warn("Puffish open screen failed for {}: {}", player.getName().getString(), e.getMessage());
+        }
+    }
+
+    private static boolean isSyncing(ServerPlayer player) {
+        return player != null && SYNC_GUARD.contains(player.getUUID());
+    }
+
+    private static void registerEvent(String interfaceName, String registerMethodName, EventHandler handler)
+            throws ReflectiveOperationException {
+        Class<?> listenerInterface = Class.forName(interfaceName);
+        Class<?> skillsApi = Class.forName(SKILLS_API_CLASS);
+        Method registerMethod = skillsApi.getMethod(registerMethodName, listenerInterface);
+        Object listener = Proxy.newProxyInstance(
+                listenerInterface.getClassLoader(),
+                new Class<?>[]{listenerInterface},
+                (proxy, method, args) -> {
+                    if (args != null && args.length == 3 && args[0] instanceof ServerPlayer player) {
+                        handler.handle(player, String.valueOf(args[1]), String.valueOf(args[2]));
+                    }
+                    return null;
+                });
+        registerMethod.invoke(null, listener);
+    }
+
+    @FunctionalInterface
+    private interface EventHandler {
+        void handle(ServerPlayer player, String categoryId, String skillId);
+    }
+}

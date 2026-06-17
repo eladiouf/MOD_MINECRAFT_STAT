@@ -16,6 +16,7 @@ import tong.statmod.integration.TensuraEventSubscriber;
 import tong.statmod.integration.epicfight.EpicFightCompat;
 import tong.statmod.integration.mahou.MahouCompat;
 import tong.statmod.integration.parcool.ParcoolCompat;
+import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.tensura.MagiculeScalingHandler;
 import tong.statmod.integration.tensura.SummonScalingHandler;
 import tong.statmod.integration.tensura.TensuraCraftQualityHandler;
@@ -67,6 +68,7 @@ public class STATMod {
         MahouCompat.init();
         ParcoolCompat.init();
         OvergearedCompat.init();
+        PuffishSkillsCompat.init();
         LOGGER.info("STAT Mod initialized on NeoForge 1.21.1");
     }
 }

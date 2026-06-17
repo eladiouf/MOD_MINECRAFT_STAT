@@ -20,6 +20,18 @@ class PuffishSyncServiceTest {
         PuffishSyncService.sync(data, gateway);
 
         assertTrue(gateway.operations.contains("unlock:statmod:brute_force:brute_core"));
+        assertTrue(gateway.operations.contains("points:statmod:brute_force:4"));
+    }
+
+    @Test
+    void mirrorsCategoryTotalsUsingRealPerkCosts() {
+        PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
+        data.addUnlockedPerk(Perk.BRUTE_SYNERGY.id);
+
+        FakeGateway gateway = new FakeGateway();
+        PuffishSyncService.sync(data, gateway);
+
         assertTrue(gateway.operations.contains("points:statmod:brute_force:3"));
     }
 

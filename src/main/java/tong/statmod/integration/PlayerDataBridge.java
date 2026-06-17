@@ -9,6 +9,7 @@ import io.github.manasmods.tensura.storage.ep.ExistenceStorage;
 import io.github.manasmods.tensura.storage.ep.IExistence;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tong.statmod.integration.tensura.TensuraSkillIds;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -56,13 +57,13 @@ public final class PlayerDataBridge {
         Set<String> learnedSkillIds = skillStorage == null
                 ? Set.of()
                 : skillStorage.getLearnedSkills().stream()
-                .map(skill -> skill.getSkillId().toString())
+                .map(skill -> TensuraSkillIds.canonicalize(skill.getSkillId().toString()))
                 .collect(Collectors.toSet());
         Set<String> intrinsicSkillIds = rs == null
                 ? Set.of()
                 : rs.getRace()
                 .map(instance -> instance.getIntrinsicSkills(player).stream()
-                        .map(skill -> skill.getRegistryName().toString())
+                        .map(skill -> TensuraSkillIds.canonicalize(skill.getRegistryName().toString()))
                         .collect(Collectors.toSet()))
                 .orElse(Set.of());
         return hasSkillId(learnedSkillIds, intrinsicSkillIds, skillId);
@@ -72,8 +73,9 @@ public final class PlayerDataBridge {
         if (skillId == null || skillId.isBlank()) {
             return false;
         }
+        String canonical = TensuraSkillIds.canonicalize(skillId);
 
-        return (learnedSkillIds != null && learnedSkillIds.contains(skillId))
-                || (intrinsicSkillIds != null && intrinsicSkillIds.contains(skillId));
+        return (learnedSkillIds != null && learnedSkillIds.contains(canonical))
+                || (intrinsicSkillIds != null && intrinsicSkillIds.contains(canonical));
     }
 }

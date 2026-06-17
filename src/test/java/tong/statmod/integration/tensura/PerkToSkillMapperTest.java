@@ -12,6 +12,9 @@ class PerkToSkillMapperTest {
         assertEquals("tensura:giant_strength", PerkToSkillMapper.resolveSkillId(Perk.BRUTE_TRANSCENDENCE));
         assertEquals("tensura:infinite_regeneration", PerkToSkillMapper.resolveSkillId(Perk.RESIST_TRANSCENDENCE));
         assertEquals("tensura:godly_craftsman", PerkToSkillMapper.resolveSkillId(Perk.FORGE_TRANSCENDENCE));
+        assertEquals("tensura:spatial_manipulation", PerkToSkillMapper.resolveSkillId(Perk.AGIL_TRANSCENDENCE));
+        assertEquals("tensura:ultraspeed_regeneration", PerkToSkillMapper.resolveSkillId(Perk.ENDUR_TRANSCENDENCE));
+        assertEquals("tensura:universal_perception", PerkToSkillMapper.resolveSkillId(Perk.TRACK_TRANSCENDENCE));
     }
 
     @Test

@@ -46,7 +46,7 @@ public final class StatLevelSkillRewards {
     public static String resolveSkillId(int statIndex, int level) {
         Map<Integer, String> byLevel = REWARDS.get(statIndex);
         if (byLevel == null) return null;
-        return byLevel.get(level);
+        return TensuraSkillIds.canonicalize(byLevel.get(level));
     }
 
     public static boolean grantReward(Player player, int statIndex, int level) {

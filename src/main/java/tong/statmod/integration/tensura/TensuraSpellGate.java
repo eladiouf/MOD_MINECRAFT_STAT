@@ -32,7 +32,7 @@ public final class TensuraSpellGate {
     private TensuraSpellGate() {}
 
     public static String resolveTensuraSpellId(String perkKey) {
-        return PERK_TO_TENSURA.get(perkKey);
+        return TensuraSkillIds.canonicalize(PERK_TO_TENSURA.get(perkKey));
     }
 
     public static String resolveMahouScrollId(String perkKey) {
@@ -44,13 +44,13 @@ public final class TensuraSpellGate {
         String key = perk.name().toLowerCase();
         String mapped = PERK_TO_TENSURA.get(key);
         if (mapped != null) {
-            return mapped;
+            return TensuraSkillIds.canonicalize(mapped);
         }
         mapped = PERK_TO_MAHOU.get(key);
         if (mapped != null) {
             return mapped;
         }
-        return resolveByStat(perk.stat, perk.tier);
+        return TensuraSkillIds.canonicalize(resolveByStat(perk.stat, perk.tier));
     }
 
     public static boolean grantReward(Player player, Perk perk) {
@@ -76,7 +76,7 @@ public final class TensuraSpellGate {
         if (resolved == null) return false;
 
         if (resolved.startsWith("tensura:")) {
-            return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(resolved));
+            return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(TensuraSkillIds.canonicalize(resolved)));
         }
 
         ResourceLocation itemId = ResourceLocation.parse(resolved);

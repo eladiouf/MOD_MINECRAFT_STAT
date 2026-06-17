@@ -35,7 +35,7 @@ public final class PerkToSkillMapper {
         if (perk == null || perk.tier != PerkTier.TRANSCENDENCE) {
             return null;
         }
-        return TRANSCENDENCE_SKILLS.get(perk);
+        return TensuraSkillIds.canonicalize(TRANSCENDENCE_SKILLS.get(perk));
     }
 
     public static boolean grantReward(Player player, Perk perk) {

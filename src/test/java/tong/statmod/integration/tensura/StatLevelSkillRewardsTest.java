@@ -13,6 +13,9 @@ class StatLevelSkillRewardsTest {
         assertEquals("tensura:berserk", StatLevelSkillRewards.resolveSkillId(StatType.BRUTE_FORCE.index, 10));
         assertEquals("tensura:sword_meister", StatLevelSkillRewards.resolveSkillId(StatType.BLADE_TECHNIQUE.index, 10));
         assertEquals("tensura:mana_manipulation", StatLevelSkillRewards.resolveSkillId(StatType.MANA_POOL.index, 10));
+        assertEquals("tensura:thought_acceleration", StatLevelSkillRewards.resolveSkillId(StatType.RAPIDITE.index, 10));
+        assertEquals("tensura:spatial_manipulation", StatLevelSkillRewards.resolveSkillId(StatType.AGILITY.index, 10));
+        assertEquals("tensura:cook", StatLevelSkillRewards.resolveSkillId(StatType.COOKING.index, 10));
     }
 
     @Test

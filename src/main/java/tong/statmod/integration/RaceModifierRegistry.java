@@ -478,12 +478,28 @@ public final class RaceModifierRegistry {
     // ── special race groups ───────────────────────────────
 
     public static boolean isHumanoid(String raceId) {
-        return raceId.startsWith("tensura:human")
-                || raceId.startsWith("tensura:elf")
-                || raceId.startsWith("tensura:dwarf");
+        String path = racePath(raceId);
+        return isRaceFamily(path, "human")
+                || isRaceFamily(path, "elf")
+                || isRaceFamily(path, "dwarf");
     }
 
     public static boolean isMonster(String raceId) {
-        return !isHumanoid(raceId) && !raceId.equals("tensura:human");
+        return hasRaceData(raceId) && !isHumanoid(raceId);
+    }
+
+    private static String racePath(String raceId) {
+        if (raceId == null) {
+            return "";
+        }
+        int separator = raceId.indexOf(':');
+        return separator >= 0 ? raceId.substring(separator + 1) : raceId;
+    }
+
+    private static boolean isRaceFamily(String path, String family) {
+        return path.equals(family)
+                || path.startsWith(family + "_")
+                || path.endsWith("_" + family)
+                || path.contains("_" + family + "_");
     }
 }

@@ -25,6 +25,9 @@ public class RespecStoneItem extends Item {
 
         int[] refunds = new int[PlayerStatData.STAT_COUNT];
         for (int id : unlocked) {
+            if (data.isPerkFreeGranted(id)) {
+                continue;
+            }
             Perk perk = Perk.byId(id);
             if (perk != null) {
                 refunds[perk.stat.index] += perk.tier.cost;

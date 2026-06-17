@@ -55,6 +55,7 @@ public class PerkManager {
     public boolean unlock(Perk perk, Player player) {
         if (!canUnlock(perk, player)) return false;
         statData.addUnlockedPerk(perk.id);
+        statData.markPerkPaid(perk.id);
         statData.addPerkPointsForStat(perk.stat.index, -perk.tier.cost);
         grantRewards(player, perk);
         return true;
@@ -66,15 +67,16 @@ public class PerkManager {
 
     public boolean grant(Perk perk, Player player) {
         if (perk == null || isUnlocked(perk)) return false;
-        statData.addUnlockedPerk(perk.id);
+        statData.markPerkFreeGranted(perk.id);
         grantRewards(player, perk);
         return true;
     }
 
     public boolean revoke(Perk perk, boolean refundPoints) {
         if (perk == null || !isUnlocked(perk)) return false;
+        boolean freeGranted = statData.isPerkFreeGranted(perk.id);
         statData.removeUnlockedPerk(perk.id);
-        if (refundPoints) {
+        if (refundPoints && !freeGranted) {
             statData.addPerkPointsForStat(perk.stat.index, perk.tier.cost);
         }
         return true;

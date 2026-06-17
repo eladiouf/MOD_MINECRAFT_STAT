@@ -124,8 +124,11 @@ public final class TensuraRaceHandler {
             }
 
             Perk perk = Perk.byId(perkId);
-            if (perk != null && perks.revoke(perk, true)) {
-                refunded += perk.tier.cost;
+            if (perk != null) {
+                boolean refundable = !data.isPerkFreeGranted(perk.id);
+                if (perks.revoke(perk, true) && refundable) {
+                    refunded += perk.tier.cost;
+                }
             }
         }
 

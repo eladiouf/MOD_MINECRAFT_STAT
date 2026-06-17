@@ -5,6 +5,7 @@ import tong.statmod.integration.RaceData;
 import tong.statmod.integration.RaceModifierRegistry;
 import tong.statmod.perks.Perk;
 import tong.statmod.storage.PlayerStatData;
+import tong.statmod.perks.PerkManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -64,6 +65,19 @@ class TensuraRaceHandlerTest {
 
         assertEquals(0, refunded);
         assertTrue(data.isPerkUnlocked(Perk.BLADE_TRANSCENDENCE.id));
+    }
+
+    @Test
+    void autoRespecDoesNotRefundFreeGrantedRacePerks() {
+        PlayerStatData data = new PlayerStatData();
+        PerkManager perks = new PerkManager(data);
+        assertTrue(perks.grant(Perk.BLADE_TRANSCENDENCE));
+
+        int refunded = TensuraRaceHandler.autoRespecRacePerks(data, "tensura:human");
+
+        assertEquals(0, refunded);
+        assertFalse(data.isPerkUnlocked(Perk.BLADE_TRANSCENDENCE.id));
+        assertEquals(0, data.getPerkPointsForStat(Perk.BLADE_TRANSCENDENCE.stat.index));
     }
 
     private static void assertHasMagicRaceBonuses(String raceId) {

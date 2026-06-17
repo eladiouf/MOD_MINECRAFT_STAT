@@ -3,9 +3,12 @@ package tong.statmod.integration.tensura;
 import org.junit.jupiter.api.Test;
 import tong.statmod.integration.RaceData;
 import tong.statmod.integration.RaceModifierRegistry;
+import tong.statmod.integration.TensuraEventSubscriber;
 import tong.statmod.perks.Perk;
 import tong.statmod.storage.PlayerStatData;
 import tong.statmod.perks.PerkManager;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -78,6 +81,25 @@ class TensuraRaceHandlerTest {
         assertEquals(0, refunded);
         assertFalse(data.isPerkUnlocked(Perk.BLADE_TRANSCENDENCE.id));
         assertEquals(0, data.getPerkPointsForStat(Perk.BLADE_TRANSCENDENCE.stat.index));
+    }
+
+    @Test
+    void intrinsicRacePerksAreReconciledAcrossRaceChanges() {
+        PlayerStatData data = new PlayerStatData();
+        PerkManager perks = new PerkManager(data);
+        assertTrue(perks.grant(Perk.BRUTE_CORE));
+
+        int changed = TensuraRaceHandler.reconcileIntrinsicPerks(
+                data,
+                Set.of("tensura:ogre_berserker"),
+                Set.of("tensura:dragon_skin")
+        );
+
+        assertEquals(2, changed);
+        assertFalse(data.isPerkUnlocked(Perk.BRUTE_CORE.id));
+        assertTrue(data.isPerkUnlocked(Perk.RESIST_CORE.id));
+        assertTrue(data.isPerkFreeGranted(Perk.RESIST_CORE.id));
+        assertFalse(data.isPerkFreeGranted(Perk.BRUTE_CORE.id));
     }
 
     private static void assertHasMagicRaceBonuses(String raceId) {

@@ -21,6 +21,7 @@ import tong.statmod.storage.PlayerStatData;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 public final class TensuraEventSubscriber {
@@ -155,5 +156,24 @@ public final class TensuraEventSubscriber {
     static int[] intrinsicPerkIdsForSkill(String skillId) {
         int[] perkIds = INTRINSIC_PERK_REWARDS.get(skillId);
         return perkIds == null ? null : perkIds.clone();
+    }
+
+    public static Set<Integer> intrinsicPerkIdsForSkills(Set<String> skillIds) {
+        Set<Integer> perkIds = new HashSet<>();
+        if (skillIds == null) {
+            return perkIds;
+        }
+
+        for (String skillId : skillIds) {
+            int[] mapped = intrinsicPerkIdsForSkill(skillId);
+            if (mapped == null) {
+                continue;
+            }
+            for (int perkId : mapped) {
+                perkIds.add(perkId);
+            }
+        }
+
+        return perkIds;
     }
 }

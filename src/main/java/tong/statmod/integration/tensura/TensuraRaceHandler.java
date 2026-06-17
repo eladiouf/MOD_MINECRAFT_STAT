@@ -89,10 +89,14 @@ public final class TensuraRaceHandler {
             PlayerStatData data = player.getData(ModAttachments.STATS);
             String newRaceId = newRace != null ? normalizeRaceId(newRace.getRaceId().toString()) : "tensura:human";
             int refunded = autoRespecRacePerks(data, newRaceId);
+            Set<String> oldIntrinsicSkills = oldRace == null ? Set.of() : oldRace.getIntrinsicSkills(player).stream()
+                    .map(skill -> skill.getRegistryName().toString())
+                    .collect(Collectors.toSet());
             Set<String> intrinsicSkills = newRace == null ? Set.of() : newRace.getIntrinsicSkills(player).stream()
                     .map(skill -> skill.getRegistryName().toString())
                     .collect(Collectors.toSet());
 
+            reconcileIntrinsicPerks(data, oldIntrinsicSkills, intrinsicSkills);
             TensuraEventSubscriber.unlockIntrinsicPerks(player, intrinsicSkills, false);
             applyRaceBonuses(player, false);
 
@@ -135,6 +139,40 @@ public final class TensuraRaceHandler {
         return refunded;
     }
 
+    static int reconcileIntrinsicPerks(PlayerStatData data, Set<String> oldIntrinsicSkills, Set<String> newIntrinsicSkills) {
+        if (data == null) {
+            return 0;
+        }
+
+        PerkManager perks = new PerkManager(data);
+        Set<Integer> oldPerkIds = TensuraEventSubscriber.intrinsicPerkIdsForSkills(oldIntrinsicSkills);
+        Set<Integer> newPerkIds = TensuraEventSubscriber.intrinsicPerkIdsForSkills(newIntrinsicSkills);
+        int changed = 0;
+
+        for (int perkId : oldPerkIds) {
+            if (newPerkIds.contains(perkId)) {
+                continue;
+            }
+
+            Perk perk = Perk.byId(perkId);
+            if (perk != null && data.isPerkFreeGranted(perk.id) && perks.revoke(perk, true)) {
+                changed++;
+            }
+        }
+
+        for (int perkId : newPerkIds) {
+            if (oldPerkIds.contains(perkId)) {
+                continue;
+            }
+
+            Perk perk = Perk.byId(perkId);
+            if (perk != null && perks.grant(perk)) {
+                changed++;
+            }
+        }
+
+        return changed;
+    }
     public static int getFlatBonus(Player player, int statIndex) {
         String raceId = getRaceName(player);
         return RaceModifierRegistry.get(raceId).modifiers().stream()

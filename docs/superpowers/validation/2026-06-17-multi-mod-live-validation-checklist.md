@@ -64,6 +64,31 @@ against the current mod baseline in `runs/client/mods`.
 - Perk reward bridge:
   - unlock mapped perk rewards and confirm the matching Epic Fight skills appear as learned
 
+## Puffish Skills
+
+- Compat load:
+  - start the client with `puffish_skills` and `default_skill_trees` present
+  - confirm `Puffish Skills integration loaded` appears in `latest.log`
+- UI routing:
+  - press `P` and confirm the Puffish skills screen opens instead of the legacy `PerkScreen`
+  - open the stats screen and click the perk button
+  - confirm it opens the same Puffish screen path
+- Category load:
+  - confirm the `statmod` categories appear for all perk-bearing stats
+  - verify there is no `STAT Mod` resource loading error tied to `data/statmod/puffish_skills`
+- Canonical point mirror:
+  - set a known perk-point count on one stat, open the related Puffish category, and confirm the visible remaining points match after sync
+  - unlock a perk with cost `2` and confirm the remaining total is corrected by sync
+- Canonical unlock mirror:
+  - unlock a perk through `STAT Mod` and confirm the corresponding Puffish node is shown unlocked
+  - grant a free perk via an integration path and confirm the Puffish node mirrors as unlocked
+- Invalid unlock rejection:
+  - try to click a Puffish node without enough canonical points or stat level
+  - confirm the node does not remain unlocked after sync
+- Respec / revoke mirror:
+  - revoke or auto-respec a previously unlocked perk
+  - confirm the Puffish node relocks and category points recover to the canonical value
+
 ## ParCool
 
 - Stamina scaling:

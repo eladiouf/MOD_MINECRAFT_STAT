@@ -1,0 +1,62 @@
+﻿{
+    "sense_core":  {
+                       "title":  "Sixth Sense",
+                       "description":  "Dodge 5% of incoming hits",
+                       "icon":  {
+                                    "type":  "item",
+                                    "data":  {
+                                                 "item":  "minecraft:spyglass"
+                                             }
+                                }
+                   },
+    "sense_active":  {
+                         "title":  "Treasure Hunter",
+                         "description":  "Doubles XP from mobs",
+                         "icon":  {
+                                      "type":  "item",
+                                      "data":  {
+                                                   "item":  "minecraft:spyglass"
+                                               }
+                                  }
+                     },
+    "sense_synergy":  {
+                          "title":  "Predator\u0027s Instinct",
+                          "description":  "Synergy: mark hidden mobs",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:spyglass"
+                                                }
+                                   }
+                      },
+    "sense_situational":  {
+                              "title":  "Intuition",
+                              "description":  "Mine ores faster near enemies",
+                              "icon":  {
+                                           "type":  "item",
+                                           "data":  {
+                                                        "item":  "minecraft:spyglass"
+                                                    }
+                                       }
+                          },
+    "sense_mastery":  {
+                          "title":  "Foresight",
+                          "description":  "Precognition: dodge next hit",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:spyglass"
+                                                }
+                                   }
+                      },
+    "sense_transcendence":  {
+                                "title":  "Omniscience",
+                                "description":  "See player health at all times",
+                                "icon":  {
+                                             "type":  "item",
+                                             "data":  {
+                                                          "item":  "minecraft:spyglass"
+                                                      }
+                                         }
+                            }
+}

@@ -1,0 +1,33 @@
+﻿{
+    "blade_core":  {
+                       "x":  0,
+                       "y":  0,
+                       "definition":  "blade_core",
+                       "root":  true
+                   },
+    "blade_active":  {
+                         "x":  0,
+                         "y":  64,
+                         "definition":  "blade_active"
+                     },
+    "blade_synergy":  {
+                          "x":  0,
+                          "y":  128,
+                          "definition":  "blade_synergy"
+                      },
+    "blade_situational":  {
+                              "x":  0,
+                              "y":  192,
+                              "definition":  "blade_situational"
+                          },
+    "blade_mastery":  {
+                          "x":  0,
+                          "y":  256,
+                          "definition":  "blade_mastery"
+                      },
+    "blade_transcendence":  {
+                                "x":  0,
+                                "y":  320,
+                                "definition":  "blade_transcendence"
+                            }
+}

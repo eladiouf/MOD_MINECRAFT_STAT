@@ -1,0 +1,62 @@
+﻿{
+    "alchem_core":  {
+                        "title":  "Mixologist",
+                        "description":  "+10% potion duration",
+                        "icon":  {
+                                     "type":  "item",
+                                     "data":  {
+                                                  "item":  "minecraft:brewing_stand"
+                                              }
+                                 }
+                    },
+    "alchem_active":  {
+                          "title":  "Brewer\u0027s Secret",
+                          "description":  "Chance to duplicate potions",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:brewing_stand"
+                                                }
+                                   }
+                      },
+    "alchem_synergy":  {
+                           "title":  "Transmutation",
+                           "description":  "Synergy: convert materials on craft",
+                           "icon":  {
+                                        "type":  "item",
+                                        "data":  {
+                                                     "item":  "minecraft:brewing_stand"
+                                                 }
+                                    }
+                       },
+    "alchem_situational":  {
+                               "title":  "Toxicologist",
+                               "description":  "Poison effects last 50% longer",
+                               "icon":  {
+                                            "type":  "item",
+                                            "data":  {
+                                                         "item":  "minecraft:brewing_stand"
+                                                     }
+                                        }
+                           },
+    "alchem_mastery":  {
+                           "title":  "Philosopher\u0027s Stone",
+                           "description":  "Potion effects are 50% stronger",
+                           "icon":  {
+                                        "type":  "item",
+                                        "data":  {
+                                                     "item":  "minecraft:brewing_stand"
+                                                 }
+                                    }
+                       },
+    "alchem_transcendence":  {
+                                 "title":  "Eternal Elixir",
+                                 "description":  "Potions never expire in inventory",
+                                 "icon":  {
+                                              "type":  "item",
+                                              "data":  {
+                                                           "item":  "minecraft:brewing_stand"
+                                                       }
+                                          }
+                             }
+}

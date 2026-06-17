@@ -1,0 +1,33 @@
+﻿{
+    "endur_core":  {
+                       "x":  0,
+                       "y":  0,
+                       "definition":  "endur_core",
+                       "root":  true
+                   },
+    "endur_active":  {
+                         "x":  0,
+                         "y":  64,
+                         "definition":  "endur_active"
+                     },
+    "endur_synergy":  {
+                          "x":  0,
+                          "y":  128,
+                          "definition":  "endur_synergy"
+                      },
+    "endur_situational":  {
+                              "x":  0,
+                              "y":  192,
+                              "definition":  "endur_situational"
+                          },
+    "endur_mastery":  {
+                          "x":  0,
+                          "y":  256,
+                          "definition":  "endur_mastery"
+                      },
+    "endur_transcendence":  {
+                                "x":  0,
+                                "y":  320,
+                                "definition":  "endur_transcendence"
+                            }
+}

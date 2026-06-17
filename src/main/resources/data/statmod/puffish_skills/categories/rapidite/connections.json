@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "rapid_core",
+                                             "rapid_active"
+                                         ],
+                                         [
+                                             "rapid_active",
+                                             "rapid_synergy"
+                                         ],
+                                         [
+                                             "rapid_synergy",
+                                             "rapid_situational"
+                                         ],
+                                         [
+                                             "rapid_situational",
+                                             "rapid_mastery"
+                                         ],
+                                         [
+                                             "rapid_mastery",
+                                             "rapid_transcendence"
+                                         ]
+                                     ]
+               }
+}

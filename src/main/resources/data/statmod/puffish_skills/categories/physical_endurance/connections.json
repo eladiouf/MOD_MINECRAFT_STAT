@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "endur_core",
+                                             "endur_active"
+                                         ],
+                                         [
+                                             "endur_active",
+                                             "endur_synergy"
+                                         ],
+                                         [
+                                             "endur_synergy",
+                                             "endur_situational"
+                                         ],
+                                         [
+                                             "endur_situational",
+                                             "endur_mastery"
+                                         ],
+                                         [
+                                             "endur_mastery",
+                                             "endur_transcendence"
+                                         ]
+                                     ]
+               }
+}

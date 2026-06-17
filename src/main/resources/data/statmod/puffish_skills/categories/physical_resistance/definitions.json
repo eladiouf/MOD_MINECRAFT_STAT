@@ -1,0 +1,62 @@
+﻿{
+    "resist_core":  {
+                        "title":  "Tough Skin",
+                        "description":  "-5% incoming damage",
+                        "icon":  {
+                                     "type":  "item",
+                                     "data":  {
+                                                  "item":  "minecraft:shield"
+                                              }
+                                 }
+                    },
+    "resist_active":  {
+                          "title":  "Iron Guard",
+                          "description":  "Blocking reduces damage by 25%",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:shield"
+                                                }
+                                   }
+                      },
+    "resist_synergy":  {
+                           "title":  "Fortress",
+                           "description":  "Synergy: armor bonus when still",
+                           "icon":  {
+                                        "type":  "item",
+                                        "data":  {
+                                                     "item":  "minecraft:shield"
+                                                 }
+                                    }
+                       },
+    "resist_situational":  {
+                               "title":  "Last Stand",
+                               "description":  "+30% resistance below 20% HP",
+                               "icon":  {
+                                            "type":  "item",
+                                            "data":  {
+                                                         "item":  "minecraft:shield"
+                                                     }
+                                        }
+                           },
+    "resist_mastery":  {
+                           "title":  "Diamond Skin",
+                           "description":  "Grants brief invulnerability after hit",
+                           "icon":  {
+                                        "type":  "item",
+                                        "data":  {
+                                                     "item":  "minecraft:shield"
+                                                 }
+                                    }
+                       },
+    "resist_transcendence":  {
+                                 "title":  "Immortal",
+                                 "description":  "Survive fatal hit once per 30s",
+                                 "icon":  {
+                                              "type":  "item",
+                                              "data":  {
+                                                           "item":  "minecraft:shield"
+                                                       }
+                                          }
+                             }
+}

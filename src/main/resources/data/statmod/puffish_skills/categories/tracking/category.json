@@ -1,0 +1,11 @@
+﻿{
+    "unlocked_by_default":  true,
+    "title":  "Tracking",
+    "icon":  {
+                 "type":  "item",
+                 "data":  {
+                              "item":  "minecraft:compass"
+                          }
+             },
+    "background":  "textures/gui/advancements/backgrounds/adventure.png"
+}

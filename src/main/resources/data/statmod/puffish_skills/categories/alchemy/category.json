@@ -1,0 +1,11 @@
+﻿{
+    "unlocked_by_default":  true,
+    "title":  "Alchemy",
+    "icon":  {
+                 "type":  "item",
+                 "data":  {
+                              "item":  "minecraft:brewing_stand"
+                          }
+             },
+    "background":  "textures/gui/advancements/backgrounds/adventure.png"
+}

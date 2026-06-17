@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "cook_core",
+                                             "cook_active"
+                                         ],
+                                         [
+                                             "cook_active",
+                                             "cook_synergy"
+                                         ],
+                                         [
+                                             "cook_synergy",
+                                             "cook_situational"
+                                         ],
+                                         [
+                                             "cook_situational",
+                                             "cook_mastery"
+                                         ],
+                                         [
+                                             "cook_mastery",
+                                             "cook_transcendence"
+                                         ]
+                                     ]
+               }
+}

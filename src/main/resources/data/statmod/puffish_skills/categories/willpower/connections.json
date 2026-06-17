@@ -1,0 +1,22 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "will_core",
+                                             "will_active"
+                                         ],
+                                         [
+                                             "will_active",
+                                             "will_synergy"
+                                         ],
+                                         [
+                                             "will_synergy",
+                                             "will_situational"
+                                         ],
+                                         [
+                                             "will_situational",
+                                             "will_mastery"
+                                         ]
+                                     ]
+               }
+}

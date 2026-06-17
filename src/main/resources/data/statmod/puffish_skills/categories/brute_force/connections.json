@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "brute_core",
+                                             "brute_active"
+                                         ],
+                                         [
+                                             "brute_active",
+                                             "brute_synergy"
+                                         ],
+                                         [
+                                             "brute_synergy",
+                                             "brute_situational"
+                                         ],
+                                         [
+                                             "brute_situational",
+                                             "brute_mastery"
+                                         ],
+                                         [
+                                             "brute_mastery",
+                                             "brute_transcendence"
+                                         ]
+                                     ]
+               }
+}

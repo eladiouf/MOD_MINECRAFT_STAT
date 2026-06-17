@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "blade_core",
+                                             "blade_active"
+                                         ],
+                                         [
+                                             "blade_active",
+                                             "blade_synergy"
+                                         ],
+                                         [
+                                             "blade_synergy",
+                                             "blade_situational"
+                                         ],
+                                         [
+                                             "blade_situational",
+                                             "blade_mastery"
+                                         ],
+                                         [
+                                             "blade_mastery",
+                                             "blade_transcendence"
+                                         ]
+                                     ]
+               }
+}

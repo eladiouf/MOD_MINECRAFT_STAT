@@ -1,0 +1,62 @@
+﻿{
+    "cook_core":  {
+                      "title":  "Home Cook",
+                      "description":  "+1 saturation from all food",
+                      "icon":  {
+                                   "type":  "item",
+                                   "data":  {
+                                                "item":  "minecraft:cooked_beef"
+                                            }
+                               }
+                  },
+    "cook_active":  {
+                        "title":  "Iron Stomach",
+                        "description":  "Bad food effects halved",
+                        "icon":  {
+                                     "type":  "item",
+                                     "data":  {
+                                                  "item":  "minecraft:cooked_beef"
+                                              }
+                                 }
+                    },
+    "cook_synergy":  {
+                         "title":  "Nutritionist",
+                         "description":  "Synergy: food gives absorption",
+                         "icon":  {
+                                      "type":  "item",
+                                      "data":  {
+                                                   "item":  "minecraft:cooked_beef"
+                                               }
+                                  }
+                     },
+    "cook_situational":  {
+                             "title":  "Fast Food",
+                             "description":  "Eat 2x faster",
+                             "icon":  {
+                                          "type":  "item",
+                                          "data":  {
+                                                       "item":  "minecraft:cooked_beef"
+                                                   }
+                                      }
+                         },
+    "cook_mastery":  {
+                         "title":  "Feast",
+                         "description":  "Share food effects with nearby allies",
+                         "icon":  {
+                                      "type":  "item",
+                                      "data":  {
+                                                   "item":  "minecraft:cooked_beef"
+                                               }
+                                  }
+                     },
+    "cook_transcendence":  {
+                               "title":  "Ambrosia",
+                               "description":  "Food gives regeneration for 30s",
+                               "icon":  {
+                                            "type":  "item",
+                                            "data":  {
+                                                         "item":  "minecraft:cooked_beef"
+                                                     }
+                                        }
+                           }
+}

@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "intim_core",
+                                             "intim_active"
+                                         ],
+                                         [
+                                             "intim_active",
+                                             "intim_synergy"
+                                         ],
+                                         [
+                                             "intim_synergy",
+                                             "intim_situational"
+                                         ],
+                                         [
+                                             "intim_situational",
+                                             "intim_mastery"
+                                         ],
+                                         [
+                                             "intim_mastery",
+                                             "intim_transcendence"
+                                         ]
+                                     ]
+               }
+}

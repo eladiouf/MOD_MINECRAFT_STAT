@@ -1,0 +1,33 @@
+﻿{
+    "track_core":  {
+                       "x":  0,
+                       "y":  0,
+                       "definition":  "track_core",
+                       "root":  true
+                   },
+    "track_active":  {
+                         "x":  0,
+                         "y":  64,
+                         "definition":  "track_active"
+                     },
+    "track_synergy":  {
+                          "x":  0,
+                          "y":  128,
+                          "definition":  "track_synergy"
+                      },
+    "track_situational":  {
+                              "x":  0,
+                              "y":  192,
+                              "definition":  "track_situational"
+                          },
+    "track_mastery":  {
+                          "x":  0,
+                          "y":  256,
+                          "definition":  "track_mastery"
+                      },
+    "track_transcendence":  {
+                                "x":  0,
+                                "y":  320,
+                                "definition":  "track_transcendence"
+                            }
+}

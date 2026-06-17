@@ -1,0 +1,19 @@
+﻿{
+    "version":  3,
+    "categories":  [
+                       "brute_force",
+                       "blade_technique",
+                       "rapidite",
+                       "agility",
+                       "physical_resistance",
+                       "physical_endurance",
+                       "precision",
+                       "tracking",
+                       "keen_senses",
+                       "forging",
+                       "cooking",
+                       "alchemy",
+                       "intimidation",
+                       "willpower"
+                   ]
+}

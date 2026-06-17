@@ -1,0 +1,33 @@
+﻿{
+    "alchem_core":  {
+                        "x":  0,
+                        "y":  0,
+                        "definition":  "alchem_core",
+                        "root":  true
+                    },
+    "alchem_active":  {
+                          "x":  0,
+                          "y":  64,
+                          "definition":  "alchem_active"
+                      },
+    "alchem_synergy":  {
+                           "x":  0,
+                           "y":  128,
+                           "definition":  "alchem_synergy"
+                       },
+    "alchem_situational":  {
+                               "x":  0,
+                               "y":  192,
+                               "definition":  "alchem_situational"
+                           },
+    "alchem_mastery":  {
+                           "x":  0,
+                           "y":  256,
+                           "definition":  "alchem_mastery"
+                       },
+    "alchem_transcendence":  {
+                                 "x":  0,
+                                 "y":  320,
+                                 "definition":  "alchem_transcendence"
+                             }
+}

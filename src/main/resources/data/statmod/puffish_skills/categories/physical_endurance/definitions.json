@@ -1,0 +1,62 @@
+﻿{
+    "endur_core":  {
+                       "title":  "Sturdy",
+                       "description":  "+2 absorption hearts",
+                       "icon":  {
+                                    "type":  "item",
+                                    "data":  {
+                                                 "item":  "minecraft:golden_apple"
+                                             }
+                                }
+                   },
+    "endur_active":  {
+                         "title":  "Second Wind",
+                         "description":  "Regain 4 absorption on kill",
+                         "icon":  {
+                                      "type":  "item",
+                                      "data":  {
+                                                   "item":  "minecraft:golden_apple"
+                                               }
+                                  }
+                     },
+    "endur_synergy":  {
+                          "title":  "Unstoppable",
+                          "description":  "Synergy: no knockback when shielded",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:golden_apple"
+                                                }
+                                   }
+                      },
+    "endur_situational":  {
+                              "title":  "Adrenaline",
+                              "description":  "Kills restore hunger/saturation",
+                              "icon":  {
+                                           "type":  "item",
+                                           "data":  {
+                                                        "item":  "minecraft:golden_apple"
+                                                    }
+                                       }
+                          },
+    "endur_mastery":  {
+                          "title":  "Overflowing Vitality",
+                          "description":  "Heal 1 HP per 5s in combat",
+                          "icon":  {
+                                       "type":  "item",
+                                       "data":  {
+                                                    "item":  "minecraft:golden_apple"
+                                                }
+                                   }
+                      },
+    "endur_transcendence":  {
+                                "title":  "Limit Break",
+                                "description":  "Double max absorption",
+                                "icon":  {
+                                             "type":  "item",
+                                             "data":  {
+                                                          "item":  "minecraft:golden_apple"
+                                                      }
+                                         }
+                            }
+}

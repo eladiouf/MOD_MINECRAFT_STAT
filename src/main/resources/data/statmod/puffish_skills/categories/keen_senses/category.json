@@ -1,0 +1,11 @@
+﻿{
+    "unlocked_by_default":  true,
+    "title":  "Keen Senses",
+    "icon":  {
+                 "type":  "item",
+                 "data":  {
+                              "item":  "minecraft:spyglass"
+                          }
+             },
+    "background":  "textures/gui/advancements/backgrounds/adventure.png"
+}

@@ -1,0 +1,33 @@
+﻿{
+    "rapid_core":  {
+                       "x":  0,
+                       "y":  0,
+                       "definition":  "rapid_core",
+                       "root":  true
+                   },
+    "rapid_active":  {
+                         "x":  0,
+                         "y":  64,
+                         "definition":  "rapid_active"
+                     },
+    "rapid_synergy":  {
+                          "x":  0,
+                          "y":  128,
+                          "definition":  "rapid_synergy"
+                      },
+    "rapid_situational":  {
+                              "x":  0,
+                              "y":  192,
+                              "definition":  "rapid_situational"
+                          },
+    "rapid_mastery":  {
+                          "x":  0,
+                          "y":  256,
+                          "definition":  "rapid_mastery"
+                      },
+    "rapid_transcendence":  {
+                                "x":  0,
+                                "y":  320,
+                                "definition":  "rapid_transcendence"
+                            }
+}

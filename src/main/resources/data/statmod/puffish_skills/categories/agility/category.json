@@ -1,0 +1,11 @@
+﻿{
+    "unlocked_by_default":  true,
+    "title":  "Agility",
+    "icon":  {
+                 "type":  "item",
+                 "data":  {
+                              "item":  "minecraft:rabbit_foot"
+                          }
+             },
+    "background":  "textures/gui/advancements/backgrounds/adventure.png"
+}

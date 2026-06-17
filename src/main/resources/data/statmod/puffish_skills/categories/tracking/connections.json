@@ -1,0 +1,26 @@
+﻿{
+    "normal":  {
+                   "bidirectional":  [
+                                         [
+                                             "track_core",
+                                             "track_active"
+                                         ],
+                                         [
+                                             "track_active",
+                                             "track_synergy"
+                                         ],
+                                         [
+                                             "track_synergy",
+                                             "track_situational"
+                                         ],
+                                         [
+                                             "track_situational",
+                                             "track_mastery"
+                                         ],
+                                         [
+                                             "track_mastery",
+                                             "track_transcendence"
+                                         ]
+                                     ]
+               }
+}

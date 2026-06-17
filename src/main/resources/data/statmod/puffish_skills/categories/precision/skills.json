@@ -1,0 +1,33 @@
+﻿{
+    "preci_core":  {
+                       "x":  0,
+                       "y":  0,
+                       "definition":  "preci_core",
+                       "root":  true
+                   },
+    "preci_active":  {
+                         "x":  0,
+                         "y":  64,
+                         "definition":  "preci_active"
+                     },
+    "preci_synergy":  {
+                          "x":  0,
+                          "y":  128,
+                          "definition":  "preci_synergy"
+                      },
+    "preci_situational":  {
+                              "x":  0,
+                              "y":  192,
+                              "definition":  "preci_situational"
+                          },
+    "preci_mastery":  {
+                          "x":  0,
+                          "y":  256,
+                          "definition":  "preci_mastery"
+                      },
+    "preci_transcendence":  {
+                                "x":  0,
+                                "y":  320,
+                                "definition":  "preci_transcendence"
+                            }
+}

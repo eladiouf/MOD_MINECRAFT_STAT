@@ -1,0 +1,11 @@
+﻿{
+    "unlocked_by_default":  true,
+    "title":  "Brute Force",
+    "icon":  {
+                 "type":  "item",
+                 "data":  {
+                              "item":  "minecraft:iron_axe"
+                          }
+             },
+    "background":  "textures/gui/advancements/backgrounds/adventure.png"
+}

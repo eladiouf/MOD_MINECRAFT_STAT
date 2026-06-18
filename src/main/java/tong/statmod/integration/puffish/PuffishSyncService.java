@@ -1,6 +1,8 @@
 package tong.statmod.integration.puffish;
 
 import tong.statmod.perks.Perk;
+import tong.statmod.stats.StatFamily;
+import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.HashSet;
@@ -15,7 +17,7 @@ public final class PuffishSyncService {
             String categoryId = PuffishPerkIds.categoryId(perk);
             if (initializedCategories.add(categoryId)) {
                 gateway.ensureCategoryUnlocked(categoryId);
-                gateway.setPoints(categoryId, mirroredCategoryTotal(data, perk));
+                gateway.setPoints(categoryId, mirroredFamilyTotal(data, perk.stat.family()));
             }
             if (data.isPerkUnlocked(perk.id)) {
                 gateway.unlock(categoryId, PuffishPerkIds.skillId(perk));
@@ -25,10 +27,15 @@ public final class PuffishSyncService {
         }
     }
 
-    private static int mirroredCategoryTotal(PlayerStatData data, Perk categoryPerk) {
-        int total = data.getPerkPointsForStat(categoryPerk.stat.index);
+    private static int mirroredFamilyTotal(PlayerStatData data, StatFamily family) {
+        int total = 0;
+        for (StatType stat : StatType.values()) {
+            if (stat.family() == family) {
+                total += data.getPerkPointsForStat(stat.index);
+            }
+        }
         for (Perk perk : Perk.values()) {
-            if (perk.stat == categoryPerk.stat && data.isPerkUnlocked(perk.id)) {
+            if (perk.stat.family() == family && data.isPerkUnlocked(perk.id)) {
                 total += perk.tier.cost;
             }
         }

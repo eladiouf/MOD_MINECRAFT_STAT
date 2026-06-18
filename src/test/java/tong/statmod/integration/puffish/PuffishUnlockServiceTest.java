@@ -34,7 +34,7 @@ class PuffishUnlockServiceTest {
         data.setLevel(Perk.BRUTE_CORE.stat.index, 10);
         data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 1);
 
-        assertTrue(PuffishUnlockService.tryUnlock(data, "statmod:brute_force", "brute_core", null));
+        assertTrue(PuffishUnlockService.tryUnlock(data, "statmod:frontline_physical_combat", "brute_force__brute_core", null));
         assertTrue(data.isPerkUnlocked(Perk.BRUTE_CORE.id));
     }
 
@@ -42,7 +42,7 @@ class PuffishUnlockServiceTest {
     void rejectsUnknownPuffishSkillIds() {
         PlayerStatData data = new PlayerStatData();
 
-        assertFalse(PuffishUnlockService.tryUnlock(data, "statmod:brute_force", "missing_skill", null));
+        assertFalse(PuffishUnlockService.tryUnlock(data, "statmod:frontline_physical_combat", "missing_skill", null));
         assertFalse(data.isPerkUnlocked(Perk.BRUTE_CORE.id));
     }
 }

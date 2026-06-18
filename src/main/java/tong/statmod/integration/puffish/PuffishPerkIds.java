@@ -3,7 +3,6 @@ package tong.statmod.integration.puffish;
 import tong.statmod.perks.Perk;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public final class PuffishPerkIds {
@@ -18,11 +17,11 @@ public final class PuffishPerkIds {
     private PuffishPerkIds() {}
 
     public static String categoryId(Perk perk) {
-        return "statmod:" + perk.stat.name().toLowerCase(Locale.ROOT);
+        return PuffishFamilyTreeBuilder.categoryId(perk);
     }
 
     public static String skillId(Perk perk) {
-        return perk.name().toLowerCase(Locale.ROOT);
+        return PuffishFamilyTreeBuilder.skillId(perk);
     }
 
     public static Perk resolve(String categoryId, String skillId) {

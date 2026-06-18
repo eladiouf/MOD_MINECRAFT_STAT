@@ -19,20 +19,22 @@ class PuffishSyncServiceTest {
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("unlock:statmod:brute_force:brute_core"));
-        assertTrue(gateway.operations.contains("points:statmod:brute_force:4"));
+        assertTrue(gateway.operations.contains("unlock:statmod:frontline_physical_combat:brute_force__brute_core"));
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:4"));
     }
 
     @Test
-    void mirrorsCategoryTotalsUsingRealPerkCosts() {
+    void mirrorsFamilyTotalsUsingRealPerkCosts() {
         PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
+        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 2);
         data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
         data.addUnlockedPerk(Perk.BRUTE_SYNERGY.id);
 
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("points:statmod:brute_force:3"));
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:5"));
     }
 
     static final class FakeGateway implements PuffishMirrorGateway {

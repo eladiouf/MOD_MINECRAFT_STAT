@@ -1,0 +1,64 @@
+{
+    "intimidation__intim_core": {
+        "x": 0,
+        "y": 0,
+        "definition": "intimidation__intim_core",
+        "root": true
+    },
+    "intimidation__intim_active": {
+        "x": 0,
+        "y": 80,
+        "definition": "intimidation__intim_active"
+    },
+    "intimidation__intim_synergy": {
+        "x": 0,
+        "y": 160,
+        "definition": "intimidation__intim_synergy"
+    },
+    "intimidation__intim_situational": {
+        "x": 0,
+        "y": 240,
+        "definition": "intimidation__intim_situational"
+    },
+    "intimidation__intim_mastery": {
+        "x": 0,
+        "y": 320,
+        "definition": "intimidation__intim_mastery"
+    },
+    "intimidation__intim_transcendence": {
+        "x": 0,
+        "y": 400,
+        "definition": "intimidation__intim_transcendence"
+    },
+    "willpower__will_core": {
+        "x": 160,
+        "y": 0,
+        "definition": "willpower__will_core",
+        "root": true
+    },
+    "willpower__will_active": {
+        "x": 160,
+        "y": 80,
+        "definition": "willpower__will_active"
+    },
+    "willpower__will_synergy": {
+        "x": 160,
+        "y": 160,
+        "definition": "willpower__will_synergy"
+    },
+    "willpower__will_situational": {
+        "x": 160,
+        "y": 240,
+        "definition": "willpower__will_situational"
+    },
+    "willpower__will_mastery": {
+        "x": 160,
+        "y": 320,
+        "definition": "willpower__will_mastery"
+    },
+    "willpower__will_transcendence": {
+        "x": 160,
+        "y": 400,
+        "definition": "willpower__will_transcendence"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Mental Pressure and Resilience",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:totem_of_undying"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/end.png"
+}

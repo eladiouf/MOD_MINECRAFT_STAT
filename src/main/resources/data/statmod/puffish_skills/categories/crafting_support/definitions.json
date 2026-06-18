@@ -1,0 +1,182 @@
+{
+    "forging__forge_core": {
+        "title": "Hammer Hand",
+        "description": "Repairs cost 1 fewer level",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "forging__forge_active": {
+        "title": "Master Smith",
+        "description": "Chance to double repair output",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "forging__forge_synergy": {
+        "title": "Enchanting Touch",
+        "description": "Synergy: anvil enchants cost less",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "forging__forge_situational": {
+        "title": "Sharpening",
+        "description": "Weapons deal more after anvil use",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "forging__forge_mastery": {
+        "title": "Artificer",
+        "description": "Create unique anvil-only upgrades",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "forging__forge_transcendence": {
+        "title": "Creation",
+        "description": "Repair items to perfect condition",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "cooking__cook_core": {
+        "title": "Home Cook",
+        "description": "+1 saturation from all food",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "cooking__cook_active": {
+        "title": "Iron Stomach",
+        "description": "Bad food effects halved",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "cooking__cook_synergy": {
+        "title": "Nutritionist",
+        "description": "Synergy: food gives absorption",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "cooking__cook_situational": {
+        "title": "Fast Food",
+        "description": "Eat 2x faster",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "cooking__cook_mastery": {
+        "title": "Feast",
+        "description": "Share food effects with nearby allies",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "cooking__cook_transcendence": {
+        "title": "Ambrosia",
+        "description": "Food gives regeneration for 30s",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:cooked_beef"
+            }
+        }
+    },
+    "alchemy__alchem_core": {
+        "title": "Mixologist",
+        "description": "+10% potion duration",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    },
+    "alchemy__alchem_active": {
+        "title": "Brewer's Secret",
+        "description": "Chance to duplicate potions",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    },
+    "alchemy__alchem_synergy": {
+        "title": "Transmutation",
+        "description": "Synergy: convert materials on craft",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    },
+    "alchemy__alchem_situational": {
+        "title": "Toxicologist",
+        "description": "Poison effects last 50% longer",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    },
+    "alchemy__alchem_mastery": {
+        "title": "Philosopher's Stone",
+        "description": "Potion effects are 50% stronger",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    },
+    "alchemy__alchem_transcendence": {
+        "title": "Eternal Elixir",
+        "description": "Potions never expire in inventory",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:brewing_stand"
+            }
+        }
+    }
+}

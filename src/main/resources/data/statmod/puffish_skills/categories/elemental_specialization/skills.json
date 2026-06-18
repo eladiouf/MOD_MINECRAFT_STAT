@@ -1,0 +1,126 @@
+{
+    "water_affinity__water_core": {
+        "x": 0,
+        "y": 0,
+        "definition": "water_affinity__water_core",
+        "root": true
+    },
+    "water_affinity__water_active": {
+        "x": 0,
+        "y": 80,
+        "definition": "water_affinity__water_active"
+    },
+    "water_affinity__water_synergy": {
+        "x": 0,
+        "y": 160,
+        "definition": "water_affinity__water_synergy"
+    },
+    "water_affinity__water_situational": {
+        "x": 0,
+        "y": 240,
+        "definition": "water_affinity__water_situational"
+    },
+    "water_affinity__water_mastery": {
+        "x": 0,
+        "y": 320,
+        "definition": "water_affinity__water_mastery"
+    },
+    "water_affinity__water_transcendence": {
+        "x": 0,
+        "y": 400,
+        "definition": "water_affinity__water_transcendence"
+    },
+    "earth_affinity__earth_core": {
+        "x": 160,
+        "y": 0,
+        "definition": "earth_affinity__earth_core",
+        "root": true
+    },
+    "earth_affinity__earth_active": {
+        "x": 160,
+        "y": 80,
+        "definition": "earth_affinity__earth_active"
+    },
+    "earth_affinity__earth_synergy": {
+        "x": 160,
+        "y": 160,
+        "definition": "earth_affinity__earth_synergy"
+    },
+    "earth_affinity__earth_situational": {
+        "x": 160,
+        "y": 240,
+        "definition": "earth_affinity__earth_situational"
+    },
+    "earth_affinity__earth_mastery": {
+        "x": 160,
+        "y": 320,
+        "definition": "earth_affinity__earth_mastery"
+    },
+    "earth_affinity__earth_transcendence": {
+        "x": 160,
+        "y": 400,
+        "definition": "earth_affinity__earth_transcendence"
+    },
+    "fire_affinity__fire_core": {
+        "x": 320,
+        "y": 0,
+        "definition": "fire_affinity__fire_core",
+        "root": true
+    },
+    "fire_affinity__fire_active": {
+        "x": 320,
+        "y": 80,
+        "definition": "fire_affinity__fire_active"
+    },
+    "fire_affinity__fire_synergy": {
+        "x": 320,
+        "y": 160,
+        "definition": "fire_affinity__fire_synergy"
+    },
+    "fire_affinity__fire_situational": {
+        "x": 320,
+        "y": 240,
+        "definition": "fire_affinity__fire_situational"
+    },
+    "fire_affinity__fire_mastery": {
+        "x": 320,
+        "y": 320,
+        "definition": "fire_affinity__fire_mastery"
+    },
+    "fire_affinity__fire_transcendence": {
+        "x": 320,
+        "y": 400,
+        "definition": "fire_affinity__fire_transcendence"
+    },
+    "air_affinity__air_core": {
+        "x": 480,
+        "y": 0,
+        "definition": "air_affinity__air_core",
+        "root": true
+    },
+    "air_affinity__air_active": {
+        "x": 480,
+        "y": 80,
+        "definition": "air_affinity__air_active"
+    },
+    "air_affinity__air_synergy": {
+        "x": 480,
+        "y": 160,
+        "definition": "air_affinity__air_synergy"
+    },
+    "air_affinity__air_situational": {
+        "x": 480,
+        "y": 240,
+        "definition": "air_affinity__air_situational"
+    },
+    "air_affinity__air_mastery": {
+        "x": 480,
+        "y": 320,
+        "definition": "air_affinity__air_mastery"
+    },
+    "air_affinity__air_transcendence": {
+        "x": 480,
+        "y": 400,
+        "definition": "air_affinity__air_transcendence"
+    }
+}

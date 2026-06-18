@@ -1,0 +1,188 @@
+{
+    "brute_force__brute_core": {
+        "x": 0,
+        "y": 0,
+        "definition": "brute_force__brute_core",
+        "root": true
+    },
+    "brute_force__brute_active": {
+        "x": 0,
+        "y": 80,
+        "definition": "brute_force__brute_active"
+    },
+    "brute_force__brute_synergy": {
+        "x": 0,
+        "y": 160,
+        "definition": "brute_force__brute_synergy"
+    },
+    "brute_force__brute_situational": {
+        "x": 0,
+        "y": 240,
+        "definition": "brute_force__brute_situational"
+    },
+    "brute_force__brute_mastery": {
+        "x": 0,
+        "y": 320,
+        "definition": "brute_force__brute_mastery"
+    },
+    "brute_force__brute_transcendence": {
+        "x": 0,
+        "y": 400,
+        "definition": "brute_force__brute_transcendence"
+    },
+    "blade_technique__blade_core": {
+        "x": 160,
+        "y": 0,
+        "definition": "blade_technique__blade_core",
+        "root": true
+    },
+    "blade_technique__blade_active": {
+        "x": 160,
+        "y": 80,
+        "definition": "blade_technique__blade_active"
+    },
+    "blade_technique__blade_synergy": {
+        "x": 160,
+        "y": 160,
+        "definition": "blade_technique__blade_synergy"
+    },
+    "blade_technique__blade_situational": {
+        "x": 160,
+        "y": 240,
+        "definition": "blade_technique__blade_situational"
+    },
+    "blade_technique__blade_mastery": {
+        "x": 160,
+        "y": 320,
+        "definition": "blade_technique__blade_mastery"
+    },
+    "blade_technique__blade_transcendence": {
+        "x": 160,
+        "y": 400,
+        "definition": "blade_technique__blade_transcendence"
+    },
+    "rapidite__rapid_core": {
+        "x": 320,
+        "y": 0,
+        "definition": "rapidite__rapid_core",
+        "root": true
+    },
+    "rapidite__rapid_active": {
+        "x": 320,
+        "y": 80,
+        "definition": "rapidite__rapid_active"
+    },
+    "rapidite__rapid_synergy": {
+        "x": 320,
+        "y": 160,
+        "definition": "rapidite__rapid_synergy"
+    },
+    "rapidite__rapid_situational": {
+        "x": 320,
+        "y": 240,
+        "definition": "rapidite__rapid_situational"
+    },
+    "rapidite__rapid_mastery": {
+        "x": 320,
+        "y": 320,
+        "definition": "rapidite__rapid_mastery"
+    },
+    "rapidite__rapid_transcendence": {
+        "x": 320,
+        "y": 400,
+        "definition": "rapidite__rapid_transcendence"
+    },
+    "agility__agil_core": {
+        "x": 480,
+        "y": 0,
+        "definition": "agility__agil_core",
+        "root": true
+    },
+    "agility__agil_active": {
+        "x": 480,
+        "y": 80,
+        "definition": "agility__agil_active"
+    },
+    "agility__agil_synergy": {
+        "x": 480,
+        "y": 160,
+        "definition": "agility__agil_synergy"
+    },
+    "agility__agil_situational": {
+        "x": 480,
+        "y": 240,
+        "definition": "agility__agil_situational"
+    },
+    "agility__agil_mastery": {
+        "x": 480,
+        "y": 320,
+        "definition": "agility__agil_mastery"
+    },
+    "agility__agil_transcendence": {
+        "x": 480,
+        "y": 400,
+        "definition": "agility__agil_transcendence"
+    },
+    "physical_resistance__resist_core": {
+        "x": 640,
+        "y": 0,
+        "definition": "physical_resistance__resist_core",
+        "root": true
+    },
+    "physical_resistance__resist_active": {
+        "x": 640,
+        "y": 80,
+        "definition": "physical_resistance__resist_active"
+    },
+    "physical_resistance__resist_synergy": {
+        "x": 640,
+        "y": 160,
+        "definition": "physical_resistance__resist_synergy"
+    },
+    "physical_resistance__resist_situational": {
+        "x": 640,
+        "y": 240,
+        "definition": "physical_resistance__resist_situational"
+    },
+    "physical_resistance__resist_mastery": {
+        "x": 640,
+        "y": 320,
+        "definition": "physical_resistance__resist_mastery"
+    },
+    "physical_resistance__resist_transcendence": {
+        "x": 640,
+        "y": 400,
+        "definition": "physical_resistance__resist_transcendence"
+    },
+    "physical_endurance__endur_core": {
+        "x": 800,
+        "y": 0,
+        "definition": "physical_endurance__endur_core",
+        "root": true
+    },
+    "physical_endurance__endur_active": {
+        "x": 800,
+        "y": 80,
+        "definition": "physical_endurance__endur_active"
+    },
+    "physical_endurance__endur_synergy": {
+        "x": 800,
+        "y": 160,
+        "definition": "physical_endurance__endur_synergy"
+    },
+    "physical_endurance__endur_situational": {
+        "x": 800,
+        "y": 240,
+        "definition": "physical_endurance__endur_situational"
+    },
+    "physical_endurance__endur_mastery": {
+        "x": 800,
+        "y": 320,
+        "definition": "physical_endurance__endur_mastery"
+    },
+    "physical_endurance__endur_transcendence": {
+        "x": 800,
+        "y": 400,
+        "definition": "physical_endurance__endur_transcendence"
+    }
+}

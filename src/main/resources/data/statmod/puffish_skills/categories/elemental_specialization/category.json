@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Elemental Specialization",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:fire_charge"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/nether.png"
+}

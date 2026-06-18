@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Crafting, Provisioning, and Technical Support",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:anvil"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/husbandry.png"
+}

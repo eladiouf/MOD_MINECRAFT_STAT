@@ -1,19 +1,11 @@
-﻿{
-    "version":  3,
-    "categories":  [
-                       "brute_force",
-                       "blade_technique",
-                       "rapidite",
-                       "agility",
-                       "physical_resistance",
-                       "physical_endurance",
-                       "precision",
-                       "tracking",
-                       "keen_senses",
-                       "forging",
-                       "cooking",
-                       "alchemy",
-                       "intimidation",
-                       "willpower"
-                   ]
+{
+    "version": 3,
+    "categories": [
+        "frontline_physical_combat",
+        "ranged_hunt_control",
+        "magical_core",
+        "elemental_specialization",
+        "mental_pressure_resilience",
+        "crafting_support"
+    ]
 }

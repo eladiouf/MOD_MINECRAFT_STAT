@@ -1,6 +1,7 @@
 package tong.statmod;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stats.StatFamily;
 import tong.statmod.stats.StatType;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,8 +28,17 @@ class StatTypeTest {
     void testHasPerks() {
         assertTrue(StatType.BRUTE_FORCE.hasPerks());
         assertTrue(StatType.WILLPOWER.hasPerks());
-        assertFalse(StatType.ARCANE_POWER.hasPerks());
-        assertFalse(StatType.ERUDITION.hasPerks());
+        assertTrue(StatType.ARCANE_POWER.hasPerks());
+        assertTrue(StatType.ERUDITION.hasPerks());
+        assertTrue(StatType.MAGIC_RESISTANCE.hasPerks());
+    }
+
+    @Test
+    void testFamilies() {
+        assertEquals(StatFamily.FRONTLINE_PHYSICAL_COMBAT, StatType.BRUTE_FORCE.family());
+        assertEquals(StatFamily.MAGICAL_CORE, StatType.ARCANE_POWER.family());
+        assertEquals(StatFamily.ELEMENTAL_SPECIALIZATION, StatType.FIRE_AFFINITY.family());
+        assertEquals(StatFamily.CRAFTING_SUPPORT, StatType.ALCHEMY.family());
     }
 
     @Test

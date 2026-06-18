@@ -114,7 +114,43 @@ Magical stats must be the canonical control layer for both:
 
 The project must avoid a split where one mod obeys one logic and the other obeys a second one.
 
-### 3.3 Breakpoint Bands
+### 3.3 Magic Resource Model
+
+Magic uses **mana only**.
+
+Interpretation:
+
+- magical casting should be driven by mana or mana-like magical reserves
+- magical performance should not consume the unified physical stamina pool by default
+- `MANA_POOL` is therefore a true magical endurance axis, not a cosmetic secondary stat
+- `PHYSICAL_ENDURANCE` and unified stamina remain the physical effort layer for combat, movement, fatigue, and daily exertion
+
+### 3.4 Magical Perk Ownership
+
+Magical stats must participate in the perk ecosystem.
+
+That means:
+
+- magical stats are not second-class progression tracks
+- advanced magical specialization should be expressed through perks as well as stat thresholds
+- the perk/tree model must be extended so physical, magical, mental, and utility families all have coherent progression space
+
+### 3.5 Perk Tree Organization
+
+Perk tree tabs should be organized by **family**, not only by isolated stat.
+
+Target family tabs:
+
+1. front-line physical combat
+2. ranged and hunt control
+3. magical core
+4. elemental specialization
+5. mental pressure and resilience
+6. crafting, provisioning, and technical support
+
+The exact node layout can still branch by stat inside a family tab, but the top-level navigation should present progression as families first.
+
+### 3.6 Breakpoint Bands
 
 Stats should generally expose meaningful threshold bands around:
 
@@ -125,7 +161,7 @@ Stats should generally expose meaningful threshold bands around:
 
 These are design anchors, not a requirement that every stat use the exact same mechanical reward.
 
-### 3.4 Synergy Rule
+### 3.7 Synergy Rule
 
 Synergies should be **structuring**, not decorative.
 
@@ -517,6 +553,27 @@ Elemental affinities serve two roles:
 - amplify their element strongly
 - gate access to advanced spells and perks of that element
 
+Before any implementation mapping is written, the project must define a **canonical spell taxonomy**.
+
+Required order:
+
+1. audit and classify `Tensura` spells first
+2. audit and classify `Mahou Tsukai` spells second
+3. only then finalize affinity gates, perk requirements, and spell-family unlock rules
+
+Reason:
+
+- `Tensura` and `Mahou Tsukai` do not expose the same magical language
+- some spells are elemental, some are structural, some are spatial, some are utility-focused
+- classification must be explicit before perk gating and scaling are safe to implement
+
+Expected output of that audit:
+
+- a canonical spell category list
+- primary stat drivers per spell
+- secondary stat drivers where needed
+- explicit identification of elemental, non-elemental, and hybrid spells
+
 ### 8.1 `FIRE_AFFINITY`
 
 **Role:** offensive fire specialization
@@ -745,6 +802,8 @@ This spec intentionally does not freeze exact formulas yet, but it does freeze t
 - stats should not collapse into duplicates
 - integrated mods should be mapped by fantasy, not by convenience
 - magical stats must remain unified across `Tensura` and `Mahou Tsukai`
+- magical progression must include perk support, not only passive scaling
+- magical casting must remain mana-based rather than stamina-based
 - utility stats must remain indirect in combat value
 
 ## 13. Scope Notes
@@ -775,3 +834,10 @@ The next implementation plan should detail, for each family:
 4. perk gating changes
 5. mod integration touchpoints
 6. tests needed for regression-safe rollout
+
+Before that family-by-family implementation work begins, the project needs a dedicated planning slice for:
+
+1. magical perk coverage across magical stats
+2. family-tab perk tree information architecture
+3. `Tensura` spell taxonomy audit
+4. `Mahou Tsukai` spell taxonomy audit

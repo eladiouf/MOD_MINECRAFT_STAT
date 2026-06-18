@@ -1,6 +1,7 @@
 package tong.statmod.integration.mahou;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -68,11 +69,12 @@ public final class MahouCompat {
         }
 
         String element = MahouElementMapper.elementFor(stack);
+        String itemId = itemId(stack);
         lastElementMap.put(player.getUUID(), element);
         lastElementTickMap.put(player.getUUID(), player.tickCount);
         int baseXp = 3 * MahouSpellTier.xpMultiplier(stack);
         boolean leveled = addXp(player, StatType.ARCANE_POWER, baseXp);
-        for (StatType stat : MahouPerkMap.statsForElement(element)) {
+        for (StatType stat : MahouPerkMap.statsForSpellId(itemId)) {
             leveled |= addXp(player, stat, Math.max(1, baseXp / 2));
         }
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
@@ -126,6 +128,14 @@ public final class MahouCompat {
     private static boolean addXp(Player player, StatType stat, int amount) {
         return RaceEffectApplier.addScaledXp(player, stat.index, amount,
                 player.getData(ModAttachments.STATS));
+    }
+
+    private static String itemId(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return "";
+        }
+        ResourceLocation id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return id == null ? "" : id.toString();
     }
 
     public static String recentElement(Player player) {

@@ -19,7 +19,25 @@ public final class MahouElementMapper {
             return "arcane";
         }
 
-        return elementForPath(id.getPath());
+        return elementForItemId(id.toString());
+    }
+
+    public static String elementForItemId(String itemId) {
+        if (itemId == null) {
+            return "arcane";
+        }
+        MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
+        if (profile != null) {
+            return switch (profile.primaryStat()) {
+                case FIRE_AFFINITY -> "fire";
+                case WATER_AFFINITY -> "water";
+                case EARTH_AFFINITY -> "earth";
+                case AIR_AFFINITY -> "air";
+                case MAGIC_RESISTANCE -> "light";
+                default -> "arcane";
+            };
+        }
+        return elementForPath(itemId);
     }
 
     public static String elementForPath(String path) {
@@ -27,6 +45,14 @@ public final class MahouElementMapper {
             return "arcane";
         }
         String normalized = path.toLowerCase(Locale.ROOT);
+        MahouSpellProfile profile = MahouSpellTaxonomy.profile(normalized);
+        if (profile != null) {
+            return elementForItemId(normalized);
+        }
+        int separator = normalized.indexOf(':');
+        if (separator >= 0 && separator + 1 < normalized.length()) {
+            normalized = normalized.substring(separator + 1);
+        }
         if (normalized.contains("fire") || normalized.contains("flame") || normalized.contains("burn")) return "fire";
         if (normalized.contains("water") || normalized.contains("aqua") || normalized.contains("ice")) return "water";
         if (normalized.contains("earth") || normalized.contains("stone") || normalized.contains("rock")) return "earth";

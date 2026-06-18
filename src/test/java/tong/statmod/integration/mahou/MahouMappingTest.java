@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MahouMappingTest {
     @Test
     void mapsPathFragmentsToElements() {
+        assertEquals("earth", MahouElementMapper.elementForPath("mahoutsukai:rho_aias_spell_scroll"));
+        assertEquals("fire", MahouElementMapper.elementForPath("mahoutsukai:fallen_down_spell_scroll"));
         assertEquals("fire", MahouElementMapper.elementForPath("fire_scroll"));
         assertEquals("water", MahouElementMapper.elementForPath("ice_tome"));
         assertEquals("arcane", MahouElementMapper.elementForPath("mystery_scroll"));
@@ -20,6 +22,10 @@ class MahouMappingTest {
                 MahouPerkMap.statsForElement("fire"));
         assertArrayEquals(new StatType[]{StatType.ARCANE_POWER, StatType.ERUDITION},
                 MahouPerkMap.statsForElement("arcane"));
+        assertArrayEquals(new StatType[]{StatType.EARTH_AFFINITY, StatType.MAGIC_RESISTANCE},
+                MahouPerkMap.statsForSpellId("mahoutsukai:rho_aias_spell_scroll"));
+        assertArrayEquals(new StatType[]{StatType.ERUDITION, StatType.MANA_POOL},
+                MahouPerkMap.statsForSpellId("mahoutsukai:mystic_staff_spell_scroll"));
     }
 
     @Test

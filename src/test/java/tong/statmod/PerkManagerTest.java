@@ -148,4 +148,17 @@ class PerkManagerTest {
         assertFalse(data.isPerkUnlocked(Perk.BRUTE_TRANSCENDENCE.id));
         assertEquals(0, data.getPerkPointsForStat(Perk.BRUTE_TRANSCENDENCE.stat.index));
     }
+
+    @Test
+    void magicalPerksUnlockThroughCanonicalPointChecks() {
+        PlayerStatData data = new PlayerStatData();
+        data.setLevel(StatType.ARCANE_POWER.index, 10);
+        data.setPerkPoints(StatType.ARCANE_POWER.index, 1);
+        PerkManager mgr = new PerkManager(data);
+
+        assertTrue(mgr.canUnlock(Perk.ARCANE_CORE));
+        assertTrue(mgr.unlock(Perk.ARCANE_CORE));
+        assertTrue(data.isPerkUnlocked(Perk.ARCANE_CORE.id));
+        assertEquals(0, data.getPerkPointsForStat(StatType.ARCANE_POWER.index));
+    }
 }

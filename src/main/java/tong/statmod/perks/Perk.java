@@ -99,7 +99,70 @@ public enum Perk {
     WILL_SYNERGY(80, StatType.WILLPOWER, PerkTier.SYNERGY, "Unbreakable", "Synergy: damage resistance with shield", StatType.PHYSICAL_RESISTANCE),
     WILL_SITUATIONAL(81, StatType.WILLPOWER, PerkTier.SITUATIONAL, "Last Breath", "Survive at 1 HP once per 30s"),
     WILL_MASTERY(82, StatType.WILLPOWER, PerkTier.MASTERY, "Indomitable", "Debuffs become buffs at low HP"),
-    WILL_TRANSCENDENCE(83, StatType.WILLPOWER, PerkTier.TRANSCENDENCE, "Transcendence", "Immune to all status effects");
+    WILL_TRANSCENDENCE(83, StatType.WILLPOWER, PerkTier.TRANSCENDENCE, "Transcendence", "Immune to all status effects"),
+
+    ARCANE_CORE(84, StatType.ARCANE_POWER, PerkTier.CORE, "Spell Pressure", "+5% offensive magic potency"),
+    ARCANE_ACTIVE(85, StatType.ARCANE_POWER, PerkTier.ACTIVE, "Arc Burst", "Short offensive magic burst after a clean cast"),
+    ARCANE_SYNERGY(86, StatType.ARCANE_POWER, PerkTier.SYNERGY, "Overchannel", "Synergy: offensive spells gain pressure when cast quickly", StatType.CASTING_SPEED),
+    ARCANE_SITUATIONAL(87, StatType.ARCANE_POWER, PerkTier.SITUATIONAL, "Spellbreaker", "Bonus damage against staggered or pinned targets"),
+    ARCANE_MASTERY(88, StatType.ARCANE_POWER, PerkTier.MASTERY, "Arcane Cascade", "Offensive casts chain pressure into the next spell"),
+    ARCANE_TRANSCENDENCE(89, StatType.ARCANE_POWER, PerkTier.TRANSCENDENCE, "Cataclysm Engine", "Large offensive magic spike windows"),
+
+    WATER_CORE(90, StatType.WATER_AFFINITY, PerkTier.CORE, "Soothing Current", "Water spells restore stability more effectively"),
+    WATER_ACTIVE(91, StatType.WATER_AFFINITY, PerkTier.ACTIVE, "Healing Surge", "Water casts briefly improve recovery"),
+    WATER_SYNERGY(92, StatType.WATER_AFFINITY, PerkTier.SYNERGY, "Reservoir Flow", "Synergy: water magic scales with deep reserves", StatType.MANA_POOL),
+    WATER_SITUATIONAL(93, StatType.WATER_AFFINITY, PerkTier.SITUATIONAL, "Cold Veil", "Defensive water magic improves under pressure"),
+    WATER_MASTERY(94, StatType.WATER_AFFINITY, PerkTier.MASTERY, "Tidal Control", "Water casts apply stronger adaptive control"),
+    WATER_TRANSCENDENCE(95, StatType.WATER_AFFINITY, PerkTier.TRANSCENDENCE, "Abyssal Grace", "Water magic becomes an elite sustain school"),
+
+    EARTH_CORE(96, StatType.EARTH_AFFINITY, PerkTier.CORE, "Stone Skin", "Earth spells reinforce structure and protection"),
+    EARTH_ACTIVE(97, StatType.EARTH_AFFINITY, PerkTier.ACTIVE, "Earthen Rampart", "Barrier spells gain a stronger first layer"),
+    EARTH_SYNERGY(98, StatType.EARTH_AFFINITY, PerkTier.SYNERGY, "Runic Bedrock", "Synergy: earth defenses harden against hostile magic", StatType.MAGIC_RESISTANCE),
+    EARTH_SITUATIONAL(99, StatType.EARTH_AFFINITY, PerkTier.SITUATIONAL, "Gravity Well", "Earth control is stronger against committed enemies"),
+    EARTH_MASTERY(100, StatType.EARTH_AFFINITY, PerkTier.MASTERY, "World Anchor", "Earth magic anchors the caster and the field"),
+    EARTH_TRANSCENDENCE(101, StatType.EARTH_AFFINITY, PerkTier.TRANSCENDENCE, "Mountain Throne", "Earth magic becomes a dominant control shell"),
+
+    FIRE_CORE(102, StatType.FIRE_AFFINITY, PerkTier.CORE, "Kindling", "Fire spells burn harder"),
+    FIRE_ACTIVE(103, StatType.FIRE_AFFINITY, PerkTier.ACTIVE, "Flashburn", "First offensive fire cast after setup hits harder"),
+    FIRE_SYNERGY(104, StatType.FIRE_AFFINITY, PerkTier.SYNERGY, "Accelerant", "Synergy: fire gains pressure from fast casting", StatType.CASTING_SPEED),
+    FIRE_SITUATIONAL(105, StatType.FIRE_AFFINITY, PerkTier.SITUATIONAL, "Execution Flame", "Fire punishes weakened targets"),
+    FIRE_MASTERY(106, StatType.FIRE_AFFINITY, PerkTier.MASTERY, "Inferno Spiral", "Fire spell chains become more explosive"),
+    FIRE_TRANSCENDENCE(107, StatType.FIRE_AFFINITY, PerkTier.TRANSCENDENCE, "Solar Cataclysm", "Fire becomes the peak offensive element"),
+
+    AIR_CORE(108, StatType.AIR_AFFINITY, PerkTier.CORE, "Tailwind", "Air spells improve movement-oriented casting"),
+    AIR_ACTIVE(109, StatType.AIR_AFFINITY, PerkTier.ACTIVE, "Gale Step", "Air casts improve repositioning windows"),
+    AIR_SYNERGY(110, StatType.AIR_AFFINITY, PerkTier.SYNERGY, "Sky Dancer", "Synergy: air magic rewards mobile bodies", StatType.AGILITY),
+    AIR_SITUATIONAL(111, StatType.AIR_AFFINITY, PerkTier.SITUATIONAL, "Storm Reach", "Air pressure extends on displaced targets"),
+    AIR_MASTERY(112, StatType.AIR_AFFINITY, PerkTier.MASTERY, "Lightning Thread", "Fast air casts weave through combat windows"),
+    AIR_TRANSCENDENCE(113, StatType.AIR_AFFINITY, PerkTier.TRANSCENDENCE, "Tempest Crown", "Air becomes the supreme mobility element"),
+
+    MAGIC_RESIST_CORE(114, StatType.MAGIC_RESISTANCE, PerkTier.CORE, "Warding Skin", "Hostile magic is slightly blunted"),
+    MAGIC_RESIST_ACTIVE(115, StatType.MAGIC_RESISTANCE, PerkTier.ACTIVE, "Spell Shear", "Clean defense shaves pressure off incoming magic"),
+    MAGIC_RESIST_SYNERGY(116, StatType.MAGIC_RESISTANCE, PerkTier.SYNERGY, "Unbroken Ward", "Synergy: magical defense hardens with mental discipline", StatType.WILLPOWER),
+    MAGIC_RESIST_SITUATIONAL(117, StatType.MAGIC_RESISTANCE, PerkTier.SITUATIONAL, "Countercurrent", "Magic defense spikes under caster pressure"),
+    MAGIC_RESIST_MASTERY(118, StatType.MAGIC_RESISTANCE, PerkTier.MASTERY, "Null Mantle", "Advanced hostile spell effects lose efficiency"),
+    MAGIC_RESIST_TRANSCENDENCE(119, StatType.MAGIC_RESISTANCE, PerkTier.TRANSCENDENCE, "Aegis Absolute", "Elite anti-magic posture"),
+
+    CASTING_SPEED_CORE(120, StatType.CASTING_SPEED, PerkTier.CORE, "Quick Sigils", "Basic casting flow is cleaner"),
+    CASTING_SPEED_ACTIVE(121, StatType.CASTING_SPEED, PerkTier.ACTIVE, "Snapcast", "One rapid cast window after stable setup"),
+    CASTING_SPEED_SYNERGY(122, StatType.CASTING_SPEED, PerkTier.SYNERGY, "Pressure Casting", "Synergy: fast execution empowers offensive spells", StatType.ARCANE_POWER),
+    CASTING_SPEED_SITUATIONAL(123, StatType.CASTING_SPEED, PerkTier.SITUATIONAL, "Window Theft", "Fast casts punish short openings better"),
+    CASTING_SPEED_MASTERY(124, StatType.CASTING_SPEED, PerkTier.MASTERY, "Spell Weave", "Spell strings become exceptionally fluid"),
+    CASTING_SPEED_TRANSCENDENCE(125, StatType.CASTING_SPEED, PerkTier.TRANSCENDENCE, "Timeless Cast", "Extreme casting tempo expression"),
+
+    MANA_POOL_CORE(126, StatType.MANA_POOL, PerkTier.CORE, "Deep Wells", "Maximum mana slightly increases"),
+    MANA_POOL_ACTIVE(127, StatType.MANA_POOL, PerkTier.ACTIVE, "Mana Draw", "Short reserve recovery after disciplined pacing"),
+    MANA_POOL_SYNERGY(128, StatType.MANA_POOL, PerkTier.SYNERGY, "Disciplined Reserve", "Synergy: deeper reserves reward learned casting", StatType.ERUDITION),
+    MANA_POOL_SITUATIONAL(129, StatType.MANA_POOL, PerkTier.SITUATIONAL, "Last Reservoir", "Low-reserve casting degrades more slowly"),
+    MANA_POOL_MASTERY(130, StatType.MANA_POOL, PerkTier.MASTERY, "Endless Cycle", "Long-form casting becomes steadier"),
+    MANA_POOL_TRANSCENDENCE(131, StatType.MANA_POOL, PerkTier.TRANSCENDENCE, "Ocean Soul", "Peak mana endurance"),
+
+    ERUDITION_CORE(132, StatType.ERUDITION, PerkTier.CORE, "Scholar's Eye", "Learned magic reveals more structure"),
+    ERUDITION_ACTIVE(133, StatType.ERUDITION, PerkTier.ACTIVE, "Pattern Recall", "Recently used spell patterns become easier to repeat"),
+    ERUDITION_SYNERGY(134, StatType.ERUDITION, PerkTier.SYNERGY, "Focused Thesis", "Synergy: disciplined minds stabilize complex magic", StatType.WILLPOWER),
+    ERUDITION_SITUATIONAL(135, StatType.ERUDITION, PerkTier.SITUATIONAL, "Adaptive Theory", "Flexible casters pivot more efficiently"),
+    ERUDITION_MASTERY(136, StatType.ERUDITION, PerkTier.MASTERY, "Grand Synthesis", "Multi-school usage becomes cleaner"),
+    ERUDITION_TRANSCENDENCE(137, StatType.ERUDITION, PerkTier.TRANSCENDENCE, "Omniform Understanding", "Top-end magical mastery");
 
     private static final Perk[] BY_ID = new Perk[values().length];
     static { for (Perk p : values()) BY_ID[p.id] = p; }

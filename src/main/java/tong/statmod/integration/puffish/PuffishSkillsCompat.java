@@ -76,13 +76,7 @@ public final class PuffishSkillsCompat {
         if (!loaded) {
             return;
         }
-        try {
-            Class<?> skillsApi = Class.forName(SKILLS_API_CLASS);
-            Method openScreen = skillsApi.getMethod("openScreen", ServerPlayer.class);
-            openScreen.invoke(null, player);
-        } catch (ReflectiveOperationException e) {
-            STATMod.LOGGER.warn("Puffish open screen failed for {}: {}", player.getName().getString(), e.getMessage());
-        }
+        PuffishScreenService.open(new ReflectionScreenGateway(player));
     }
 
     private static boolean isSyncing(ServerPlayer player) {
@@ -109,5 +103,43 @@ public final class PuffishSkillsCompat {
     @FunctionalInterface
     private interface EventHandler {
         void handle(ServerPlayer player, String categoryId, String skillId);
+    }
+
+    private static final class ReflectionScreenGateway implements PuffishScreenGateway {
+        private static final String SKILLS_MOD_CLASS = "net.puffish.skillsmod.SkillsMod";
+
+        private final ServerPlayer player;
+
+        private ReflectionScreenGateway(ServerPlayer player) {
+            this.player = player;
+        }
+
+        @Override
+        public void refreshCategories() {
+            invokeSkillsMod("updateAllCategories");
+        }
+
+        @Override
+        public void openScreen() {
+            try {
+                Class<?> skillsApi = Class.forName(SKILLS_API_CLASS);
+                Method openScreen = skillsApi.getMethod("openScreen", ServerPlayer.class);
+                openScreen.invoke(null, player);
+            } catch (ReflectiveOperationException e) {
+                STATMod.LOGGER.warn("Puffish open screen failed for {}: {}", player.getName().getString(), e.getMessage());
+            }
+        }
+
+        private void invokeSkillsMod(String methodName) {
+            try {
+                Class<?> skillsMod = Class.forName(SKILLS_MOD_CLASS);
+                Method getInstance = skillsMod.getMethod("getInstance");
+                Object instance = getInstance.invoke(null);
+                Method method = skillsMod.getMethod(methodName, ServerPlayer.class);
+                method.invoke(instance, player);
+            } catch (ReflectiveOperationException e) {
+                STATMod.LOGGER.warn("Puffish {} failed for {}: {}", methodName, player.getName().getString(), e.getMessage());
+            }
+        }
     }
 }

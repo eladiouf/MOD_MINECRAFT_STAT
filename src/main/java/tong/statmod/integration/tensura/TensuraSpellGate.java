@@ -53,6 +53,10 @@ public final class TensuraSpellGate {
         return TensuraSkillIds.canonicalize(resolveByStat(perk.stat, perk.tier));
     }
 
+    public static StatType primaryStatForResolvedSkill(String skillId) {
+        return TensuraSpellTaxonomy.primaryStat(skillId);
+    }
+
     public static boolean grantReward(Player player, Perk perk) {
         String resolved = resolveForPerk(perk);
         if (player == null || resolved == null) {
@@ -88,6 +92,11 @@ public final class TensuraSpellGate {
 
     private static String resolveByStat(StatType stat, PerkTier tier) {
         if (stat == null) return null;
+
+        String magicalRepresentative = TensuraSpellTaxonomy.representativeSkillId(stat);
+        if (magicalRepresentative != null) {
+            return magicalRepresentative;
+        }
 
         return switch (stat) {
             case BRUTE_FORCE -> "tensura:berserk";

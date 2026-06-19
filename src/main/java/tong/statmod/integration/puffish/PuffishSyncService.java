@@ -17,7 +17,7 @@ public final class PuffishSyncService {
             String categoryId = PuffishPerkIds.categoryId(perk);
             if (initializedCategories.add(categoryId)) {
                 gateway.ensureCategoryUnlocked(categoryId);
-                gateway.setPoints(categoryId, mirroredFamilyTotal(data, perk.stat.family()));
+                gateway.setPoints(categoryId, mirroredFamilyPoints(data, perk.stat.family()));
             }
             if (data.isPerkUnlocked(perk.id)) {
                 gateway.unlock(categoryId, PuffishPerkIds.skillId(perk));
@@ -27,16 +27,11 @@ public final class PuffishSyncService {
         }
     }
 
-    private static int mirroredFamilyTotal(PlayerStatData data, StatFamily family) {
+    private static int mirroredFamilyPoints(PlayerStatData data, StatFamily family) {
         int total = 0;
         for (StatType stat : StatType.values()) {
             if (stat.family() == family) {
                 total += data.getPerkPointsForStat(stat.index);
-            }
-        }
-        for (Perk perk : Perk.values()) {
-            if (perk.stat.family() == family && data.isPerkUnlocked(perk.id)) {
-                total += perk.tier.cost;
             }
         }
         return total;

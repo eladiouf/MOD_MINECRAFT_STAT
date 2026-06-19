@@ -20,11 +20,11 @@ class PuffishSyncServiceTest {
         PuffishSyncService.sync(data, gateway);
 
         assertTrue(gateway.operations.contains("unlock:statmod:frontline_physical_combat:brute_force__brute_core"));
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:4"));
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
     }
 
     @Test
-    void mirrorsFamilyTotalsUsingRealPerkCosts() {
+    void mirrorsRemainingPointsAcrossTheWholeFamily() {
         PlayerStatData data = new PlayerStatData();
         data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
         data.setPerkPoints(Perk.BLADE_CORE.stat.index, 2);
@@ -34,7 +34,19 @@ class PuffishSyncServiceTest {
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:5"));
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
+    }
+
+    @Test
+    void mirrorsOnlyRemainingSpendableFamilyPoints() {
+        PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 0);
+        data.addUnlockedPerk(Perk.BRUTE_CORE.id);
+
+        FakeGateway gateway = new FakeGateway();
+        PuffishSyncService.sync(data, gateway);
+
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:0"));
     }
 
     static final class FakeGateway implements PuffishMirrorGateway {

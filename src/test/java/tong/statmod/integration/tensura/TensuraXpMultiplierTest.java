@@ -35,6 +35,7 @@ class TensuraXpMultiplierTest {
         assertEquals(1.50f, TensuraXpMultiplier.getEpMultiplier(data, "magic_fire"), 0.0001f);
         assertEquals(1.85f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:healing_rain"), 0.0001f);
         assertEquals(1.70f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:analyze"), 0.0001f);
+        assertEquals(1.90f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:maximum_magic_bullet"), 0.0001f);
     }
 
     @Test

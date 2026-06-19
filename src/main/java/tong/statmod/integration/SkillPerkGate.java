@@ -95,6 +95,8 @@ public final class SkillPerkGate {
         requireSkill(119, "tensura:magic_barrier", "tensura:anti_magic_area"); // Aegis Absolute
         requireSkill(124, "tensura:teleport");             // Spell Weave
         requireSkill(125, "tensura:teleport", "tensura:gate"); // Timeless Cast
+        requireSkill(130, "tensura:multilayer_barrier");   // Endless Cycle
+        requireSkill(131, "tensura:multilayer_barrier", "tensura:maximum_magic_bullet"); // Ocean Soul
         requireSkill(136, "tensura:analyze");              // Grand Synthesis
         requireSkill(137, "tensura:analyze", "tensura:clairvoyance"); // Omniform Understanding
 

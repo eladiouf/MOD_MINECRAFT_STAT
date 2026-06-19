@@ -65,7 +65,14 @@ public final class TensuraSpellTaxonomy {
             entry("tensura:clairvoyance", "utility", StatType.ERUDITION, List.of(StatType.WILLPOWER), true),
             entry("tensura:doppelganger", "utility", StatType.ERUDITION, List.of(StatType.WILLPOWER), true),
             entry("tensura:spatial_storage", "utility", StatType.ERUDITION, List.of(StatType.MANA_POOL), true),
-            entry("tensura:dimension_cutter", "offense", StatType.ERUDITION, List.of(StatType.CASTING_SPEED, StatType.ARCANE_POWER), true)
+            entry("tensura:dimension_cutter", "offense", StatType.ERUDITION, List.of(StatType.CASTING_SPEED, StatType.ARCANE_POWER), true),
+
+            entry("tensura:magic_aura", "empowerment", StatType.MANA_POOL, List.of(StatType.ARCANE_POWER), true),
+            entry("tensura:magic_bullet", "offense", StatType.MANA_POOL, List.of(StatType.ARCANE_POWER, StatType.CASTING_SPEED), true),
+            entry("tensura:magic_space_transform", "empowerment", StatType.MANA_POOL, List.of(StatType.ERUDITION, StatType.CASTING_SPEED), true),
+            entry("tensura:healthcare", "support", StatType.MANA_POOL, List.of(StatType.WATER_AFFINITY, StatType.ERUDITION), true),
+            entry("tensura:multilayer_barrier", "defense", StatType.MANA_POOL, List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER), true),
+            entry("tensura:maximum_magic_bullet", "offense", StatType.MANA_POOL, List.of(StatType.ARCANE_POWER, StatType.ERUDITION), true)
     );
 
     private TensuraSpellTaxonomy() {}
@@ -119,13 +126,21 @@ public final class TensuraSpellTaxonomy {
                 case MASTERY -> "tensura:darkness_cannon";
                 case TRANSCENDENCE -> "tensura:true_darkness";
             };
-            case WATER_AFFINITY, MANA_POOL -> switch (tier) {
+            case WATER_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:healing";
                 case ACTIVE -> "tensura:recovery";
                 case SYNERGY -> "tensura:antidote";
                 case SITUATIONAL -> "tensura:water_jail";
                 case MASTERY -> "tensura:healing_rain";
                 case TRANSCENDENCE -> "tensura:full_recovery";
+            };
+            case MANA_POOL -> switch (tier) {
+                case CORE -> "tensura:magic_aura";
+                case ACTIVE -> "tensura:magic_bullet";
+                case SYNERGY -> "tensura:magic_space_transform";
+                case SITUATIONAL -> "tensura:healthcare";
+                case MASTERY -> "tensura:multilayer_barrier";
+                case TRANSCENDENCE -> "tensura:maximum_magic_bullet";
             };
             case EARTH_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:earth_wall";

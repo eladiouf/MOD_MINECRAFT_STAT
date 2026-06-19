@@ -23,6 +23,8 @@ class TensuraSkillGateTest {
         assertEquals(java.util.List.of("tensura:magic_barrier", "tensura:anti_magic_area"), TensuraSkillGate.requiredSkills(Perk.MAGIC_RESIST_TRANSCENDENCE.id));
         assertEquals(java.util.List.of("tensura:teleport"), TensuraSkillGate.requiredSkills(Perk.CASTING_SPEED_MASTERY.id));
         assertEquals(java.util.List.of("tensura:teleport", "tensura:gate"), TensuraSkillGate.requiredSkills(Perk.CASTING_SPEED_TRANSCENDENCE.id));
+        assertEquals(java.util.List.of("tensura:multilayer_barrier"), TensuraSkillGate.requiredSkills(Perk.MANA_POOL_MASTERY.id));
+        assertEquals(java.util.List.of("tensura:multilayer_barrier", "tensura:maximum_magic_bullet"), TensuraSkillGate.requiredSkills(Perk.MANA_POOL_TRANSCENDENCE.id));
         assertEquals(java.util.List.of("tensura:analyze"), TensuraSkillGate.requiredSkills(Perk.ERUDITION_MASTERY.id));
         assertEquals(java.util.List.of("tensura:analyze", "tensura:clairvoyance"), TensuraSkillGate.requiredSkills(Perk.ERUDITION_TRANSCENDENCE.id));
     }
@@ -36,6 +38,7 @@ class TensuraSkillGateTest {
         assertTrue(TensuraSkillGate.isGated(Perk.AIR_TRANSCENDENCE.id));
         assertTrue(TensuraSkillGate.isGated(Perk.MAGIC_RESIST_TRANSCENDENCE.id));
         assertTrue(TensuraSkillGate.isGated(Perk.CASTING_SPEED_TRANSCENDENCE.id));
+        assertTrue(TensuraSkillGate.isGated(Perk.MANA_POOL_TRANSCENDENCE.id));
         assertTrue(TensuraSkillGate.isGated(Perk.ERUDITION_TRANSCENDENCE.id));
     }
 }

@@ -33,6 +33,8 @@ class TensuraSpellGateTest {
         assertEquals("tensura:hellfire", TensuraSpellGate.resolveForPerk(Perk.FIRE_TRANSCENDENCE));
         assertEquals("tensura:anti_magic_area", TensuraSpellGate.resolveForPerk(Perk.MAGIC_RESIST_TRANSCENDENCE));
         assertEquals("tensura:teleport", TensuraSpellGate.resolveForPerk(Perk.CASTING_SPEED_MASTERY));
+        assertEquals("tensura:multilayer_barrier", TensuraSpellGate.resolveForPerk(Perk.MANA_POOL_MASTERY));
+        assertEquals("tensura:maximum_magic_bullet", TensuraSpellGate.resolveForPerk(Perk.MANA_POOL_TRANSCENDENCE));
         assertEquals("tensura:dimension_cutter", TensuraSpellGate.resolveForPerk(Perk.ERUDITION_TRANSCENDENCE));
     }
 
@@ -48,5 +50,6 @@ class TensuraSpellGateTest {
         assertEquals(StatType.FIRE_AFFINITY, TensuraSpellGate.primaryStatForResolvedSkill("tensura:fire_bolt"));
         assertEquals(StatType.CASTING_SPEED, TensuraSpellGate.primaryStatForResolvedSkill("tensura:teleport"));
         assertEquals(StatType.ERUDITION, TensuraSpellGate.primaryStatForResolvedSkill("tensura:analyze"));
+        assertEquals(StatType.MANA_POOL, TensuraSpellGate.primaryStatForResolvedSkill("tensura:multilayer_barrier"));
     }
 }

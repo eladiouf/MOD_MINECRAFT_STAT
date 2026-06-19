@@ -31,6 +31,7 @@ public final class ElementalsCompat {
             return;
         }
         NeoForge.EVENT_BUS.register(ElementalsCompat.class);
+        NeoForge.EVENT_BUS.register(ElementalsCombatScalingHandler.class);
         STATMod.LOGGER.info("Elementals integration loaded");
     }
 
@@ -40,6 +41,7 @@ public final class ElementalsCompat {
             return;
         }
         reconcilePlayer(player);
+        applyRuntimePenalties(player);
     }
 
     public static void reconcilePlayer(ServerPlayer player) {
@@ -47,6 +49,9 @@ public final class ElementalsCompat {
         ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
         MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
         Set<Integer> unlockedPerks = unlockedPerks(statData);
+        EnumSet<ElementalBranch> previousAllowed = mageData.unlockedBranches();
+        EnumSet<ElementalBranch> runtimeAllowed = RUNTIME.branches(player);
+        boolean previousAwakened = mageData.mageAwakened();
         EnumSet<ElementalBranch> allowed = reconcileMageState(
                 profile,
                 player.getUUID(),
@@ -54,9 +59,14 @@ public final class ElementalsCompat {
                 unlockedPerks,
                 mageData,
                 null);
-        RUNTIME.setAllowedBranches(player, allowed);
-        SyncHelper.syncStats(player);
-        SyncHelper.syncPerks(player);
+        boolean runtimeChanged = !runtimeAllowed.equals(allowed);
+        if (runtimeChanged) {
+            RUNTIME.setAllowedBranches(player, allowed);
+        }
+        if (runtimeChanged || previousAwakened != mageData.mageAwakened() || !previousAllowed.equals(mageData.unlockedBranches())) {
+            SyncHelper.syncStats(player);
+            SyncHelper.syncPerks(player);
+        }
     }
 
     static EnumSet<ElementalBranch> reconcileMageState(MageRaceProfile profile,
@@ -124,6 +134,50 @@ public final class ElementalsCompat {
             return ElementalsMageRules.stateForBaseBranch(branch, player.getData(ModAttachments.STATS)::getLevel, unlockedPerks);
         }
         return mageData.unlockedBranches().contains(branch) ? ElementState.AWAKENED : ElementState.LOCKED;
+    }
+
+    private static void applyRuntimePenalties(ServerPlayer player) {
+        ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
+        MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
+        ElementalBranch activeBranch = RUNTIME.activeBranch(player);
+        float currentChi = RUNTIME.chi(player);
+        float currentXp = RUNTIME.xp(player);
+        int currentLevel = RUNTIME.level(player);
+
+        if (profile.supported()
+                && mageData.mageAwakened()
+                && activeBranch != null
+                && mageData.unlockedBranches().contains(activeBranch)) {
+            ElementState state = stateFor(player, activeBranch);
+            boolean rareBranch = !activeBranch.isBaseBranch();
+            float adjustedChi = ElementalsPenaltyModel.adjustedChiAfterSpend(
+                    mageData.lastSeenChi(),
+                    currentChi,
+                    state,
+                    rareBranch,
+                    mageData.rewardedRareBranches().size());
+            if (Float.compare(adjustedChi, currentChi) != 0) {
+                RUNTIME.setChi(player, adjustedChi);
+                currentChi = adjustedChi;
+            }
+
+            if (mageData.lastSeenLevel() == currentLevel) {
+                float adjustedXp = ElementalsPenaltyModel.adjustedXpAfterGain(
+                        mageData.lastSeenXp(),
+                        currentXp,
+                        profile.beastfolk(),
+                        activeBranch,
+                        mageData.rewardedRareBranches());
+                if (Float.compare(adjustedXp, currentXp) != 0) {
+                    RUNTIME.setXp(player, adjustedXp);
+                    currentXp = adjustedXp;
+                }
+            }
+        }
+
+        mageData.setLastSeenChi(currentChi);
+        mageData.setLastSeenXp(currentXp);
+        mageData.setLastSeenLevel(currentLevel);
     }
 
     private static Set<Integer> unlockedPerks(PlayerStatData statData) {

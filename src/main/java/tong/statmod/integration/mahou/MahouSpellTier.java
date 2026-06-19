@@ -29,7 +29,7 @@ public final class MahouSpellTier {
     }
 
     public static int requiredArcanePower(ItemStack stack) {
-        return requiredArcanePowerForPath(path(stack));
+        return requiredArcanePowerForItemId(itemId(stack));
     }
 
     public static int requiredPrimaryStatLevel(String itemId) {
@@ -41,8 +41,23 @@ public final class MahouSpellTier {
             case "arcane_offense" -> 10;
             case "barrier" -> 15;
             case "mastery" -> 20;
+            case "ritual" -> 20;
             case "cataclysm" -> 30;
             default -> 0;
+        };
+    }
+
+    public static int requiredArcanePowerForItemId(String itemId) {
+        MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
+        if (profile == null) {
+            return requiredArcanePowerForPath(itemId);
+        }
+        return switch (profile.family()) {
+            case "arcane_offense" -> 10;
+            case "barrier" -> 20;
+            case "mastery", "ritual" -> 25;
+            case "cataclysm" -> 40;
+            default -> requiredArcanePowerForPath(itemId);
         };
     }
 
@@ -65,7 +80,7 @@ public final class MahouSpellTier {
     }
 
     public static boolean canCast(int arcanePower, int primaryStatLevel, String itemId) {
-        return arcanePower >= requiredArcanePowerForPath(itemId)
+        return arcanePower >= requiredArcanePowerForItemId(itemId)
                 && primaryStatLevel >= requiredPrimaryStatLevel(itemId);
     }
 
@@ -82,5 +97,11 @@ public final class MahouSpellTier {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (id == null) return "";
         return id.getPath().toLowerCase(Locale.ROOT);
+    }
+
+    private static String itemId(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return "";
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return id == null ? "" : id.toString().toLowerCase(Locale.ROOT);
     }
 }

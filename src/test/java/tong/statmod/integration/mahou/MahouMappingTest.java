@@ -26,6 +26,8 @@ class MahouMappingTest {
                 MahouPerkMap.statsForSpellId("mahoutsukai:rho_aias_spell_scroll"));
         assertArrayEquals(new StatType[]{StatType.ERUDITION, StatType.MANA_POOL},
                 MahouPerkMap.statsForSpellId("mahoutsukai:mystic_staff_spell_scroll"));
+        assertArrayEquals(new StatType[]{StatType.ARCANE_POWER, StatType.MANA_POOL},
+                MahouPerkMap.statsForSpellId("mahoutsukai:scroll_boundary_drain_life"));
     }
 
     @Test
@@ -54,9 +56,19 @@ class MahouMappingTest {
         assertEquals(15, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:rho_aias_spell_scroll"));
         assertEquals(30, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:fallen_down_spell_scroll"));
         assertEquals(20, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:mystic_staff_spell_scroll"));
+        assertEquals(20, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:scroll_boundary_drain_life"));
 
+        assertEquals(10, MahouSpellTier.requiredArcanePowerForItemId("mahoutsukai:gandr_spell_scroll"));
+        assertEquals(20, MahouSpellTier.requiredArcanePowerForItemId("mahoutsukai:rho_aias_spell_scroll"));
+        assertEquals(25, MahouSpellTier.requiredArcanePowerForItemId("mahoutsukai:mystic_staff_spell_scroll"));
+        assertEquals(25, MahouSpellTier.requiredArcanePowerForItemId("mahoutsukai:scroll_boundary_drain_life"));
+        assertEquals(40, MahouSpellTier.requiredArcanePowerForItemId("mahoutsukai:fallen_down_spell_scroll"));
+
+        assertEquals(false, MahouSpellTier.canCast(39, 30, "mahoutsukai:fallen_down_spell_scroll"));
         assertEquals(false, MahouSpellTier.canCast(40, 29, "mahoutsukai:fallen_down_spell_scroll"));
         assertEquals(true, MahouSpellTier.canCast(40, 30, "mahoutsukai:fallen_down_spell_scroll"));
+        assertEquals(false, MahouSpellTier.canCast(24, 20, "mahoutsukai:scroll_boundary_drain_life"));
+        assertEquals(true, MahouSpellTier.canCast(25, 20, "mahoutsukai:scroll_boundary_drain_life"));
         assertEquals(false, MahouSpellTier.canCast(40, 14, "mahoutsukai:rho_aias_spell_scroll"));
         assertEquals(true, MahouSpellTier.canCast(40, 15, "mahoutsukai:rho_aias_spell_scroll"));
     }

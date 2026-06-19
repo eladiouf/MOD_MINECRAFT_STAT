@@ -61,7 +61,7 @@ public final class MahouCompat {
         String itemId = itemId(stack);
         StatType primaryStat = MahouSpellTier.primaryStat(itemId);
         int primaryLevel = RaceEffectApplier.getEffectiveLevel(player, primaryStat.index);
-        int requiredArcane = MahouSpellTier.requiredArcanePower(stack);
+        int requiredArcane = MahouSpellTier.requiredArcanePowerForItemId(itemId);
         int requiredPrimary = MahouSpellTier.requiredPrimaryStatLevel(itemId);
         if (!MahouSpellTier.canCast(arcanePower, primaryLevel, itemId)) {
             String message = (requiredPrimary <= 0 || primaryStat == StatType.ARCANE_POWER)

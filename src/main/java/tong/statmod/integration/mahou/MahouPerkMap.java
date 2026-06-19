@@ -7,18 +7,13 @@ public final class MahouPerkMap {
 
     public static StatType[] statsForSpellId(String itemId) {
         MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
-        if (profile == null) {
-            return statsForElement(MahouElementMapper.elementForPath(itemId));
+        if (profile != null) {
+            if (!profile.secondaryStats().isEmpty()) {
+                return new StatType[]{profile.primaryStat(), profile.secondaryStats().getFirst()};
+            }
+            return new StatType[]{profile.primaryStat()};
         }
-        return switch (profile.primaryStat()) {
-            case FIRE_AFFINITY -> new StatType[]{StatType.FIRE_AFFINITY, StatType.ARCANE_POWER};
-            case WATER_AFFINITY -> new StatType[]{StatType.WATER_AFFINITY, StatType.MANA_POOL};
-            case EARTH_AFFINITY -> new StatType[]{StatType.EARTH_AFFINITY, StatType.MAGIC_RESISTANCE};
-            case AIR_AFFINITY -> new StatType[]{StatType.AIR_AFFINITY, StatType.CASTING_SPEED};
-            case MAGIC_RESISTANCE -> new StatType[]{StatType.MAGIC_RESISTANCE, StatType.WILLPOWER};
-            case ERUDITION -> new StatType[]{StatType.ERUDITION, StatType.MANA_POOL};
-            default -> new StatType[]{StatType.ARCANE_POWER, StatType.ERUDITION};
-        };
+        return statsForElement(MahouElementMapper.elementForPath(itemId));
     }
 
     public static StatType[] statsForElement(String element) {

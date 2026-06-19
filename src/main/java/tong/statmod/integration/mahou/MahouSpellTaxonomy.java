@@ -8,11 +8,12 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class MahouSpellTaxonomy {
-    private static final Map<String, MahouSpellProfile> PROFILES = Map.of(
-            "mahoutsukai:gandr_spell_scroll", new MahouSpellProfile("mahoutsukai:gandr_spell_scroll", "arcane_offense", StatType.ARCANE_POWER, List.of(StatType.CASTING_SPEED)),
-            "mahoutsukai:rho_aias_spell_scroll", new MahouSpellProfile("mahoutsukai:rho_aias_spell_scroll", "barrier", StatType.EARTH_AFFINITY, List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER)),
-            "mahoutsukai:fallen_down_spell_scroll", new MahouSpellProfile("mahoutsukai:fallen_down_spell_scroll", "cataclysm", StatType.FIRE_AFFINITY, List.of(StatType.ARCANE_POWER)),
-            "mahoutsukai:mystic_staff_spell_scroll", new MahouSpellProfile("mahoutsukai:mystic_staff_spell_scroll", "mastery", StatType.ERUDITION, List.of(StatType.MANA_POOL))
+    private static final Map<String, MahouSpellProfile> PROFILES = Map.ofEntries(
+            Map.entry("mahoutsukai:gandr_spell_scroll", new MahouSpellProfile("mahoutsukai:gandr_spell_scroll", "arcane_offense", StatType.ARCANE_POWER, List.of(StatType.CASTING_SPEED))),
+            Map.entry("mahoutsukai:rho_aias_spell_scroll", new MahouSpellProfile("mahoutsukai:rho_aias_spell_scroll", "barrier", StatType.EARTH_AFFINITY, List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER))),
+            Map.entry("mahoutsukai:fallen_down_spell_scroll", new MahouSpellProfile("mahoutsukai:fallen_down_spell_scroll", "cataclysm", StatType.FIRE_AFFINITY, List.of(StatType.ARCANE_POWER))),
+            Map.entry("mahoutsukai:mystic_staff_spell_scroll", new MahouSpellProfile("mahoutsukai:mystic_staff_spell_scroll", "mastery", StatType.ERUDITION, List.of(StatType.MANA_POOL))),
+            Map.entry("mahoutsukai:scroll_boundary_drain_life", new MahouSpellProfile("mahoutsukai:scroll_boundary_drain_life", "ritual", StatType.ARCANE_POWER, List.of(StatType.MANA_POOL, StatType.WILLPOWER)))
     );
 
     private MahouSpellTaxonomy() {}

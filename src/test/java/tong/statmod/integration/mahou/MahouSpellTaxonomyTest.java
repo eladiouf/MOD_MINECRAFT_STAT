@@ -13,6 +13,7 @@ class MahouSpellTaxonomyTest {
         assertEquals(StatType.EARTH_AFFINITY, MahouSpellTaxonomy.primaryStat("mahoutsukai:rho_aias_spell_scroll"));
         assertEquals(StatType.FIRE_AFFINITY, MahouSpellTaxonomy.primaryStat("mahoutsukai:fallen_down_spell_scroll"));
         assertEquals(StatType.ERUDITION, MahouSpellTaxonomy.primaryStat("mahoutsukai:mystic_staff_spell_scroll"));
+        assertEquals(StatType.ARCANE_POWER, MahouSpellTaxonomy.primaryStat("mahoutsukai:scroll_boundary_drain_life"));
     }
 
     @Test
@@ -23,5 +24,8 @@ class MahouSpellTaxonomyTest {
         assertIterableEquals(
                 java.util.List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER),
                 MahouSpellTaxonomy.secondaryStats("mahoutsukai:rho_aias_spell_scroll"));
+        assertIterableEquals(
+                java.util.List.of(StatType.MANA_POOL, StatType.WILLPOWER),
+                MahouSpellTaxonomy.secondaryStats("mahoutsukai:scroll_boundary_drain_life"));
     }
 }

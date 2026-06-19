@@ -3,6 +3,7 @@ package tong.statmod.integration.mahou;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import tong.statmod.stats.StatType;
 
 import java.util.Locale;
 
@@ -28,6 +29,16 @@ public final class MahouElementMapper {
         }
         MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
         if (profile != null) {
+            String familyElement = switch (profile.family()) {
+                case "boundary" -> "earth";
+                case "displacement" -> "air";
+                case "eyes" -> profile.primaryStat() == StatType.FIRE_AFFINITY ? "fire" : "arcane";
+                case "projection", "mastery", "ritual" -> "arcane";
+                default -> null;
+            };
+            if (familyElement != null) {
+                return familyElement;
+            }
             return switch (profile.primaryStat()) {
                 case FIRE_AFFINITY -> "fire";
                 case WATER_AFFINITY -> "water";
@@ -44,7 +55,7 @@ public final class MahouElementMapper {
         if (path == null) {
             return "arcane";
         }
-        String normalized = path.toLowerCase(Locale.ROOT);
+        String normalized = MahouSpellIds.canonicalize(path);
         MahouSpellProfile profile = MahouSpellTaxonomy.profile(normalized);
         if (profile != null) {
             return elementForItemId(normalized);

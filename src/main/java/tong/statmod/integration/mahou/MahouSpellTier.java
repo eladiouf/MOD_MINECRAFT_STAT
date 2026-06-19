@@ -40,6 +40,10 @@ public final class MahouSpellTier {
         return switch (profile.family()) {
             case "arcane_offense" -> 10;
             case "barrier" -> 15;
+            case "boundary" -> 15;
+            case "displacement" -> 10;
+            case "eyes" -> profile.primaryStat() == StatType.FIRE_AFFINITY ? 20 : 15;
+            case "projection" -> 20;
             case "mastery" -> 20;
             case "ritual" -> 20;
             case "cataclysm" -> 30;
@@ -55,6 +59,10 @@ public final class MahouSpellTier {
         return switch (profile.family()) {
             case "arcane_offense" -> 10;
             case "barrier" -> 20;
+            case "boundary" -> 20;
+            case "displacement" -> 15;
+            case "eyes" -> profile.primaryStat() == StatType.FIRE_AFFINITY ? 25 : 20;
+            case "projection" -> 25;
             case "mastery", "ritual" -> 25;
             case "cataclysm" -> 40;
             default -> requiredArcanePowerForPath(itemId);

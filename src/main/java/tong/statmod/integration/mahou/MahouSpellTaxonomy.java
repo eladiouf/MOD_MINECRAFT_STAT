@@ -9,11 +9,16 @@ import java.util.Map;
 
 public final class MahouSpellTaxonomy {
     private static final Map<String, MahouSpellProfile> PROFILES = Map.ofEntries(
-            Map.entry("mahoutsukai:gandr_spell_scroll", new MahouSpellProfile("mahoutsukai:gandr_spell_scroll", "arcane_offense", StatType.ARCANE_POWER, List.of(StatType.CASTING_SPEED))),
-            Map.entry("mahoutsukai:rho_aias_spell_scroll", new MahouSpellProfile("mahoutsukai:rho_aias_spell_scroll", "barrier", StatType.EARTH_AFFINITY, List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER))),
-            Map.entry("mahoutsukai:fallen_down_spell_scroll", new MahouSpellProfile("mahoutsukai:fallen_down_spell_scroll", "cataclysm", StatType.FIRE_AFFINITY, List.of(StatType.ARCANE_POWER))),
-            Map.entry("mahoutsukai:mystic_staff_spell_scroll", new MahouSpellProfile("mahoutsukai:mystic_staff_spell_scroll", "mastery", StatType.ERUDITION, List.of(StatType.MANA_POOL))),
+            Map.entry("mahoutsukai:scroll_gandr", new MahouSpellProfile("mahoutsukai:scroll_gandr", "arcane_offense", StatType.ARCANE_POWER, List.of(StatType.CASTING_SPEED))),
+            Map.entry("mahoutsukai:scroll_rho_aias", new MahouSpellProfile("mahoutsukai:scroll_rho_aias", "barrier", StatType.EARTH_AFFINITY, List.of(StatType.MAGIC_RESISTANCE, StatType.WILLPOWER))),
+            Map.entry("mahoutsukai:scroll_fallen_down", new MahouSpellProfile("mahoutsukai:scroll_fallen_down", "cataclysm", StatType.FIRE_AFFINITY, List.of(StatType.ARCANE_POWER))),
+            Map.entry("mahoutsukai:scroll_mystic_staff", new MahouSpellProfile("mahoutsukai:scroll_mystic_staff", "mastery", StatType.ERUDITION, List.of(StatType.MANA_POOL))),
             Map.entry("mahoutsukai:scroll_boundary_drain_life", new MahouSpellProfile("mahoutsukai:scroll_boundary_drain_life", "ritual", StatType.ARCANE_POWER, List.of(StatType.MANA_POOL, StatType.WILLPOWER)))
+            ,Map.entry("mahoutsukai:scroll_mental_displacement", new MahouSpellProfile("mahoutsukai:scroll_mental_displacement", "displacement", StatType.CASTING_SPEED, List.of(StatType.AIR_AFFINITY)))
+            ,Map.entry("mahoutsukai:scroll_boundary_gravity", new MahouSpellProfile("mahoutsukai:scroll_boundary_gravity", "boundary", StatType.EARTH_AFFINITY, List.of(StatType.MAGIC_RESISTANCE)))
+            ,Map.entry("mahoutsukai:scroll_prediction", new MahouSpellProfile("mahoutsukai:scroll_prediction", "eyes", StatType.ERUDITION, List.of(StatType.WILLPOWER)))
+            ,Map.entry("mahoutsukai:scroll_black_flame", new MahouSpellProfile("mahoutsukai:scroll_black_flame", "eyes", StatType.FIRE_AFFINITY, List.of(StatType.ARCANE_POWER)))
+            ,Map.entry("mahoutsukai:scroll_treasury_projection", new MahouSpellProfile("mahoutsukai:scroll_treasury_projection", "projection", StatType.ERUDITION, List.of(StatType.MANA_POOL)))
     );
 
     private MahouSpellTaxonomy() {}
@@ -22,7 +27,7 @@ public final class MahouSpellTaxonomy {
         if (itemId == null || itemId.isBlank()) {
             return null;
         }
-        return PROFILES.get(itemId.toLowerCase(Locale.ROOT));
+        return PROFILES.get(MahouSpellIds.canonicalize(itemId));
     }
 
     public static StatType primaryStat(String itemId) {

@@ -23,10 +23,10 @@ public final class TensuraSpellGate {
     );
 
     private static final Map<String, String> PERK_TO_MAHOU = Map.of(
-            "mystic_staff", "mahoutsukai:mystic_staff_spell_scroll",
-            "gandr", "mahoutsukai:gandr_spell_scroll",
-            "rho_aias", "mahoutsukai:rho_aias_spell_scroll",
-            "fallen_down", "mahoutsukai:fallen_down_spell_scroll"
+            "mystic_staff", "mahoutsukai:scroll_mystic_staff",
+            "gandr", "mahoutsukai:scroll_gandr",
+            "rho_aias", "mahoutsukai:scroll_rho_aias",
+            "fallen_down", "mahoutsukai:scroll_fallen_down"
     );
 
     private TensuraSpellGate() {}

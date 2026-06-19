@@ -14,7 +14,7 @@ class TensuraSpellGateTest {
         assertEquals("tensura:fire_bolt", TensuraSpellGate.resolveTensuraSpellId("fire_bolt"));
         assertEquals("tensura:magic_barrier", TensuraSpellGate.resolveTensuraSpellId("light_bind"));
         assertEquals("tensura:teleport", TensuraSpellGate.resolveTensuraSpellId("space_shift"));
-        assertEquals("mahoutsukai:gandr_spell_scroll", TensuraSpellGate.resolveMahouScrollId("gandr"));
+        assertEquals("mahoutsukai:scroll_gandr", TensuraSpellGate.resolveMahouScrollId("gandr"));
     }
 
     @Test

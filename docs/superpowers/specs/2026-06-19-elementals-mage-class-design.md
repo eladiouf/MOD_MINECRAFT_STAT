@@ -165,18 +165,24 @@ Beastfolk threshold:
 Relevant magical stats for this design are:
 
 - `ARCANE_POWER`
+- `WATER_AFFINITY`
+- `EARTH_AFFINITY`
+- `FIRE_AFFINITY`
+- `AIR_AFFINITY`
 - `CASTING_SPEED`
 - `MANA_POOL`
 - `ERUDITION`
 - `MAGIC_RESISTANCE`
 - `WILLPOWER`
 
+For every threshold in this spec, `total magical stat sum` means the sum of all nine stats listed above.
+
 ### 5.3 Awakening Outcome
 
 When mage awakening happens, the player gains:
 
 - access to the mage-class path
-- access to their race-defined starting elements
+- their race-defined starting elements in the `awakened` state
 - eligibility to progress those elements toward mastery
 
 Awakening should feel like entering a real specialization, not just unlocking a UI screen.
@@ -220,6 +226,8 @@ Requirements:
 - total magical stat sum of `60+`
 - required perk ownership
 
+On unlock, the third base element enters the `awakened` state.
+
 Race modifiers:
 
 - `human`: total magical stat sum reduced to `56+`
@@ -236,11 +244,14 @@ Requirements:
 - `ERUDITION 22+`
 - `ARCANE_POWER 22+`
 - total magical stat sum of `76+`
+- required perk ownership
 
 Race modifiers:
 
 - `human`: total magical stat sum reduced to `72+`
 - `beastfolk`: total magical stat sum increased to `82+`
+
+On unlock, the fourth base element enters the `awakened` state.
 
 This stage should be exceptional, not normal progression.
 
@@ -264,6 +275,7 @@ On successful use, the unlock is:
 - permanent
 - tied to the character
 - accompanied by a perk and a skill grant
+- applied in the `awakened` state, not immediately `mastered`
 
 ### 7.3 Lightning Requirements
 
@@ -286,6 +298,8 @@ On successful use, the unlock is:
 `lightning` and `blood` are cumulative. A character may earn both.
 
 This is allowed because the system compensates with harsh cost and progression penalties.
+
+This spec does not yet define a full rare-branch mastery path. Until that later slice exists, rare branches should be treated as advanced `awakened` branches with their own penalties and perk rewards.
 
 ## 8. Runtime Power Model
 
@@ -340,6 +354,8 @@ This includes:
 - mastery perks for base elements
 - unlock perks for broader progression stages
 - rare-branch perks attached to grimoire acquisition
+
+The implementation plan must map these requirements to exact existing perk ids or define the new perk nodes needed.
 
 ### 10.2 Tree Organization
 

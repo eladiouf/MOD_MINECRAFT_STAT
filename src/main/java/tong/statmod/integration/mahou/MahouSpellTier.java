@@ -11,7 +11,7 @@ public final class MahouSpellTier {
     private MahouSpellTier() {}
 
     public static int xpMultiplier(ItemStack stack) {
-        return xpMultiplierForPath(path(stack));
+        return xpMultiplierForItemId(itemId(stack));
     }
 
     public static int xpMultiplierForPath(String path) {
@@ -26,6 +26,19 @@ public final class MahouSpellTier {
             return 2;
         }
         return 1;
+    }
+
+    public static int xpMultiplierForItemId(String itemId) {
+        MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
+        if (profile == null) {
+            return xpMultiplierForPath(itemId);
+        }
+        return switch (profile.family()) {
+            case "arcane_offense", "displacement" -> 1;
+            case "barrier", "boundary", "eyes", "mastery", "ritual" -> 2;
+            case "projection", "cataclysm" -> 3;
+            default -> xpMultiplierForPath(itemId);
+        };
     }
 
     public static int requiredArcanePower(ItemStack stack) {

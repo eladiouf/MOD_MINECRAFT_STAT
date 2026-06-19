@@ -48,6 +48,13 @@ class MahouMappingTest {
         assertEquals(1, MahouSpellTier.xpMultiplierForPath("basic_scroll"));
         assertEquals(2, MahouSpellTier.xpMultiplierForPath("advanced_scroll"));
         assertEquals(3, MahouSpellTier.xpMultiplierForPath("ultimate_scroll"));
+        assertEquals(1, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_gandr"));
+        assertEquals(2, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_boundary_gravity"));
+        assertEquals(2, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_prediction"));
+        assertEquals(2, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_mystic_staff"));
+        assertEquals(2, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_black_flame"));
+        assertEquals(3, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_treasury_projection"));
+        assertEquals(3, MahouSpellTier.xpMultiplierForItemId("mahoutsukai:scroll_fallen_down"));
     }
 
     @Test

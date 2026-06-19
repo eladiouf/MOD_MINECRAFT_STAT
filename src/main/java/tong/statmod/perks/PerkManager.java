@@ -9,6 +9,15 @@ import tong.statmod.integration.tensura.TensuraSpellGate;
 import tong.statmod.storage.PlayerStatData;
 
 public class PerkManager {
+    public enum UnlockFailure {
+        INVALID_PERK,
+        ALREADY_UNLOCKED,
+        LEVEL_TOO_LOW,
+        NOT_ENOUGH_POINTS,
+        SYNERGY_TOO_LOW,
+        EXTERNAL_REQUIREMENT
+    }
+
     private final PlayerStatData statData;
 
     public PerkManager(PlayerStatData statData) {
@@ -32,20 +41,25 @@ public class PerkManager {
     }
 
     public boolean canUnlock(Perk perk, Player player) {
-        if (perk == null || isUnlocked(perk)) return false;
+        return getUnlockFailure(perk, player) == null;
+    }
+
+    public UnlockFailure getUnlockFailure(Perk perk, Player player) {
+        if (perk == null) return UnlockFailure.INVALID_PERK;
+        if (isUnlocked(perk)) return UnlockFailure.ALREADY_UNLOCKED;
         int statLevel = player != null
                 ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
                 : statData.getLevel(perk.stat.index);
-        if (statLevel < perk.tier.requiredStatLevel) return false;
-        if (getPointsForStat(perk.stat.index) < perk.tier.cost) return false;
+        if (statLevel < perk.tier.requiredStatLevel) return UnlockFailure.LEVEL_TOO_LOW;
+        if (getPointsForStat(perk.stat.index) < perk.tier.cost) return UnlockFailure.NOT_ENOUGH_POINTS;
         if (perk.synergyStat != null) {
             int synergyLevel = player != null
                     ? RaceEffectApplier.getEffectiveLevel(player, perk.synergyStat.index)
                     : statData.getLevel(perk.synergyStat.index);
-            if (synergyLevel < PerkTier.SYNERGY.requiredStatLevel) return false;
+            if (synergyLevel < PerkTier.SYNERGY.requiredStatLevel) return UnlockFailure.SYNERGY_TOO_LOW;
         }
-        if (player != null && !SkillPerkGate.canUnlock(player, perk)) return false;
-        return true;
+        if (player != null && !SkillPerkGate.canUnlock(player, perk)) return UnlockFailure.EXTERNAL_REQUIREMENT;
+        return null;
     }
 
     public boolean unlock(Perk perk) {

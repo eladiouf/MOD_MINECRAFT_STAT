@@ -30,5 +30,8 @@ public class NetworkHandler {
 
         registrar.playToClient(StaminaSyncPayload.TYPE, StaminaSyncPayload.CODEC,
                 ClientPayloadHandler::handleStaminaSync);
+
+        registrar.playToClient(PerkFeedbackPayload.TYPE, PerkFeedbackPayload.CODEC,
+                ClientPayloadHandler::handlePerkFeedback);
     }
 }

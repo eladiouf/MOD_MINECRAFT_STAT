@@ -6,6 +6,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
 import tong.statmod.client.ClientStaminaCache;
+import tong.statmod.client.gui.PerkFeedbackToast;
+import net.minecraft.network.chat.Component;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientPayloadHandler {
@@ -31,5 +33,11 @@ public final class ClientPayloadHandler {
                 payload.currentStamina(),
                 payload.fatigueDebt(),
                 payload.meditating()));
+    }
+
+    public static void handlePerkFeedback(PerkFeedbackPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> PerkFeedbackToast.show(
+                Component.literal(payload.title()),
+                Component.literal(payload.message())));
     }
 }

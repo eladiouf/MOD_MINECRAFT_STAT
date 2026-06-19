@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public final class PuffishReflectionGateway implements PuffishMirrorGateway {
     private static final String SKILLS_API_CLASS = "net.puffish.skillsmod.api.SkillsAPI";
+    private static final String POINT_SOURCES_CLASS = "net.puffish.skillsmod.util.PointSources";
 
     private final ServerPlayer player;
 
@@ -23,6 +24,20 @@ public final class PuffishReflectionGateway implements PuffishMirrorGateway {
 
     @Override
     public void setPoints(String categoryId, int points) {
+        Object category = category(categoryId);
+        if (category == null) {
+            return;
+        }
+        try {
+            Method silentMethod = findMethod(category.getClass(), "setPointsSilently", 3);
+            Object commandSource = commandsPointSource();
+            if (silentMethod != null && commandSource != null) {
+                silentMethod.invoke(category, player, commandSource, points);
+                return;
+            }
+        } catch (ReflectiveOperationException e) {
+            STATMod.LOGGER.warn("Puffish silent points sync failed for {}: {}", categoryId, e.getMessage());
+        }
         invokeCategory(categoryId, "setExtraPoints", points);
     }
 
@@ -107,5 +122,14 @@ public final class PuffishReflectionGateway implements PuffishMirrorGateway {
             }
         }
         return null;
+    }
+
+    private static Object commandsPointSource() {
+        try {
+            Class<?> pointSources = Class.forName(POINT_SOURCES_CLASS);
+            return pointSources.getField("COMMANDS").get(null);
+        } catch (ReflectiveOperationException e) {
+            return null;
+        }
     }
 }

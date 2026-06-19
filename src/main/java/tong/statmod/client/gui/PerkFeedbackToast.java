@@ -9,14 +9,22 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
-final class PerkFeedbackToast {
+public final class PerkFeedbackToast {
     private static final SystemToast.SystemToastId TOAST_ID = new SystemToast.SystemToastId();
     private static Consumer<ToastPayload> sinkForTests;
 
     private PerkFeedbackToast() {}
 
-    static void show(PerkNodeWidget.ClickResult result) {
+    public static void show(PerkNodeWidget.ClickResult result) {
         ToastPayload payload = payloadFor(result);
+        if (payload == null) {
+            return;
+        }
+        show(payload.title(), payload.message());
+    }
+
+    public static void show(Component title, Component message) {
+        ToastPayload payload = new ToastPayload(title, message);
         if (payload == null) {
             return;
         }

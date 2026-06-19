@@ -1,9 +1,14 @@
 package tong.statmod.integration.puffish;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
 import tong.statmod.network.SyncHelper;
+import tong.statmod.network.PerkFeedbackPayload;
+import tong.statmod.perks.Perk;
+import tong.statmod.perks.PerkManager;
 import tong.statmod.sound.SoundHelper;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -35,8 +40,15 @@ public final class PuffishSkillsCompat {
                             return;
                         }
                         PlayerStatData data = player.getData(ModAttachments.STATS);
-                        if (PuffishUnlockService.tryUnlock(data, categoryId, skillId, player)) {
+                        Perk perk = PuffishPerkIds.resolve(categoryId, skillId);
+                        PerkManager manager = new PerkManager(data);
+                        PerkManager.UnlockFailure failure = manager.getUnlockFailure(perk, player);
+                        if (failure == null && manager.unlock(perk, player)) {
                             SoundHelper.playPerkUnlock(player);
+                        } else {
+                            PacketDistributor.sendToPlayer(player, new PerkFeedbackPayload(
+                                    "Perk unavailable",
+                                    feedbackMessage(failure).getString()));
                         }
                         SyncHelper.syncPerks(player);
                     });
@@ -81,6 +93,20 @@ public final class PuffishSkillsCompat {
 
     private static boolean isSyncing(ServerPlayer player) {
         return player != null && SYNC_GUARD.contains(player.getUUID());
+    }
+
+    private static Component feedbackMessage(PerkManager.UnlockFailure failure) {
+        if (failure == null) {
+            return Component.empty();
+        }
+        return switch (failure) {
+            case LEVEL_TOO_LOW -> Component.literal("Stat level too low");
+            case NOT_ENOUGH_POINTS -> Component.literal("Not enough perk points");
+            case ALREADY_UNLOCKED -> Component.literal("Perk already unlocked");
+            case SYNERGY_TOO_LOW -> Component.literal("Synergy stat too low");
+            case EXTERNAL_REQUIREMENT -> Component.literal("Perk requirements not met");
+            case INVALID_PERK -> Component.literal("Invalid perk");
+        };
     }
 
     private static void registerEvent(String interfaceName, String registerMethodName, EventHandler handler)

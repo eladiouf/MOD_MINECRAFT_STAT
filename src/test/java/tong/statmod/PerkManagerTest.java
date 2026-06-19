@@ -175,4 +175,18 @@ class PerkManagerTest {
         assertEquals(1, data.getPerkPointsForStat(StatType.BLADE_TECHNIQUE.index));
         assertTrue(mgr.canUnlock(Perk.BLADE_CORE));
     }
+
+    @Test
+    void reportsLevelTooLowFailureReason() {
+        PerkManager mgr = makeManager(5, 10);
+
+        assertEquals(PerkManager.UnlockFailure.LEVEL_TOO_LOW, mgr.getUnlockFailure(Perk.BRUTE_CORE, null));
+    }
+
+    @Test
+    void reportsNotEnoughPointsFailureReason() {
+        PerkManager mgr = makeManager(10, 0);
+
+        assertEquals(PerkManager.UnlockFailure.NOT_ENOUGH_POINTS, mgr.getUnlockFailure(Perk.BRUTE_CORE, null));
+    }
 }

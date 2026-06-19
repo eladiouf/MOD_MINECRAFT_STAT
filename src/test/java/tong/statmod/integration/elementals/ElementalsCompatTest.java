@@ -166,12 +166,63 @@ class ElementalsCompatTest {
         ElementalsCompat.applyRuntimePenalties(
                 ElementalsRaceAffinity.resolve("tensura:beastfolk"),
                 data,
-                ElementState.AWAKENED,
-                runtime
+                runtime,
+                branch -> ElementState.AWAKENED
         );
 
         assertEquals(5, runtime.level());
         assertEquals(1.04f, runtime.xp(), 0.0001f);
         assertEquals(1, runtime.xpSyncCalls);
+    }
+
+    @Test
+    void chiPenaltyUsesPreviousActiveBranchWhenPlayerSwapsBeforeTick() {
+        FakeRuntime runtime = new FakeRuntime();
+        runtime.activeBranch = ElementalBranch.FIRE;
+        runtime.chi = 80.0f;
+
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.LIGHTNING));
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+        data.setLastSeenChi(100.0f);
+        data.setLastSeenActiveBranch(ElementalBranch.LIGHTNING);
+
+        ElementalsCompat.applyRuntimePenalties(
+                ElementalsRaceAffinity.resolve("tensura:human"),
+                data,
+                runtime,
+                branch -> branch == ElementalBranch.LIGHTNING ? ElementState.AWAKENED : ElementState.MASTERED
+        );
+
+        assertEquals(70.0f, runtime.chi(), 0.0001f);
+        assertEquals(ElementalBranch.FIRE, data.lastSeenActiveBranch());
+    }
+
+    @Test
+    void xpPenaltyUsesPreviousActiveBranchWhenPlayerSwapsBeforeTick() {
+        FakeRuntime runtime = new FakeRuntime();
+        runtime.activeBranch = ElementalBranch.LIGHTNING;
+        runtime.xp = 10.0f;
+        runtime.level = 5;
+
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.LIGHTNING));
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+        data.setLastSeenXp(0.0f);
+        data.setLastSeenLevel(5);
+        data.setLastSeenActiveBranch(ElementalBranch.FIRE);
+
+        ElementalsCompat.applyRuntimePenalties(
+                ElementalsRaceAffinity.resolve("tensura:human"),
+                data,
+                runtime,
+                branch -> ElementState.AWAKENED
+        );
+
+        assertEquals(8.0f, runtime.xp(), 0.0001f);
+        assertEquals(1, runtime.xpSyncCalls);
+        assertEquals(ElementalBranch.LIGHTNING, data.lastSeenActiveBranch());
     }
 }

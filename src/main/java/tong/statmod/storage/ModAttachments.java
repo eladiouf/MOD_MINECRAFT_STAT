@@ -128,6 +128,7 @@ public class ModAttachments {
             if (tag.contains("LastSeenChi")) data.setLastSeenChi(tag.getFloat("LastSeenChi"));
             if (tag.contains("LastSeenXp")) data.setLastSeenXp(tag.getFloat("LastSeenXp"));
             if (tag.contains("LastSeenLevel")) data.setLastSeenLevel(tag.getInt("LastSeenLevel"));
+            if (tag.contains("LastSeenActiveBranch")) data.setLastSeenActiveBranch(fromOrdinal(tag.getInt("LastSeenActiveBranch")));
             return data;
         }
 
@@ -141,6 +142,9 @@ public class ModAttachments {
             tag.putFloat("LastSeenChi", data.lastSeenChi());
             tag.putFloat("LastSeenXp", data.lastSeenXp());
             tag.putInt("LastSeenLevel", data.lastSeenLevel());
+            if (data.lastSeenActiveBranch() != null) {
+                tag.putInt("LastSeenActiveBranch", data.lastSeenActiveBranch().ordinal());
+            }
             return tag;
         }
 
@@ -151,11 +155,19 @@ public class ModAttachments {
         private static EnumSet<ElementalBranch> fromOrdinals(int[] ordinals) {
             EnumSet<ElementalBranch> branches = EnumSet.noneOf(ElementalBranch.class);
             for (int ordinal : ordinals) {
-                if (ordinal >= 0 && ordinal < ElementalBranch.values().length) {
-                    branches.add(ElementalBranch.values()[ordinal]);
+                ElementalBranch branch = fromOrdinal(ordinal);
+                if (branch != null) {
+                    branches.add(branch);
                 }
             }
             return branches;
+        }
+
+        private static ElementalBranch fromOrdinal(int ordinal) {
+            if (ordinal < 0 || ordinal >= ElementalBranch.values().length) {
+                return null;
+            }
+            return ElementalBranch.values()[ordinal];
         }
     }
 }

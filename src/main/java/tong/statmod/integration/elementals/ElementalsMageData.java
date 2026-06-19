@@ -10,6 +10,7 @@ public final class ElementalsMageData {
     private float lastSeenChi;
     private float lastSeenXp;
     private int lastSeenLevel;
+    private ElementalBranch lastSeenActiveBranch;
 
     public boolean mageAwakened() {
         return mageAwakened;
@@ -74,5 +75,13 @@ public final class ElementalsMageData {
 
     public void setLastSeenLevel(int value) {
         lastSeenLevel = Math.max(0, value);
+    }
+
+    public ElementalBranch lastSeenActiveBranch() {
+        return lastSeenActiveBranch;
+    }
+
+    public void setLastSeenActiveBranch(ElementalBranch branch) {
+        lastSeenActiveBranch = branch;
     }
 }

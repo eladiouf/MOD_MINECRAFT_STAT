@@ -16,6 +16,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 
 public final class ElementalsCompat {
@@ -145,9 +146,7 @@ public final class ElementalsCompat {
     private static void applyRuntimePenalties(ServerPlayer player) {
         ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
         MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
-        ElementalBranch activeBranch = RUNTIME.activeBranch(player);
-        ElementState activeState = activeBranch == null ? ElementState.LOCKED : stateFor(player, activeBranch);
-        applyRuntimePenalties(profile, mageData, activeState, new ElementalsRuntimePort() {
+        applyRuntimePenalties(profile, mageData, new ElementalsRuntimePort() {
             @Override
             public void setAllowedBranches(EnumSet<ElementalBranch> branches) {
                 throw new UnsupportedOperationException();
@@ -192,27 +191,32 @@ public final class ElementalsCompat {
             public void setLevelAndXp(int level, float xp) {
                 RUNTIME.setLevelAndXp(player, level, xp);
             }
-        });
+        }, branch -> branch == null ? ElementState.LOCKED : stateFor(player, branch));
     }
 
     static void applyRuntimePenalties(MageRaceProfile profile,
                                       ElementalsMageData mageData,
-                                      ElementState activeState,
-                                      ElementalsRuntimePort runtime) {
+                                      ElementalsRuntimePort runtime,
+                                      Function<ElementalBranch, ElementState> stateResolver) {
         ElementalBranch activeBranch = runtime.activeBranch();
         float currentChi = runtime.chi();
         float currentXp = runtime.xp();
         int currentLevel = runtime.level();
+        boolean chiSpent = mageData.lastSeenChi() > currentChi;
+        boolean progressGained = currentLevel > mageData.lastSeenLevel()
+                || (currentLevel == mageData.lastSeenLevel() && currentXp > mageData.lastSeenXp());
+        ElementalBranch penalizedBranch = penaltyBranch(mageData.lastSeenActiveBranch(), activeBranch, chiSpent || progressGained);
 
         if (profile.supported()
                 && mageData.mageAwakened()
-                && activeBranch != null
-                && mageData.unlockedBranches().contains(activeBranch)) {
-            boolean rareBranch = !activeBranch.isBaseBranch();
+                && penalizedBranch != null
+                && mageData.unlockedBranches().contains(penalizedBranch)) {
+            ElementState penalizedState = stateResolver.apply(penalizedBranch);
+            boolean rareBranch = !penalizedBranch.isBaseBranch();
             float adjustedChi = ElementalsPenaltyModel.adjustedChiAfterSpend(
                     mageData.lastSeenChi(),
                     currentChi,
-                    activeState,
+                    penalizedState,
                     rareBranch,
                     mageData.rewardedRareBranches().size());
             if (Float.compare(adjustedChi, currentChi) != 0) {
@@ -226,7 +230,7 @@ public final class ElementalsCompat {
                     currentLevel,
                     currentXp,
                     profile.beastfolk(),
-                    activeBranch,
+                    penalizedBranch,
                     mageData.rewardedRareBranches(),
                     runtime);
             if (adjustedProgress != null
@@ -240,6 +244,16 @@ public final class ElementalsCompat {
         mageData.setLastSeenChi(currentChi);
         mageData.setLastSeenXp(currentXp);
         mageData.setLastSeenLevel(currentLevel);
+        mageData.setLastSeenActiveBranch(activeBranch);
+    }
+
+    private static ElementalBranch penaltyBranch(ElementalBranch previousActiveBranch,
+                                                 ElementalBranch currentActiveBranch,
+                                                 boolean hasTrackedDelta) {
+        if (hasTrackedDelta && previousActiveBranch != null) {
+            return previousActiveBranch;
+        }
+        return currentActiveBranch;
     }
 
     private static ProgressSnapshot adjustProgressSnapshot(int previousLevel,

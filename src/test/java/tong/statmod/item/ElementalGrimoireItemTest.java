@@ -17,6 +17,7 @@ class ElementalGrimoireItemTest {
         statData.setLevel(13, 20);
         statData.setLevel(15, 18);
         ElementalsMageData mageData = new ElementalsMageData();
+        mageData.setMageAwakened(true);
 
         boolean consumed = ElementalGrimoireItem.tryUnlockForTests(ElementalBranch.LIGHTNING, statData, mageData);
 
@@ -34,5 +35,20 @@ class ElementalGrimoireItemTest {
 
         assertFalse(consumed);
         assertFalse(mageData.rewardedRareBranches().contains(ElementalBranch.BLOOD));
+    }
+
+    @Test
+    void rareGrimoireRequiresMageAwakening() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.setLevel(7, 20);
+        statData.setLevel(13, 20);
+        statData.setLevel(15, 18);
+        ElementalsMageData mageData = new ElementalsMageData();
+
+        boolean consumed = ElementalGrimoireItem.tryUnlockForTests(ElementalBranch.LIGHTNING, statData, mageData);
+
+        assertFalse(consumed);
+        assertFalse(mageData.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
+        assertFalse(statData.isPerkFreeGranted(ElementalsPerkBindings.rareRewardPerk(ElementalBranch.LIGHTNING).id));
     }
 }

@@ -1,8 +1,10 @@
 package tong.statmod.integration.elementals;
 
+import tong.statmod.STATMod;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
@@ -59,6 +61,25 @@ public class ElementalsRuntimeBridge implements ElementalsRuntimePort {
 
     public void setXp(ServerPlayer player, float value) {
         PlayerData.get(player).xp = Math.max(0.0f, value);
+    }
+
+    public float maxXpForLevel(int level) {
+        return Bender.getMaxXp(level);
+    }
+
+    public void setLevelAndXp(ServerPlayer player, int level, float xp) {
+        PlayerData data = PlayerData.get(player);
+        data.level = Math.max(0, level);
+        data.xp = Math.max(0.0f, xp);
+        try {
+            Class<?> networkClass = Class.forName("commonnetwork.api.Network");
+            Object handler = networkClass.getMethod("getNetworkHandler").invoke(null);
+            handler.getClass()
+                    .getMethod("sendToClient", Object.class, ServerPlayer.class)
+                    .invoke(handler, new SyncLevelPacket(data.level, data.xp), player);
+        } catch (ReflectiveOperationException exception) {
+            STATMod.LOGGER.warn("Failed to sync Elementals level/xp to client", exception);
+        }
     }
 
     public void setChi(ServerPlayer player, float value) {

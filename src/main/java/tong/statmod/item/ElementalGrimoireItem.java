@@ -8,11 +8,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.elementals.ElementalBranch;
 import tong.statmod.integration.elementals.ElementalsCompat;
 import tong.statmod.integration.elementals.ElementalsMageData;
 import tong.statmod.integration.elementals.ElementalsMageRules;
 import tong.statmod.integration.elementals.ElementalsPerkBindings;
+import tong.statmod.integration.elementals.ElementalsRaceAffinity;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -36,7 +38,8 @@ public class ElementalGrimoireItem extends Item {
 
         PlayerStatData statData = serverPlayer.getData(ModAttachments.STATS);
         ElementalsMageData mageData = serverPlayer.getData(ModAttachments.ELEMENTALS_MAGE);
-        if (!tryUnlock(branch, statData, mageData)) {
+        if (!ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(serverPlayer)).supported()
+                || !tryUnlock(branch, statData, mageData)) {
             serverPlayer.displayClientMessage(deniedMessage(branch), true);
             return InteractionResultHolder.fail(serverPlayer.getItemInHand(hand));
         }
@@ -54,6 +57,9 @@ public class ElementalGrimoireItem extends Item {
     }
 
     private static boolean tryUnlock(ElementalBranch branch, PlayerStatData statData, ElementalsMageData mageData) {
+        if (!mageData.mageAwakened()) {
+            return false;
+        }
         if (!ElementalsMageRules.canUseRareGrimoire(branch, statData::getLevel)) {
             return false;
         }

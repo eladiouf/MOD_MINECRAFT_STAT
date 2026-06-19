@@ -2,6 +2,7 @@ package tong.statmod.integration.tensura;
 
 import tong.statmod.stats.StatType;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,16 @@ public final class TensuraSpellTaxonomy {
     public static StatType primaryStat(String skillId) {
         TensuraSpellProfile profile = profile(skillId);
         return profile == null ? StatType.ARCANE_POWER : profile.primaryStat();
+    }
+
+    public static List<StatType> secondaryStats(String skillId) {
+        TensuraSpellProfile profile = profile(skillId);
+        return profile == null ? Collections.emptyList() : profile.secondaryStats();
+    }
+
+    public static String discipline(String skillId) {
+        TensuraSpellProfile profile = profile(skillId);
+        return profile == null ? "offense" : profile.discipline();
     }
 
     public static String representativeSkillId(StatType stat) {

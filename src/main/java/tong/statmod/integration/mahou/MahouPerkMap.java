@@ -2,16 +2,18 @@ package tong.statmod.integration.mahou;
 
 import tong.statmod.stats.StatType;
 
+import java.util.LinkedHashSet;
+
 public final class MahouPerkMap {
     private MahouPerkMap() {}
 
     public static StatType[] statsForSpellId(String itemId) {
         MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
         if (profile != null) {
-            if (!profile.secondaryStats().isEmpty()) {
-                return new StatType[]{profile.primaryStat(), profile.secondaryStats().getFirst()};
-            }
-            return new StatType[]{profile.primaryStat()};
+            LinkedHashSet<StatType> stats = new LinkedHashSet<>();
+            stats.add(profile.primaryStat());
+            stats.addAll(profile.secondaryStats());
+            return stats.toArray(StatType[]::new);
         }
         return statsForElement(MahouElementMapper.elementForPath(itemId));
     }

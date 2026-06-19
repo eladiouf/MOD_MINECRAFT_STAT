@@ -25,11 +25,11 @@ class MahouMappingTest {
                 MahouPerkMap.statsForElement("fire"));
         assertArrayEquals(new StatType[]{StatType.ARCANE_POWER, StatType.ERUDITION},
                 MahouPerkMap.statsForElement("arcane"));
-        assertArrayEquals(new StatType[]{StatType.EARTH_AFFINITY, StatType.MAGIC_RESISTANCE},
+        assertArrayEquals(new StatType[]{StatType.EARTH_AFFINITY, StatType.MAGIC_RESISTANCE, StatType.WILLPOWER},
                 MahouPerkMap.statsForSpellId("mahoutsukai:scroll_rho_aias"));
         assertArrayEquals(new StatType[]{StatType.ERUDITION, StatType.MANA_POOL},
                 MahouPerkMap.statsForSpellId("mahoutsukai:scroll_mystic_staff"));
-        assertArrayEquals(new StatType[]{StatType.ARCANE_POWER, StatType.MANA_POOL},
+        assertArrayEquals(new StatType[]{StatType.ARCANE_POWER, StatType.MANA_POOL, StatType.WILLPOWER},
                 MahouPerkMap.statsForSpellId("mahoutsukai:scroll_boundary_drain_life"));
         assertArrayEquals(new StatType[]{StatType.CASTING_SPEED, StatType.AIR_AFFINITY},
                 MahouPerkMap.statsForSpellId("mahoutsukai:scroll_mental_displacement"));

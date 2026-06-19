@@ -16,10 +16,10 @@ public final class TensuraSpellGate {
             "fire_bolt", "tensura:fire_bolt",
             "water_heal", "tensura:healing_rain",
             "wind_blade", "tensura:wind_cutter",
-            "earth_wall", "tensura:earth_barrier",
+            "earth_wall", "tensura:earth_wall",
             "darkness_veil", "tensura:darkness",
-            "light_bind", "tensura:light_binding",
-            "space_shift", "tensura:spatial_movement"
+            "light_bind", "tensura:magic_barrier",
+            "space_shift", "tensura:teleport"
     );
 
     private static final Map<String, String> PERK_TO_MAHOU = Map.of(
@@ -93,9 +93,9 @@ public final class TensuraSpellGate {
     private static String resolveByStat(StatType stat, PerkTier tier) {
         if (stat == null) return null;
 
-        String magicalRepresentative = TensuraSpellTaxonomy.representativeSkillId(stat);
-        if (magicalRepresentative != null) {
-            return magicalRepresentative;
+        String tieredMagicSkill = TensuraSpellTaxonomy.skillForTier(stat, tier);
+        if (tieredMagicSkill != null) {
+            return tieredMagicSkill;
         }
 
         return switch (stat) {

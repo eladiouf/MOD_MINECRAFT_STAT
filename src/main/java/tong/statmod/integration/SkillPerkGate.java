@@ -81,22 +81,22 @@ public final class SkillPerkGate {
         requireSkill(82, "tensura:resistance_all");         // Indomitable
 
         // ── Magic perks require representative school spells at high tiers ──
-        requireSkill(88, "tensura:darkness");               // Arcane Cascade
-        requireSkill(89, "tensura:darkness");               // Cataclysm Engine
+        requireSkill(88, "tensura:darkness_cannon");        // Arcane Cascade
+        requireSkill(89, "tensura:darkness_cannon", "tensura:true_darkness"); // Cataclysm Engine
         requireSkill(94, "tensura:healing_rain");           // Tidal Control
-        requireSkill(95, "tensura:healing_rain");           // Abyssal Grace
-        requireSkill(100, "tensura:earth_barrier");         // World Anchor
-        requireSkill(101, "tensura:earth_barrier");         // Mountain Throne
-        requireSkill(106, "tensura:fire_bolt");             // Inferno Spiral
-        requireSkill(107, "tensura:fire_bolt");             // Solar Cataclysm
-        requireSkill(112, "tensura:wind_cutter");           // Lightning Thread
-        requireSkill(113, "tensura:wind_cutter");           // Tempest Crown
-        requireSkill(118, "tensura:light_binding");         // Null Mantle
-        requireSkill(119, "tensura:light_binding");         // Aegis Absolute
-        requireSkill(124, "tensura:spatial_movement");      // Spell Weave
-        requireSkill(125, "tensura:spatial_movement");      // Timeless Cast
-        requireSkill(136, "tensura:spatial_movement");      // Grand Synthesis
-        requireSkill(137, "tensura:spatial_movement");      // Omniform Understanding
+        requireSkill(95, "tensura:healing_rain", "tensura:full_recovery"); // Abyssal Grace
+        requireSkill(100, "tensura:earth_jail");           // World Anchor
+        requireSkill(101, "tensura:earth_jail", "tensura:earth_storm"); // Mountain Throne
+        requireSkill(106, "tensura:fire_storm");           // Inferno Spiral
+        requireSkill(107, "tensura:fire_storm", "tensura:hellfire"); // Solar Cataclysm
+        requireSkill(112, "tensura:lightning_lance");      // Lightning Thread
+        requireSkill(113, "tensura:lightning_lance", "tensura:aerial_blade"); // Tempest Crown
+        requireSkill(118, "tensura:magic_barrier");        // Null Mantle
+        requireSkill(119, "tensura:magic_barrier", "tensura:anti_magic_area"); // Aegis Absolute
+        requireSkill(124, "tensura:teleport");             // Spell Weave
+        requireSkill(125, "tensura:teleport", "tensura:gate"); // Timeless Cast
+        requireSkill(136, "tensura:analyze");              // Grand Synthesis
+        requireSkill(137, "tensura:analyze", "tensura:clairvoyance"); // Omniform Understanding
 
         // ── Race-gated perks ──
         requireRace(5, "tensura:giant");                    // Titan's Wrath

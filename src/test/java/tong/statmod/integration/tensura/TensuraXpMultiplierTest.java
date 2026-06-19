@@ -25,6 +25,7 @@ class TensuraXpMultiplierTest {
         PlayerStatData data = new PlayerStatData();
         data.setLevel(10, 8);
         data.setLevel(7, 4);
+        data.setLevel(22, 4);
         data.setLevel(13, 2);
         data.setLevel(8, 6);
         data.setLevel(11, 2);
@@ -33,7 +34,7 @@ class TensuraXpMultiplierTest {
 
         assertEquals(1.50f, TensuraXpMultiplier.getEpMultiplier(data, "magic_fire"), 0.0001f);
         assertEquals(1.85f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:healing_rain"), 0.0001f);
-        assertEquals(1.70f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:spatial_movement"), 0.0001f);
+        assertEquals(1.70f, TensuraXpMultiplier.getEpMultiplier(data, "tensura:analyze"), 0.0001f);
     }
 
     @Test

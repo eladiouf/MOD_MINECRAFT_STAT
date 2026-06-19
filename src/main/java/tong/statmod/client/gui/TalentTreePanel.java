@@ -29,8 +29,6 @@ public class TalentTreePanel {
     private final int panelHeight;
     private final List<PerkNodeWidget> nodes = new ArrayList<>();
     private int scrollOffset;
-    private Component lastFeedbackMessage = Component.empty();
-    private int lastFeedbackColor = 0x00000000;
 
     public TalentTreePanel(StatType stat, int x, int y, int panelWidth, int panelHeight) {
         this.stat = stat;
@@ -74,10 +72,6 @@ public class TalentTreePanel {
         String levelText = "Lv." + statLevel + "/" + cap;
         graphics.drawString(font, Component.literal("\u00a77" + levelText + "\u00a7r"), centerX - font.width(levelText) / 2, y + 16, 0xFFAAAAAA);
 
-        if (!lastFeedbackMessage.getString().isEmpty()) {
-            graphics.drawString(font, lastFeedbackMessage, x + PANEL_PADDING, y + panelHeight - 12, lastFeedbackColor);
-        }
-
         graphics.enableScissor(x + 1, y + 32, x + panelWidth - 1, y + panelHeight - 1);
 
         int contentStartY = y + 32 + scrollOffset;
@@ -117,7 +111,7 @@ public class TalentTreePanel {
 
         for (PerkNodeWidget node : nodes) {
             if (node.isMouseOver((int) mouseX, (int) mouseY)) {
-                applyClickFeedback(node.tryClickResult());
+                PerkFeedbackToast.show(node.tryClickResult());
                 return true;
             }
         }
@@ -147,39 +141,5 @@ public class TalentTreePanel {
         if (idx == 21) return 0xFFAA0000;
         if (idx == 22) return 0xFFAA88FF;
         return 0xFFFFFFFF;
-    }
-
-    Component getLastFeedbackMessage() {
-        return lastFeedbackMessage;
-    }
-
-    void setLastFeedbackMessage(Component message) {
-        lastFeedbackMessage = message == null ? Component.empty() : message;
-        lastFeedbackColor = 0xFFFF5555;
-    }
-
-    private void applyClickFeedback(PerkNodeWidget.ClickResult result) {
-        switch (result) {
-            case UNLOCK_SENT -> {
-                lastFeedbackMessage = Component.empty();
-                lastFeedbackColor = 0x00000000;
-            }
-            case LEVEL_TOO_LOW -> {
-                lastFeedbackMessage = Component.literal("Stat level too low");
-                lastFeedbackColor = 0xFFFF5555;
-            }
-            case NOT_ENOUGH_POINTS -> {
-                lastFeedbackMessage = Component.literal("Not enough perk points");
-                lastFeedbackColor = 0xFFFF5555;
-            }
-            case ALREADY_UNLOCKED -> {
-                lastFeedbackMessage = Component.literal("Perk already unlocked");
-                lastFeedbackColor = 0xFFAAAAAA;
-            }
-            case PERK_MISSING -> {
-                lastFeedbackMessage = Component.literal("Invalid perk");
-                lastFeedbackColor = 0xFFFF5555;
-            }
-        }
     }
 }

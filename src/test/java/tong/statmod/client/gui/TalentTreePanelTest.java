@@ -1,15 +1,16 @@
 package tong.statmod.client.gui;
 
 import org.junit.jupiter.api.Test;
-import net.minecraft.network.chat.Component;
 import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatType;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TalentTreePanelTest {
@@ -33,28 +34,37 @@ class TalentTreePanelTest {
     void showsFeedbackWhenNodeRejectsForLowLevel() throws Exception {
         TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
         replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.LEVEL_TOO_LOW)));
+        AtomicReference<PerkFeedbackToast.ToastPayload> payload = new AtomicReference<>();
+        PerkFeedbackToast.setSinkForTests(payload::set);
 
         assertTrue(panel.mouseClicked(15, 15, 0));
-        assertEquals("Stat level too low", panel.getLastFeedbackMessage().getString());
+        assertEquals("Perk unavailable", payload.get().title().getString());
+        assertEquals("Stat level too low", payload.get().message().getString());
+        PerkFeedbackToast.resetSinkForTests();
     }
 
     @Test
     void showsFeedbackWhenNodeRejectsForMissingPoints() throws Exception {
         TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
         replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.NOT_ENOUGH_POINTS)));
+        AtomicReference<PerkFeedbackToast.ToastPayload> payload = new AtomicReference<>();
+        PerkFeedbackToast.setSinkForTests(payload::set);
 
         assertTrue(panel.mouseClicked(15, 15, 0));
-        assertEquals("Not enough perk points", panel.getLastFeedbackMessage().getString());
+        assertEquals("Not enough perk points", payload.get().message().getString());
+        PerkFeedbackToast.resetSinkForTests();
     }
 
     @Test
-    void clearsFeedbackAfterSuccessfulUnlockClick() throws Exception {
+    void doesNotShowToastAfterSuccessfulUnlockClick() throws Exception {
         TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
-        panel.setLastFeedbackMessage(Component.literal("Old message"));
         replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.UNLOCK_SENT)));
+        AtomicReference<PerkFeedbackToast.ToastPayload> payload = new AtomicReference<>();
+        PerkFeedbackToast.setSinkForTests(payload::set);
 
         assertTrue(panel.mouseClicked(15, 15, 0));
-        assertEquals("", panel.getLastFeedbackMessage().getString());
+        assertNull(payload.get());
+        PerkFeedbackToast.resetSinkForTests();
     }
 
     private static void replaceNodes(TalentTreePanel panel, List<PerkNodeWidget> replacement) throws Exception {

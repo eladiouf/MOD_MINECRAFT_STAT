@@ -2,7 +2,6 @@ package tong.statmod.integration.puffish;
 
 import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatFamily;
-import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.HashSet;
@@ -28,12 +27,6 @@ public final class PuffishSyncService {
     }
 
     private static int mirroredFamilyPoints(PlayerStatData data, StatFamily family) {
-        int total = 0;
-        for (StatType stat : StatType.values()) {
-            if (stat.family() == family) {
-                total += data.getPerkPointsForStat(stat.index);
-            }
-        }
-        return total;
+        return data.getPerkPointsForFamily(family);
     }
 }

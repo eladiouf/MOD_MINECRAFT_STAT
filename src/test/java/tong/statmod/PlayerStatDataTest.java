@@ -1,6 +1,7 @@
 package tong.statmod;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,6 +73,21 @@ class PlayerStatDataTest {
         assertEquals(3, data.getPerkPointsForStat(0));
         data.addPerkPointsForStat(0, -10);
         assertEquals(0, data.getPerkPointsForStat(0));
+    }
+
+    @Test
+    void testPerkPointsAreSharedAcrossStatsInTheSameFamily() {
+        PlayerStatData data = new PlayerStatData();
+
+        data.setPerkPoints(StatType.BRUTE_FORCE.index, 4);
+
+        assertEquals(4, data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+        assertEquals(4, data.getPerkPointsForStat(StatType.BLADE_TECHNIQUE.index));
+
+        data.addPerkPointsForStat(StatType.BLADE_TECHNIQUE.index, -1);
+
+        assertEquals(3, data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+        assertEquals(3, data.getPerkPointsForStat(StatType.BLADE_TECHNIQUE.index));
     }
 
     @Test

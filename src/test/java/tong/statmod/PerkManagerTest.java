@@ -161,4 +161,18 @@ class PerkManagerTest {
         assertTrue(data.isPerkUnlocked(Perk.ARCANE_CORE.id));
         assertEquals(0, data.getPerkPointsForStat(StatType.ARCANE_POWER.index));
     }
+
+    @Test
+    void unlockingOneFrontlinePerkConsumesSharedFamilyPointsForSiblingStats() {
+        PlayerStatData data = new PlayerStatData();
+        data.setLevel(StatType.BRUTE_FORCE.index, 10);
+        data.setLevel(StatType.BLADE_TECHNIQUE.index, 10);
+        data.setPerkPoints(StatType.BRUTE_FORCE.index, 2);
+        PerkManager mgr = new PerkManager(data);
+
+        assertTrue(mgr.unlock(Perk.BRUTE_CORE));
+        assertEquals(1, data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+        assertEquals(1, data.getPerkPointsForStat(StatType.BLADE_TECHNIQUE.index));
+        assertTrue(mgr.canUnlock(Perk.BLADE_CORE));
+    }
 }

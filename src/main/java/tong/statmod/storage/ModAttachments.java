@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.NotNull;
 import tong.statmod.STATMod;
+import tong.statmod.stats.StatFamily;
 import tong.statmod.stamina.StaminaData;
 
 public class ModAttachments {
@@ -46,7 +47,16 @@ public class ModAttachments {
             for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
                 if (i < levels.length) data.setLevel(i, levels[i]);
                 if (i < xp.length) data.setXp(i, xp[i]);
-                if (i < points.length) data.setPerkPoints(i, points[i]);
+            }
+            if (points.length == PlayerStatData.STAT_COUNT) {
+                for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
+                    data.addPerkPointsForStat(i, points[i]);
+                }
+            } else {
+                StatFamily[] families = StatFamily.values();
+                for (int i = 0; i < families.length && i < points.length; i++) {
+                    data.setPerkPointsForFamily(families[i], points[i]);
+                }
             }
             int[] unlocked = tag.getIntArray("UnlockedPerks");
             if (unlocked.length > 0) data.setUnlockedPerks(unlocked);

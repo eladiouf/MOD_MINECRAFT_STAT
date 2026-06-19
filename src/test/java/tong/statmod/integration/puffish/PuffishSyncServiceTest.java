@@ -26,9 +26,8 @@ class PuffishSyncServiceTest {
     @Test
     void mirrorsRemainingPointsAcrossTheWholeFamily() {
         PlayerStatData data = new PlayerStatData();
-        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
-        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 2);
-        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 1);
+        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 2);
+        data.addPerkPointsForStat(Perk.BLADE_CORE.stat.index, 1);
         data.addUnlockedPerk(Perk.BRUTE_SYNERGY.id);
 
         FakeGateway gateway = new FakeGateway();
@@ -47,6 +46,18 @@ class PuffishSyncServiceTest {
         PuffishSyncService.sync(data, gateway);
 
         assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:0"));
+    }
+
+    @Test
+    void mirrorsCanonicalFamilyPointsWithoutDoubleCountingSiblingStats() {
+        PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 3);
+        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 3);
+
+        FakeGateway gateway = new FakeGateway();
+        PuffishSyncService.sync(data, gateway);
+
+        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
     }
 
     static final class FakeGateway implements PuffishMirrorGateway {

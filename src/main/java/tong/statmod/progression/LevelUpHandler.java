@@ -5,7 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
-import tong.statmod.stats.StatType;
+import tong.statmod.perks.PerkPointAllocator;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -32,13 +32,9 @@ public class LevelUpHandler {
 
         if (tier > already) {
             int granted = tier - already;
-            for (StatType stat : StatType.values()) {
-                if (stat.hasPerks()) {
-                    data.addPerkPointsForStat(stat.index, granted);
-                }
-            }
+            PerkPointAllocator.grantPointsToAllFamilies(data, granted);
             lastGrantedTier.put(uuid, tier);
-            STATMod.LOGGER.info("Granted {} perk point(s) to all perk-capable stats for {} (global level {})",
+            STATMod.LOGGER.info("Granted {} perk point(s) to each perk family for {} (global level {})",
                     granted, player.getName().getString(), globalLevel);
         }
     }

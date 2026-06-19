@@ -3,21 +3,22 @@ package tong.statmod.client;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import tong.statmod.perks.Perk;
+import tong.statmod.stats.StatType;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientPerkCache {
-    private static boolean[] unlocked = new boolean[84];
-    private static int[] perStatPoints = new int[0];
+    private static boolean[] unlocked = new boolean[Perk.values().length];
+    private static int[] familyPoints = new int[0];
 
     private ClientPerkCache() {}
 
     public static void update(int[] perkIds, int[] points) {
-        boolean[] next = new boolean[84];
+        boolean[] next = new boolean[Perk.values().length];
         for (int id : perkIds) {
-            if (id >= 0 && id < 84) next[id] = true;
+            if (id >= 0 && id < next.length) next[id] = true;
         }
         unlocked = next;
-        perStatPoints = points.clone();
+        familyPoints = points.clone();
     }
 
     public static boolean isUnlocked(Perk perk) {
@@ -25,8 +26,13 @@ public final class ClientPerkCache {
     }
 
     public static int getPointsForStat(int statIndex) {
-        return statIndex >= 0 && statIndex < perStatPoints.length ? perStatPoints[statIndex] : 0;
+        StatType stat = StatType.byIndex(statIndex);
+        return stat != null ? getPointsForFamily(stat.family().ordinal()) : 0;
     }
 
-    public static int[] getPerStatPoints() { return perStatPoints.clone(); }
+    public static int getPointsForFamily(int familyIndex) {
+        return familyIndex >= 0 && familyIndex < familyPoints.length ? familyPoints[familyIndex] : 0;
+    }
+
+    public static int[] getPerStatPoints() { return familyPoints.clone(); }
 }

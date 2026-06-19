@@ -111,7 +111,8 @@ public class TalentTreePanel {
 
         for (PerkNodeWidget node : nodes) {
             if (node.isMouseOver((int) mouseX, (int) mouseY)) {
-                return node.tryClick();
+                node.tryClick();
+                return true;
             }
         }
         return false;

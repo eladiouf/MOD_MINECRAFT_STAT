@@ -1,10 +1,14 @@
 package tong.statmod.storage;
 
+import tong.statmod.stats.StatFamily;
+import tong.statmod.stats.StatType;
+
 public class PlayerStatData {
     public static final int STAT_COUNT = 23;
+    public static final int PERK_FAMILY_COUNT = StatFamily.values().length;
     private final int[] levels = new int[STAT_COUNT];
     private final int[] xp = new int[STAT_COUNT];
-    private final int[] perkPoints = new int[STAT_COUNT];
+    private final int[] perkPoints = new int[PERK_FAMILY_COUNT];
     private int[] unlockedPerks = new int[0];
     private int[] freeGrantedPerks = new int[0];
     private int soulLevel;
@@ -17,11 +21,29 @@ public class PlayerStatData {
 
     public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
     public int getXp(int index) { return index >= 0 && index < STAT_COUNT ? xp[index] : 0; }
-    public int getPerkPointsForStat(int index) { return index >= 0 && index < STAT_COUNT ? perkPoints[index] : 0; }
+    public int getPerkPointsForStat(int index) {
+        StatType stat = StatType.byIndex(index);
+        return stat != null ? getPerkPointsForFamily(stat.family()) : 0;
+    }
+
+    public int getPerkPointsForFamily(StatFamily family) {
+        return family != null ? perkPoints[family.ordinal()] : 0;
+    }
 
     public void setLevel(int index, int value) { if (index >= 0 && index < STAT_COUNT) levels[index] = value; }
     public void setXp(int index, int value) { if (index >= 0 && index < STAT_COUNT) xp[index] = value; }
-    public void setPerkPoints(int index, int value) { if (index >= 0 && index < STAT_COUNT) perkPoints[index] = value; }
+    public void setPerkPoints(int index, int value) {
+        StatType stat = StatType.byIndex(index);
+        if (stat != null) {
+            setPerkPointsForFamily(stat.family(), value);
+        }
+    }
+
+    public void setPerkPointsForFamily(StatFamily family, int value) {
+        if (family != null) {
+            perkPoints[family.ordinal()] = Math.max(0, value);
+        }
+    }
 
     public boolean isPerkUnlocked(int perkId) {
         for (int id : unlockedPerks) if (id == perkId) return true;
@@ -112,8 +134,16 @@ public class PlayerStatData {
     }
 
     public void addPerkPointsForStat(int index, int amount) {
-        if (index >= 0 && index < STAT_COUNT) {
-            perkPoints[index] = Math.max(0, perkPoints[index] + amount);
+        StatType stat = StatType.byIndex(index);
+        if (stat != null) {
+            addPerkPointsForFamily(stat.family(), amount);
+        }
+    }
+
+    public void addPerkPointsForFamily(StatFamily family, int amount) {
+        if (family != null) {
+            int familyIndex = family.ordinal();
+            perkPoints[familyIndex] = Math.max(0, perkPoints[familyIndex] + amount);
         }
     }
 

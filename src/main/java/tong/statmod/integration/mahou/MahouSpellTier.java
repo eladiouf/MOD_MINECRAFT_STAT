@@ -3,6 +3,7 @@ package tong.statmod.integration.mahou;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import tong.statmod.stats.StatType;
 
 import java.util.Locale;
 
@@ -31,6 +32,20 @@ public final class MahouSpellTier {
         return requiredArcanePowerForPath(path(stack));
     }
 
+    public static int requiredPrimaryStatLevel(String itemId) {
+        MahouSpellProfile profile = MahouSpellTaxonomy.profile(itemId);
+        if (profile == null) {
+            return 0;
+        }
+        return switch (profile.family()) {
+            case "arcane_offense" -> 10;
+            case "barrier" -> 15;
+            case "mastery" -> 20;
+            case "cataclysm" -> 30;
+            default -> 0;
+        };
+    }
+
     public static int requiredArcanePowerForPath(String path) {
         if (path == null) {
             return 0;
@@ -49,8 +64,17 @@ public final class MahouSpellTier {
         return arcanePower >= requiredArcanePowerForPath(path);
     }
 
+    public static boolean canCast(int arcanePower, int primaryStatLevel, String itemId) {
+        return arcanePower >= requiredArcanePowerForPath(itemId)
+                && primaryStatLevel >= requiredPrimaryStatLevel(itemId);
+    }
+
     public static boolean canCast(ItemStack stack, int arcanePower) {
         return arcanePower >= requiredArcanePower(stack);
+    }
+
+    public static StatType primaryStat(String itemId) {
+        return MahouSpellTaxonomy.primaryStat(itemId);
     }
 
     private static String path(ItemStack stack) {

@@ -58,18 +58,24 @@ public final class MahouCompat {
         if (!isSpellScroll(stack)) return;
 
         int arcanePower = RaceEffectApplier.getEffectiveLevel(player, StatType.ARCANE_POWER.index);
+        String itemId = itemId(stack);
+        StatType primaryStat = MahouSpellTier.primaryStat(itemId);
+        int primaryLevel = RaceEffectApplier.getEffectiveLevel(player, primaryStat.index);
         int requiredArcane = MahouSpellTier.requiredArcanePower(stack);
-        if (!MahouSpellTier.canCast(stack, arcanePower)) {
-            player.sendSystemMessage(Component.literal(
-                    "Arcane Power " + requiredArcane + " required for this spell scroll."
-            ));
+        int requiredPrimary = MahouSpellTier.requiredPrimaryStatLevel(itemId);
+        if (!MahouSpellTier.canCast(arcanePower, primaryLevel, itemId)) {
+            String message = (requiredPrimary <= 0 || primaryStat == StatType.ARCANE_POWER)
+                    ? "Arcane Power " + requiredArcane + " required for this spell scroll."
+                    : primaryStat.displayName + " " + requiredPrimary
+                    + " and Arcane Power " + requiredArcane
+                    + " required for this spell scroll.";
+            player.sendSystemMessage(Component.literal(message));
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
             return;
         }
 
         String element = MahouElementMapper.elementFor(stack);
-        String itemId = itemId(stack);
         lastElementMap.put(player.getUUID(), element);
         lastElementTickMap.put(player.getUUID(), player.tickCount);
         int baseXp = 3 * MahouSpellTier.xpMultiplier(stack);

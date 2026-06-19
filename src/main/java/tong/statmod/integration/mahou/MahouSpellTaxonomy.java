@@ -2,6 +2,7 @@ package tong.statmod.integration.mahou;
 
 import tong.statmod.stats.StatType;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,5 +27,10 @@ public final class MahouSpellTaxonomy {
     public static StatType primaryStat(String itemId) {
         MahouSpellProfile profile = profile(itemId);
         return profile == null ? StatType.ARCANE_POWER : profile.primaryStat();
+    }
+
+    public static List<StatType> secondaryStats(String itemId) {
+        MahouSpellProfile profile = profile(itemId);
+        return profile == null ? Collections.emptyList() : profile.secondaryStats();
     }
 }

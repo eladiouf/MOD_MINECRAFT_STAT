@@ -49,6 +49,19 @@ class MahouMappingTest {
     }
 
     @Test
+    void gatesCuratedProfilesByTheirPrimaryMagicStat() {
+        assertEquals(10, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:gandr_spell_scroll"));
+        assertEquals(15, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:rho_aias_spell_scroll"));
+        assertEquals(30, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:fallen_down_spell_scroll"));
+        assertEquals(20, MahouSpellTier.requiredPrimaryStatLevel("mahoutsukai:mystic_staff_spell_scroll"));
+
+        assertEquals(false, MahouSpellTier.canCast(40, 29, "mahoutsukai:fallen_down_spell_scroll"));
+        assertEquals(true, MahouSpellTier.canCast(40, 30, "mahoutsukai:fallen_down_spell_scroll"));
+        assertEquals(false, MahouSpellTier.canCast(40, 14, "mahoutsukai:rho_aias_spell_scroll"));
+        assertEquals(true, MahouSpellTier.canCast(40, 15, "mahoutsukai:rho_aias_spell_scroll"));
+    }
+
+    @Test
     void computesCombatBonusesFromRecentSpellAndStats() {
         assertEquals(1.2f, MahouCompat.earthDamageMultiplier(20, "earth", 200, 210), 0.0001f);
         assertEquals(1.0f, MahouCompat.earthDamageMultiplier(20, "fire", 200, 210), 0.0001f);

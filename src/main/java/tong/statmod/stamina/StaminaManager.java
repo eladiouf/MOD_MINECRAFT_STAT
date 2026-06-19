@@ -11,6 +11,7 @@ public final class StaminaManager {
             return false;
         }
         data.setCurrentStamina(data.currentStamina() - amount);
+        data.setFatigueDebt(data.fatigueDebt() + StaminaRules.fatigueDebtFromSpend(amount));
         return true;
     }
 
@@ -33,10 +34,14 @@ public final class StaminaManager {
         }
         if (sleeping) {
             restore(data, 0.35f, enduranceLevel);
+            relieveFatigue(data, StaminaRules.fatigueReliefPerTick(false, true));
             return;
         }
-        restore(data, StaminaRules.passiveRecoveryPerTick(meditating), enduranceLevel);
+        float recovery = StaminaRules.passiveRecoveryPerTick(meditating)
+                * StaminaRules.recoveryMultiplierFromDebt(data.fatigueDebt(), enduranceLevel);
+        restore(data, recovery, enduranceLevel);
         consumeUnchecked(data, StaminaRules.passiveDrainPerTick(sprinting, airborne));
+        relieveFatigue(data, StaminaRules.fatigueReliefPerTick(meditating, false));
     }
 
     public static void consumeUnchecked(StaminaData data, float amount) {
@@ -44,5 +49,13 @@ public final class StaminaManager {
             return;
         }
         data.setCurrentStamina(data.currentStamina() - amount);
+        data.setFatigueDebt(data.fatigueDebt() + StaminaRules.fatigueDebtFromSpend(amount));
+    }
+
+    public static void relieveFatigue(StaminaData data, float amount) {
+        if (data == null || amount <= 0.0f) {
+            return;
+        }
+        data.setFatigueDebt(data.fatigueDebt() - amount);
     }
 }

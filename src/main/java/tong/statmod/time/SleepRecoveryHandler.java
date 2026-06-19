@@ -7,6 +7,7 @@ import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.stamina.StaminaData;
 import tong.statmod.stamina.StaminaManager;
+import tong.statmod.stamina.StaminaRules;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 
@@ -15,6 +16,7 @@ public final class SleepRecoveryHandler {
 
     public static void applyWakeBonus(StaminaData data, int enduranceLevel) {
         StaminaManager.restore(data, 35.0f, enduranceLevel);
+        StaminaManager.relieveFatigue(data, StaminaRules.wakeFatigueRelief());
     }
 
     @SubscribeEvent

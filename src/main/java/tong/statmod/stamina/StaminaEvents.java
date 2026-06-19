@@ -60,9 +60,11 @@ public final class StaminaEvents {
 
         var data = player.getData(ModAttachments.STAMINA);
         int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+        float fatigueRelief = StaminaRules.foodFatigueRelief(food.nutrition(), food.saturation());
         StaminaManager.restore(data,
                 StaminaRules.foodRecoveryAmount(food.nutrition(), food.saturation()),
                 endurance);
+        StaminaManager.relieveFatigue(data, fatigueRelief);
         SyncHelper.syncStamina(player);
     }
 

@@ -14,4 +14,13 @@ class SleepRecoveryHandlerTest {
         SleepRecoveryHandler.applyWakeBonus(data, 50);
         assertTrue(data.currentStamina() > 30.0f);
     }
+
+    @Test
+    void wakeBonusAlsoClearsPartOfFatigueDebt() {
+        StaminaData data = new StaminaData();
+        data.setFatigueDebt(20.0f);
+
+        SleepRecoveryHandler.applyWakeBonus(data, 50);
+        assertTrue(data.fatigueDebt() < 20.0f);
+    }
 }

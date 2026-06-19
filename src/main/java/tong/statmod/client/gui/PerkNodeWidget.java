@@ -24,6 +24,14 @@ public class PerkNodeWidget {
     private final int x;
     private final int y;
 
+    public enum ClickResult {
+        PERK_MISSING,
+        ALREADY_UNLOCKED,
+        LEVEL_TOO_LOW,
+        NOT_ENOUGH_POINTS,
+        UNLOCK_SENT
+    }
+
     public PerkNodeWidget(Perk perk, int x, int y) {
         this.perk = perk;
         this.x = x;
@@ -41,18 +49,22 @@ public class PerkNodeWidget {
     }
 
     public boolean tryClick() {
-        if (perk == null) return false;
+        return tryClickResult() == ClickResult.UNLOCK_SENT;
+    }
+
+    public ClickResult tryClickResult() {
+        if (perk == null) return ClickResult.PERK_MISSING;
         boolean unlocked = ClientPerkCache.isUnlocked(perk);
-        if (unlocked) return false;
+        if (unlocked) return ClickResult.ALREADY_UNLOCKED;
         var player = Minecraft.getInstance().player;
         int statLevel = player != null
                 ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
                 : ClientStatCache.getLevel(perk.stat.index);
         int points = ClientPerkCache.getPointsForStat(perk.stat.index);
-        if (statLevel < perk.tier.requiredStatLevel) return false;
-        if (points < perk.tier.cost) return false;
+        if (statLevel < perk.tier.requiredStatLevel) return ClickResult.LEVEL_TOO_LOW;
+        if (points < perk.tier.cost) return ClickResult.NOT_ENOUGH_POINTS;
         PacketDistributor.sendToServer(new UnlockPerkPayload(perk.id));
-        return true;
+        return ClickResult.UNLOCK_SENT;
     }
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font) {

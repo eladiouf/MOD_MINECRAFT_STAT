@@ -1,6 +1,7 @@
 package tong.statmod.client.gui;
 
 import org.junit.jupiter.api.Test;
+import net.minecraft.network.chat.Component;
 import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatType;
 
@@ -8,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TalentTreePanelTest {
@@ -27,6 +29,34 @@ class TalentTreePanelTest {
         assertFalse(panel.mouseClicked(250, 250, 0));
     }
 
+    @Test
+    void showsFeedbackWhenNodeRejectsForLowLevel() throws Exception {
+        TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
+        replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.LEVEL_TOO_LOW)));
+
+        assertTrue(panel.mouseClicked(15, 15, 0));
+        assertEquals("Stat level too low", panel.getLastFeedbackMessage().getString());
+    }
+
+    @Test
+    void showsFeedbackWhenNodeRejectsForMissingPoints() throws Exception {
+        TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
+        replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.NOT_ENOUGH_POINTS)));
+
+        assertTrue(panel.mouseClicked(15, 15, 0));
+        assertEquals("Not enough perk points", panel.getLastFeedbackMessage().getString());
+    }
+
+    @Test
+    void clearsFeedbackAfterSuccessfulUnlockClick() throws Exception {
+        TalentTreePanel panel = new TalentTreePanel(StatType.BRUTE_FORCE, 0, 0, 300, 300);
+        panel.setLastFeedbackMessage(Component.literal("Old message"));
+        replaceNodes(panel, List.of(new RejectingNode(PerkNodeWidget.ClickResult.UNLOCK_SENT)));
+
+        assertTrue(panel.mouseClicked(15, 15, 0));
+        assertEquals("", panel.getLastFeedbackMessage().getString());
+    }
+
     private static void replaceNodes(TalentTreePanel panel, List<PerkNodeWidget> replacement) throws Exception {
         Field nodesField = TalentTreePanel.class.getDeclaredField("nodes");
         nodesField.setAccessible(true);
@@ -37,8 +67,15 @@ class TalentTreePanelTest {
     }
 
     private static final class RejectingNode extends PerkNodeWidget {
+        private final ClickResult result;
+
         private RejectingNode() {
+            this(ClickResult.LEVEL_TOO_LOW);
+        }
+
+        private RejectingNode(ClickResult result) {
             super(Perk.BRUTE_CORE, 10, 10);
+            this.result = result;
         }
 
         @Override
@@ -49,6 +86,11 @@ class TalentTreePanelTest {
         @Override
         public boolean tryClick() {
             return false;
+        }
+
+        @Override
+        public ClickResult tryClickResult() {
+            return result;
         }
     }
 }

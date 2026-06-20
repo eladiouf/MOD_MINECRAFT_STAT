@@ -16,6 +16,8 @@ import tong.statmod.integration.elementals.ElementalsMageRules;
 import tong.statmod.integration.elementals.ElementalsPerkBindings;
 import tong.statmod.integration.elementals.ElementalsRaceAffinity;
 import tong.statmod.network.SyncHelper;
+import tong.statmod.perks.Perk;
+import tong.statmod.perks.PerkManager;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -88,8 +90,16 @@ public class ElementalGrimoireItem extends Item {
         unlocked.add(branch);
         mageData.setUnlockedBranches(unlocked);
 
-        statData.markPerkFreeGranted(ElementalsPerkBindings.rareRewardPerk(branch).id);
+        grantRareRewardPerk(statData, branch);
         return true;
+    }
+
+    private static void grantRareRewardPerk(PlayerStatData statData, ElementalBranch branch) {
+        Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
+        if (statData.isPerkUnlocked(rewardPerk.id)) {
+            return;
+        }
+        new PerkManager(statData).grant(rewardPerk);
     }
 
     private static Component deniedMessage(ElementalBranch branch) {

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import tong.statmod.integration.elementals.ElementalBranch;
 import tong.statmod.integration.elementals.ElementalsMageData;
 import tong.statmod.integration.elementals.ElementalsPerkBindings;
+import tong.statmod.perks.Perk;
 import tong.statmod.storage.PlayerStatData;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -130,5 +131,27 @@ class ElementalGrimoireItemTest {
 
         assertFalse(consumed);
         assertFalse(mageData.rewardedRareBranches().contains(ElementalBranch.METAL));
+    }
+
+    @Test
+    void rareGrimoireDoesNotConvertPaidPerkIntoFreeGrantedPerk() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.setLevel(7, 20);
+        statData.setLevel(13, 20);
+        statData.setLevel(14, 2);
+        statData.setLevel(15, 18);
+        statData.addUnlockedPerk(Perk.AIR_TRANSCENDENCE.id);
+        ElementalsMageData mageData = new ElementalsMageData();
+        mageData.setMageAwakened(true);
+
+        boolean consumed = ElementalGrimoireItem.tryUnlockForTests(
+                tong.statmod.integration.elementals.ElementalsRaceAffinity.resolve("tensura:human"),
+                ElementalBranch.LIGHTNING,
+                statData,
+                mageData);
+
+        assertTrue(consumed);
+        assertTrue(mageData.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
+        assertFalse(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
     }
 }

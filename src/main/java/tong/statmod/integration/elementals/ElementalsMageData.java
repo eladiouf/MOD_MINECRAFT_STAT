@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 public final class ElementalsMageData {
     private boolean mageAwakened;
+    private String starterRaceId = "";
     private final EnumSet<ElementalBranch> starterBranches = EnumSet.noneOf(ElementalBranch.class);
     private final EnumSet<ElementalBranch> unlockedBranches = EnumSet.noneOf(ElementalBranch.class);
     private final EnumSet<ElementalBranch> rewardedRareBranches = EnumSet.noneOf(ElementalBranch.class);
@@ -18,6 +19,14 @@ public final class ElementalsMageData {
 
     public void setMageAwakened(boolean value) {
         mageAwakened = value;
+    }
+
+    public String starterRaceId() {
+        return starterRaceId;
+    }
+
+    public void setStarterRaceId(String value) {
+        starterRaceId = value == null ? "" : value;
     }
 
     public EnumSet<ElementalBranch> starterBranches() {

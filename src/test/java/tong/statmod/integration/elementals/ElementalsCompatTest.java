@@ -119,6 +119,7 @@ class ElementalsCompatTest {
         ElementalsMageData data = new ElementalsMageData();
         data.setMageAwakened(true);
         data.setStarterBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        data.setStarterRaceId("tensura:human");
         data.setUnlockedBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER, ElementalBranch.EARTH));
         MageRaceProfile profile = ElementalsRaceAffinity.resolve("tensura:human");
 
@@ -255,6 +256,7 @@ class ElementalsCompatTest {
         ElementalsMageData data = new ElementalsMageData();
         data.setMageAwakened(true);
         data.setStarterBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        data.setStarterRaceId("tensura:human");
         data.setUnlockedBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
 
         ElementalsCompat.reconcileMageState(
@@ -317,6 +319,32 @@ class ElementalsCompatTest {
         assertEquals(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH), data.starterBranches());
         assertTrue(runtime.allowedBranches.contains(ElementalBranch.FIRE));
         assertTrue(runtime.allowedBranches.contains(ElementalBranch.EARTH));
+        assertFalse(runtime.allowedBranches.contains(ElementalBranch.AIR));
+        assertFalse(runtime.allowedBranches.contains(ElementalBranch.WATER));
+    }
+
+    @Test
+    void awakenedMageReseedsHumanStartersAfterRaceChange() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setStarterBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        MageRaceProfile human = ElementalsRaceAffinity.resolve("tensura:human");
+        UUID playerId = UUID.fromString("00000000-0000-0000-0000-000000000029");
+        EnumSet<ElementalBranch> expectedHumanStarters = ElementalsRaceAffinity.starterBranches(human, playerId);
+
+        ElementalsCompat.reconcileMageState(
+                human,
+                playerId,
+                index -> 30,
+                Set.of(),
+                data,
+                runtime
+        );
+
+        assertEquals(expectedHumanStarters, data.starterBranches());
+        assertEquals(expectedHumanStarters, runtime.allowedBranches);
         assertFalse(runtime.allowedBranches.contains(ElementalBranch.AIR));
         assertFalse(runtime.allowedBranches.contains(ElementalBranch.WATER));
     }

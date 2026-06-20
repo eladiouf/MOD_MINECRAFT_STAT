@@ -78,6 +78,7 @@ public final class ElementalsCompat {
                                                        ElementalsRuntimePort runtime) {
         if (profile == null || !profile.supported()) {
             data.setMageAwakened(false);
+            data.setStarterRaceId("");
             data.setStarterBranches(EnumSet.noneOf(ElementalBranch.class));
             data.setUnlockedBranches(EnumSet.noneOf(ElementalBranch.class));
             if (runtime != null) {
@@ -92,8 +93,9 @@ public final class ElementalsCompat {
             data.setMageAwakened(true);
         }
         if (data.mageAwakened()) {
-            if (!profile.human() || data.starterBranches().isEmpty()) {
+            if (data.starterBranches().isEmpty() || !profile.raceId().equals(data.starterRaceId())) {
                 data.setStarterBranches(expectedStarters);
+                data.setStarterRaceId(profile.raceId());
             }
         }
 

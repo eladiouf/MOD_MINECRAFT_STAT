@@ -122,6 +122,7 @@ public class ModAttachments {
                                                 @NotNull HolderLookup.Provider provider) {
             ElementalsMageData data = new ElementalsMageData();
             data.setMageAwakened(tag.getBoolean("MageAwakened"));
+            if (tag.contains("StarterRaceId")) data.setStarterRaceId(tag.getString("StarterRaceId"));
             data.setStarterBranches(fromOrdinals(tag.getIntArray("StarterBranches")));
             data.setUnlockedBranches(fromOrdinals(tag.getIntArray("UnlockedBranches")));
             data.setRewardedRareBranches(fromOrdinals(tag.getIntArray("RewardedRareBranches")));
@@ -136,6 +137,7 @@ public class ModAttachments {
         public CompoundTag write(@NotNull ElementalsMageData data, @NotNull HolderLookup.Provider provider) {
             CompoundTag tag = new CompoundTag();
             tag.putBoolean("MageAwakened", data.mageAwakened());
+            tag.putString("StarterRaceId", data.starterRaceId());
             tag.putIntArray("StarterBranches", ordinals(data.starterBranches()));
             tag.putIntArray("UnlockedBranches", ordinals(data.unlockedBranches()));
             tag.putIntArray("RewardedRareBranches", ordinals(data.rewardedRareBranches()));

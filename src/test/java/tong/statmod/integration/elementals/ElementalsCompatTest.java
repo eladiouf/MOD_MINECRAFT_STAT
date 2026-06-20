@@ -296,4 +296,28 @@ class ElementalsCompatTest {
 
         assertTrue(runtime.allowedBranches.contains(ElementalBranch.METAL));
     }
+
+    @Test
+    void awakenedMageRefreshesStarterBranchesWhenRaceProfileChanges() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setStarterBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+
+        ElementalsCompat.reconcileMageState(
+                ElementalsRaceAffinity.resolve("tensura:dwarf"),
+                UUID.fromString("00000000-0000-0000-0000-000000000023"),
+                index -> 30,
+                Set.of(),
+                data,
+                runtime
+        );
+
+        assertEquals(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH), data.starterBranches());
+        assertTrue(runtime.allowedBranches.contains(ElementalBranch.FIRE));
+        assertTrue(runtime.allowedBranches.contains(ElementalBranch.EARTH));
+        assertFalse(runtime.allowedBranches.contains(ElementalBranch.AIR));
+        assertFalse(runtime.allowedBranches.contains(ElementalBranch.WATER));
+    }
 }

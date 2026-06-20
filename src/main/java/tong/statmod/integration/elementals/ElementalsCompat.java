@@ -86,35 +86,47 @@ public final class ElementalsCompat {
             return EnumSet.noneOf(ElementalBranch.class);
         }
 
+        EnumSet<ElementalBranch> previousStarterBranches = data.starterBranches();
+        EnumSet<ElementalBranch> expectedStarters = ElementalsRaceAffinity.starterBranches(profile, playerId);
         if (!data.mageAwakened() && ElementalsMageRules.canAwaken(profile, levels)) {
             data.setMageAwakened(true);
-            data.setStarterBranches(ElementalsRaceAffinity.starterBranches(profile, playerId));
+        }
+        if (data.mageAwakened()) {
+            if (!profile.human() || data.starterBranches().isEmpty()) {
+                data.setStarterBranches(expectedStarters);
+            }
         }
 
         EnumSet<ElementalBranch> allowed = EnumSet.noneOf(ElementalBranch.class);
         if (data.mageAwakened()) {
             allowed.addAll(data.starterBranches());
             for (ElementalBranch branch : data.unlockedBranches()) {
-                if (branch.isBaseBranch()) {
+                if (!branch.isBaseBranch()) {
+                    continue;
+                }
+                if (data.starterBranches().contains(branch) || !previousStarterBranches.contains(branch)) {
                     allowed.add(branch);
                 }
             }
         }
 
-        int masteredBaseCount = 0;
-        for (ElementalBranch branch : allowed) {
-            if (branch.isBaseBranch()
-                    && ElementalsMageRules.stateForBaseBranch(branch, profile, levels, unlockedPerks) == ElementState.MASTERED) {
-                masteredBaseCount++;
-            }
-        }
+        int masteredBaseCount = countMasteredBaseBranches(allowed, profile, levels, unlockedPerks);
 
         for (ElementalBranch branch : ElementalBranch.values()) {
             if (!branch.isBaseBranch() || allowed.contains(branch)) {
                 continue;
             }
-            if (ElementalsMageRules.canUnlockThirdBase(profile, branch, levels, unlockedPerks, masteredBaseCount)
-                    || ElementalsMageRules.canUnlockFourthBase(profile, branch, levels, unlockedPerks, masteredBaseCount)) {
+            if (ElementalsMageRules.canUnlockThirdBase(profile, branch, levels, unlockedPerks, masteredBaseCount)) {
+                allowed.add(branch);
+            }
+        }
+
+        masteredBaseCount = countMasteredBaseBranches(allowed, profile, levels, unlockedPerks);
+        for (ElementalBranch branch : ElementalBranch.values()) {
+            if (!branch.isBaseBranch() || allowed.contains(branch)) {
+                continue;
+            }
+            if (ElementalsMageRules.canUnlockFourthBase(profile, branch, levels, unlockedPerks, masteredBaseCount)) {
                 allowed.add(branch);
             }
         }
@@ -302,6 +314,20 @@ public final class ElementalsCompat {
             unlocked.add(id);
         }
         return unlocked;
+    }
+
+    private static int countMasteredBaseBranches(EnumSet<ElementalBranch> branches,
+                                                 MageRaceProfile profile,
+                                                 IntUnaryOperator levels,
+                                                 Set<Integer> unlockedPerks) {
+        int masteredBaseCount = 0;
+        for (ElementalBranch branch : branches) {
+            if (branch.isBaseBranch()
+                    && ElementalsMageRules.stateForBaseBranch(branch, profile, levels, unlockedPerks) == ElementState.MASTERED) {
+                masteredBaseCount++;
+            }
+        }
+        return masteredBaseCount;
     }
 
     private record ProgressSnapshot(int level, float xp) {}

@@ -1,11 +1,13 @@
 package tong.statmod.integration.elementals;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.integration.SkillPerkGate;
 import tong.statmod.perks.Perk;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ElementalsPerkBindingsTest {
     @Test
@@ -28,5 +30,14 @@ class ElementalsPerkBindingsTest {
     void rareRewardsUseFreeGrantedExistingTreePerksWithoutAutoGrantHooks() {
         assertEquals(Perk.AIR_TRANSCENDENCE, ElementalsPerkBindings.rareRewardPerk(ElementalBranch.LIGHTNING));
         assertEquals(Perk.WILL_TRANSCENDENCE, ElementalsPerkBindings.rareRewardPerk(ElementalBranch.BLOOD));
+    }
+
+    @Test
+    void elementalsProgressionPerksAreNotExternallySkillGated() {
+        assertFalse(SkillPerkGate.isGated(Perk.AIR_MASTERY.id));
+        assertFalse(SkillPerkGate.isGated(Perk.WATER_MASTERY.id));
+        assertFalse(SkillPerkGate.isGated(Perk.EARTH_MASTERY.id));
+        assertFalse(SkillPerkGate.isGated(Perk.FIRE_MASTERY.id));
+        assertFalse(SkillPerkGate.isGated(Perk.ERUDITION_MASTERY.id));
     }
 }

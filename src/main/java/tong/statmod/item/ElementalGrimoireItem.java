@@ -23,6 +23,7 @@ import tong.statmod.storage.PlayerStatData;
 
 import java.util.EnumSet;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class ElementalGrimoireItem extends Item {
     private final ElementalBranch branch;
@@ -41,7 +42,7 @@ public class ElementalGrimoireItem extends Item {
         PlayerStatData statData = serverPlayer.getData(ModAttachments.STATS);
         ElementalsMageData mageData = serverPlayer.getData(ModAttachments.ELEMENTALS_MAGE);
         var profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(serverPlayer));
-        if (!profile.supported() || !tryUnlock(profile, branch, statData, mageData)) {
+        if (!profile.supported() || !tryUnlock(profile, branch, statData, mageData, perk -> grantRareRewardPerk(statData, branch, serverPlayer))) {
             serverPlayer.displayClientMessage(deniedMessage(branch), true);
             return InteractionResultHolder.fail(serverPlayer.getItemInHand(hand));
         }
@@ -65,10 +66,26 @@ public class ElementalGrimoireItem extends Item {
         return tryUnlock(profile, branch, statData, mageData);
     }
 
+    static boolean tryUnlockForTests(tong.statmod.integration.elementals.MageRaceProfile profile,
+                                     ElementalBranch branch,
+                                     PlayerStatData statData,
+                                     ElementalsMageData mageData,
+                                     Consumer<Perk> rewardHook) {
+        return tryUnlock(profile, branch, statData, mageData, rewardHook);
+    }
+
     private static boolean tryUnlock(tong.statmod.integration.elementals.MageRaceProfile profile,
                                      ElementalBranch branch,
                                      PlayerStatData statData,
                                      ElementalsMageData mageData) {
+        return tryUnlock(profile, branch, statData, mageData, perk -> grantRareRewardPerk(statData, branch, null));
+    }
+
+    private static boolean tryUnlock(tong.statmod.integration.elementals.MageRaceProfile profile,
+                                     ElementalBranch branch,
+                                     PlayerStatData statData,
+                                     ElementalsMageData mageData,
+                                     Consumer<Perk> rewardHook) {
         if (profile == null || !profile.supported()) {
             return false;
         }
@@ -90,13 +107,20 @@ public class ElementalGrimoireItem extends Item {
         unlocked.add(branch);
         mageData.setUnlockedBranches(unlocked);
 
-        grantRareRewardPerk(statData, branch);
+        Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
+        if (rewardHook != null) {
+            rewardHook.accept(rewardPerk);
+        }
         return true;
     }
 
-    private static void grantRareRewardPerk(PlayerStatData statData, ElementalBranch branch) {
+    private static void grantRareRewardPerk(PlayerStatData statData, ElementalBranch branch, Player player) {
         Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
         if (statData.isPerkUnlocked(rewardPerk.id)) {
+            return;
+        }
+        if (player != null) {
+            new PerkManager(statData).grant(rewardPerk, player);
             return;
         }
         new PerkManager(statData).grant(rewardPerk);

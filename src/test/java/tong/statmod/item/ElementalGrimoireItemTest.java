@@ -7,7 +7,10 @@ import tong.statmod.integration.elementals.ElementalsPerkBindings;
 import tong.statmod.perks.Perk;
 import tong.statmod.storage.PlayerStatData;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ElementalGrimoireItemTest {
@@ -153,5 +156,27 @@ class ElementalGrimoireItemTest {
         assertTrue(consumed);
         assertTrue(mageData.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
         assertFalse(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
+    }
+
+    @Test
+    void successfulRareGrimoireInvokesRewardPerkHook() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.setLevel(7, 20);
+        statData.setLevel(13, 20);
+        statData.setLevel(14, 2);
+        statData.setLevel(15, 18);
+        ElementalsMageData mageData = new ElementalsMageData();
+        mageData.setMageAwakened(true);
+        AtomicInteger rewardedPerkId = new AtomicInteger(-1);
+
+        boolean consumed = ElementalGrimoireItem.tryUnlockForTests(
+                tong.statmod.integration.elementals.ElementalsRaceAffinity.resolve("tensura:human"),
+                ElementalBranch.LIGHTNING,
+                statData,
+                mageData,
+                perk -> rewardedPerkId.set(perk.id));
+
+        assertTrue(consumed);
+        assertEquals(Perk.AIR_TRANSCENDENCE.id, rewardedPerkId.get());
     }
 }

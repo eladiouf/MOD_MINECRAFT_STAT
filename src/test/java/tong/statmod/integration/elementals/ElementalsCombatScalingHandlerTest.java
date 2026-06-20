@@ -33,4 +33,21 @@ class ElementalsCombatScalingHandlerTest {
                 "net.minecraft.world.entity.projectile.Arrow"));
         assertNull(ElementalsCombatScalingHandler.branchFromEntityClassName(null));
     }
+
+    @Test
+    void resolvesDamageBranchFromElementalsAbilityPackage() {
+        assertEquals(ElementalBranch.FIRE,
+                ElementalsCombatScalingHandler.branchFromAbilityClassName(
+                        "dev.saperate.elementals.elements.fire.AbilityFlameThrower"));
+        assertEquals(ElementalBranch.BLOOD,
+                ElementalsCombatScalingHandler.branchFromAbilityClassName(
+                        "dev.saperate.elementals.elements.blood.AbilityBloodControl"));
+    }
+
+    @Test
+    void ignoresNonElementalsAbilities() {
+        assertNull(ElementalsCombatScalingHandler.branchFromAbilityClassName(
+                "net.minecraft.world.item.SwordItem"));
+        assertNull(ElementalsCombatScalingHandler.branchFromAbilityClassName(null));
+    }
 }

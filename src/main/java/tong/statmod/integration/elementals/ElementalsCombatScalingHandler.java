@@ -2,6 +2,7 @@ package tong.statmod.integration.elementals;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
+import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -20,15 +21,22 @@ public final class ElementalsCombatScalingHandler {
 
     @SubscribeEvent
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
-        DamageSource source = event.getSource();
-        ElementalBranch damageBranch = damageBranch(source, event.getEntity());
-        Entity owner = source.getEntity();
-        if (!(owner instanceof Player player) || damageBranch == null) {
+        ElementalDamageContext context = damageContext(event.getSource(), event.getEntity());
+        if (context == null) {
             return;
         }
 
-        ElementState state = ElementalsCompat.stateFor(player, damageBranch);
+        ElementState state = ElementalsCompat.stateFor(context.player(), context.branch());
         event.setAmount(event.getAmount() * ElementalsPenaltyModel.damageMultiplier(state));
+    }
+
+    static ElementalDamageContext damageContext(DamageSource source, LivingEntity target) {
+        ElementalBranch branch = damageBranch(source, target);
+        Entity owner = source.getEntity();
+        if (owner instanceof Player player && branch != null) {
+            return new ElementalDamageContext(player, branch);
+        }
+        return nearbyElementalContext(target);
     }
 
     static ElementalBranch damageBranch(DamageSource source) {
@@ -44,9 +52,9 @@ public final class ElementalsCombatScalingHandler {
 
         Entity owner = source.getEntity();
         if (direct != null && direct == owner && owner instanceof ServerPlayer serverPlayer) {
-            ElementalBranch nearbyOwnedEntityBranch = nearbyOwnedElementalBranch(target, owner);
-            if (nearbyOwnedEntityBranch != null) {
-                return nearbyOwnedEntityBranch;
+            ElementalDamageContext nearbyContext = nearbyElementalContext(target);
+            if (nearbyContext != null && nearbyContext.player() == owner) {
+                return nearbyContext.branch();
             }
             return activeAbilityBranch(serverPlayer);
         }
@@ -111,6 +119,17 @@ public final class ElementalsCombatScalingHandler {
         return null;
     }
 
+    static ElementalContextHint contextHintFromEntityClassName(String className) {
+        ElementalBranch branch = branchFromEntityClassName(className);
+        if (branch == null) {
+            return null;
+        }
+        ContextOwnerSource ownerSource = className != null && className.endsWith(".WaterHelmetEntity")
+                ? ContextOwnerSource.CASTER
+                : ContextOwnerSource.OWNER;
+        return new ElementalContextHint(branch, ownerSource);
+    }
+
     static ElementalBranch branchFromNearbyOwnedElementalClasses(List<String> classNames) {
         List<ElementalBranch> branches = new ArrayList<>();
         for (String className : classNames) {
@@ -122,21 +141,20 @@ public final class ElementalsCombatScalingHandler {
         return uniqueBranch(branches);
     }
 
-    private static ElementalBranch nearbyOwnedElementalBranch(LivingEntity target, Entity owner) {
+    private static ElementalDamageContext nearbyElementalContext(LivingEntity target) {
         if (target == null) {
             return null;
         }
 
         AABB targetBox = target.getBoundingBox();
         AABB searchBox = targetBox.inflate(1.0D);
-        List<String> nearbyClassNames = target.level().getEntities(target, searchBox, entity ->
-                        entity instanceof AbstractElementalsEntity<?> elemental
-                                && elemental.getOwner() == owner
-                                && entity.getBoundingBox().intersects(targetBox.inflate(0.25D)))
+        List<ElementalDamageContext> contexts = target.level().getEntities(target, searchBox, entity ->
+                        entity.getBoundingBox().intersects(targetBox.inflate(0.25D)))
                 .stream()
-                .map(entity -> entity.getClass().getName())
+                .map(ElementalsCombatScalingHandler::contextFromNearbyEntity)
+                .filter(context -> context != null)
                 .toList();
-        return branchFromNearbyOwnedElementalClasses(nearbyClassNames);
+        return uniqueContext(contexts);
     }
 
     private static ElementalBranch uniqueBranch(Collection<ElementalBranch> branches) {
@@ -153,11 +171,61 @@ public final class ElementalsCombatScalingHandler {
         return resolved;
     }
 
+    private static ElementalDamageContext contextFromNearbyEntity(Entity entity) {
+        ElementalContextHint hint = contextHintFromEntityClassName(entity.getClass().getName());
+        if (hint == null) {
+            return null;
+        }
+
+        Player player = switch (hint.ownerSource()) {
+            case OWNER -> ownerPlayer(entity);
+            case CASTER -> casterPlayer(entity);
+        };
+        return player == null ? null : new ElementalDamageContext(player, hint.branch());
+    }
+
+    private static Player ownerPlayer(Entity entity) {
+        if (entity instanceof AbstractElementalsEntity<?> elemental && elemental.getOwner() instanceof Player player) {
+            return player;
+        }
+        return null;
+    }
+
+    private static Player casterPlayer(Entity entity) {
+        if (entity instanceof WaterHelmetEntity waterHelmet && waterHelmet.getCaster() instanceof Player player) {
+            return player;
+        }
+        return null;
+    }
+
+    private static ElementalDamageContext uniqueContext(Collection<ElementalDamageContext> contexts) {
+        ElementalDamageContext resolved = null;
+        for (ElementalDamageContext context : contexts) {
+            if (resolved == null) {
+                resolved = context;
+                continue;
+            }
+            if (resolved.branch() != context.branch() || resolved.player() != context.player()) {
+                return null;
+            }
+        }
+        return resolved;
+    }
+
     private static ElementalBranch activeAbilityBranch(ServerPlayer player) {
         Bender bender = Bender.getBender(player);
         if (bender == null || bender.currAbility == null) {
             return null;
         }
         return branchFromAbilityClassName(bender.currAbility.getClass().getName());
+    }
+
+    record ElementalDamageContext(Player player, ElementalBranch branch) {}
+
+    record ElementalContextHint(ElementalBranch branch, ContextOwnerSource ownerSource) {}
+
+    enum ContextOwnerSource {
+        OWNER,
+        CASTER
     }
 }

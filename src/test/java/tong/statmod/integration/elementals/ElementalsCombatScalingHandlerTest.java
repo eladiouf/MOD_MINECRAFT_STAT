@@ -73,4 +73,30 @@ class ElementalsCombatScalingHandlerTest {
                 "net.minecraft.world.entity.projectile.Arrow",
                 "dev.saperate.elementals.entities.common.BoomerangEntity")));
     }
+
+    @Test
+    void resolvesContextHintForOwnerDrivenElementalsEntities() {
+        ElementalsCombatScalingHandler.ElementalContextHint hint =
+                ElementalsCombatScalingHandler.contextHintFromEntityClassName(
+                        "dev.saperate.elementals.entities.fire.FireShieldEntity");
+        assertEquals(ElementalBranch.FIRE, hint.branch());
+        assertEquals(ElementalsCombatScalingHandler.ContextOwnerSource.OWNER, hint.ownerSource());
+    }
+
+    @Test
+    void resolvesContextHintForCasterDrivenElementalsEntities() {
+        ElementalsCombatScalingHandler.ElementalContextHint hint =
+                ElementalsCombatScalingHandler.contextHintFromEntityClassName(
+                        "dev.saperate.elementals.entities.water.WaterHelmetEntity");
+        assertEquals(ElementalBranch.WATER, hint.branch());
+        assertEquals(ElementalsCombatScalingHandler.ContextOwnerSource.CASTER, hint.ownerSource());
+    }
+
+    @Test
+    void ignoresContextHintForUnknownOrCommonEntities() {
+        assertNull(ElementalsCombatScalingHandler.contextHintFromEntityClassName(
+                "dev.saperate.elementals.entities.common.BoomerangEntity"));
+        assertNull(ElementalsCombatScalingHandler.contextHintFromEntityClassName(
+                "net.minecraft.world.entity.projectile.Arrow"));
+    }
 }

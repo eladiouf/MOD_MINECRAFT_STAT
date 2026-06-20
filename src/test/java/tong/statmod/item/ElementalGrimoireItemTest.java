@@ -32,6 +32,7 @@ class ElementalGrimoireItemTest {
 
         assertTrue(consumed);
         assertTrue(mageData.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
+        assertTrue(mageData.freeGrantedRewardBranches().contains(ElementalBranch.LIGHTNING));
         assertTrue(statData.isPerkFreeGranted(ElementalsPerkBindings.rareRewardPerk(ElementalBranch.LIGHTNING).id));
     }
 
@@ -89,6 +90,7 @@ class ElementalGrimoireItemTest {
 
         assertTrue(consumed);
         assertTrue(mageData.rewardedRareBranches().contains(ElementalBranch.METAL));
+        assertTrue(mageData.freeGrantedRewardBranches().contains(ElementalBranch.METAL));
         assertTrue(statData.isPerkFreeGranted(ElementalsPerkBindings.rareRewardPerk(ElementalBranch.METAL).id));
     }
 
@@ -155,6 +157,7 @@ class ElementalGrimoireItemTest {
 
         assertTrue(consumed);
         assertTrue(mageData.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
+        assertFalse(mageData.freeGrantedRewardBranches().contains(ElementalBranch.LIGHTNING));
         assertFalse(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
     }
 

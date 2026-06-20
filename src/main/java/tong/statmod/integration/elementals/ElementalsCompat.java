@@ -339,10 +339,19 @@ public final class ElementalsCompat {
                                                ElementalsMageData mageData,
                                                Consumer<Perk> rewardHook) {
         boolean changed = false;
+        EnumSet<ElementalBranch> freeGrantedRewards = mageData.freeGrantedRewardBranches();
+        boolean metadataChanged = false;
         for (ElementalBranch branch : mageData.rewardedRareBranches()) {
             Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
             int perkId = rewardPerk.id;
+            if (statData.isPerkFreeGranted(perkId) && !freeGrantedRewards.contains(branch)) {
+                freeGrantedRewards.add(branch);
+                metadataChanged = true;
+            }
             if (statData.isPerkUnlocked(perkId)) {
+                continue;
+            }
+            if (!freeGrantedRewards.contains(branch)) {
                 continue;
             }
             if (rewardHook != null) {
@@ -352,6 +361,9 @@ public final class ElementalsCompat {
                 statData.markPerkFreeGranted(perkId);
             }
             changed = true;
+        }
+        if (metadataChanged) {
+            mageData.setFreeGrantedRewardBranches(freeGrantedRewards);
         }
         return changed;
     }

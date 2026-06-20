@@ -377,6 +377,7 @@ class ElementalsCompatTest {
         PlayerStatData statData = new PlayerStatData();
         ElementalsMageData data = new ElementalsMageData();
         data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING, ElementalBranch.METAL));
+        data.setFreeGrantedRewardBranches(EnumSet.of(ElementalBranch.LIGHTNING, ElementalBranch.METAL));
 
         boolean changed = ElementalsCompat.restorePermanentRewardPerks(statData, data);
 
@@ -390,6 +391,7 @@ class ElementalsCompatTest {
         PlayerStatData statData = new PlayerStatData();
         ElementalsMageData data = new ElementalsMageData();
         data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+        data.setFreeGrantedRewardBranches(EnumSet.of(ElementalBranch.LIGHTNING));
         AtomicInteger rewardedPerkId = new AtomicInteger(-1);
 
         boolean changed = ElementalsCompat.restorePermanentRewardPerks(
@@ -413,5 +415,19 @@ class ElementalsCompatTest {
         assertFalse(changed);
         assertTrue(statData.isPerkUnlocked(Perk.AIR_TRANSCENDENCE.id));
         assertFalse(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
+    }
+
+    @Test
+    void restoringPermanentRarePerksBackfillsTrackedFreeRewardBranches() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.markPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id);
+        ElementalsMageData data = new ElementalsMageData();
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+
+        boolean changed = ElementalsCompat.restorePermanentRewardPerks(statData, data);
+
+        assertFalse(changed);
+        assertTrue(data.freeGrantedRewardBranches().contains(ElementalBranch.LIGHTNING));
+        assertTrue(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
     }
 }

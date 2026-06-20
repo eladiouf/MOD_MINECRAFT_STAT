@@ -126,6 +126,7 @@ public class ModAttachments {
             data.setStarterBranches(fromOrdinals(tag.getIntArray("StarterBranches")));
             data.setUnlockedBranches(fromOrdinals(tag.getIntArray("UnlockedBranches")));
             data.setRewardedRareBranches(fromOrdinals(tag.getIntArray("RewardedRareBranches")));
+            data.setFreeGrantedRewardBranches(fromOrdinals(tag.getIntArray("FreeGrantedRewardBranches")));
             if (tag.contains("LastSeenChi")) data.setLastSeenChi(tag.getFloat("LastSeenChi"));
             if (tag.contains("LastSeenXp")) data.setLastSeenXp(tag.getFloat("LastSeenXp"));
             if (tag.contains("LastSeenLevel")) data.setLastSeenLevel(tag.getInt("LastSeenLevel"));
@@ -141,6 +142,7 @@ public class ModAttachments {
             tag.putIntArray("StarterBranches", ordinals(data.starterBranches()));
             tag.putIntArray("UnlockedBranches", ordinals(data.unlockedBranches()));
             tag.putIntArray("RewardedRareBranches", ordinals(data.rewardedRareBranches()));
+            tag.putIntArray("FreeGrantedRewardBranches", ordinals(data.freeGrantedRewardBranches()));
             tag.putFloat("LastSeenChi", data.lastSeenChi());
             tag.putFloat("LastSeenXp", data.lastSeenXp());
             tag.putInt("LastSeenLevel", data.lastSeenLevel());

@@ -111,6 +111,11 @@ public class ElementalGrimoireItem extends Item {
         if (rewardHook != null) {
             rewardHook.accept(rewardPerk);
         }
+        if (statData.isPerkFreeGranted(rewardPerk.id)) {
+            EnumSet<ElementalBranch> freeGrantedRewards = mageData.freeGrantedRewardBranches();
+            freeGrantedRewards.add(branch);
+            mageData.setFreeGrantedRewardBranches(freeGrantedRewards);
+        }
         return true;
     }
 

@@ -8,6 +8,7 @@ public final class ElementalsMageData {
     private final EnumSet<ElementalBranch> starterBranches = EnumSet.noneOf(ElementalBranch.class);
     private final EnumSet<ElementalBranch> unlockedBranches = EnumSet.noneOf(ElementalBranch.class);
     private final EnumSet<ElementalBranch> rewardedRareBranches = EnumSet.noneOf(ElementalBranch.class);
+    private final EnumSet<ElementalBranch> freeGrantedRewardBranches = EnumSet.noneOf(ElementalBranch.class);
     private float lastSeenChi;
     private float lastSeenXp;
     private int lastSeenLevel;
@@ -59,6 +60,17 @@ public final class ElementalsMageData {
         rewardedRareBranches.clear();
         if (branches != null) {
             rewardedRareBranches.addAll(branches);
+        }
+    }
+
+    public EnumSet<ElementalBranch> freeGrantedRewardBranches() {
+        return freeGrantedRewardBranches.isEmpty() ? EnumSet.noneOf(ElementalBranch.class) : EnumSet.copyOf(freeGrantedRewardBranches);
+    }
+
+    public void setFreeGrantedRewardBranches(EnumSet<ElementalBranch> branches) {
+        freeGrantedRewardBranches.clear();
+        if (branches != null) {
+            freeGrantedRewardBranches.addAll(branches);
         }
     }
 

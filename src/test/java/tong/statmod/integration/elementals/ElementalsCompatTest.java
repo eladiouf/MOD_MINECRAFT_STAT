@@ -7,6 +7,7 @@ import tong.statmod.storage.PlayerStatData;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -361,5 +362,21 @@ class ElementalsCompatTest {
         assertTrue(changed);
         assertTrue(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
         assertTrue(statData.isPerkFreeGranted(Perk.EARTH_TRANSCENDENCE.id));
+    }
+
+    @Test
+    void restoringPermanentRarePerksInvokesRewardHooks() {
+        PlayerStatData statData = new PlayerStatData();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+        AtomicInteger rewardedPerkId = new AtomicInteger(-1);
+
+        boolean changed = ElementalsCompat.restorePermanentRewardPerks(
+                statData,
+                data,
+                perk -> rewardedPerkId.set(perk.id));
+
+        assertTrue(changed);
+        assertEquals(Perk.AIR_TRANSCENDENCE.id, rewardedPerkId.get());
     }
 }

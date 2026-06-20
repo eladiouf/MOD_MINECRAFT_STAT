@@ -9,6 +9,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.network.SyncHelper;
+import tong.statmod.perks.Perk;
+import tong.statmod.perks.PerkManager;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -16,6 +18,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 
@@ -49,7 +52,14 @@ public final class ElementalsCompat {
         PlayerStatData statData = player.getData(ModAttachments.STATS);
         ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
         MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
-        boolean restoredRewardPerks = restorePermanentRewardPerks(statData, mageData);
+        boolean restoredRewardPerks = restorePermanentRewardPerks(
+                statData,
+                mageData,
+                perk -> {
+                    if (!statData.isPerkUnlocked(perk.id)) {
+                        new PerkManager(statData).grant(perk, player);
+                    }
+                });
         Set<Integer> unlockedPerks = unlockedPerks(statData);
         EnumSet<ElementalBranch> previousAllowed = mageData.unlockedBranches();
         EnumSet<ElementalBranch> runtimeAllowed = RUNTIME.branches(player);
@@ -320,10 +330,20 @@ public final class ElementalsCompat {
     }
 
     static boolean restorePermanentRewardPerks(PlayerStatData statData, ElementalsMageData mageData) {
+        return restorePermanentRewardPerks(statData, mageData, perk -> statData.markPerkFreeGranted(perk.id));
+    }
+
+    static boolean restorePermanentRewardPerks(PlayerStatData statData,
+                                               ElementalsMageData mageData,
+                                               Consumer<Perk> rewardHook) {
         boolean changed = false;
         for (ElementalBranch branch : mageData.rewardedRareBranches()) {
-            int perkId = ElementalsPerkBindings.rareRewardPerk(branch).id;
+            Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
+            int perkId = rewardPerk.id;
             if (!statData.isPerkUnlocked(perkId) || !statData.isPerkFreeGranted(perkId)) {
+                if (rewardHook != null) {
+                    rewardHook.accept(rewardPerk);
+                }
                 statData.markPerkFreeGranted(perkId);
                 changed = true;
             }

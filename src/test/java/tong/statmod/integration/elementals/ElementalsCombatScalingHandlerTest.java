@@ -2,6 +2,8 @@ package tong.statmod.integration.elementals;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -49,5 +51,26 @@ class ElementalsCombatScalingHandlerTest {
         assertNull(ElementalsCombatScalingHandler.branchFromAbilityClassName(
                 "net.minecraft.world.item.SwordItem"));
         assertNull(ElementalsCombatScalingHandler.branchFromAbilityClassName(null));
+    }
+
+    @Test
+    void resolvesOwnedElementalEntityBranchesFromNearbyClasses() {
+        assertEquals(ElementalBranch.AIR,
+                ElementalsCombatScalingHandler.branchFromNearbyOwnedElementalClasses(List.of(
+                        "dev.saperate.elementals.entities.air.AirBulletEntity")));
+        assertEquals(ElementalBranch.WATER,
+                ElementalsCombatScalingHandler.branchFromNearbyOwnedElementalClasses(List.of(
+                        "dev.saperate.elementals.entities.water.WaterJetEntity",
+                        "dev.saperate.elementals.entities.water.WaterBladeEntity")));
+    }
+
+    @Test
+    void ignoresAmbiguousOrNonElementalNearbyOwnedClasses() {
+        assertNull(ElementalsCombatScalingHandler.branchFromNearbyOwnedElementalClasses(List.of(
+                "dev.saperate.elementals.entities.fire.FireArcEntity",
+                "dev.saperate.elementals.entities.air.AirBulletEntity")));
+        assertNull(ElementalsCombatScalingHandler.branchFromNearbyOwnedElementalClasses(List.of(
+                "net.minecraft.world.entity.projectile.Arrow",
+                "dev.saperate.elementals.entities.common.BoomerangEntity")));
     }
 }

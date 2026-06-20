@@ -400,4 +400,18 @@ class ElementalsCompatTest {
         assertTrue(changed);
         assertEquals(Perk.AIR_TRANSCENDENCE.id, rewardedPerkId.get());
     }
+
+    @Test
+    void restoringPermanentRarePerksDoesNotConvertPaidPerksIntoFreeGrantedPerks() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.addUnlockedPerk(Perk.AIR_TRANSCENDENCE.id);
+        ElementalsMageData data = new ElementalsMageData();
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+
+        boolean changed = ElementalsCompat.restorePermanentRewardPerks(statData, data);
+
+        assertFalse(changed);
+        assertTrue(statData.isPerkUnlocked(Perk.AIR_TRANSCENDENCE.id));
+        assertFalse(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
+    }
 }

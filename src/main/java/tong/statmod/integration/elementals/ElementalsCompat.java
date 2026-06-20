@@ -342,13 +342,16 @@ public final class ElementalsCompat {
         for (ElementalBranch branch : mageData.rewardedRareBranches()) {
             Perk rewardPerk = ElementalsPerkBindings.rareRewardPerk(branch);
             int perkId = rewardPerk.id;
-            if (!statData.isPerkUnlocked(perkId) || !statData.isPerkFreeGranted(perkId)) {
-                if (rewardHook != null) {
-                    rewardHook.accept(rewardPerk);
-                }
-                statData.markPerkFreeGranted(perkId);
-                changed = true;
+            if (statData.isPerkUnlocked(perkId)) {
+                continue;
             }
+            if (rewardHook != null) {
+                rewardHook.accept(rewardPerk);
+            }
+            if (!statData.isPerkFreeGranted(perkId)) {
+                statData.markPerkFreeGranted(perkId);
+            }
+            changed = true;
         }
         return changed;
     }

@@ -66,4 +66,27 @@ class ElementalsMageRulesTest {
                 ElementalBranch.METAL,
                 levels));
     }
+
+    @Test
+    void unsupportedRaceCannotPassRareGrimoireGate() {
+        IntUnaryOperator levels = index -> 30;
+
+        assertFalse(ElementalsMageRules.canUseRareGrimoire(
+                ElementalsRaceAffinity.resolve("tensura:slime"),
+                ElementalBranch.METAL,
+                levels));
+    }
+
+    @Test
+    void unsupportedRaceCannotUnlockThirdBase() {
+        IntUnaryOperator levels = index -> 30;
+        Set<Integer> perks = Set.of(Perk.ERUDITION_CORE.id, Perk.FIRE_CORE.id);
+
+        assertFalse(ElementalsMageRules.canUnlockThirdBase(
+                ElementalsRaceAffinity.resolve("tensura:slime"),
+                ElementalBranch.FIRE,
+                levels,
+                perks,
+                1));
+    }
 }

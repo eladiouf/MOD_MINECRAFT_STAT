@@ -53,7 +53,7 @@ public class ElementalGrimoireItem extends Item {
     }
 
     static boolean tryUnlockForTests(ElementalBranch branch, PlayerStatData statData, ElementalsMageData mageData) {
-        return tryUnlock(null, branch, statData, mageData);
+        return tryUnlock(ElementalsRaceAffinity.resolve("tensura:human"), branch, statData, mageData);
     }
 
     static boolean tryUnlockForTests(tong.statmod.integration.elementals.MageRaceProfile profile,
@@ -67,6 +67,9 @@ public class ElementalGrimoireItem extends Item {
                                      ElementalBranch branch,
                                      PlayerStatData statData,
                                      ElementalsMageData mageData) {
+        if (profile == null || !profile.supported()) {
+            return false;
+        }
         if (!mageData.mageAwakened()) {
             return false;
         }

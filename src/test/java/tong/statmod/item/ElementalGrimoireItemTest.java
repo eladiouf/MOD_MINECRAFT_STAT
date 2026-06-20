@@ -107,4 +107,28 @@ class ElementalGrimoireItemTest {
 
         assertFalse(consumed);
     }
+
+    @Test
+    void unsupportedRaceCannotUnlockRareBranchEvenWithStats() {
+        PlayerStatData statData = new PlayerStatData();
+        statData.setLevel(7, 30);
+        statData.setLevel(9, 30);
+        statData.setLevel(10, 30);
+        statData.setLevel(13, 30);
+        statData.setLevel(14, 30);
+        statData.setLevel(15, 30);
+        statData.setLevel(22, 30);
+        ElementalsMageData mageData = new ElementalsMageData();
+        mageData.setMageAwakened(true);
+
+        boolean consumed = ElementalGrimoireItem.tryUnlockForTests(
+                tong.statmod.integration.elementals.ElementalsRaceAffinity.resolve("tensura:slime"),
+                ElementalBranch.METAL,
+                statData,
+                mageData
+        );
+
+        assertFalse(consumed);
+        assertFalse(mageData.rewardedRareBranches().contains(ElementalBranch.METAL));
+    }
 }

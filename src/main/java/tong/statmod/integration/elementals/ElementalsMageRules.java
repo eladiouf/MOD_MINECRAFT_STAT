@@ -63,7 +63,7 @@ public final class ElementalsMageRules {
     }
 
     public static boolean canUnlockThirdBase(MageRaceProfile profile, ElementalBranch branch, IntUnaryOperator levels, Set<Integer> unlockedPerks, int masteredBaseCount) {
-        if (profile == null || branch == null || !branch.isBaseBranch()) {
+        if (profile == null || !profile.supported() || branch == null || !branch.isBaseBranch()) {
             return false;
         }
         int primaryRequirement = profile.human() ? 20 : profile.beastfolk() ? 24 : 22;
@@ -83,7 +83,7 @@ public final class ElementalsMageRules {
     }
 
     public static boolean canUnlockFourthBase(MageRaceProfile profile, ElementalBranch branch, IntUnaryOperator levels, Set<Integer> unlockedPerks, int masteredBaseCount) {
-        if (profile == null || branch == null || !branch.isBaseBranch()) {
+        if (profile == null || !profile.supported() || branch == null || !branch.isBaseBranch()) {
             return false;
         }
         int primaryRequirement = profile.human() ? 24 : profile.beastfolk() ? 28 : 26;
@@ -103,6 +103,9 @@ public final class ElementalsMageRules {
     }
 
     public static boolean canUseRareGrimoire(MageRaceProfile profile, ElementalBranch branch, IntUnaryOperator levels) {
+        if (profile != null && !profile.supported()) {
+            return false;
+        }
         if (branch == null) {
             return false;
         }

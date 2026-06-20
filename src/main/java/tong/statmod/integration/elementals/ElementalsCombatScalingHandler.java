@@ -12,22 +12,47 @@ public final class ElementalsCombatScalingHandler {
     @SubscribeEvent
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
         DamageSource source = event.getSource();
+        ElementalBranch damageBranch = damageBranch(source);
         Entity owner = source.getEntity();
-        if (!(owner instanceof Player player) || !isElementalsDamage(source)) {
+        if (!(owner instanceof Player player) || damageBranch == null) {
             return;
         }
 
-        ElementalBranch activeBranch = ElementalsCompat.activeBranch(player);
-        if (activeBranch == null) {
-            return;
-        }
-
-        ElementState state = ElementalsCompat.stateFor(player, activeBranch);
+        ElementState state = ElementalsCompat.stateFor(player, damageBranch);
         event.setAmount(event.getAmount() * ElementalsPenaltyModel.damageMultiplier(state));
     }
 
-    private static boolean isElementalsDamage(DamageSource source) {
+    static ElementalBranch damageBranch(DamageSource source) {
         Entity direct = source.getDirectEntity();
-        return direct != null && direct.getClass().getName().startsWith("dev.saperate.elementals.");
+        return direct == null ? null : branchFromEntityClassName(direct.getClass().getName());
+    }
+
+    static ElementalBranch branchFromEntityClassName(String className) {
+        if (className == null || !className.startsWith("dev.saperate.elementals.entities.")) {
+            return null;
+        }
+
+        if (className.contains(".entities.air.")) {
+            return ElementalBranch.AIR;
+        }
+        if (className.contains(".entities.water.")) {
+            return ElementalBranch.WATER;
+        }
+        if (className.contains(".entities.earth.")) {
+            return ElementalBranch.EARTH;
+        }
+        if (className.contains(".entities.fire.")) {
+            return ElementalBranch.FIRE;
+        }
+        if (className.contains(".entities.lightning.")) {
+            return ElementalBranch.LIGHTNING;
+        }
+        if (className.contains(".entities.blood.")) {
+            return ElementalBranch.BLOOD;
+        }
+        if (className.contains(".entities.metal.")) {
+            return ElementalBranch.METAL;
+        }
+        return null;
     }
 }

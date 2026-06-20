@@ -1,0 +1,36 @@
+package tong.statmod.integration.elementals;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class ElementalsCombatScalingHandlerTest {
+    @Test
+    void resolvesDamageBranchFromElementalEntityPackage() {
+        assertEquals(ElementalBranch.FIRE,
+                ElementalsCombatScalingHandler.branchFromEntityClassName(
+                        "dev.saperate.elementals.entities.fire.FireBallEntity"));
+        assertEquals(ElementalBranch.LIGHTNING,
+                ElementalsCombatScalingHandler.branchFromEntityClassName(
+                        "dev.saperate.elementals.entities.lightning.LightningArcEntity"));
+        assertEquals(ElementalBranch.METAL,
+                ElementalsCombatScalingHandler.branchFromEntityClassName(
+                        "dev.saperate.elementals.entities.metal.MetalBulletEntity"));
+    }
+
+    @Test
+    void ignoresCommonElementalsEntitiesWithoutElementBranch() {
+        assertNull(ElementalsCombatScalingHandler.branchFromEntityClassName(
+                "dev.saperate.elementals.entities.common.BoomerangEntity"));
+        assertNull(ElementalsCombatScalingHandler.branchFromEntityClassName(
+                "dev.saperate.elementals.entities.common.DirtBottleEntity"));
+    }
+
+    @Test
+    void ignoresNonElementalsEntities() {
+        assertNull(ElementalsCombatScalingHandler.branchFromEntityClassName(
+                "net.minecraft.world.entity.projectile.Arrow"));
+        assertNull(ElementalsCombatScalingHandler.branchFromEntityClassName(null));
+    }
+}

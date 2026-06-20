@@ -18,22 +18,37 @@ public final class ElementalsRaceAffinity {
 
     public static MageRaceProfile resolve(String raceId) {
         String normalized = raceId == null ? "" : raceId.trim().toLowerCase();
-        return switch (normalized) {
-            case "tensura:elf" -> new MageRaceProfile(normalized, true, false, false,
+        String familyId = canonicalSupportedRaceId(normalized);
+        return switch (familyId) {
+            case "tensura:elf" -> new MageRaceProfile(familyId, true, false, false,
                     EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER),
                     EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
-            case "tensura:human" -> new MageRaceProfile(normalized, true, true, false,
+            case "tensura:human" -> new MageRaceProfile(familyId, true, true, false,
                     EnumSet.noneOf(ElementalBranch.class),
                     EnumSet.noneOf(ElementalBranch.class));
-            case "tensura:dwarf" -> new MageRaceProfile(normalized, true, false, false,
+            case "tensura:dwarf" -> new MageRaceProfile(familyId, true, false, false,
                     EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH),
                     EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH));
-            case "tensura:beastfolk" -> new MageRaceProfile(normalized, true, false, true,
+            case "tensura:beastfolk" -> new MageRaceProfile(familyId, true, false, true,
                     EnumSet.of(ElementalBranch.WATER, ElementalBranch.AIR),
                     EnumSet.noneOf(ElementalBranch.class));
             default -> new MageRaceProfile(normalized, false, false, false,
                     EnumSet.noneOf(ElementalBranch.class),
                     EnumSet.noneOf(ElementalBranch.class));
+        };
+    }
+
+    private static String canonicalSupportedRaceId(String raceId) {
+        return switch (raceId) {
+            case "tensura:human", "tensura:enlightened_human", "tensura:human_saint", "tensura:divine_human" ->
+                    "tensura:human";
+            case "tensura:elf", "tensura:enlightened_elf", "tensura:elf_saint", "tensura:divine_elf" ->
+                    "tensura:elf";
+            case "tensura:dwarf", "tensura:enlightened_dwarf", "tensura:dwarf_saint", "tensura:divine_dwarf" ->
+                    "tensura:dwarf";
+            case "tensura:beastfolk", "tensura:beast_lord", "tensura:spirit_beast", "tensura:divine_beast" ->
+                    "tensura:beastfolk";
+            default -> raceId;
         };
     }
 

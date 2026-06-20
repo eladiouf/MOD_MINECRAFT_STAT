@@ -20,6 +20,14 @@ class ElementalsRaceAffinityTest {
     }
 
     @Test
+    void approvedMageRaceFamiliesIncludeSupportedEvolutions() {
+        assertTrue(ElementalsRaceAffinity.resolve("tensura:divine_elf").supported());
+        assertTrue(ElementalsRaceAffinity.resolve("tensura:human_saint").supported());
+        assertTrue(ElementalsRaceAffinity.resolve("tensura:divine_dwarf").supported());
+        assertTrue(ElementalsRaceAffinity.resolve("tensura:beast_lord").supported());
+    }
+
+    @Test
     void fixedRacesKeepTheirApprovedStarterPairs() {
         assertEquals(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER),
                 ElementalsRaceAffinity.starterBranches(

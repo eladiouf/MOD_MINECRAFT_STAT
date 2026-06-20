@@ -2,6 +2,7 @@ package tong.statmod.integration.elementals;
 
 import org.junit.jupiter.api.Test;
 import tong.statmod.perks.Perk;
+import tong.statmod.storage.PlayerStatData;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -347,5 +348,18 @@ class ElementalsCompatTest {
         assertEquals(expectedHumanStarters, runtime.allowedBranches);
         assertFalse(runtime.allowedBranches.contains(ElementalBranch.AIR));
         assertFalse(runtime.allowedBranches.contains(ElementalBranch.WATER));
+    }
+
+    @Test
+    void permanentRareBranchesRegrantMissingRewardPerks() {
+        PlayerStatData statData = new PlayerStatData();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING, ElementalBranch.METAL));
+
+        boolean changed = ElementalsCompat.restorePermanentRewardPerks(statData, data);
+
+        assertTrue(changed);
+        assertTrue(statData.isPerkFreeGranted(Perk.AIR_TRANSCENDENCE.id));
+        assertTrue(statData.isPerkFreeGranted(Perk.EARTH_TRANSCENDENCE.id));
     }
 }

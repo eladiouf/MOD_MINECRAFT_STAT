@@ -49,6 +49,7 @@ public final class ElementalsCompat {
         PlayerStatData statData = player.getData(ModAttachments.STATS);
         ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
         MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
+        boolean restoredRewardPerks = restorePermanentRewardPerks(statData, mageData);
         Set<Integer> unlockedPerks = unlockedPerks(statData);
         EnumSet<ElementalBranch> previousAllowed = mageData.unlockedBranches();
         EnumSet<ElementalBranch> runtimeAllowed = RUNTIME.branches(player);
@@ -64,7 +65,7 @@ public final class ElementalsCompat {
         if (runtimeChanged) {
             RUNTIME.setAllowedBranches(player, allowed);
         }
-        if (runtimeChanged || previousAwakened != mageData.mageAwakened() || !previousAllowed.equals(mageData.unlockedBranches())) {
+        if (restoredRewardPerks || runtimeChanged || previousAwakened != mageData.mageAwakened() || !previousAllowed.equals(mageData.unlockedBranches())) {
             SyncHelper.syncStats(player);
             SyncHelper.syncPerks(player);
         }
@@ -316,6 +317,18 @@ public final class ElementalsCompat {
             unlocked.add(id);
         }
         return unlocked;
+    }
+
+    static boolean restorePermanentRewardPerks(PlayerStatData statData, ElementalsMageData mageData) {
+        boolean changed = false;
+        for (ElementalBranch branch : mageData.rewardedRareBranches()) {
+            int perkId = ElementalsPerkBindings.rareRewardPerk(branch).id;
+            if (!statData.isPerkUnlocked(perkId) || !statData.isPerkFreeGranted(perkId)) {
+                statData.markPerkFreeGranted(perkId);
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private static int countMasteredBaseBranches(EnumSet<ElementalBranch> branches,

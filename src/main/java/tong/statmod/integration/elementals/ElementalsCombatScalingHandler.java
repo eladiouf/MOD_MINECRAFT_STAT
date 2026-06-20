@@ -158,7 +158,7 @@ public final class ElementalsCombatScalingHandler {
         List<ElementalDamageContext> contexts = target.level().getEntities(target, searchBox, entity ->
                         entity.getBoundingBox().intersects(targetBox.inflate(0.25D)))
                 .stream()
-                .map(ElementalsCombatScalingHandler::contextFromNearbyEntity)
+                .map(entity -> contextFromNearbyEntity(entity, target))
                 .filter(context -> context != null)
                 .toList();
         return uniqueContext(contexts);
@@ -178,7 +178,7 @@ public final class ElementalsCombatScalingHandler {
         return resolved;
     }
 
-    private static ElementalDamageContext contextFromNearbyEntity(Entity entity) {
+    private static ElementalDamageContext contextFromNearbyEntity(Entity entity, LivingEntity target) {
         ElementalContextHint hint = contextHintFromEntityClassName(entity.getClass().getName());
         if (hint == null) {
             return null;
@@ -186,7 +186,7 @@ public final class ElementalsCombatScalingHandler {
 
         Player player = switch (hint.ownerSource()) {
             case OWNER -> ownerPlayer(entity);
-            case CASTER -> casterPlayer(entity);
+            case CASTER -> casterPlayer(entity, target);
         };
         return player == null ? null : new ElementalDamageContext(player, hint.branch());
     }
@@ -198,11 +198,17 @@ public final class ElementalsCombatScalingHandler {
         return null;
     }
 
-    private static Player casterPlayer(Entity entity) {
-        if (entity instanceof WaterHelmetEntity waterHelmet && waterHelmet.getCaster() instanceof Player player) {
+    private static Player casterPlayer(Entity entity, LivingEntity target) {
+        if (entity instanceof WaterHelmetEntity waterHelmet
+                && allowsWaterHelmetCasterFallback(waterHelmet.suffocate, waterHelmet.getOwner() == target)
+                && waterHelmet.getCaster() instanceof Player player) {
             return player;
         }
         return null;
+    }
+
+    static boolean allowsWaterHelmetCasterFallback(boolean suffocate, boolean ownerMatchesTarget) {
+        return suffocate && ownerMatchesTarget;
     }
 
     private static ElementalDamageContext uniqueContext(Collection<ElementalDamageContext> contexts) {

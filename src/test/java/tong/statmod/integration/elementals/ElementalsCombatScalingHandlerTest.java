@@ -108,4 +108,12 @@ class ElementalsCombatScalingHandlerTest {
         assertEquals(false, ElementalsCombatScalingHandler.allowsNearbyContextFallback("cactus"));
         assertEquals(false, ElementalsCombatScalingHandler.allowsNearbyContextFallback(null));
     }
+
+    @Test
+    void casterDrivenWaterHelmetFallbackRequiresSuffocateAndOwnerMatch() {
+        assertEquals(true, ElementalsCombatScalingHandler.allowsWaterHelmetCasterFallback(true, true));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsWaterHelmetCasterFallback(false, true));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsWaterHelmetCasterFallback(true, false));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsWaterHelmetCasterFallback(false, false));
+    }
 }

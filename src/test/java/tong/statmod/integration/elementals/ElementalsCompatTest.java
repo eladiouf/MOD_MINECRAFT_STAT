@@ -248,4 +248,52 @@ class ElementalsCompatTest {
 
         assertFalse(data.mageAwakened());
     }
+
+    @Test
+    void humanUnlocksThirdBaseAtNewLowerThreshold() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setStarterBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
+
+        ElementalsCompat.reconcileMageState(
+                ElementalsRaceAffinity.resolve("tensura:human"),
+                UUID.fromString("00000000-0000-0000-0000-000000000021"),
+                index -> switch (index) {
+                    case 7 -> 16;
+                    case 10 -> 20;
+                    case 11 -> 18;
+                    case 13 -> 20;
+                    case 15 -> 16;
+                    default -> 0;
+                },
+                Set.of(Perk.ERUDITION_CORE.id, Perk.FIRE_CORE.id, Perk.AIR_MASTERY.id),
+                data,
+                runtime
+        );
+
+        assertTrue(runtime.allowedBranches.contains(ElementalBranch.FIRE));
+    }
+
+    @Test
+    void runtimeKeepsRewardedMetalWhenReconciled() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(true);
+        data.setStarterBranches(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH));
+        data.setUnlockedBranches(EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH, ElementalBranch.METAL));
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.METAL));
+
+        ElementalsCompat.reconcileMageState(
+                ElementalsRaceAffinity.resolve("tensura:dwarf"),
+                UUID.fromString("00000000-0000-0000-0000-000000000022"),
+                index -> 30,
+                Set.of(),
+                data,
+                runtime
+        );
+
+        assertTrue(runtime.allowedBranches.contains(ElementalBranch.METAL));
+    }
 }

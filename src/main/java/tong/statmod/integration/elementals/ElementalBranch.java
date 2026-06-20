@@ -6,7 +6,8 @@ public enum ElementalBranch {
     EARTH("earth", true),
     FIRE("fire", true),
     LIGHTNING("lightning", false),
-    BLOOD("blood", false);
+    BLOOD("blood", false),
+    METAL("metal", false);
 
     private final String elementalsName;
     private final boolean baseBranch;

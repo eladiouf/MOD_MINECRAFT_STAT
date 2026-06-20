@@ -104,7 +104,7 @@ public final class ElementalsCompat {
         int masteredBaseCount = 0;
         for (ElementalBranch branch : allowed) {
             if (branch.isBaseBranch()
-                    && ElementalsMageRules.stateForBaseBranch(branch, levels, unlockedPerks) == ElementState.MASTERED) {
+                    && ElementalsMageRules.stateForBaseBranch(branch, profile, levels, unlockedPerks) == ElementState.MASTERED) {
                 masteredBaseCount++;
             }
         }
@@ -137,8 +137,9 @@ public final class ElementalsCompat {
         }
         Set<Integer> unlockedPerks = unlockedPerks(player.getData(ModAttachments.STATS));
         ElementalsMageData mageData = player.getData(ModAttachments.ELEMENTALS_MAGE);
+        MageRaceProfile profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(player));
         if (mageData.unlockedBranches().contains(branch) && branch.isBaseBranch()) {
-            return ElementalsMageRules.stateForBaseBranch(branch, player.getData(ModAttachments.STATS)::getLevel, unlockedPerks);
+            return ElementalsMageRules.stateForBaseBranch(branch, profile, player.getData(ModAttachments.STATS)::getLevel, unlockedPerks);
         }
         return mageData.unlockedBranches().contains(branch) ? ElementState.AWAKENED : ElementState.LOCKED;
     }

@@ -20,14 +20,19 @@ public final class ElementalsRaceAffinity {
         String normalized = raceId == null ? "" : raceId.trim().toLowerCase();
         return switch (normalized) {
             case "tensura:elf" -> new MageRaceProfile(normalized, true, false, false,
+                    EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER),
                     EnumSet.of(ElementalBranch.AIR, ElementalBranch.WATER));
             case "tensura:human" -> new MageRaceProfile(normalized, true, true, false,
+                    EnumSet.noneOf(ElementalBranch.class),
                     EnumSet.noneOf(ElementalBranch.class));
             case "tensura:dwarf" -> new MageRaceProfile(normalized, true, false, false,
+                    EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH),
                     EnumSet.of(ElementalBranch.FIRE, ElementalBranch.EARTH));
             case "tensura:beastfolk" -> new MageRaceProfile(normalized, true, false, true,
-                    EnumSet.of(ElementalBranch.WATER, ElementalBranch.AIR));
+                    EnumSet.of(ElementalBranch.WATER, ElementalBranch.AIR),
+                    EnumSet.noneOf(ElementalBranch.class));
             default -> new MageRaceProfile(normalized, false, false, false,
+                    EnumSet.noneOf(ElementalBranch.class),
                     EnumSet.noneOf(ElementalBranch.class));
         };
     }

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ElementalsCompatTest {
@@ -224,5 +225,27 @@ class ElementalsCompatTest {
         assertEquals(8.0f, runtime.xp(), 0.0001f);
         assertEquals(1, runtime.xpSyncCalls);
         assertEquals(ElementalBranch.LIGHTNING, data.lastSeenActiveBranch());
+    }
+
+    @Test
+    void beastfolkNeedsHigherMagicalTotalForAwakening() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+
+        ElementalsCompat.reconcileMageState(
+                ElementalsRaceAffinity.resolve("tensura:beastfolk"),
+                UUID.fromString("00000000-0000-0000-0000-000000000020"),
+                index -> switch (index) {
+                    case 7, 12 -> 13;
+                    case 13 -> 9;
+                    case 14 -> 6;
+                    default -> 0;
+                },
+                Set.of(),
+                data,
+                runtime
+        );
+
+        assertFalse(data.mageAwakened());
     }
 }

@@ -144,7 +144,9 @@ public final class ElementalsCompat {
             }
         }
 
-        allowed.addAll(data.rewardedRareBranches());
+        if (data.mageAwakened()) {
+            allowed.addAll(data.rewardedRareBranches());
+        }
         data.setUnlockedBranches(allowed);
         if (runtime != null) {
             runtime.setAllowedBranches(allowed);

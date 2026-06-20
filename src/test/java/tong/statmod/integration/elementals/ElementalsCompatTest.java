@@ -302,6 +302,27 @@ class ElementalsCompatTest {
     }
 
     @Test
+    void rewardedRareBranchesDoNotBypassMageAwakening() {
+        FakeRuntime runtime = new FakeRuntime();
+        ElementalsMageData data = new ElementalsMageData();
+        data.setMageAwakened(false);
+        data.setRewardedRareBranches(EnumSet.of(ElementalBranch.LIGHTNING));
+
+        ElementalsCompat.reconcileMageState(
+                ElementalsRaceAffinity.resolve("tensura:human"),
+                UUID.fromString("00000000-0000-0000-0000-000000000024"),
+                index -> 0,
+                Set.of(),
+                data,
+                runtime
+        );
+
+        assertFalse(data.mageAwakened());
+        assertEquals(EnumSet.noneOf(ElementalBranch.class), runtime.allowedBranches);
+        assertTrue(data.rewardedRareBranches().contains(ElementalBranch.LIGHTNING));
+    }
+
+    @Test
     void awakenedMageRefreshesStarterBranchesWhenRaceProfileChanges() {
         FakeRuntime runtime = new FakeRuntime();
         ElementalsMageData data = new ElementalsMageData();

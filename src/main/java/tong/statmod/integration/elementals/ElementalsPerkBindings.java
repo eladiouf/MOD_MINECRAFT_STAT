@@ -29,6 +29,7 @@ public final class ElementalsPerkBindings {
         return switch (branch) {
             case LIGHTNING -> Perk.AIR_TRANSCENDENCE;
             case BLOOD -> Perk.WILL_TRANSCENDENCE;
+            case METAL -> Perk.EARTH_TRANSCENDENCE;
             default -> throw new IllegalArgumentException("No rare reward perk for " + branch);
         };
     }

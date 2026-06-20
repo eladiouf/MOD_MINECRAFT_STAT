@@ -38,8 +38,8 @@ public class ElementalGrimoireItem extends Item {
 
         PlayerStatData statData = serverPlayer.getData(ModAttachments.STATS);
         ElementalsMageData mageData = serverPlayer.getData(ModAttachments.ELEMENTALS_MAGE);
-        if (!ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(serverPlayer)).supported()
-                || !tryUnlock(branch, statData, mageData)) {
+        var profile = ElementalsRaceAffinity.resolve(PlayerDataBridge.getRaceId(serverPlayer));
+        if (!profile.supported() || !tryUnlock(profile, branch, statData, mageData)) {
             serverPlayer.displayClientMessage(deniedMessage(branch), true);
             return InteractionResultHolder.fail(serverPlayer.getItemInHand(hand));
         }
@@ -53,14 +53,24 @@ public class ElementalGrimoireItem extends Item {
     }
 
     static boolean tryUnlockForTests(ElementalBranch branch, PlayerStatData statData, ElementalsMageData mageData) {
-        return tryUnlock(branch, statData, mageData);
+        return tryUnlock(null, branch, statData, mageData);
     }
 
-    private static boolean tryUnlock(ElementalBranch branch, PlayerStatData statData, ElementalsMageData mageData) {
+    static boolean tryUnlockForTests(tong.statmod.integration.elementals.MageRaceProfile profile,
+                                     ElementalBranch branch,
+                                     PlayerStatData statData,
+                                     ElementalsMageData mageData) {
+        return tryUnlock(profile, branch, statData, mageData);
+    }
+
+    private static boolean tryUnlock(tong.statmod.integration.elementals.MageRaceProfile profile,
+                                     ElementalBranch branch,
+                                     PlayerStatData statData,
+                                     ElementalsMageData mageData) {
         if (!mageData.mageAwakened()) {
             return false;
         }
-        if (!ElementalsMageRules.canUseRareGrimoire(branch, statData::getLevel)) {
+        if (!ElementalsMageRules.canUseRareGrimoire(profile, branch, statData::getLevel)) {
             return false;
         }
         if (mageData.rewardedRareBranches().contains(branch)) {

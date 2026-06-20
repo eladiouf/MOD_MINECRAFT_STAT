@@ -99,4 +99,13 @@ class ElementalsCombatScalingHandlerTest {
         assertNull(ElementalsCombatScalingHandler.contextHintFromEntityClassName(
                 "net.minecraft.world.entity.projectile.Arrow"));
     }
+
+    @Test
+    void allowsNearbyContextFallbackOnlyForProvenAmbientElementalsDamageIds() {
+        assertEquals(true, ElementalsCombatScalingHandler.allowsNearbyContextFallback("drown"));
+        assertEquals(true, ElementalsCombatScalingHandler.allowsNearbyContextFallback("inFire"));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsNearbyContextFallback("dryout"));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsNearbyContextFallback("cactus"));
+        assertEquals(false, ElementalsCombatScalingHandler.allowsNearbyContextFallback(null));
+    }
 }

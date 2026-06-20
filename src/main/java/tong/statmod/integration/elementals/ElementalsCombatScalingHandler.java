@@ -36,6 +36,9 @@ public final class ElementalsCombatScalingHandler {
         if (owner instanceof Player player && branch != null) {
             return new ElementalDamageContext(player, branch);
         }
+        if (!allowsNearbyContextFallback(source.getMsgId())) {
+            return null;
+        }
         return nearbyElementalContext(target);
     }
 
@@ -128,6 +131,10 @@ public final class ElementalsCombatScalingHandler {
                 ? ContextOwnerSource.CASTER
                 : ContextOwnerSource.OWNER;
         return new ElementalContextHint(branch, ownerSource);
+    }
+
+    static boolean allowsNearbyContextFallback(String damageTypeMsgId) {
+        return "drown".equals(damageTypeMsgId) || "inFire".equals(damageTypeMsgId);
     }
 
     static ElementalBranch branchFromNearbyOwnedElementalClasses(List<String> classNames) {

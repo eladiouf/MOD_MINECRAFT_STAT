@@ -93,6 +93,9 @@ jobs:
           name: "STAT Mod ${{ github.ref_name }}"
           version: ${{ github.ref_name }}
           changelog: "See CHANGELOG.md"
-          game-versions: '1.20.1'
-          loaders: forge
-          dependencies: epic-fight(required)
+          game-versions: '1.21.1'
+          loaders: neoforge
+          dependencies: |
+            tensura-reincarnated(required)
+            irons-spellbooks(optional)
+            epic-fight(optional)

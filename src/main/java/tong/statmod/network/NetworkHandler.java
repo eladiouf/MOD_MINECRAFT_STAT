@@ -35,5 +35,11 @@ public class NetworkHandler {
 
         registrar.playToClient(PerkFeedbackPayload.TYPE, PerkFeedbackPayload.CODEC,
                 ClientPayloadHandler::handlePerkFeedback);
+
+        registrar.playToClient(SyncMagicPayload.TYPE, SyncMagicPayload.CODEC,
+                ClientPayloadHandler::handleSyncMagic);
+
+        registrar.playToServer(UnlockMagicNodePayload.TYPE, UnlockMagicNodePayload.CODEC,
+                ServerPayloadHandler::handleUnlockMagicNode);
     }
 }

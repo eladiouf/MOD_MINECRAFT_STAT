@@ -5,6 +5,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.STATMod;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
+import tong.statmod.magic.MagicNode;
+import tong.statmod.magic.MagicTreeCatalog;
+import tong.statmod.magic.MagicTreeProgressionService;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
 import tong.statmod.sound.SoundHelper;
@@ -28,6 +31,28 @@ public final class ServerPayloadHandler {
                         new SyncPerksPayload(data.getUnlockedPerks(), data.getPerkPoints()));
                 SoundHelper.playPerkUnlock(player);
                 STATMod.LOGGER.debug("{} unlocked perk {}", player.getName().getString(), perk.name);
+            }
+        });
+    }
+
+    public static void handleUnlockMagicNode(UnlockMagicNodePayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            MagicNode node = MagicTreeCatalog.byId(payload.nodeId());
+            if (node == null) return;
+            PlayerStatData data = player.getData(ModAttachments.STATS);
+            MagicTreeProgressionService.UnlockResult result = MagicTreeProgressionService.tryUnlock(data, node);
+            if (result.success()) {
+                PacketDistributor.sendToPlayer(player, new SyncMagicPayload(
+                        data.getMagicNodes(), data.getLearnedSpells(),
+                        data.getArcanePoints(), data.getSchoolPointsArray(),
+                        data.getMagicRace().ordinal(),
+                        data.getChosenStartBranch() != null ? data.getChosenStartBranch().ordinal() : -1
+                ));
+                STATMod.LOGGER.debug("{} unlocked magic node {}", player.getName().getString(), payload.nodeId());
+            } else {
+                STATMod.LOGGER.debug("{} failed unlock node {}: {}", player.getName().getString(),
+                        payload.nodeId(), result.failure());
             }
         });
     }

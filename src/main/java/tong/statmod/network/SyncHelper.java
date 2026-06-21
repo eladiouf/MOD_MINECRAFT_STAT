@@ -29,9 +29,19 @@ public final class SyncHelper {
                 new StaminaSyncPayload(data.currentStamina(), data.fatigueDebt(), data.meditating()));
     }
 
+    public static void syncMagic(ServerPlayer player) {
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PacketDistributor.sendToPlayer(player,
+                new SyncMagicPayload(data.getMagicNodes(), data.getLearnedSpells(),
+                        data.getArcanePoints(), data.getSchoolPointsArray(),
+                        data.getMagicRace().ordinal(),
+                        data.getChosenStartBranch() != null ? data.getChosenStartBranch().ordinal() : -1));
+    }
+
     public static void syncAll(ServerPlayer player) {
         syncStats(player);
         syncPerks(player);
         syncStamina(player);
+        syncMagic(player);
     }
 }

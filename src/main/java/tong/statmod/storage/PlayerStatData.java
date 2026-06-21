@@ -123,6 +123,7 @@ public class PlayerStatData {
     public int getSchoolPoints(tong.statmod.magic.MagicBranch b) {
         return b == null ? 0 : schoolPoints[b.ordinal()];
     }
+    public int[] getSchoolPointsArray() { return schoolPoints.clone(); }
     public void setSchoolPoints(tong.statmod.magic.MagicBranch b, int v) {
         if (b != null) schoolPoints[b.ordinal()] = Math.max(0, v);
     }

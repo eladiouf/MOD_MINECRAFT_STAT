@@ -23,4 +23,10 @@ final class NetCodecs {
                         return list;
                     }
             );
+
+    static final StreamCodec<ByteBuf, String[]> STRING_ARRAY =
+            ByteBufCodecs.stringUtf8(32767).apply(ByteBufCodecs.list()).map(
+                    list -> list.toArray(new String[0]),
+                    arr -> List.of(arr)
+            );
 }

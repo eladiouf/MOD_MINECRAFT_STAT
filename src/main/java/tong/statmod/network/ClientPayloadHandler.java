@@ -1,13 +1,14 @@
 package tong.statmod.network;
 
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import tong.statmod.client.ClientMagicCache;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
 import tong.statmod.client.ClientStaminaCache;
 import tong.statmod.client.gui.PerkFeedbackToast;
-import net.minecraft.network.chat.Component;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientPayloadHandler {
@@ -39,5 +40,12 @@ public final class ClientPayloadHandler {
         context.enqueueWork(() -> PerkFeedbackToast.show(
                 Component.literal(payload.title()),
                 Component.literal(payload.message())));
+    }
+
+    public static void handleSyncMagic(SyncMagicPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ClientMagicCache.update(
+                payload.magicNodes(), payload.learnedSpells(),
+                payload.arcanePoints(), payload.schoolPoints(),
+                payload.raceOrdinal(), payload.startBranchOrdinal()));
     }
 }

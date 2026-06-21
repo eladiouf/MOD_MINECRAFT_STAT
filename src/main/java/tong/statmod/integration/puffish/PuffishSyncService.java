@@ -24,6 +24,8 @@ public final class PuffishSyncService {
                 gateway.lock(categoryId, PuffishPerkIds.skillId(perk));
             }
         }
+
+        PuffishMagicSyncService.sync(data, gateway);
     }
 
     private static int mirroredFamilyPoints(PlayerStatData data, StatFamily family) {

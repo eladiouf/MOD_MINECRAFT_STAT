@@ -1,0 +1,63 @@
+site_name: STAT Mod Wiki
+site_url: https://stat-mod-wiki.vercel.app/
+repo_url: https://github.com/eladiouf/MOD_MINECRAFT_STAT
+repo_name: eladiouf/MOD_MINECRAFT_STAT
+edit_uri: edit/neoforge-1.21.1/docs/wiki/
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - search.highlight
+    - search.share
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Mode sombre
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Mode clair
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - tables
+  - attr_list
+  - def_list
+  - toc:
+      permalink: true
+
+nav:
+  - Accueil: index.md
+  - Installation: installation.md
+  - Commandes: commands.md
+  - Dépendances: dependencies.md
+  - Stats: stats.md
+  - Perks: perks.md
+  - Intégration Tensura:
+    - Présentation: tensura/index.md
+    - Races: tensura/races.md
+    - Soul Level: tensura/soul-level.md
+  - Arbre Magique:
+    - Présentation: magic/index.md
+    - Branches: magic/branches.md
+  - Raccourcis: keybinds.md

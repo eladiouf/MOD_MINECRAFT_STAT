@@ -15,6 +15,7 @@ import tong.statmod.integration.SoulLevelSyncHandler;
 import tong.statmod.integration.TensuraEventSubscriber;
 import tong.statmod.integration.epicfight.EpicFightCompat;
 import tong.statmod.integration.parcool.ParcoolCompat;
+import tong.statmod.integration.ironspells.IronSpellsCompat;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.tensura.MagiculeScalingHandler;
 import tong.statmod.integration.tensura.RacePhysicalEffects;
@@ -69,6 +70,7 @@ public class STATMod {
         ParcoolCompat.init();
         OvergearedCompat.init();
         PuffishSkillsCompat.init();
+        IronSpellsCompat.init();
         LOGGER.info("STAT Mod initialized on NeoForge 1.21.1");
     }
 }

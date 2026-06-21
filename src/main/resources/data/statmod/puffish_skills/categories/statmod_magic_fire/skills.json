@@ -25,6 +25,11 @@
         "y": 100,
         "definition": "fire.signature.firebolt"
     },
+    "fire.signature.tensura_fire_bolt": {
+        "x": 360,
+        "y": 100,
+        "definition": "fire.signature.tensura_fire_bolt"
+    },
     "fire.signature.burning_dash": {
         "x": 180,
         "y": 200,
@@ -35,9 +40,19 @@
         "y": 300,
         "definition": "fire.signature.fireball"
     },
+    "fire.signature.tensura_fire_storm": {
+        "x": 360,
+        "y": 300,
+        "definition": "fire.signature.tensura_fire_storm"
+    },
     "fire.signature.fire_breath": {
         "x": 180,
         "y": 400,
         "definition": "fire.signature.fire_breath"
+    },
+    "fire.signature.tensura_hellfire": {
+        "x": 360,
+        "y": 400,
+        "definition": "fire.signature.tensura_hellfire"
     }
 }

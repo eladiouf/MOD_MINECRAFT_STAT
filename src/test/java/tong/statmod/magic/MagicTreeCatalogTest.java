@@ -17,14 +17,14 @@ class MagicTreeCatalogTest {
     }
 
     @Test
-    void fire_branch_has_opener_three_tiers_and_four_signatures() {
+    void fire_branch_has_opener_three_tiers_and_hybrid_signatures() {
         List<MagicNode> fire = MagicTreeCatalog.byBranch(MagicBranch.FIRE);
         long openers = fire.stream().filter(n -> n.kind() == MagicNodeKind.BRANCH_OPENER).count();
         long tiers = fire.stream().filter(n -> n.kind() == MagicNodeKind.BRANCH_TIER).count();
         long sigs = fire.stream().filter(n -> n.kind() == MagicNodeKind.SIGNATURE_SPELL).count();
         assertEquals(1, openers);
         assertEquals(3, tiers);
-        assertEquals(4, sigs);
+        assertEquals(7, sigs);
     }
 
     @Test
@@ -38,6 +38,16 @@ class MagicTreeCatalogTest {
     void fire_signature_spells_reference_real_irons_ids() {
         MagicNode firebolt = MagicTreeCatalog.byId("fire/signature/firebolt");
         assertTrue(firebolt.learnedSpells().contains("irons_spellbooks:firebolt"));
+    }
+
+    @Test
+    void fire_branch_also_contains_tensura_signature_nodes() {
+        MagicNode tensuraFireBolt = MagicTreeCatalog.byId("fire/signature/tensura_fire_bolt");
+        MagicNode tensuraHellfire = MagicTreeCatalog.byId("fire/signature/tensura_hellfire");
+        assertNotNull(tensuraFireBolt);
+        assertNotNull(tensuraHellfire);
+        assertTrue(tensuraFireBolt.learnedSpells().contains("tensura:fire_bolt"));
+        assertTrue(tensuraHellfire.learnedSpells().contains("tensura:hellfire"));
     }
 
     @Test

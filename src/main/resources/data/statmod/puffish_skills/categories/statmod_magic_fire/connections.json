@@ -18,6 +18,10 @@
                 "fire.signature.firebolt"
             ],
             [
+                "fire.tier.ember_path",
+                "fire.signature.tensura_fire_bolt"
+            ],
+            [
                 "fire.tier.flame_path",
                 "fire.signature.burning_dash"
             ],
@@ -26,8 +30,16 @@
                 "fire.signature.fireball"
             ],
             [
+                "fire.tier.flame_path",
+                "fire.signature.tensura_fire_storm"
+            ],
+            [
                 "fire.tier.inferno_path",
                 "fire.signature.fire_breath"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.tensura_hellfire"
             ]
         ]
     }

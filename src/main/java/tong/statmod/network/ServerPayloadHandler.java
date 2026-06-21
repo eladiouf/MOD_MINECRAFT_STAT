@@ -41,7 +41,7 @@ public final class ServerPayloadHandler {
             MagicNode node = MagicTreeCatalog.byId(payload.nodeId());
             if (node == null) return;
             PlayerStatData data = player.getData(ModAttachments.STATS);
-            MagicTreeProgressionService.UnlockResult result = MagicTreeProgressionService.tryUnlock(data, node);
+            MagicTreeProgressionService.UnlockResult result = MagicTreeProgressionService.tryUnlock(data, node, player);
             if (result.success()) {
                 PacketDistributor.sendToPlayer(player, new SyncMagicPayload(
                         data.getMagicNodes(), data.getLearnedSpells(),

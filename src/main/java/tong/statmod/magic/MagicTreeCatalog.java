@@ -49,6 +49,10 @@ public final class MagicTreeCatalog {
                 MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("fire/tier/ember_path"),
                 Set.of("irons_spellbooks:firebolt")));
+        add(new MagicNode("fire/signature/tensura_fire_bolt",
+                MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T1,
+                MagicCurrency.SCHOOL, 1, List.of("fire/tier/ember_path"),
+                Set.of("tensura:fire_bolt")));
         add(new MagicNode("fire/signature/burning_dash",
                 MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T2,
                 MagicCurrency.SCHOOL, 1, List.of("fire/tier/flame_path"),
@@ -57,10 +61,18 @@ public final class MagicTreeCatalog {
                 MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T2,
                 MagicCurrency.SCHOOL, 2, List.of("fire/tier/flame_path"),
                 Set.of("irons_spellbooks:fireball")));
+        add(new MagicNode("fire/signature/tensura_fire_storm",
+                MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T2,
+                MagicCurrency.SCHOOL, 2, List.of("fire/tier/flame_path"),
+                Set.of("tensura:fire_storm")));
         add(new MagicNode("fire/signature/fire_breath",
                 MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T3,
                 MagicCurrency.SCHOOL, 3, List.of("fire/tier/inferno_path"),
                 Set.of("irons_spellbooks:fire_breath")));
+        add(new MagicNode("fire/signature/tensura_hellfire",
+                MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T3,
+                MagicCurrency.SCHOOL, 3, List.of("fire/tier/inferno_path"),
+                Set.of("tensura:hellfire")));
 
         // Locked placeholders for the other branches
         for (MagicBranch b : MagicBranch.values()) {

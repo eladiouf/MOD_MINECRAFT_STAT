@@ -1,6 +1,10 @@
 package tong.statmod.magic;
 
+import net.minecraft.world.entity.player.Player;
 import tong.statmod.storage.PlayerStatData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MagicTreeProgressionService {
     public record UnlockResult(boolean success, MagicEligibilityResolver.Failure failure, int spent) {
@@ -15,6 +19,19 @@ public final class MagicTreeProgressionService {
     private MagicTreeProgressionService() {}
 
     public static UnlockResult tryUnlock(PlayerStatData data, MagicNode node) {
+        return tryUnlock(data, node, (MagicNodeRuntimeRewards.TensuraGrantSink) null);
+    }
+
+    public static UnlockResult tryUnlock(PlayerStatData data, MagicNode node, Player player) {
+        return tryUnlock(data, node, grantedSkill -> {
+            MagicNodeRuntimeRewards.GrantSummary summary =
+                    MagicNodeRuntimeRewards.apply(player, java.util.List.of(grantedSkill));
+            return summary.tensuraGranted() > 0;
+        });
+    }
+
+    public static UnlockResult tryUnlock(PlayerStatData data, MagicNode node,
+                                         MagicNodeRuntimeRewards.TensuraGrantSink tensuraGrantSink) {
         MagicEligibilityResolver.Result eval = MagicEligibilityResolver.evaluate(data, node);
         if (eval.failure() != MagicEligibilityResolver.Failure.NONE) {
             return UnlockResult.fail(eval.failure());
@@ -25,7 +42,13 @@ public final class MagicTreeProgressionService {
             case SCHOOL -> data.addSchoolPoints(node.branch(), -adjusted);
         }
         data.addMagicNode(node.id());
-        for (String spell : node.learnedSpells()) data.learnSpell(spell);
+        List<String> newlyLearned = new ArrayList<>();
+        for (String spell : node.learnedSpells()) {
+            if (data.learnSpell(spell)) {
+                newlyLearned.add(spell);
+            }
+        }
+        MagicNodeRuntimeRewards.apply(newlyLearned, tensuraGrantSink);
         return UnlockResult.ok(adjusted);
     }
 }

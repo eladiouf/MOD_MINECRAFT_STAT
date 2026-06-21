@@ -49,6 +49,29 @@ class MagicTreeProgressionServiceTest {
     }
 
     @Test
+    void unlock_can_grant_tensura_runtime_rewards_for_new_skills() {
+        PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(MagicRace.DWARF);
+        d.addSchoolPoints(MagicBranch.FIRE, 5);
+        d.addMagicNode("fire/opener/ignition");
+        d.addMagicNode("fire/tier/ember_path");
+        java.util.List<String> granted = new java.util.ArrayList<>();
+        MagicNode node = new MagicNode(
+                "fire/signature/test_tensura_fire",
+                MagicBranch.FIRE,
+                MagicNodeKind.SIGNATURE_SPELL,
+                MagicTier.T1,
+                MagicCurrency.SCHOOL,
+                1,
+                java.util.List.of("fire/tier/ember_path"),
+                java.util.Set.of("tensura:fire_bolt"));
+
+        assertTrue(MagicTreeProgressionService.tryUnlock(d, node, granted::add).success());
+        assertTrue(d.hasLearnedSpell("tensura:fire_bolt"));
+        assertEquals(java.util.List.of("tensura:fire_bolt"), granted);
+    }
+
+    @Test
     void unlock_failure_returns_typed_reason() {
         PlayerStatData d = new PlayerStatData();
         d.setMagicRace(MagicRace.DWARF);

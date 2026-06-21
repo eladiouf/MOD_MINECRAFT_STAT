@@ -47,7 +47,7 @@ public final class PuffishSkillsCompat {
                             String nodeId = PuffishMagicCategoryIds.fromSkillId(skillId);
                             MagicNode node = MagicTreeCatalog.byId(nodeId);
                             if (node == null) return;
-                            var result = MagicTreeProgressionService.tryUnlock(data, node);
+                            var result = MagicTreeProgressionService.tryUnlock(data, node, player);
                             if (result.success()) SoundHelper.playPerkUnlock(player);
                             SyncHelper.syncMagic(player);
                             return;

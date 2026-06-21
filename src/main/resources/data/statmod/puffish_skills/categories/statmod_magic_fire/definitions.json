@@ -49,6 +49,16 @@
             }
         }
     },
+    "fire.signature.tensura_fire_bolt": {
+        "title": "Tensura Fire Bolt",
+        "description": "Learn Tensura Fire Bolt — a precise fire projectile",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
     "fire.signature.burning_dash": {
         "title": "Burning Dash",
         "description": "Learn Burning Dash — a fiery escape",
@@ -69,6 +79,16 @@
             }
         }
     },
+    "fire.signature.tensura_fire_storm": {
+        "title": "Tensura Fire Storm",
+        "description": "Learn Tensura Fire Storm — a broad burning barrage",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:campfire"
+            }
+        }
+    },
     "fire.signature.fire_breath": {
         "title": "Fire Breath",
         "description": "Learn Fire Breath — channel the dragon's fury",
@@ -76,6 +96,16 @@
             "type": "item",
             "data": {
                 "item": "minecraft:dragon_breath"
+            }
+        }
+    },
+    "fire.signature.tensura_hellfire": {
+        "title": "Tensura Hellfire",
+        "description": "Learn Tensura Hellfire — a late fire capstone",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lava_bucket"
             }
         }
     }

@@ -22,5 +22,13 @@
   "sound.statmod.level_up": "Level Up",
   "sound.statmod.perk_unlock": "Perk Unlocked",
   "sound.statmod.perk_tree_open": "Perk Tree Opens",
-  "sound.statmod.stat_up": "Stat Increased"
+  "sound.statmod.stat_up": "Stat Increased",
+  "statmod.magic.locked_spell": "You have not learned this spell yet!",
+  "statmod.magic.arcane_points": "Arcane Points",
+  "statmod.magic.school_points": "School Points",
+  "statmod.magic.mastery": "Mastery",
+  "statmod.magic.race": "Magical Race",
+  "statmod.magic.start_branch": "Chosen School",
+  "statmod.magic.nodes_unlocked": "Nodes Unlocked",
+  "statmod.magic.spells_learned": "Spells Learned"
 }

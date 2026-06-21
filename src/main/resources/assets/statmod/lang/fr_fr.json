@@ -9,6 +9,7 @@
   "key.categories.statmod": "STAT Mod",
   "key.statmod.toggle_stats": "Ouvrir les Statistiques",
   "key.statmod.open_perks": "Ouvrir l'Arbre de Perks",
+  "key.statmod.open_spell_codex": "Ouvrir le Codex de Sorts (Inscription Virtuelle)",
   "statmod.screen.stats": "STAT Mod",
   "statmod.screen.perks": "Arbre de Perks",
   "statmod.button.stats": "Stats",
@@ -22,5 +23,7 @@
   "sound.statmod.level_up": "Montée de Niveau",
   "sound.statmod.perk_unlock": "Perk Débloqué",
   "sound.statmod.perk_tree_open": "Arbre de Perks Ouvert",
-  "sound.statmod.stat_up": "Stat Augmentée"
+  "sound.statmod.stat_up": "Stat Augmentée",
+  "statmod.magic.irons_not_loaded": "Iron's Spellbooks n'est pas installé",
+  "statmod.menu.virtual_inscription": "Codex de Sorts"
 }

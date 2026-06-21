@@ -26,10 +26,17 @@ public final class ClientSetup {
             GLFW.GLFW_KEY_P,
             "key.categories.statmod");
 
+    public static final KeyMapping OPEN_SPELL_CODEX = new KeyMapping(
+            "key.statmod.open_spell_codex",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_J,
+            "key.categories.statmod");
+
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(TOGGLE_STATS);
         event.register(OPEN_PERKS);
+        event.register(OPEN_SPELL_CODEX);
     }
 
     @SubscribeEvent

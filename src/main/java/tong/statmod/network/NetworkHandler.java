@@ -41,5 +41,8 @@ public class NetworkHandler {
 
         registrar.playToServer(UnlockMagicNodePayload.TYPE, UnlockMagicNodePayload.CODEC,
                 ServerPayloadHandler::handleUnlockMagicNode);
+
+        registrar.playToServer(OpenVirtualInscriptionPayload.TYPE, OpenVirtualInscriptionPayload.CODEC,
+                ServerPayloadHandler::handleOpenVirtualInscription);
     }
 }

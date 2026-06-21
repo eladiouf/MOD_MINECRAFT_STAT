@@ -1,27 +1,33 @@
-name: Deploy Wiki
+name: Deploy Wiki to Vercel
 
 on:
   push:
-    branches: [experiment]
+    branches: [neoforge-1.21.1]
     paths:
       - 'src/main/java/**'
       - 'tools/generate_wiki.py'
+      - 'docs/wiki/**'
+      - 'mkdocs.yml'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Generate wiki
+      - name: Install MkDocs
+        run: pip install -r requirements-wiki.txt
+      - name: Generate wiki pages
         run: python tools/generate_wiki.py
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Build MkDocs site
+        run: mkdocs build --site-dir site
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/wiki
-          destination_dir: wiki
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          vercel-args: '--prod'

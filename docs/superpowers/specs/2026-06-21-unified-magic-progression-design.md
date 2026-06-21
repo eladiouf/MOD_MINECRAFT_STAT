@@ -41,12 +41,18 @@ Conséquence : le **menu d'inscription virtuel ne concerne QUE les sorts Iron's*
 
 ## 4. Phase A — Progression (priorité)
 
-### A1 — Étendre les branches Iron's (Water, Air, Earth)
+### A1 — Étendre les branches Iron's (Water, Air, Earth) avec addons first-class
 Activer trois nouvelles branches avec contenu réel, sur le même patron que `fire/*` :
-`opener` → tiers (paths) → `signature` accordant `irons_spellbooks:*`.
+`opener` → tiers (paths) → `signature` accordant des sorts.
 - Modifs : `magic/MagicTreeCatalog.java`, ressources `data/statmod/puffish_skills/` (categories + skills + connections JSON).
 - Les branches lategame restent verrouillées (hors scope).
-- Source de vérité des spell IDs : `libs/irons_spellbooks-1.21.1-3.16.1.jar` (`SpellRegistry`).
+- **Mapping des écoles (décision Founder, option C — addons first-class) :**
+  - **AIR** → `wind_spellbooks:*` (addon air dédié : aeropic, almighty_push, tailwind, tornado, wind_blade, wind_jump, iron_slash).
+  - **WATER** → sorts de glace base Iron's (`irons_spellbooks:` ray_of_frost, frostbite, ice_spikes, cone_of_cold, blizzard) + `legendarymage:*` glace en enrichissement (focused_ice_cone, giant_snowball, living_ice_sculpture).
+  - **EARTH** → nature/terre base Iron's (`irons_spellbooks:` root, oakskin, stomp, earthquake, gravity_fissure).
+  - **FIRE** (existant) peut être enrichi de `gametechbcs_spellbooks:*` (meteor_storm, flames_reborn) — optionnel.
+- **Gating optionnel des addons (Exit Conditions) :** un nœud dont les sorts proviennent d'un addon (`wind_spellbooks`, `legendarymage`, `gametechbcs_spellbooks`) n'est *unlockable* que si le mod est chargé. Le mod requis est dérivé du **namespace** de l'ID de sort. Si l'addon est absent, le nœud échoue proprement (`Failure.MOD_ABSENT`) et est masqué du miroir Puffish — aucun crash.
+- Sources de vérité des spell IDs (lang `en_us.json` extraits des jars) : `libs/irons_spellbooks-1.21.1-3.16.1.jar`, `libs/wind_spellbooks-1.0.4.jar`, `libs/legendarymage-1.0.9.jar`, `libs/gametechbcs_spellbooks-3.0.0-1.21.1.jar`.
 
 ### A2 — Sélection de race/affinité en jeu
 - Nouveau `ChooseRaceAffinityPayload` (`CustomPacketPayload` + `StreamCodec`).
@@ -54,10 +60,12 @@ Activer trois nouvelles branches avec contenu réel, sur le même patron que `fi
 - Gate : un joueur ne peut ouvrir les branches non-COMMON que si sa race les autorise.
 
 ### A3 — Skills Tensura comme nœuds d'arbre
-- Nouveau champ `learnedTensuraSkills[]` dans `PlayerStatData` (+ sérialisation NBT, + sync payload).
-- Nouvelle catégorie Puffish dédiée Tensura.
-- Au déblocage : `SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse("tensura:..."))` via `TensuraSpellGate`.
+- Nouveau champ `learnedTensuraSkills[]` dans `PlayerStatData` (+ sérialisation NBT). Pas de sync client dédié pour le MVP (Tensura affiche les skills appris dans sa propre HUD).
+- Nouvelle branche `MagicBranch.TENSURA` (neutre vis-à-vis de la race) + catégorie Puffish dédiée.
+- Nouveau composant `tensuraSkills` sur `MagicNode` (constructeur de compat conservant les appels existants).
+- Au déblocage (côté serveur, après `tryUnlock`) : `SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse("tensura:..."))`.
 - Cast : **natif Tensura**, aucune intervention de notre part.
+- **Confirmé par inspection :** `tensura_iron_spells-neoforge-2.0.0.0.jar` est un **pont de données** (`data/irons_spellbooks/entity_existence/` + `gear_existence/`) — il n'enregistre **aucun** nouveau sort castable. Les skills Tensura restent donc dans le système Tensura, hors grimoire.
 
 ### A4 — Boucle d'acquisition de points organique
 - Brancher un gain de `arcanePoints`/`schoolPoints` sur la progression des stats magiques / leveling existant, pour amorcer la boucle sans commande admin.
@@ -103,7 +111,8 @@ Activer trois nouvelles branches avec contenu réel, sur le même patron que `fi
 
 ## 9. Risques
 
-- IDs de sorts Iron's à valider contre `SpellRegistry` 3.16.1 (éviter RL invalides).
+- IDs de sorts (base + addons) à valider contre les registres au runtime (éviter RL invalides). Mitigation : gating optionnel par namespace + `Failure.MOD_ABSENT`.
+- Couplage aux addons : aucun addon ne doit devenir une **hard dependency**. Les nœuds d'addon sont optionnels et masqués si l'addon est absent.
 - Sérialisation : ajout de `learnedTensuraSkills[]` doit rester rétro-compatible avec les sauvegardes existantes (migration testée — lié à M5).
 - `ContainerLevelAccess.NULL` : vérifier le comportement de fermeture/quick-move sans bloc.
 - Sync client : nouveaux champs doivent être inclus dans les payloads de sync existants.

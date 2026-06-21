@@ -9,6 +9,7 @@
   "key.categories.statmod": "STAT Mod",
   "key.statmod.toggle_stats": "Open Stats Screen",
   "key.statmod.open_perks": "Open Perk Tree",
+  "key.statmod.open_spell_codex": "Open Spell Codex (Virtual Inscription)",
   "statmod.screen.stats": "STAT Mod",
   "statmod.screen.perks": "Perk Tree",
   "statmod.button.stats": "Stats",
@@ -30,5 +31,7 @@
   "statmod.magic.race": "Magical Race",
   "statmod.magic.start_branch": "Chosen School",
   "statmod.magic.nodes_unlocked": "Nodes Unlocked",
-  "statmod.magic.spells_learned": "Spells Learned"
+  "statmod.magic.spells_learned": "Spells Learned",
+  "statmod.magic.irons_not_loaded": "Iron's Spellbooks is not installed",
+  "statmod.menu.virtual_inscription": "Spell Codex"
 }

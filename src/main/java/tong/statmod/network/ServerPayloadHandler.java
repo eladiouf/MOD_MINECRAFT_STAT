@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.STATMod;
+import tong.statmod.integration.ironspells.IronInscriptionOpenerService;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.magic.MagicNode;
 import tong.statmod.magic.MagicTreeCatalog;
@@ -60,6 +61,15 @@ public final class ServerPayloadHandler {
             PlayerStatData data = player.getData(ModAttachments.STATS);
             PuffishSkillsCompat.sync(player, data);
             PuffishSkillsCompat.openScreen(player);
+        });
+    }
+
+    public static void handleOpenVirtualInscription(OpenVirtualInscriptionPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) {
+                return;
+            }
+            IronInscriptionOpenerService.openVirtual(player);
         });
     }
 }

@@ -10,17 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class TensuraSpellGateTest {
 
     @Test
-    void resolvesKnownTensuraAndMahouMappings() {
+    void resolvesKnownTensuraMappings() {
         assertEquals("tensura:fire_bolt", TensuraSpellGate.resolveTensuraSpellId("fire_bolt"));
         assertEquals("tensura:magic_barrier", TensuraSpellGate.resolveTensuraSpellId("light_bind"));
         assertEquals("tensura:teleport", TensuraSpellGate.resolveTensuraSpellId("space_shift"));
-        assertEquals("mahoutsukai:scroll_gandr", TensuraSpellGate.resolveMahouScrollId("gandr"));
     }
 
     @Test
     void returnsNullForUnknownMappings() {
         assertNull(TensuraSpellGate.resolveTensuraSpellId("unknown"));
-        assertNull(TensuraSpellGate.resolveMahouScrollId("unknown"));
     }
 
     @Test

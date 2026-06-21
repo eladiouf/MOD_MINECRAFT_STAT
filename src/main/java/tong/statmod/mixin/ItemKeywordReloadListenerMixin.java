@@ -1,13 +1,17 @@
 package tong.statmod.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tong.statmod.STATMod;
+import tong.statmod.progression.WeaponResolver;
+import tong.statmod.stats.StatType;
 import yesman.epicfight.world.capabilities.item.ItemKeywordReloadListener;
 import yesman.epicfight.world.capabilities.provider.CommonItemCapabilityProvider;
 
@@ -51,7 +55,7 @@ public class ItemKeywordReloadListenerMixin {
         ));
         EXTRA_PATTERNS.put("epicfight:sword", List.of(
             "tensura:.*_staff", "tensura:.*_wand", "tensura:.*_sickle",
-            "tensura:.*_rapier", "mahoutsukai:.*_wand", "mahoutsukai:.*_staff", "mahoutsukai:.*_rod"
+            "tensura:.*_rapier"
         ));
         EXTRA_PATTERNS.put("epicfight:longsword", List.of("tensura:.*_long_sword"));
         EXTRA_PATTERNS.put("epicfight:dagger", List.of("tensura:.*_kodachi"));
@@ -117,8 +121,31 @@ public class ItemKeywordReloadListenerMixin {
             CommonItemCapabilityProvider.INSTANCE.clear();
             CommonItemCapabilityProvider.INSTANCE.addDefaultItems();
             STATMod.LOGGER.info("Re-ran addDefaultItems() with injected patterns");
+
+            logWeaponClassifications();
         } catch (Exception e) {
             STATMod.LOGGER.error("Failed to inject EpicFight patterns", e);
+        }
+    }
+
+    private static void logWeaponClassifications() {
+        List<String> namespaces = List.of("simplyswords", "tensura", "overgeared",
+                "magistuarmory", "darkagesarmory", "magistuarmoryaddon");
+        for (String ns : namespaces) {
+            List<String> lines = new ArrayList<>();
+            for (net.minecraft.world.item.Item item : BuiltInRegistries.ITEM) {
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
+                if (id == null || !id.getNamespace().equals(ns)) continue;
+                ItemStack stack = new ItemStack(item);
+                if (stack.isEmpty()) continue;
+                StatType stat = WeaponResolver.statFor(stack);
+                String action = WeaponResolver.tensuraActionFor(stack);
+                lines.add("  " + id.getPath() + " -> " + stat.displayName + " [" + action + "]");
+            }
+            if (!lines.isEmpty()) {
+                STATMod.LOGGER.info("[WeaponScan] {} ({} items):", ns, lines.size());
+                for (String l : lines) STATMod.LOGGER.info(l);
+            }
         }
     }
 

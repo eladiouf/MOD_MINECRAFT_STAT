@@ -10,12 +10,8 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.NotNull;
 import tong.statmod.STATMod;
-import tong.statmod.integration.elementals.ElementalBranch;
-import tong.statmod.integration.elementals.ElementalsMageData;
 import tong.statmod.stats.StatFamily;
 import tong.statmod.stamina.StaminaData;
-
-import java.util.EnumSet;
 
 public class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
@@ -31,12 +27,6 @@ public class ModAttachments {
             ATTACHMENTS.register("stamina", () ->
                     AttachmentType.builder(StaminaData::new)
                             .serialize(StaminaSerializer.INSTANCE)
-                            .build());
-
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ElementalsMageData>> ELEMENTALS_MAGE =
-            ATTACHMENTS.register("elementals_mage", () ->
-                    AttachmentType.builder(ElementalsMageData::new)
-                            .serialize(ElementalsMageSerializer.INSTANCE)
                             .build());
 
     public static void register(IEventBus modBus) {
@@ -110,68 +100,6 @@ public class ModAttachments {
             tag.putFloat("FatigueDebt", data.fatigueDebt());
             tag.putBoolean("Meditating", data.meditating());
             return tag;
-        }
-    }
-
-    private static final class ElementalsMageSerializer implements IAttachmentSerializer<CompoundTag, ElementalsMageData> {
-        static final ElementalsMageSerializer INSTANCE = new ElementalsMageSerializer();
-
-        @Override
-        public @NotNull ElementalsMageData read(net.neoforged.neoforge.attachment.IAttachmentHolder holder,
-                                                @NotNull CompoundTag tag,
-                                                @NotNull HolderLookup.Provider provider) {
-            ElementalsMageData data = new ElementalsMageData();
-            data.setMageAwakened(tag.getBoolean("MageAwakened"));
-            if (tag.contains("StarterRaceId")) data.setStarterRaceId(tag.getString("StarterRaceId"));
-            data.setStarterBranches(fromOrdinals(tag.getIntArray("StarterBranches")));
-            data.setUnlockedBranches(fromOrdinals(tag.getIntArray("UnlockedBranches")));
-            data.setRewardedRareBranches(fromOrdinals(tag.getIntArray("RewardedRareBranches")));
-            data.setFreeGrantedRewardBranches(fromOrdinals(tag.getIntArray("FreeGrantedRewardBranches")));
-            if (tag.contains("LastSeenChi")) data.setLastSeenChi(tag.getFloat("LastSeenChi"));
-            if (tag.contains("LastSeenXp")) data.setLastSeenXp(tag.getFloat("LastSeenXp"));
-            if (tag.contains("LastSeenLevel")) data.setLastSeenLevel(tag.getInt("LastSeenLevel"));
-            if (tag.contains("LastSeenActiveBranch")) data.setLastSeenActiveBranch(fromOrdinal(tag.getInt("LastSeenActiveBranch")));
-            return data;
-        }
-
-        @Override
-        public CompoundTag write(@NotNull ElementalsMageData data, @NotNull HolderLookup.Provider provider) {
-            CompoundTag tag = new CompoundTag();
-            tag.putBoolean("MageAwakened", data.mageAwakened());
-            tag.putString("StarterRaceId", data.starterRaceId());
-            tag.putIntArray("StarterBranches", ordinals(data.starterBranches()));
-            tag.putIntArray("UnlockedBranches", ordinals(data.unlockedBranches()));
-            tag.putIntArray("RewardedRareBranches", ordinals(data.rewardedRareBranches()));
-            tag.putIntArray("FreeGrantedRewardBranches", ordinals(data.freeGrantedRewardBranches()));
-            tag.putFloat("LastSeenChi", data.lastSeenChi());
-            tag.putFloat("LastSeenXp", data.lastSeenXp());
-            tag.putInt("LastSeenLevel", data.lastSeenLevel());
-            if (data.lastSeenActiveBranch() != null) {
-                tag.putInt("LastSeenActiveBranch", data.lastSeenActiveBranch().ordinal());
-            }
-            return tag;
-        }
-
-        private static int[] ordinals(EnumSet<ElementalBranch> branches) {
-            return branches.stream().mapToInt(Enum::ordinal).toArray();
-        }
-
-        private static EnumSet<ElementalBranch> fromOrdinals(int[] ordinals) {
-            EnumSet<ElementalBranch> branches = EnumSet.noneOf(ElementalBranch.class);
-            for (int ordinal : ordinals) {
-                ElementalBranch branch = fromOrdinal(ordinal);
-                if (branch != null) {
-                    branches.add(branch);
-                }
-            }
-            return branches;
-        }
-
-        private static ElementalBranch fromOrdinal(int ordinal) {
-            if (ordinal < 0 || ordinal >= ElementalBranch.values().length) {
-                return null;
-            }
-            return ElementalBranch.values()[ordinal];
         }
     }
 }

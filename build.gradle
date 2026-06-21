@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation fileTree(dir: 'libs', include: '*.jar', exclude: ['elementals*.jar', 'mahoutsukai*.jar'])
     implementation fileTree(dir: 'libs/META-INF/jars', include: '*.jar')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 }

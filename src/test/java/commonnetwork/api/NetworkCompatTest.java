@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NetworkCompatTest {
     @Test
-    void packetDirectionFollowsElementalsPackageConvention() {
+    void packetDirectionFollowsS2cAndC2sPackageConvention() {
         assertEquals(Network.PacketDirection.CLIENTBOUND,
-                Network.packetDirection("dev.saperate.elementals.network.packets.S2C.SyncChiPacket"));
+                Network.packetDirection("example.mod.network.packets.S2C.SyncChiPacket"));
         assertEquals(Network.PacketDirection.SERVERBOUND,
-                Network.packetDirection("dev.saperate.elementals.network.packets.C2S.MouseClickPacket"));
+                Network.packetDirection("example.mod.network.packets.C2S.MouseClickPacket"));
         assertEquals(Network.PacketDirection.BIDIRECTIONAL,
-                Network.packetDirection("dev.saperate.elementals.network.packets.common.SyncLevelPacket"));
+                Network.packetDirection("example.mod.network.packets.common.SyncLevelPacket"));
     }
 
     @Test

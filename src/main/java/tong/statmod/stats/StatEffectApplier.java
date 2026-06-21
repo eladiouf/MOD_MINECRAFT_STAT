@@ -10,7 +10,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 
 import tong.statmod.STATMod;
-import tong.statmod.integration.mahou.MahouCompat;
 import tong.statmod.integration.RaceEffectApplier;
 
 @EventBusSubscriber(modid = STATMod.MODID)
@@ -51,14 +50,6 @@ public class StatEffectApplier {
             if (agility > 0 && attacker.getDeltaMovement().horizontalDistanceSqr() > 0.01) {
                 dmg *= 1.0f + agility * 0.002f;
             }
-
-            int earthAffinity = RaceEffectApplier.getEffectiveLevel(attacker, StatType.EARTH_AFFINITY.index);
-            dmg *= MahouCompat.earthDamageMultiplier(
-                    earthAffinity,
-                    MahouCompat.recentElement(attacker),
-                    MahouCompat.recentElementTick(attacker),
-                    attacker.tickCount
-            );
         }
 
         if (event.getEntity() instanceof Player victim) {
@@ -69,14 +60,6 @@ public class StatEffectApplier {
             if (magicRes > 0 && event.getSource().getDirectEntity() != null
                     && event.getSource().getDirectEntity() != event.getSource().getEntity()) {
                 dmg *= 1.0f - Math.min(0.5f, magicRes * 0.005f);
-
-                if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                    int will = RaceEffectApplier.getEffectiveLevel(victim, StatType.WILLPOWER.index);
-                    float reflectChance = MahouCompat.magicReflectionChance(will, magicRes);
-                    if (reflectChance > 0.0f) {
-                        attacker.hurt(attacker.damageSources().magic(), dmg * reflectChance);
-                    }
-                }
             }
 
             int will = RaceEffectApplier.getEffectiveLevel(victim, StatType.WILLPOWER.index);

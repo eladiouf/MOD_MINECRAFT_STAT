@@ -22,21 +22,10 @@ public final class TensuraSpellGate {
             "space_shift", "tensura:teleport"
     );
 
-    private static final Map<String, String> PERK_TO_MAHOU = Map.of(
-            "mystic_staff", "mahoutsukai:scroll_mystic_staff",
-            "gandr", "mahoutsukai:scroll_gandr",
-            "rho_aias", "mahoutsukai:scroll_rho_aias",
-            "fallen_down", "mahoutsukai:scroll_fallen_down"
-    );
-
     private TensuraSpellGate() {}
 
     public static String resolveTensuraSpellId(String perkKey) {
         return TensuraSkillIds.canonicalize(PERK_TO_TENSURA.get(perkKey));
-    }
-
-    public static String resolveMahouScrollId(String perkKey) {
-        return PERK_TO_MAHOU.get(perkKey);
     }
 
     public static String resolveForPerk(Perk perk) {
@@ -45,10 +34,6 @@ public final class TensuraSpellGate {
         String mapped = PERK_TO_TENSURA.get(key);
         if (mapped != null) {
             return TensuraSkillIds.canonicalize(mapped);
-        }
-        mapped = PERK_TO_MAHOU.get(key);
-        if (mapped != null) {
-            return mapped;
         }
         return TensuraSkillIds.canonicalize(resolveByStat(perk.stat, perk.tier));
     }
@@ -76,18 +61,10 @@ public final class TensuraSpellGate {
 
     public static boolean grantReward(Player player, String perkKey) {
         if (player == null || perkKey == null) return false;
-        String resolved = PERK_TO_TENSURA.getOrDefault(perkKey, PERK_TO_MAHOU.get(perkKey));
+        String resolved = PERK_TO_TENSURA.get(perkKey);
         if (resolved == null) return false;
 
-        if (resolved.startsWith("tensura:")) {
-            return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(TensuraSkillIds.canonicalize(resolved)));
-        }
-
-        ResourceLocation itemId = ResourceLocation.parse(resolved);
-        return BuiltInRegistries.ITEM.getOptional(itemId)
-                .map(ItemStack::new)
-                .map(stack -> player.getInventory().add(stack))
-                .orElse(false);
+        return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(TensuraSkillIds.canonicalize(resolved)));
     }
 
     private static String resolveByStat(StatType stat, PerkTier tier) {

@@ -3,6 +3,7 @@ site_url: https://stat-mod-wiki.vercel.app/
 repo_url: https://github.com/eladiouf/MOD_MINECRAFT_STAT
 repo_name: eladiouf/MOD_MINECRAFT_STAT
 edit_uri: edit/neoforge-1.21.1/docs/wiki/
+docs_dir: docs/wiki
 
 theme:
   name: material
@@ -33,7 +34,6 @@ theme:
 
 plugins:
   - search
-  - awesome-pages
 
 markdown_extensions:
   - admonition

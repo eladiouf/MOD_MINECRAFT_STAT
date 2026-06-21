@@ -24,6 +24,17 @@ public enum MagicRace {
         return naturalAffinities.contains(branch);
     }
 
+    public static MagicRace byId(String id) {
+        if (id == null) return null;
+        return switch (id.toLowerCase()) {
+            case "human" -> HUMAN;
+            case "elf" -> ELF;
+            case "dwarf" -> DWARF;
+            case "beast" -> BEAST;
+            default -> null;
+        };
+    }
+
     public static MagicRace byOrdinalOrDefault(int ordinal) {
         MagicRace[] all = values();
         return ordinal >= 0 && ordinal < all.length ? all[ordinal] : HUMAN;

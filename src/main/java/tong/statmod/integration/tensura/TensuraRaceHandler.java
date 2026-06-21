@@ -18,6 +18,8 @@ import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.integration.RaceModifierRegistry;
 import tong.statmod.integration.TensuraEventSubscriber;
+import tong.statmod.magic.MagicBranch;
+import tong.statmod.magic.MagicRace;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
@@ -69,6 +71,8 @@ public final class TensuraRaceHandler {
         }
 
         String raceId = getRaceName(player);
+        RacePhysicalEffects.apply(player, raceId);
+
         if (!RaceModifierRegistry.hasRaceData(raceId)) {
             return;
         }
@@ -99,6 +103,7 @@ public final class TensuraRaceHandler {
             reconcileIntrinsicPerks(data, oldIntrinsicSkills, intrinsicSkills);
             TensuraEventSubscriber.unlockIntrinsicPerks(player, intrinsicSkills, false);
             applyRaceBonuses(player, false);
+            syncMagicRaceFromTensura(data, newRaceId);
 
             if (player instanceof ServerPlayer serverPlayer) {
                 if (refunded > 0) {
@@ -193,11 +198,38 @@ public final class TensuraRaceHandler {
 
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        applyRaceBonuses(event.getEntity());
+        Player player = event.getEntity();
+        applyRaceBonuses(player);
+        if (player instanceof ServerPlayer serverPlayer) {
+            PlayerStatData data = player.getData(ModAttachments.STATS);
+            if (data.getMagicRace() == null) {
+                if (syncMagicRaceFromTensura(data, getRaceName(player))) {
+                    SyncHelper.syncMagic(serverPlayer);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
     public static void onClone(PlayerEvent.Clone event) {
         applyRaceBonuses(event.getEntity());
+    }
+
+    static boolean syncMagicRaceFromTensura(PlayerStatData data, String tensuraRaceId) {
+        if (data == null) {
+            return false;
+        }
+        MagicRace previous = data.getMagicRace();
+        MagicRace derived = TensuraToMagicRaceMapper.fromTensuraRaceId(tensuraRaceId);
+        boolean changed = previous != derived;
+        data.setMagicRace(derived);
+
+        MagicBranch currentStart = data.getChosenStartBranch();
+        if (currentStart == null || !derived.canChooseStartBranch(currentStart)) {
+            MagicBranch defaultStart = TensuraToMagicRaceMapper.defaultStartBranch(derived);
+            data.setChosenStartBranch(defaultStart);
+            changed = changed || currentStart != defaultStart;
+        }
+        return changed;
     }
 }

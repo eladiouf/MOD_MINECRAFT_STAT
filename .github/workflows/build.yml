@@ -64,13 +64,15 @@ jobs:
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           project_id: ${{ vars.CURSEFORGE_PROJECT_ID }}
           game_endpoint: minecraft
-          game_versions: '1.20.1'
+          game_versions: '1.21.1'
           release_type: release
           file_path: "statmod-*.jar"
           changelog: "See CHANGELOG.md"
           display_name: "STAT Mod ${{ github.ref_name }}"
           relations: |
-            epic-fight:requiredDependency
+            tensura-reincarnated:requiredDependency
+            irons-spellbooks:optionalDependency
+            epic-fight:optionalDependency
 
   publish-modrinth:
     if: startsWith(github.ref, 'refs/tags/v')

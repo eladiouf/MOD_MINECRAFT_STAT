@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
+import tong.statmod.magic.MagicUnlockFeedbackMessageFactory;
 import tong.statmod.magic.MagicNode;
 import tong.statmod.magic.MagicTreeCatalog;
 import tong.statmod.magic.MagicTreeProgressionService;
@@ -48,7 +49,15 @@ public final class PuffishSkillsCompat {
                             MagicNode node = MagicTreeCatalog.byId(nodeId);
                             if (node == null) return;
                             var result = MagicTreeProgressionService.tryUnlock(data, node, player);
-                            if (result.success()) SoundHelper.playPerkUnlock(player);
+                            if (result.success()) {
+                                SoundHelper.playPerkUnlock(player);
+                            } else {
+                                MagicUnlockFeedbackMessageFactory.MagicUnlockFeedbackMessage feedback =
+                                        MagicUnlockFeedbackMessageFactory.forFailure(node, result.failure());
+                                PacketDistributor.sendToPlayer(player, new PerkFeedbackPayload(
+                                        feedback.title().getString(),
+                                        feedback.message().getString()));
+                            }
                             SyncHelper.syncMagic(player);
                             return;
                         }

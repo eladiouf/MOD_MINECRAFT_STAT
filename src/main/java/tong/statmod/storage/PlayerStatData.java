@@ -156,6 +156,18 @@ public class PlayerStatData {
         return true;
     }
 
+    public boolean removeMagicNode(String id) {
+        if (id == null || magicNodes.length == 0 || !hasMagicNode(id)) return false;
+        String[] next = new String[magicNodes.length - 1];
+        int index = 0;
+        for (String value : magicNodes) {
+            if (id.equals(value)) continue;
+            next[index++] = value;
+        }
+        magicNodes = next;
+        return true;
+    }
+
     public String[] getLearnedSpells() { return learnedSpells.clone(); }
     public void setLearnedSpells(String[] ids) { learnedSpells = ids.clone(); }
     public boolean hasLearnedSpell(String id) {
@@ -167,6 +179,18 @@ public class PlayerStatData {
         String[] next = new String[learnedSpells.length + 1];
         System.arraycopy(learnedSpells, 0, next, 0, learnedSpells.length);
         next[learnedSpells.length] = id;
+        learnedSpells = next;
+        return true;
+    }
+
+    public boolean forgetSpell(String id) {
+        if (id == null || learnedSpells.length == 0 || !hasLearnedSpell(id)) return false;
+        String[] next = new String[learnedSpells.length - 1];
+        int index = 0;
+        for (String value : learnedSpells) {
+            if (id.equals(value)) continue;
+            next[index++] = value;
+        }
         learnedSpells = next;
         return true;
     }

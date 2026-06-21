@@ -3,7 +3,7 @@ package tong.statmod.magic;
 import tong.statmod.storage.PlayerStatData;
 
 public final class MagicEligibilityResolver {
-    public enum Failure { NONE, LOCKED, MISSING_PREREQ, NOT_ENOUGH_POINTS, ALREADY_UNLOCKED, NO_RACE }
+    public enum Failure { NONE, LOCKED, MISSING_PREREQ, NOT_ENOUGH_POINTS, ALREADY_UNLOCKED, NO_RACE, RUNTIME_GRANT_FAILED }
 
     public record Result(Failure failure, int adjustedCost) {}
 

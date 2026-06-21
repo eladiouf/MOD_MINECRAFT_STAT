@@ -72,6 +72,32 @@ class MagicTreeProgressionServiceTest {
     }
 
     @Test
+    void unlock_rolls_back_when_tensura_runtime_grant_fails() {
+        PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(MagicRace.DWARF);
+        d.addSchoolPoints(MagicBranch.FIRE, 5);
+        d.addMagicNode("fire/opener/ignition");
+        d.addMagicNode("fire/tier/ember_path");
+        MagicNode node = new MagicNode(
+                "fire/signature/test_failed_tensura_fire",
+                MagicBranch.FIRE,
+                MagicNodeKind.SIGNATURE_SPELL,
+                MagicTier.T1,
+                MagicCurrency.SCHOOL,
+                1,
+                java.util.List.of("fire/tier/ember_path"),
+                java.util.Set.of("tensura:fire_bolt"));
+
+        MagicTreeProgressionService.UnlockResult result = MagicTreeProgressionService.tryUnlock(d, node, skillId -> false);
+
+        assertFalse(result.success());
+        assertEquals(MagicEligibilityResolver.Failure.RUNTIME_GRANT_FAILED, result.failure());
+        assertEquals(5, d.getSchoolPoints(MagicBranch.FIRE));
+        assertFalse(d.hasMagicNode(node.id()));
+        assertFalse(d.hasLearnedSpell("tensura:fire_bolt"));
+    }
+
+    @Test
     void unlock_failure_returns_typed_reason() {
         PlayerStatData d = new PlayerStatData();
         d.setMagicRace(MagicRace.DWARF);

@@ -48,7 +48,34 @@ public final class MagicTreeProgressionService {
                 newlyLearned.add(spell);
             }
         }
-        MagicNodeRuntimeRewards.apply(newlyLearned, tensuraGrantSink);
+        MagicNodeRuntimeRewards.GrantSummary rewardSummary = MagicNodeRuntimeRewards.apply(newlyLearned, tensuraGrantSink);
+        int expectedTensuraRewards = 0;
+        for (String spellId : newlyLearned) {
+            if (spellId != null && spellId.startsWith("tensura:")) {
+                expectedTensuraRewards++;
+            }
+        }
+        if (tensuraGrantSink != null && rewardSummary.tensuraGranted() < expectedTensuraRewards) {
+            rollbackUnlock(data, node, adjusted, newlyLearned);
+            return UnlockResult.fail(MagicEligibilityResolver.Failure.RUNTIME_GRANT_FAILED);
+        }
         return UnlockResult.ok(adjusted);
+    }
+
+    private static void rollbackUnlock(PlayerStatData data, MagicNode node, int adjustedCost, Iterable<String> newlyLearned) {
+        if (data == null || node == null) {
+            return;
+        }
+        switch (node.currency()) {
+            case ARCANE -> data.addArcanePoints(adjustedCost);
+            case SCHOOL -> data.addSchoolPoints(node.branch(), adjustedCost);
+        }
+        data.removeMagicNode(node.id());
+        if (newlyLearned == null) {
+            return;
+        }
+        for (String spellId : newlyLearned) {
+            data.forgetSpell(spellId);
+        }
     }
 }

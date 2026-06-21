@@ -2,6 +2,7 @@ package tong.statmod.network;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
+import tong.statmod.integration.puffish.PuffishMagicTreeBuilder;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -31,11 +32,9 @@ public final class SyncHelper {
 
     public static void syncMagic(ServerPlayer player) {
         PlayerStatData data = player.getData(ModAttachments.STATS);
-        PacketDistributor.sendToPlayer(player,
-                new SyncMagicPayload(data.getMagicNodes(), data.getLearnedSpells(),
-                        data.getArcanePoints(), data.getSchoolPointsArray(),
-                        data.getMagicRace() != null ? data.getMagicRace().ordinal() : -1,
-                        data.getChosenStartBranch() != null ? data.getChosenStartBranch().ordinal() : -1));
+        MagicStateSyncService.sync(data,
+                payload -> PacketDistributor.sendToPlayer(player, payload),
+                () -> PuffishMagicTreeBuilder.applyMirror(player));
     }
 
     public static void syncAll(ServerPlayer player) {

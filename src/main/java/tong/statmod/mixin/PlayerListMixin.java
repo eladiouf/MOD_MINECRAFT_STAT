@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tong.statmod.STATMod;
-import tong.statmod.integration.puffish.PuffishMagicTreeBuilder;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.network.BatchSyncPayload;
 import tong.statmod.network.SyncHelper;
@@ -28,7 +27,6 @@ public class PlayerListMixin {
         PacketDistributor.sendToPlayer(player, payload);
         SyncHelper.syncMagic(player);
         PuffishSkillsCompat.sync(player, data);
-        PuffishMagicTreeBuilder.applyMirror(player);
         STATMod.LOGGER.info("Synced stat and magic data to {}", player.getName().getString());
     }
 }

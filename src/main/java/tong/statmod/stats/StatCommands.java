@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import tong.statmod.integration.RaceEffectApplier;
-import tong.statmod.integration.puffish.PuffishMagicTreeBuilder;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.magic.MagicRace;
 import tong.statmod.magic.SchoolProgressTracker;
@@ -118,7 +117,6 @@ public class StatCommands {
                                         PlayerStatData data = player.getData(ModAttachments.STATS);
                                         data.addArcanePoints(amount);
                                         SyncHelper.syncMagic(player);
-                                        PuffishMagicTreeBuilder.applyMirror(player);
                                         ctx.getSource().sendSuccess(() ->
                                                 Component.literal("+ " + amount + " arcane points"), true);
                                     }
@@ -139,7 +137,6 @@ public class StatCommands {
                                                 PlayerStatData data = player.getData(ModAttachments.STATS);
                                                 data.addSchoolPoints(b, amount);
                                                 SyncHelper.syncMagic(player);
-                                                PuffishMagicTreeBuilder.applyMirror(player);
                                                 ctx.getSource().sendSuccess(() ->
                                                         Component.literal("+ " + amount + " school points for " + b.id), true);
                                             }
@@ -160,7 +157,6 @@ public class StatCommands {
                                                 PlayerStatData data = player.getData(ModAttachments.STATS);
                                                 SchoolProgressTracker.applyMastery(data, b, amount);
                                                 SyncHelper.syncMagic(player);
-                                                PuffishMagicTreeBuilder.applyMirror(player);
                                                 ctx.getSource().sendSuccess(() ->
                                                         Component.literal("+ " + amount + " mastery for " + b.id), true);
                                             }
@@ -186,6 +182,7 @@ public class StatCommands {
                                                 PlayerStatData data = player.getData(ModAttachments.STATS);
                                                 data.setMagicRace(race);
                                                 data.setChosenStartBranch(start);
+                                                SyncHelper.syncMagic(player);
                                                 ctx.getSource().sendSuccess(() ->
                                                         Component.literal("Race set to " + raceId + " with " + branchId + " affinity"), true);
                                             }

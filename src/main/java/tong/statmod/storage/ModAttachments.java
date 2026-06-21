@@ -23,6 +23,8 @@ public class ModAttachments {
                             .serialize(StatSerializer.INSTANCE)
                             .build());
 
+    public static final IAttachmentSerializer<CompoundTag, PlayerStatData> STATS_SERIALIZER = StatSerializer.INSTANCE;
+
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<StaminaData>> STAMINA =
             ATTACHMENTS.register("stamina", () ->
                     AttachmentType.builder(StaminaData::new)
@@ -63,6 +65,9 @@ public class ModAttachments {
             int[] freeGranted = tag.getIntArray("FreeGrantedPerks");
             if (freeGranted.length > 0) data.setFreeGrantedPerks(freeGranted);
             if (tag.contains("SoulLevel")) data.setSoulLevel(tag.getInt("SoulLevel"));
+
+            MagicStateSerializer.deserialize(tag, data);
+
             return data;
         }
 
@@ -75,6 +80,12 @@ public class ModAttachments {
             tag.putIntArray("UnlockedPerks", data.getUnlockedPerks());
             tag.putIntArray("FreeGrantedPerks", data.getFreeGrantedPerks());
             tag.putInt("SoulLevel", data.getSoulLevel());
+
+            CompoundTag magicTag = MagicStateSerializer.serialize(data);
+            for (String key : magicTag.getAllKeys()) {
+                tag.put(key, magicTag.get(key));
+            }
+
             return tag;
         }
     }

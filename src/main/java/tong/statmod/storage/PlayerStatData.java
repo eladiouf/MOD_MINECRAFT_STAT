@@ -13,6 +13,15 @@ public class PlayerStatData {
     private int[] freeGrantedPerks = new int[0];
     private int soulLevel;
 
+    // Magic tree state
+    private int arcanePoints;
+    private final int[] schoolPoints = new int[tong.statmod.magic.MagicBranch.values().length];
+    private final int[] schoolMasteryProgress = new int[tong.statmod.magic.MagicBranch.values().length];
+    private String[] magicNodes = new String[0];
+    private String[] learnedSpells = new String[0];
+    private tong.statmod.magic.MagicRace magicRace;
+    private tong.statmod.magic.MagicBranch chosenStartBranch;
+
     public int[] getLevels() { return levels.clone(); }
     public int[] getXp() { return xp.clone(); }
     public int[] getPerkPoints() { return perkPoints.clone(); }
@@ -106,6 +115,66 @@ public class PlayerStatData {
     public int getSoulLevel() { return soulLevel; }
 
     public void setSoulLevel(int level) { soulLevel = Math.max(0, level); }
+
+    public int getArcanePoints() { return arcanePoints; }
+    public void setArcanePoints(int v) { arcanePoints = Math.max(0, v); }
+    public void addArcanePoints(int delta) { arcanePoints = Math.max(0, arcanePoints + delta); }
+
+    public int getSchoolPoints(tong.statmod.magic.MagicBranch b) {
+        return b == null ? 0 : schoolPoints[b.ordinal()];
+    }
+    public void setSchoolPoints(tong.statmod.magic.MagicBranch b, int v) {
+        if (b != null) schoolPoints[b.ordinal()] = Math.max(0, v);
+    }
+    public void addSchoolPoints(tong.statmod.magic.MagicBranch b, int delta) {
+        if (b != null) schoolPoints[b.ordinal()] = Math.max(0, schoolPoints[b.ordinal()] + delta);
+    }
+
+    public int getSchoolMasteryProgress(tong.statmod.magic.MagicBranch b) {
+        return b == null ? 0 : schoolMasteryProgress[b.ordinal()];
+    }
+    public void setSchoolMasteryProgress(tong.statmod.magic.MagicBranch b, int v) {
+        if (b != null) schoolMasteryProgress[b.ordinal()] = Math.max(0, v);
+    }
+    public void addSchoolMasteryProgress(tong.statmod.magic.MagicBranch b, int delta) {
+        if (b != null) schoolMasteryProgress[b.ordinal()] = Math.max(0, schoolMasteryProgress[b.ordinal()] + delta);
+    }
+
+    public String[] getMagicNodes() { return magicNodes.clone(); }
+    public void setMagicNodes(String[] ids) { magicNodes = ids.clone(); }
+    public boolean hasMagicNode(String id) {
+        for (String s : magicNodes) if (s.equals(id)) return true;
+        return false;
+    }
+    public boolean addMagicNode(String id) {
+        if (id == null || hasMagicNode(id)) return false;
+        String[] next = new String[magicNodes.length + 1];
+        System.arraycopy(magicNodes, 0, next, 0, magicNodes.length);
+        next[magicNodes.length] = id;
+        magicNodes = next;
+        return true;
+    }
+
+    public String[] getLearnedSpells() { return learnedSpells.clone(); }
+    public void setLearnedSpells(String[] ids) { learnedSpells = ids.clone(); }
+    public boolean hasLearnedSpell(String id) {
+        for (String s : learnedSpells) if (s.equals(id)) return true;
+        return false;
+    }
+    public boolean learnSpell(String id) {
+        if (id == null || hasLearnedSpell(id)) return false;
+        String[] next = new String[learnedSpells.length + 1];
+        System.arraycopy(learnedSpells, 0, next, 0, learnedSpells.length);
+        next[learnedSpells.length] = id;
+        learnedSpells = next;
+        return true;
+    }
+
+    public tong.statmod.magic.MagicRace getMagicRace() { return magicRace; }
+    public void setMagicRace(tong.statmod.magic.MagicRace race) { magicRace = race; }
+
+    public tong.statmod.magic.MagicBranch getChosenStartBranch() { return chosenStartBranch; }
+    public void setChosenStartBranch(tong.statmod.magic.MagicBranch b) { chosenStartBranch = b; }
 
     public int maxStatLevel() {
         return soulLevel > 0 ? Math.min(soulLevel, 100) : 100;

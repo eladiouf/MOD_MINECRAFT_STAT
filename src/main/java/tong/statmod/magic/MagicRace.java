@@ -24,6 +24,10 @@ public enum MagicRace {
         return naturalAffinities.contains(branch);
     }
 
+    public boolean canChooseStartBranch(MagicBranch branch) {
+        return branch != null && !branch.lateGame && branch != MagicBranch.COMMON && hasAffinity(branch);
+    }
+
     public static MagicRace byId(String id) {
         if (id == null) return null;
         return switch (id.toLowerCase()) {

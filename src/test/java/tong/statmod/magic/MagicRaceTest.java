@@ -28,4 +28,13 @@ class MagicRaceTest {
         assertEquals(Set.of(MagicBranch.WATER, MagicBranch.AIR), MagicRace.BEAST.naturalAffinities());
         assertTrue(MagicRace.BEAST.purityPenalty);
     }
+
+    @Test
+    void start_branch_selection_obeys_racial_affinities() {
+        assertTrue(MagicRace.HUMAN.canChooseStartBranch(MagicBranch.EARTH));
+        assertTrue(MagicRace.DWARF.canChooseStartBranch(MagicBranch.FIRE));
+        assertFalse(MagicRace.DWARF.canChooseStartBranch(MagicBranch.WATER));
+        assertFalse(MagicRace.ELF.canChooseStartBranch(MagicBranch.HOLY));
+        assertFalse(MagicRace.BEAST.canChooseStartBranch(MagicBranch.COMMON));
+    }
 }

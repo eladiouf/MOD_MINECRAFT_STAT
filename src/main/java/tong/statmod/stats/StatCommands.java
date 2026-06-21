@@ -174,7 +174,7 @@ public class StatCommands {
                                                 ctx.getSource().sendFailure(Component.literal("Unknown race: " + raceId + " (human/elf/dwarf/beast)"));
                                                 return 0;
                                             }
-                                            if (start == null || start.lateGame) {
+                                            if (start == null || !race.canChooseStartBranch(start)) {
                                                 ctx.getSource().sendFailure(Component.literal("Invalid start branch: " + branchId + " (fire/water/air/earth)"));
                                                 return 0;
                                             }

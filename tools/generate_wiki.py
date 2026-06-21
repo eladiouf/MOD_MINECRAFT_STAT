@@ -1,90 +1,145 @@
 #!/usr/bin/env python3
-"""Generate STAT Mod wiki from Java source code."""
-import os, re, json
+"""Generate STAT Mod wiki from Java source — MkDocs multi-page output."""
+import re
 from pathlib import Path
 
 SRC = Path("src/main/java/tong/statmod")
 DOCS = Path("docs/wiki")
-DOCS.mkdir(parents=True, exist_ok=True)
+
 
 def parse_stat_type():
     """Parse StatType.java to extract stat definitions."""
     content = (SRC / "stats/StatType.java").read_text()
     stats = []
-    for match in re.finditer(r'(\w+)\((\d+),\s*StatCategory\.(\w+),\s*"([^"]+)"', content):
+    for match in re.finditer(
+        r'(\w+)\((\d+),\s*StatFamily\.(\w+),\s*"([^"]+)"', content
+    ):
         stats.append({
             "name": match.group(1),
             "index": int(match.group(2)),
             "category": match.group(3),
-            "display": match.group(4)
+            "display": match.group(4),
         })
     return stats
+
 
 def parse_perks():
     """Parse Perk.java to extract perk definitions."""
     content = (SRC / "perks/Perk.java").read_text()
     perks = []
-    for match in re.finditer(r'(\w+)\((\d+),\s*StatType\.(\w+),\s*(\d+),\s*"([^"]+)"', content):
+    for match in re.finditer(
+        r'(\w+)\((\d+),\s*StatType\.(\w+),\s*\w+\.(\w+),\s*"([^"]+)"', content
+    ):
         perks.append({
             "name": match.group(1),
             "id": int(match.group(2)),
             "stat": match.group(3),
-            "level": int(match.group(4)),
-            "display": match.group(5)
+            "tier": match.group(4),
+            "display": match.group(5),
         })
     return perks
 
-def gen_index():
-    """Generate wiki index page."""
+
+def front_matter(title, description, nav_order):
+    return f"""---
+title: {title}
+description: "{description}"
+nav_order: {nav_order}
+---"""
+
+
+def gen_stats():
     stats = parse_stat_type()
-    perks = parse_perks()
+    active = stats[:14]
+    magic = stats[14:]
 
-    lines = []
-    lines.append("# STAT Mod Wiki")
+    lines = [front_matter("Stats", "Liste complète des 22 stats", 4)]
     lines.append("")
-    lines.append("Auto-generated from source code. Last updated: " + os.popen("date").read().strip())
+    lines.append("# Stats")
     lines.append("")
-
-    lines.append("## Stats (23)")
-    lines.append("| Stat | Category | Index |")
-    lines.append("|------|----------|-------|")
-    for s in stats:
+    lines.append(f"## Stats Actives ({len(active)})")
+    lines.append("| Stat | Catégorie | Index |")
+    lines.append("|------|-----------|-------|")
+    for s in active:
+        lines.append(f"| {s['display']} | {s['category']} | {s['index']} |")
+    lines.append("")
+    lines.append(f"## Stats Magiques ({len(magic)})")
+    lines.append("| Stat | Catégorie | Index |")
+    lines.append("|------|-----------|-------|")
+    for s in magic:
         lines.append(f"| {s['display']} | {s['category']} | {s['index']} |")
     lines.append("")
 
-    lines.append("## Perks (42)")
-    lines.append("| Perk | Stat | Level Required |")
-    lines.append("|------|------|----------------|")
+    (DOCS / "stats.md").write_text("\n".join(lines), newline="\n")
+    print(f"Generated docs/wiki/stats.md ({len(stats)} stats)")
+
+
+def gen_perks():
+    perks = parse_perks()
+
+    lines = [front_matter("Perks", "Liste des 84 perks", 5)]
+    lines.append("")
+    lines.append("# Perks")
+    lines.append("")
+    lines.append("| Perk | Stat | Tier |")
+    lines.append("|------|------|------|")
     for p in perks:
-        lines.append(f"| {p['display']} | {p['stat']} | {p['level']} |")
+        lines.append(f"| {p['display']} | {p['stat']} | {p['tier']} |")
     lines.append("")
 
-    lines.append("## Commands")
-    lines.append("| Command | Description | Permission |")
-    lines.append("|---------|-------------|------------|")
-    lines.append("| `/statmod list [player]` | List all stats | Player / Admin |")
-    lines.append("| `/statmod get <stat>` | Get stat level | Player |")
-    lines.append("| `/statmod set <stat|all> <level>` | Set stat level | Admin (2) |")
-    lines.append("| `/statmod xp <stat> <amount>` | Add XP | Admin (2) |")
-    lines.append("| `/statmod reset` | Reset all stats | Admin (2) |")
-    lines.append("| `/statmod backup` | Save stats backup | Admin (2) |")
-    lines.append("| `/statmod restore` | Restore from backup | Admin (2) |")
-    lines.append("| `/statmod preset <easy|normal|hard>` | Apply config preset | Admin (2) |")
-    lines.append("| `/statmod profile` | Toggle profiler | Admin (2) |")
-    lines.append("| `/statmod benchmark` | Run balance benchmark | Admin (2) |")
+    (DOCS / "perks.md").write_text("\n".join(lines), newline="\n")
+    print(f"Generated docs/wiki/perks.md ({len(perks)} perks)")
+
+
+def gen_keybinds():
+    lines = [front_matter("Raccourcis", "Touches par défaut", 9)]
+    lines.append("")
+    lines.append("# Raccourcis")
+    lines.append("")
+    lines.append("| Touche | Action |")
+    lines.append("|--------|--------|")
+    lines.append("| P | Écran de personnage |")
+    lines.append("| O | Écran des perks |")
+    lines.append("| F8 | Écran de debug |")
     lines.append("")
 
-    lines.append("## Keybindings")
-    lines.append("| Key | Action |")
-    lines.append("|-----|--------|")
-    lines.append("| P | Character Screen |")
-    lines.append("| O | Perk Screen |")
-    lines.append("| F8 | Debug Screen |")
+    (DOCS / "keybinds.md").write_text("\n".join(lines), newline="\n")
+    print("Generated docs/wiki/keybinds.md")
+
+
+def gen_magic_branches():
+    (DOCS / "magic").mkdir(parents=True, exist_ok=True)
+
+    lines = [front_matter(
+        "Branches Magiques", "Les 8 écoles de l'arbre magique unifié", 8
+    )]
+    lines.append("")
+    lines.append("# Branches Magiques")
+    lines.append("")
+    lines.append("| Branche | Statut | Description |")
+    lines.append("|---------|--------|-------------|")
+    lines.append("| Fire | **Actif** | Sorts de feu, dégâts directs |")
+    lines.append("| Water | Verrouillé | Soins, buffs |")
+    lines.append("| Earth | Verrouillé | Protection, contrôle |")
+    lines.append("| Air | Verrouillé | Vélocité, furtivité |")
+    lines.append("| Lightning | Verrouillé | Dégâts rapides |")
+    lines.append("| Ice | Verrouillé | Contrôle, ralentissements |")
+    lines.append("| Arcane | Verrouillé | Magie pure, altération |")
+    lines.append("| Holy | Verrouillé | Lumière, purification |")
     lines.append("")
 
-    outline = "\n".join(lines)
-    (DOCS / "index.md").write_text(outline)
-    print(f"Wiki generated at {DOCS}/index.md")
+    (DOCS / "magic/branches.md").write_text("\n".join(lines), newline="\n")
+    print("Generated docs/wiki/magic/branches.md")
+
+
+def main():
+    DOCS.mkdir(parents=True, exist_ok=True)
+    gen_stats()
+    gen_perks()
+    gen_keybinds()
+    gen_magic_branches()
+    print("\nAll wiki files generated.")
+
 
 if __name__ == "__main__":
-    gen_index()
+    main()

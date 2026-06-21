@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0] - 2026-06-21
+
+### Added
+- Unified magic tree — Iron's Spellbooks Phase 1 (common trunk + Fire school active)
+- 8 magic schools structurally present (locked, pending Phase 2)
+- Arcane and school point system with persistence
+- IronSpellEventBridge for event-driven spell casting
+- Puffish Skills mirror UI for magic tree
+- `/magic` command for tree management
+- Magic node unlock/gating with race affinity cost adjustment
+- Client-side magic tree cache with sync on join
+
+### Fixed
+- Audit M1 — 10 critical/important/minor fixes from code review (065d57a)
+- SwordSoaringClientModEventsMixin cleanup
+- Magic state sync on player join/respawn
+
+### Changed
+- Port NeoForge 1.21.1 finalized (zero Forge residuals in src/)
+- Perk gating integrates with Tensura skill level
+- Build CI targets JDK 21, NeoForge 1.21.1
+
+---
+
 ## [1.1.0] - 2026-06-04
 
 ### Added

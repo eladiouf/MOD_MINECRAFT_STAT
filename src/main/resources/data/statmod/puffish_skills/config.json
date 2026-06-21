@@ -6,6 +6,9 @@
         "magical_core",
         "elemental_specialization",
         "mental_pressure_resilience",
-        "crafting_support"
+        "crafting_support",
+        "statmod_magic_common",
+        "statmod_magic_fire",
+        "statmod_magic_locked"
     ]
 }

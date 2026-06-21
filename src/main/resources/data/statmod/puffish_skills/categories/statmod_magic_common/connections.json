@@ -1,0 +1,18 @@
+{
+    "normal": {
+        "bidirectional": [
+            [
+                "common.foundation.arcane_focus",
+                "common.foundation.mana_well"
+            ],
+            [
+                "common.foundation.mana_well",
+                "common.foundation.cast_discipline"
+            ],
+            [
+                "common.foundation.cast_discipline",
+                "common.foundation.multi_school_gate"
+            ]
+        ]
+    }
+}

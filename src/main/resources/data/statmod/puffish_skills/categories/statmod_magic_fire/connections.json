@@ -1,0 +1,34 @@
+{
+    "normal": {
+        "bidirectional": [
+            [
+                "fire.opener.ignition",
+                "fire.tier.ember_path"
+            ],
+            [
+                "fire.tier.ember_path",
+                "fire.tier.flame_path"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.tier.inferno_path"
+            ],
+            [
+                "fire.tier.ember_path",
+                "fire.signature.firebolt"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.burning_dash"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.fireball"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.fire_breath"
+            ]
+        ]
+    }
+}

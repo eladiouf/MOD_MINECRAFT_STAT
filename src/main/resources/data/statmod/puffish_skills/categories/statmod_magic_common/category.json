@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Arcane Foundations",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:enchanted_book"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/end.png"
+}

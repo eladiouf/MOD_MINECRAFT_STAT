@@ -5,6 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
+import tong.statmod.magic.MagicNode;
+import tong.statmod.magic.MagicTreeCatalog;
+import tong.statmod.magic.MagicTreeProgressionService;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.network.PerkFeedbackPayload;
 import tong.statmod.perks.Perk;
@@ -37,10 +40,19 @@ public final class PuffishSkillsCompat {
         try {
             registerEvent("net.puffish.skillsmod.api.Events$SkillUnlock", "registerSkillUnlockEvent",
                     (player, categoryId, skillId) -> {
-                        if (isSyncing(player)) {
+                        if (isSyncing(player)) return;
+                        PlayerStatData data = player.getData(ModAttachments.STATS);
+
+                        if (categoryId != null && categoryId.startsWith("statmod:statmod_magic_")) {
+                            String nodeId = PuffishMagicCategoryIds.fromSkillId(skillId);
+                            MagicNode node = MagicTreeCatalog.byId(nodeId);
+                            if (node == null) return;
+                            var result = MagicTreeProgressionService.tryUnlock(data, node);
+                            if (result.success()) SoundHelper.playPerkUnlock(player);
+                            SyncHelper.syncMagic(player);
                             return;
                         }
-                        PlayerStatData data = player.getData(ModAttachments.STATS);
+
                         Perk perk = PuffishPerkIds.resolve(categoryId, skillId);
                         PerkManager manager = new PerkManager(data);
                         PerkManager.UnlockFailure failure = manager.getUnlockFailure(perk, player);

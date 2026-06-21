@@ -1,0 +1,50 @@
+{
+    "water.locked.anchor": {
+        "x": 0,
+        "y": 0,
+        "definition": "water.locked.anchor",
+        "root": true
+    },
+    "air.locked.anchor": {
+        "x": 120,
+        "y": 0,
+        "definition": "air.locked.anchor",
+        "root": true
+    },
+    "earth.locked.anchor": {
+        "x": 240,
+        "y": 0,
+        "definition": "earth.locked.anchor",
+        "root": true
+    },
+    "holy.locked.anchor": {
+        "x": 360,
+        "y": 0,
+        "definition": "holy.locked.anchor",
+        "root": true
+    },
+    "blood.locked.anchor": {
+        "x": 480,
+        "y": 0,
+        "definition": "blood.locked.anchor",
+        "root": true
+    },
+    "ender.locked.anchor": {
+        "x": 600,
+        "y": 0,
+        "definition": "ender.locked.anchor",
+        "root": true
+    },
+    "evocation.locked.anchor": {
+        "x": 720,
+        "y": 0,
+        "definition": "evocation.locked.anchor",
+        "root": true
+    },
+    "eldritch.locked.anchor": {
+        "x": 840,
+        "y": 0,
+        "definition": "eldritch.locked.anchor",
+        "root": true
+    }
+}

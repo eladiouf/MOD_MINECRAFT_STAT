@@ -1,0 +1,82 @@
+{
+    "fire.opener.ignition": {
+        "title": "Ignition",
+        "description": "Open the Fire school — the spark that starts the flame",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:flint_and_steel"
+            }
+        }
+    },
+    "fire.tier.ember_path": {
+        "title": "Ember Path",
+        "description": "Tier 1 — kindle your first embers",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.tier.flame_path": {
+        "title": "Flame Path",
+        "description": "Tier 2 — the fire grows",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_rod"
+            }
+        }
+    },
+    "fire.tier.inferno_path": {
+        "title": "Inferno Path",
+        "description": "Tier 3 — become one with the blaze",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:firework_rocket"
+            }
+        }
+    },
+    "fire.signature.firebolt": {
+        "title": "Firebolt",
+        "description": "Learn Firebolt — a quick ranged fire spell",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
+    },
+    "fire.signature.burning_dash": {
+        "title": "Burning Dash",
+        "description": "Learn Burning Dash — a fiery escape",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:magma_cream"
+            }
+        }
+    },
+    "fire.signature.fireball": {
+        "title": "Fireball",
+        "description": "Learn Fireball — a devastating explosive spell",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
+    },
+    "fire.signature.fire_breath": {
+        "title": "Fire Breath",
+        "description": "Learn Fire Breath — channel the dragon's fury",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:dragon_breath"
+            }
+        }
+    }
+}

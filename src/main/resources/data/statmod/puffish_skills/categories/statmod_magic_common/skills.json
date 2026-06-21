@@ -1,0 +1,23 @@
+{
+    "common.foundation.arcane_focus": {
+        "x": 0,
+        "y": 0,
+        "definition": "common.foundation.arcane_focus",
+        "root": true
+    },
+    "common.foundation.mana_well": {
+        "x": 0,
+        "y": 120,
+        "definition": "common.foundation.mana_well"
+    },
+    "common.foundation.cast_discipline": {
+        "x": 0,
+        "y": 240,
+        "definition": "common.foundation.cast_discipline"
+    },
+    "common.foundation.multi_school_gate": {
+        "x": 0,
+        "y": 360,
+        "definition": "common.foundation.multi_school_gate"
+    }
+}

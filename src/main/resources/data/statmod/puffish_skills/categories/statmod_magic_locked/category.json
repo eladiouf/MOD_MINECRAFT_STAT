@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Locked Schools",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:barrier"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/adventure.png"
+}

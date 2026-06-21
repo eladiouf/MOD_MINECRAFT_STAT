@@ -1,0 +1,82 @@
+{
+    "water.locked.anchor": {
+        "title": "Water School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:water_bucket"
+            }
+        }
+    },
+    "air.locked.anchor": {
+        "title": "Air School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "earth.locked.anchor": {
+        "title": "Earth School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:diamond_pickaxe"
+            }
+        }
+    },
+    "holy.locked.anchor": {
+        "title": "Holy School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glistering_melon_slice"
+            }
+        }
+    },
+    "blood.locked.anchor": {
+        "title": "Blood School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "ender.locked.anchor": {
+        "title": "Ender School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:chorus_fruit"
+            }
+        }
+    },
+    "evocation.locked.anchor": {
+        "title": "Evocation School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "eldritch.locked.anchor": {
+        "title": "Eldritch School",
+        "description": "Locked — unlock this school in a future phase",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    }
+}

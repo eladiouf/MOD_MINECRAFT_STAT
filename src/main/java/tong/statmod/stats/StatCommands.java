@@ -91,9 +91,9 @@ public class StatCommands {
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("§bArcane Points:§r " + data.getArcanePoints()), true);
                                 ctx.getSource().sendSuccess(() ->
-                                        Component.literal("§bRace:§r " + data.getMagicRace()), true);
+                                        Component.literal("§bRace:§r " + (data.getMagicRace() != null ? data.getMagicRace().name() : "§7not set§r")), true);
                                 ctx.getSource().sendSuccess(() ->
-                                        Component.literal("§bStart Branch:§r " + data.getChosenStartBranch()), true);
+                                        Component.literal("§bStart Branch:§r " + (data.getChosenStartBranch() != null ? data.getChosenStartBranch().id : "§7not set§r")), true);
                                 for (MagicBranch b : MagicBranch.values()) {
                                     if (b == MagicBranch.COMMON) continue;
                                     int sp = data.getSchoolPoints(b);

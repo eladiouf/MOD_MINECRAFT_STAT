@@ -24,7 +24,7 @@ public final class ClientMagicCache {
         learnedSpells.clear();
         if (spells != null) for (String s : spells) learnedSpells.add(s);
         arcanePoints = ap;
-        if (sp != null) schoolPoints = sp.clone();
+        if (sp != null && sp.length == schoolPoints.length) schoolPoints = sp.clone();
         raceOrdinal = race;
         startBranchOrdinal = branch;
     }

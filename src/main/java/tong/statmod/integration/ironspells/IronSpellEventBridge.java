@@ -48,7 +48,7 @@ public final class IronSpellEventBridge {
 
         double maxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
         double manaFrac = maxMana > 0 ? event.getManaCost() / maxMana : 0.0;
-        boolean hadImpact = event.getSpellLevel() >= 1;
+        boolean hadImpact = manaFrac >= 0.25;
         boolean wasFreeCast = manaFrac <= 0;
 
         CastContext ctx = new CastContext(canonicalId, branch, manaFrac, hadImpact, wasFreeCast, event.getSpellLevel());

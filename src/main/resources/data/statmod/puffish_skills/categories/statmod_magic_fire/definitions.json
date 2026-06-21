@@ -45,7 +45,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:fire_charge"
+                "item": "minecraft:arrow"
             }
         }
     },

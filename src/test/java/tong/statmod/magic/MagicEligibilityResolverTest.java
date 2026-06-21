@@ -80,4 +80,51 @@ class MagicEligibilityResolverTest {
         assertEquals(MagicEligibilityResolver.Failure.LOCKED,
                 MagicEligibilityResolver.evaluate(d, lockedAnchor).failure());
     }
+
+    @Test
+    void non_common_node_fails_with_no_race_selected() {
+        PlayerStatData d = new PlayerStatData();
+        d.addArcanePoints(99);
+        d.addMagicNode("common/foundation/arcane_focus");
+        d.addMagicNode("common/foundation/mana_well");
+        MagicNode node = MagicTreeCatalog.byId("fire/opener/ignition");
+        assertEquals(MagicEligibilityResolver.Failure.NO_RACE,
+                MagicEligibilityResolver.evaluate(d, node).failure());
+    }
+
+    @Test
+    void common_trunk_allowed_without_race() {
+        PlayerStatData d = new PlayerStatData();
+        d.addArcanePoints(5);
+        MagicNode node = MagicTreeCatalog.byId("common/foundation/arcane_focus");
+        assertEquals(MagicEligibilityResolver.Failure.NONE,
+                MagicEligibilityResolver.evaluate(d, node).failure());
+    }
+
+    @Test
+    void beast_purity_penalty_triples_out_of_affinity_cost() {
+        int cost = MagicEligibilityResolver.affinityAdjustedCost(
+                dataWithRace(MagicRace.BEAST), MagicBranch.FIRE, 4);
+        assertEquals(12, cost);
+    }
+
+    @Test
+    void human_flexible_cost_for_out_of_affinity_doubles() {
+        int cost = MagicEligibilityResolver.affinityAdjustedCost(
+                dataWithRace(MagicRace.HUMAN), MagicBranch.BLOOD, 4);
+        assertEquals(8, cost);
+    }
+
+    @Test
+    void null_race_doubles_cost() {
+        PlayerStatData d = new PlayerStatData();
+        int cost = MagicEligibilityResolver.affinityAdjustedCost(d, MagicBranch.FIRE, 4);
+        assertEquals(8, cost);
+    }
+
+    private static PlayerStatData dataWithRace(MagicRace race) {
+        PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(race);
+        return d;
+    }
 }

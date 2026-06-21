@@ -34,7 +34,7 @@ public final class SyncHelper {
         PacketDistributor.sendToPlayer(player,
                 new SyncMagicPayload(data.getMagicNodes(), data.getLearnedSpells(),
                         data.getArcanePoints(), data.getSchoolPointsArray(),
-                        data.getMagicRace().ordinal(),
+                        data.getMagicRace() != null ? data.getMagicRace().ordinal() : -1,
                         data.getChosenStartBranch() != null ? data.getChosenStartBranch().ordinal() : -1));
     }
 

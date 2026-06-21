@@ -12,6 +12,7 @@ public final class MagicEligibilityResolver {
     public static Result evaluate(PlayerStatData data, MagicNode node) {
         if (data == null || node == null) return new Result(Failure.MISSING_PREREQ, 0);
         if (data.hasMagicNode(node.id())) return new Result(Failure.ALREADY_UNLOCKED, node.cost());
+        if (node.branch() != MagicBranch.COMMON && data.getMagicRace() == null) return new Result(Failure.NO_RACE, 0);
         for (String p : node.prerequisites()) {
             if (MagicTreeCatalog.LOCKED_SENTINEL.equals(p)) {
                 return new Result(Failure.LOCKED, node.cost());
@@ -33,7 +34,7 @@ public final class MagicEligibilityResolver {
         if (baseCost <= 0 || branch == null || branch == MagicBranch.COMMON) return baseCost;
         MagicRace race = data == null ? null : data.getMagicRace();
         if (race == null) return baseCost * 2;
-        if (!race.hasAffinity(branch)) return baseCost * 2;
+        if (!race.hasAffinity(branch)) return baseCost * (race.purityPenalty ? 3 : 2);
         MagicBranch start = data.getChosenStartBranch();
         if (start != null && start != branch) {
             return Math.max(1, (baseCost + 1) / 2);

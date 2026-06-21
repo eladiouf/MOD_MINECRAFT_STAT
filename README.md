@@ -1,30 +1,29 @@
 # STAT Mod
 
 [![Build](https://github.com/eladiouf/MOD_MINECRAFT_STAT/actions/workflows/build.yml/badge.svg)](https://github.com/eladiouf/MOD_MINECRAFT_STAT/actions)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-brightgreen)](https://www.minecraft.net/)
-[![Forge](https://img.shields.io/badge/Forge-47.4.20-orange)](https://files.minecraftforge.net/)
-[![Java](https://img.shields.io/badge/Java-17-red)](https://adoptium.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen)](https://www.minecraft.net/)
+[![NeoForge](https://img.shields.io/badge/NeoForge-21.1.228-orange)](https://neoforged.net/)
+[![Java](https://img.shields.io/badge/Java-21-red)](https://adoptium.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Available-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/statmod)
 [![Modrinth](https://img.shields.io/badge/Modrinth-Available-green?logo=modrinth)](https://modrinth.com/mod/statmod)
 [![Wiki](https://img.shields.io/badge/Wiki-GitHub%20Pages-blue)](https://eladiouf.github.io/MOD_MINECRAFT_STAT/)
 
-A deep RPG progression mod for Minecraft Forge 1.20.1, built as an **Epic Fight** addon. Adds 23 character stats, 60+ custom skills, perks, fatigue, thirst, weapon mastery, and a full leveling system.
+A deep RPG progression mod for Minecraft **NeoForge 1.21.1**. `STAT Mod` acts as a progression authority for stats, perks, stamina, survival pressure, and optional multi-mod combat or magic integrations.
 
 ---
 
 ## Features
 
-- **23 Stats** across 5 categories (Combat, Magic, Survival, Crafting, Mental) — level 0-100
-- **60+ Epic Fight Skills** — Weapon Passives (12), Stat Passives (21), Active Skills (7), Identity Ultimates (3), Guard Skills (3), Mover Skills (3), Non-Combat Skills (17)
-- **42 Perks** — 3 per stat, unlockable at milestones
-- **Fatigue System** — Accumulates from activity, recovers with rest. 7 debuff thresholds
-- **Thirst System** — Decays from exertion/heat/armor. Dehydration causes debuffs and damage
-- **Weapon Mastery** — 13 weapon types with individual XP and levels
-- **Mana Pool** — Spellcasting resource, scales with Mana Pool stat
-- **48-Minute Day Cycle** — Slower days for better pacing
-- **Adrenaline Potions** — Brewable fatigue-reducing potions
-- **Full Config** — Almost every value configurable via Forge config
+- **23 Stats** across 5 families, with XP, thresholds, and stat-driven effects
+- **84 Perks** mirrored into the current Puffish-driven perk tree flow
+- **Unified stamina, fatigue, and thirst** systems for day-to-day pacing and combat pressure
+- **Weapon mastery** and stat-driven progression rewards
+- **48-minute Overworld day cycle** with sleep and recovery systems
+- **Epic Fight integration** for native combat-facing skill UX where available
+- **Puffish Skills integration** for perk and magic tree presentation
+- **Magic groundwork** for unified progression across external spell systems
+- **Configurable tuning** through the common config surface
 
 ---
 
@@ -32,22 +31,22 @@ A deep RPG progression mod for Minecraft Forge 1.20.1, built as an **Epic Fight*
 
 | Mod | Version | Required |
 |-----|---------|----------|
-| **Minecraft Forge** | 47.4.20 | Yes |
-| **Epic Fight** | 20.14.17 | Yes |
-| ParCool / Epic Parcool | 20.12.0.1 | Optional |
-| AAA Particles | 2.2.1 | Optional |
-| Weapons of Miracles | 2.0.15 | Optional |
+| **Minecraft** | 1.21.1 | Yes |
+| **NeoForge** | 21.1.228 or above | Yes |
+| **Java** | 21 | Yes |
+| Epic Fight and other integrations | Matching the active modpack/runtime line | Optional / feature-dependent |
 
 ---
 
 ## Installation
 
-1. Install **Minecraft Forge 1.20.1** (version 47.4.20+)
-2. Install **Epic Fight** (version 20.14.17) in your `mods` folder
-3. Copy `statmod-1.0.0.jar` to your `mods` folder
-4. Launch Minecraft
+1. Install **Minecraft 1.21.1**
+2. Install **NeoForge 21.1.228 or above**
+3. Copy the `STAT Mod` jar into your `mods` folder
+4. Add any optional integration mods that your pack expects
+5. Launch Minecraft
 
-Optional mods (ParCool, AAA Particles, Weapons of Miracles) go in `mods` too.
+If you run combat, perk-tree, or magic integrations, make sure those mods match the active runtime line of your pack.
 
 ---
 
@@ -66,9 +65,9 @@ Optional mods (ParCool, AAA Particles, Weapons of Miracles) go in `mods` too.
 
 | Key | Action |
 |-----|--------|
-| `P` | Open Character Screen (stats overview) |
-| `O` | Open Perk Screen (perk tree) |
-| Custom | Class Arts (configurable) |
+| `P` | Open the main character / progression screen |
+| `O` | Open the perk tree flow |
+| Custom | Integration-specific combat or class actions |
 
 ---
 
@@ -94,13 +93,14 @@ Optional mods (ParCool, AAA Particles, Weapons of Miracles) go in `mods` too.
 
 ## Configuration
 
-All values are in `.minecraft/config/statmod-common.toml`. Key sections:
+Core tuning lives in `.minecraft/config/statmod-common.toml`. Key sections include:
 
 - **XP Progression**: XP per level multiplier, XP tier ranges
-- **Perks & Skills**: Unlock thresholds, cooldown multiplier
+- **Perks & Skills**: Unlock thresholds, perk or skill behavior
 - **Thirst**: Decay rates, sprint/jump/armor costs
 - **Fatigue**: Accumulation rates, costs, recovery, capacity
 - **Weapon Mastery**: XP awards, max level
+- **Stamina / Time**: day-cycle pacing, recovery, and related balance knobs
 
 ---
 
@@ -108,7 +108,7 @@ All values are in `.minecraft/config/statmod-common.toml`. Key sections:
 
 ```bash
 # Clone the repo
-git clone -b experiment https://github.com/eladiouf/MOD_MINECRAFT_STAT.git
+git clone -b neoforge-1.21.1 https://github.com/eladiouf/MOD_MINECRAFT_STAT.git
 cd MOD_MINECRAFT_STAT
 
 # Build
@@ -123,7 +123,7 @@ cd MOD_MINECRAFT_STAT
 ## Credits
 
 - **Developer**: ela_juff
-- **Built with**: Minecraft Forge, Epic Fight, Parchment mappings
+- **Built with**: NeoForge, Java 21, optional multi-mod integrations
 - **Inspiration**: RPG leveling systems from Skyrim, Dark Souls, and AuraSkills
 
 ---

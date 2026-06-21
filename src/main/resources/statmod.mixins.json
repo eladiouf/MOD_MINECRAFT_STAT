@@ -4,7 +4,7 @@
   "package": "tong.statmod.mixin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "statmod.refmap.json",
-  "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "SwordSoaringClientModEventsMixin"],
-  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin"],
+  "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "IronInscriptionTableScreenMixin"],
+  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin"],
   "server": []
 }

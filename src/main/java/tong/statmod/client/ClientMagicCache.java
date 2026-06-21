@@ -5,6 +5,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import tong.statmod.magic.MagicBranch;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
@@ -31,6 +32,7 @@ public final class ClientMagicCache {
 
     public static boolean hasMagicNode(String id) { return id != null && magicNodes.contains(id); }
     public static boolean hasLearnedSpell(String id) { return id != null && learnedSpells.contains(id); }
+    public static List<String> getLearnedSpells() { return List.copyOf(learnedSpells); }
     public static int getArcanePoints() { return arcanePoints; }
     public static int getSchoolPoints(MagicBranch b) { return b == null ? 0 : schoolPoints[b.ordinal()]; }
     public static int[] getSchoolPointsArray() { return schoolPoints.clone(); }

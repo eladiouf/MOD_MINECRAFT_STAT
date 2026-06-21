@@ -4,10 +4,12 @@ import io.github.manasmods.manascore.skill.api.SkillAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
+import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.tensura.TensuraSkillIds;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public final class MagicNodeRuntimeRewards {
     @FunctionalInterface
@@ -20,6 +22,10 @@ public final class MagicNodeRuntimeRewards {
     private MagicNodeRuntimeRewards() {}
 
     public static GrantSummary apply(Iterable<String> spellIds, TensuraGrantSink sink) {
+        return apply(spellIds, null, sink);
+    }
+
+    public static GrantSummary apply(Iterable<String> spellIds, Predicate<String> knownSkill, TensuraGrantSink sink) {
         if (spellIds == null) {
             return new GrantSummary(0, 0);
         }
@@ -32,7 +38,12 @@ public final class MagicNodeRuntimeRewards {
                 continue;
             }
             if (spellId.startsWith("tensura:")) {
-                if (sink != null && sink.grant(TensuraSkillIds.canonicalize(spellId))) {
+                String canonical = TensuraSkillIds.canonicalize(spellId);
+                boolean granted = sink != null && sink.grant(canonical);
+                if (!granted && knownSkill != null) {
+                    granted = knownSkill.test(canonical);
+                }
+                if (granted) {
                     tensuraGranted++;
                 }
             } else {
@@ -46,6 +57,8 @@ public final class MagicNodeRuntimeRewards {
         if (player == null || !ModList.get().isLoaded("tensura")) {
             return apply(spellIds, null);
         }
-        return apply(spellIds, skillId -> SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(skillId)));
+        return apply(spellIds,
+                skillId -> PlayerDataBridge.hasSkill(player, skillId),
+                skillId -> SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(skillId)));
     }
 }

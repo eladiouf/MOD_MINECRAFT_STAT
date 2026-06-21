@@ -25,4 +25,21 @@ class MagicNodeRuntimeRewardsTest {
         assertEquals(2, summary.tensuraGranted());
         assertEquals(1, summary.ignored());
     }
+
+    @Test
+    void treatsAlreadyKnownTensuraSkillAsGranted() {
+        List<String> attempted = new ArrayList<>();
+
+        MagicNodeRuntimeRewards.GrantSummary summary = MagicNodeRuntimeRewards.apply(
+                List.of("tensura:accelerated_thoughts"),
+                skillId -> "tensura:thought_acceleration".equals(skillId),
+                skillId -> {
+                    attempted.add(skillId);
+                    return false;
+                });
+
+        assertEquals(List.of("tensura:thought_acceleration"), attempted);
+        assertEquals(1, summary.tensuraGranted());
+        assertEquals(0, summary.ignored());
+    }
 }

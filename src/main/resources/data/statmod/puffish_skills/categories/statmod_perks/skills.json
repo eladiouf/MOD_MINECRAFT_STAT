@@ -1,0 +1,715 @@
+{
+    "brute_force__brute_core": {
+        "x": 780,
+        "y": 430,
+        "definition": "brute_force__brute_core",
+        "root": true
+    },
+    "brute_force__brute_active": {
+        "x": 685,
+        "y": 370,
+        "definition": "brute_force__brute_active"
+    },
+    "brute_force__brute_synergy": {
+        "x": 590,
+        "y": 310,
+        "definition": "brute_force__brute_synergy"
+    },
+    "brute_force__brute_situational": {
+        "x": 495,
+        "y": 250,
+        "definition": "brute_force__brute_situational"
+    },
+    "brute_force__brute_mastery": {
+        "x": 400,
+        "y": 190,
+        "definition": "brute_force__brute_mastery"
+    },
+    "brute_force__brute_transcendence": {
+        "x": 305,
+        "y": 130,
+        "definition": "brute_force__brute_transcendence"
+    },
+    "blade_technique__blade_core": {
+        "x": 725,
+        "y": 482,
+        "definition": "blade_technique__blade_core",
+        "root": true
+    },
+    "blade_technique__blade_active": {
+        "x": 630,
+        "y": 422,
+        "definition": "blade_technique__blade_active"
+    },
+    "blade_technique__blade_synergy": {
+        "x": 535,
+        "y": 362,
+        "definition": "blade_technique__blade_synergy"
+    },
+    "blade_technique__blade_situational": {
+        "x": 440,
+        "y": 302,
+        "definition": "blade_technique__blade_situational"
+    },
+    "blade_technique__blade_mastery": {
+        "x": 345,
+        "y": 242,
+        "definition": "blade_technique__blade_mastery"
+    },
+    "blade_technique__blade_transcendence": {
+        "x": 250,
+        "y": 182,
+        "definition": "blade_technique__blade_transcendence"
+    },
+    "rapidite__rapid_core": {
+        "x": 670,
+        "y": 534,
+        "definition": "rapidite__rapid_core",
+        "root": true
+    },
+    "rapidite__rapid_active": {
+        "x": 575,
+        "y": 474,
+        "definition": "rapidite__rapid_active"
+    },
+    "rapidite__rapid_synergy": {
+        "x": 480,
+        "y": 414,
+        "definition": "rapidite__rapid_synergy"
+    },
+    "rapidite__rapid_situational": {
+        "x": 385,
+        "y": 354,
+        "definition": "rapidite__rapid_situational"
+    },
+    "rapidite__rapid_mastery": {
+        "x": 290,
+        "y": 294,
+        "definition": "rapidite__rapid_mastery"
+    },
+    "rapidite__rapid_transcendence": {
+        "x": 195,
+        "y": 234,
+        "definition": "rapidite__rapid_transcendence"
+    },
+    "agility__agil_core": {
+        "x": 615,
+        "y": 586,
+        "definition": "agility__agil_core",
+        "root": true
+    },
+    "agility__agil_active": {
+        "x": 520,
+        "y": 526,
+        "definition": "agility__agil_active"
+    },
+    "agility__agil_synergy": {
+        "x": 425,
+        "y": 466,
+        "definition": "agility__agil_synergy"
+    },
+    "agility__agil_situational": {
+        "x": 330,
+        "y": 406,
+        "definition": "agility__agil_situational"
+    },
+    "agility__agil_mastery": {
+        "x": 235,
+        "y": 346,
+        "definition": "agility__agil_mastery"
+    },
+    "agility__agil_transcendence": {
+        "x": 140,
+        "y": 286,
+        "definition": "agility__agil_transcendence"
+    },
+    "physical_resistance__resist_core": {
+        "x": 560,
+        "y": 638,
+        "definition": "physical_resistance__resist_core",
+        "root": true
+    },
+    "physical_resistance__resist_active": {
+        "x": 465,
+        "y": 578,
+        "definition": "physical_resistance__resist_active"
+    },
+    "physical_resistance__resist_synergy": {
+        "x": 370,
+        "y": 518,
+        "definition": "physical_resistance__resist_synergy"
+    },
+    "physical_resistance__resist_situational": {
+        "x": 275,
+        "y": 458,
+        "definition": "physical_resistance__resist_situational"
+    },
+    "physical_resistance__resist_mastery": {
+        "x": 180,
+        "y": 398,
+        "definition": "physical_resistance__resist_mastery"
+    },
+    "physical_resistance__resist_transcendence": {
+        "x": 85,
+        "y": 338,
+        "definition": "physical_resistance__resist_transcendence"
+    },
+    "physical_endurance__endur_core": {
+        "x": 505,
+        "y": 690,
+        "definition": "physical_endurance__endur_core",
+        "root": true
+    },
+    "physical_endurance__endur_active": {
+        "x": 410,
+        "y": 630,
+        "definition": "physical_endurance__endur_active"
+    },
+    "physical_endurance__endur_synergy": {
+        "x": 315,
+        "y": 570,
+        "definition": "physical_endurance__endur_synergy"
+    },
+    "physical_endurance__endur_situational": {
+        "x": 220,
+        "y": 510,
+        "definition": "physical_endurance__endur_situational"
+    },
+    "physical_endurance__endur_mastery": {
+        "x": 125,
+        "y": 450,
+        "definition": "physical_endurance__endur_mastery"
+    },
+    "physical_endurance__endur_transcendence": {
+        "x": 30,
+        "y": 390,
+        "definition": "physical_endurance__endur_transcendence"
+    },
+    "precision__preci_core": {
+        "x": 930,
+        "y": 430,
+        "definition": "precision__preci_core",
+        "root": true
+    },
+    "precision__preci_active": {
+        "x": 1025,
+        "y": 372,
+        "definition": "precision__preci_active"
+    },
+    "precision__preci_synergy": {
+        "x": 1120,
+        "y": 314,
+        "definition": "precision__preci_synergy"
+    },
+    "precision__preci_situational": {
+        "x": 1215,
+        "y": 256,
+        "definition": "precision__preci_situational"
+    },
+    "precision__preci_mastery": {
+        "x": 1310,
+        "y": 198,
+        "definition": "precision__preci_mastery"
+    },
+    "precision__preci_transcendence": {
+        "x": 1405,
+        "y": 140,
+        "definition": "precision__preci_transcendence"
+    },
+    "tracking__track_core": {
+        "x": 990,
+        "y": 504,
+        "definition": "tracking__track_core",
+        "root": true
+    },
+    "tracking__track_active": {
+        "x": 1085,
+        "y": 446,
+        "definition": "tracking__track_active"
+    },
+    "tracking__track_synergy": {
+        "x": 1180,
+        "y": 388,
+        "definition": "tracking__track_synergy"
+    },
+    "tracking__track_situational": {
+        "x": 1275,
+        "y": 330,
+        "definition": "tracking__track_situational"
+    },
+    "tracking__track_mastery": {
+        "x": 1370,
+        "y": 272,
+        "definition": "tracking__track_mastery"
+    },
+    "tracking__track_transcendence": {
+        "x": 1465,
+        "y": 214,
+        "definition": "tracking__track_transcendence"
+    },
+    "keen_senses__sense_core": {
+        "x": 1050,
+        "y": 578,
+        "definition": "keen_senses__sense_core",
+        "root": true
+    },
+    "keen_senses__sense_active": {
+        "x": 1145,
+        "y": 520,
+        "definition": "keen_senses__sense_active"
+    },
+    "keen_senses__sense_synergy": {
+        "x": 1240,
+        "y": 462,
+        "definition": "keen_senses__sense_synergy"
+    },
+    "keen_senses__sense_situational": {
+        "x": 1335,
+        "y": 404,
+        "definition": "keen_senses__sense_situational"
+    },
+    "keen_senses__sense_mastery": {
+        "x": 1430,
+        "y": 346,
+        "definition": "keen_senses__sense_mastery"
+    },
+    "keen_senses__sense_transcendence": {
+        "x": 1525,
+        "y": 288,
+        "definition": "keen_senses__sense_transcendence"
+    },
+    "arcane_power__arcane_core": {
+        "x": 560,
+        "y": 480,
+        "definition": "arcane_power__arcane_core",
+        "root": true
+    },
+    "arcane_power__arcane_active": {
+        "x": 560,
+        "y": 398,
+        "definition": "arcane_power__arcane_active"
+    },
+    "arcane_power__arcane_synergy": {
+        "x": 560,
+        "y": 316,
+        "definition": "arcane_power__arcane_synergy"
+    },
+    "arcane_power__arcane_situational": {
+        "x": 560,
+        "y": 234,
+        "definition": "arcane_power__arcane_situational"
+    },
+    "arcane_power__arcane_mastery": {
+        "x": 560,
+        "y": 152,
+        "definition": "arcane_power__arcane_mastery"
+    },
+    "arcane_power__arcane_transcendence": {
+        "x": 560,
+        "y": 70,
+        "definition": "arcane_power__arcane_transcendence"
+    },
+    "magic_resistance__magic_resist_core": {
+        "x": 655,
+        "y": 480,
+        "definition": "magic_resistance__magic_resist_core",
+        "root": true
+    },
+    "magic_resistance__magic_resist_active": {
+        "x": 655,
+        "y": 398,
+        "definition": "magic_resistance__magic_resist_active"
+    },
+    "magic_resistance__magic_resist_synergy": {
+        "x": 655,
+        "y": 316,
+        "definition": "magic_resistance__magic_resist_synergy"
+    },
+    "magic_resistance__magic_resist_situational": {
+        "x": 655,
+        "y": 234,
+        "definition": "magic_resistance__magic_resist_situational"
+    },
+    "magic_resistance__magic_resist_mastery": {
+        "x": 655,
+        "y": 152,
+        "definition": "magic_resistance__magic_resist_mastery"
+    },
+    "magic_resistance__magic_resist_transcendence": {
+        "x": 655,
+        "y": 70,
+        "definition": "magic_resistance__magic_resist_transcendence"
+    },
+    "casting_speed__casting_speed_core": {
+        "x": 750,
+        "y": 480,
+        "definition": "casting_speed__casting_speed_core",
+        "root": true
+    },
+    "casting_speed__casting_speed_active": {
+        "x": 750,
+        "y": 398,
+        "definition": "casting_speed__casting_speed_active"
+    },
+    "casting_speed__casting_speed_synergy": {
+        "x": 750,
+        "y": 316,
+        "definition": "casting_speed__casting_speed_synergy"
+    },
+    "casting_speed__casting_speed_situational": {
+        "x": 750,
+        "y": 234,
+        "definition": "casting_speed__casting_speed_situational"
+    },
+    "casting_speed__casting_speed_mastery": {
+        "x": 750,
+        "y": 152,
+        "definition": "casting_speed__casting_speed_mastery"
+    },
+    "casting_speed__casting_speed_transcendence": {
+        "x": 750,
+        "y": 70,
+        "definition": "casting_speed__casting_speed_transcendence"
+    },
+    "mana_pool__mana_pool_core": {
+        "x": 845,
+        "y": 480,
+        "definition": "mana_pool__mana_pool_core",
+        "root": true
+    },
+    "mana_pool__mana_pool_active": {
+        "x": 845,
+        "y": 398,
+        "definition": "mana_pool__mana_pool_active"
+    },
+    "mana_pool__mana_pool_synergy": {
+        "x": 845,
+        "y": 316,
+        "definition": "mana_pool__mana_pool_synergy"
+    },
+    "mana_pool__mana_pool_situational": {
+        "x": 845,
+        "y": 234,
+        "definition": "mana_pool__mana_pool_situational"
+    },
+    "mana_pool__mana_pool_mastery": {
+        "x": 845,
+        "y": 152,
+        "definition": "mana_pool__mana_pool_mastery"
+    },
+    "mana_pool__mana_pool_transcendence": {
+        "x": 845,
+        "y": 70,
+        "definition": "mana_pool__mana_pool_transcendence"
+    },
+    "erudition__erudition_core": {
+        "x": 940,
+        "y": 480,
+        "definition": "erudition__erudition_core",
+        "root": true
+    },
+    "erudition__erudition_active": {
+        "x": 940,
+        "y": 398,
+        "definition": "erudition__erudition_active"
+    },
+    "erudition__erudition_synergy": {
+        "x": 940,
+        "y": 316,
+        "definition": "erudition__erudition_synergy"
+    },
+    "erudition__erudition_situational": {
+        "x": 940,
+        "y": 234,
+        "definition": "erudition__erudition_situational"
+    },
+    "erudition__erudition_mastery": {
+        "x": 940,
+        "y": 152,
+        "definition": "erudition__erudition_mastery"
+    },
+    "erudition__erudition_transcendence": {
+        "x": 940,
+        "y": 70,
+        "definition": "erudition__erudition_transcendence"
+    },
+    "water_affinity__water_core": {
+        "x": 610,
+        "y": 720,
+        "definition": "water_affinity__water_core",
+        "root": true
+    },
+    "water_affinity__water_active": {
+        "x": 610,
+        "y": 802,
+        "definition": "water_affinity__water_active"
+    },
+    "water_affinity__water_synergy": {
+        "x": 610,
+        "y": 884,
+        "definition": "water_affinity__water_synergy"
+    },
+    "water_affinity__water_situational": {
+        "x": 610,
+        "y": 966,
+        "definition": "water_affinity__water_situational"
+    },
+    "water_affinity__water_mastery": {
+        "x": 610,
+        "y": 1048,
+        "definition": "water_affinity__water_mastery"
+    },
+    "water_affinity__water_transcendence": {
+        "x": 610,
+        "y": 1130,
+        "definition": "water_affinity__water_transcendence"
+    },
+    "earth_affinity__earth_core": {
+        "x": 710,
+        "y": 720,
+        "definition": "earth_affinity__earth_core",
+        "root": true
+    },
+    "earth_affinity__earth_active": {
+        "x": 710,
+        "y": 802,
+        "definition": "earth_affinity__earth_active"
+    },
+    "earth_affinity__earth_synergy": {
+        "x": 710,
+        "y": 884,
+        "definition": "earth_affinity__earth_synergy"
+    },
+    "earth_affinity__earth_situational": {
+        "x": 710,
+        "y": 966,
+        "definition": "earth_affinity__earth_situational"
+    },
+    "earth_affinity__earth_mastery": {
+        "x": 710,
+        "y": 1048,
+        "definition": "earth_affinity__earth_mastery"
+    },
+    "earth_affinity__earth_transcendence": {
+        "x": 710,
+        "y": 1130,
+        "definition": "earth_affinity__earth_transcendence"
+    },
+    "fire_affinity__fire_core": {
+        "x": 810,
+        "y": 720,
+        "definition": "fire_affinity__fire_core",
+        "root": true
+    },
+    "fire_affinity__fire_active": {
+        "x": 810,
+        "y": 802,
+        "definition": "fire_affinity__fire_active"
+    },
+    "fire_affinity__fire_synergy": {
+        "x": 810,
+        "y": 884,
+        "definition": "fire_affinity__fire_synergy"
+    },
+    "fire_affinity__fire_situational": {
+        "x": 810,
+        "y": 966,
+        "definition": "fire_affinity__fire_situational"
+    },
+    "fire_affinity__fire_mastery": {
+        "x": 810,
+        "y": 1048,
+        "definition": "fire_affinity__fire_mastery"
+    },
+    "fire_affinity__fire_transcendence": {
+        "x": 810,
+        "y": 1130,
+        "definition": "fire_affinity__fire_transcendence"
+    },
+    "air_affinity__air_core": {
+        "x": 910,
+        "y": 720,
+        "definition": "air_affinity__air_core",
+        "root": true
+    },
+    "air_affinity__air_active": {
+        "x": 910,
+        "y": 802,
+        "definition": "air_affinity__air_active"
+    },
+    "air_affinity__air_synergy": {
+        "x": 910,
+        "y": 884,
+        "definition": "air_affinity__air_synergy"
+    },
+    "air_affinity__air_situational": {
+        "x": 910,
+        "y": 966,
+        "definition": "air_affinity__air_situational"
+    },
+    "air_affinity__air_mastery": {
+        "x": 910,
+        "y": 1048,
+        "definition": "air_affinity__air_mastery"
+    },
+    "air_affinity__air_transcendence": {
+        "x": 910,
+        "y": 1130,
+        "definition": "air_affinity__air_transcendence"
+    },
+    "intimidation__intim_core": {
+        "x": 620,
+        "y": 720,
+        "definition": "intimidation__intim_core",
+        "root": true
+    },
+    "intimidation__intim_active": {
+        "x": 530,
+        "y": 775,
+        "definition": "intimidation__intim_active"
+    },
+    "intimidation__intim_synergy": {
+        "x": 440,
+        "y": 830,
+        "definition": "intimidation__intim_synergy"
+    },
+    "intimidation__intim_situational": {
+        "x": 350,
+        "y": 885,
+        "definition": "intimidation__intim_situational"
+    },
+    "intimidation__intim_mastery": {
+        "x": 260,
+        "y": 940,
+        "definition": "intimidation__intim_mastery"
+    },
+    "intimidation__intim_transcendence": {
+        "x": 170,
+        "y": 995,
+        "definition": "intimidation__intim_transcendence"
+    },
+    "willpower__will_core": {
+        "x": 550,
+        "y": 810,
+        "definition": "willpower__will_core",
+        "root": true
+    },
+    "willpower__will_active": {
+        "x": 460,
+        "y": 865,
+        "definition": "willpower__will_active"
+    },
+    "willpower__will_synergy": {
+        "x": 370,
+        "y": 920,
+        "definition": "willpower__will_synergy"
+    },
+    "willpower__will_situational": {
+        "x": 280,
+        "y": 975,
+        "definition": "willpower__will_situational"
+    },
+    "willpower__will_mastery": {
+        "x": 190,
+        "y": 1030,
+        "definition": "willpower__will_mastery"
+    },
+    "willpower__will_transcendence": {
+        "x": 100,
+        "y": 1085,
+        "definition": "willpower__will_transcendence"
+    },
+    "forging__forge_core": {
+        "x": 980,
+        "y": 720,
+        "definition": "forging__forge_core",
+        "root": true
+    },
+    "forging__forge_active": {
+        "x": 1070,
+        "y": 775,
+        "definition": "forging__forge_active"
+    },
+    "forging__forge_synergy": {
+        "x": 1160,
+        "y": 830,
+        "definition": "forging__forge_synergy"
+    },
+    "forging__forge_situational": {
+        "x": 1250,
+        "y": 885,
+        "definition": "forging__forge_situational"
+    },
+    "forging__forge_mastery": {
+        "x": 1340,
+        "y": 940,
+        "definition": "forging__forge_mastery"
+    },
+    "forging__forge_transcendence": {
+        "x": 1430,
+        "y": 995,
+        "definition": "forging__forge_transcendence"
+    },
+    "cooking__cook_core": {
+        "x": 1055,
+        "y": 810,
+        "definition": "cooking__cook_core",
+        "root": true
+    },
+    "cooking__cook_active": {
+        "x": 1145,
+        "y": 865,
+        "definition": "cooking__cook_active"
+    },
+    "cooking__cook_synergy": {
+        "x": 1235,
+        "y": 920,
+        "definition": "cooking__cook_synergy"
+    },
+    "cooking__cook_situational": {
+        "x": 1325,
+        "y": 975,
+        "definition": "cooking__cook_situational"
+    },
+    "cooking__cook_mastery": {
+        "x": 1415,
+        "y": 1030,
+        "definition": "cooking__cook_mastery"
+    },
+    "cooking__cook_transcendence": {
+        "x": 1505,
+        "y": 1085,
+        "definition": "cooking__cook_transcendence"
+    },
+    "alchemy__alchem_core": {
+        "x": 1130,
+        "y": 900,
+        "definition": "alchemy__alchem_core",
+        "root": true
+    },
+    "alchemy__alchem_active": {
+        "x": 1220,
+        "y": 955,
+        "definition": "alchemy__alchem_active"
+    },
+    "alchemy__alchem_synergy": {
+        "x": 1310,
+        "y": 1010,
+        "definition": "alchemy__alchem_synergy"
+    },
+    "alchemy__alchem_situational": {
+        "x": 1400,
+        "y": 1065,
+        "definition": "alchemy__alchem_situational"
+    },
+    "alchemy__alchem_mastery": {
+        "x": 1490,
+        "y": 1120,
+        "definition": "alchemy__alchem_mastery"
+    },
+    "alchemy__alchem_transcendence": {
+        "x": 1580,
+        "y": 1175,
+        "definition": "alchemy__alchem_transcendence"
+    }
+}

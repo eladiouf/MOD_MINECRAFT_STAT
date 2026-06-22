@@ -27,8 +27,8 @@ class PuffishSyncServiceTest {
     void mirrorsTotalAvailablePerkPointsAcrossFamilies() {
         PlayerStatData data = new PlayerStatData();
         data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 3);
-        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 2);
-        data.setPerkPoints(Perk.WILL_CORE.stat.index, 4);
+        data.setPerkPoints(Perk.WILL_CORE.stat.index, 2);
+        data.setPerkPoints(Perk.FORGE_CORE.stat.index, 4);
 
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);

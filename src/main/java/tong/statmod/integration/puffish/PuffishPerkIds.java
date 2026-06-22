@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class PuffishPerkIds {
+    public static final String UNIFIED_CATEGORY = "statmod:statmod_perks";
+
     private static final Map<String, Perk> BY_PATH = new HashMap<>();
 
     static {
@@ -17,7 +19,7 @@ public final class PuffishPerkIds {
     private PuffishPerkIds() {}
 
     public static String categoryId(Perk perk) {
-        return PuffishFamilyTreeBuilder.categoryId(perk);
+        return UNIFIED_CATEGORY;
     }
 
     public static String skillId(Perk perk) {

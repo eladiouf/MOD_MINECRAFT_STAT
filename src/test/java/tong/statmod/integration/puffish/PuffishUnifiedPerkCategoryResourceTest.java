@@ -25,7 +25,7 @@ class PuffishUnifiedPerkCategoryResourceTest {
             assertNotNull(stream);
             String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             assertTrue(json.contains("\"brute_force__brute_core\""));
-            assertTrue(json.contains("\"precision__precision_core\""));
+            assertTrue(json.contains("\"precision__preci_core\""));
             assertTrue(json.contains("\"arcane_power__arcane_core\""));
             assertTrue(json.contains("\"forging__forge_core\""));
         }

@@ -1,0 +1,11 @@
+{
+    "unlocked_by_default": true,
+    "title": "Perk Tree",
+    "icon": {
+        "type": "item",
+        "data": {
+            "item": "minecraft:nether_star"
+        }
+    },
+    "background": "textures/gui/advancements/backgrounds/adventure.png"
+}

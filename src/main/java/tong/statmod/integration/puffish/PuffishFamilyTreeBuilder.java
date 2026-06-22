@@ -7,9 +7,10 @@ import tong.statmod.stats.StatType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public final class PuffishFamilyTreeBuilder {
     public record GeneratedCategoryFiles(
@@ -27,111 +28,119 @@ public final class PuffishFamilyTreeBuilder {
             PerkTier.MASTERY,
             PerkTier.TRANSCENDENCE
     );
+    private static final List<String> MAGIC_CATEGORY_SLUGS = List.of(
+            "statmod_magic_common",
+            "statmod_magic_fire",
+            "statmod_magic_water",
+            "statmod_magic_air",
+            "statmod_magic_earth",
+            "statmod_magic_holy",
+            "statmod_magic_blood",
+            "statmod_magic_ender",
+            "statmod_magic_evocation",
+            "statmod_magic_eldritch",
+            "statmod_magic_locked"
+    );
 
     private PuffishFamilyTreeBuilder() {}
 
     public static String configJson() {
-        String categories = Arrays.stream(StatFamily.values())
-                .map(family -> "        \"" + family.slug + "\"")
-                .collect(Collectors.joining(",\n"));
+        List<String> categories = new ArrayList<>();
+        categories.add("        \"statmod_perks\"");
+        for (String magicCategory : MAGIC_CATEGORY_SLUGS) {
+            categories.add("        \"" + magicCategory + "\"");
+        }
         return "{\n" +
                 "    \"version\": 3,\n" +
                 "    \"categories\": [\n" +
-                categories + "\n" +
+                String.join(",\n", categories) + "\n" +
                 "    ]\n" +
                 "}\n";
     }
 
     public static String categoryId(Perk perk) {
-        return "statmod:" + perk.stat.family().slug;
+        return PuffishPerkIds.UNIFIED_CATEGORY;
     }
 
     public static String skillId(Perk perk) {
         return perk.stat.name().toLowerCase(Locale.ROOT) + "__" + perk.name().toLowerCase(Locale.ROOT);
     }
 
-    public static GeneratedCategoryFiles categoryFiles(StatFamily family) {
-        List<StatType> stats = statsForFamily(family);
+    public static GeneratedCategoryFiles unifiedCategoryFiles() {
         return new GeneratedCategoryFiles(
-                buildCategoryJson(family),
-                buildSkillsJson(stats),
-                buildDefinitionsJson(stats),
-                buildConnectionsJson(stats)
+                buildUnifiedCategoryJson(),
+                buildUnifiedSkillsJson(),
+                buildUnifiedDefinitionsJson(),
+                buildUnifiedConnectionsJson()
         );
     }
 
-    private static List<StatType> statsForFamily(StatFamily family) {
-        return Arrays.stream(StatType.values())
-                .filter(stat -> stat.family() == family)
-                .toList();
-    }
-
-    private static String buildCategoryJson(StatFamily family) {
+    private static String buildUnifiedCategoryJson() {
         return "{\n" +
                 "    \"unlocked_by_default\": true,\n" +
-                "    \"title\": \"" + escape(family.displayName) + "\",\n" +
+                "    \"title\": \"Perk Tree\",\n" +
                 "    \"icon\": {\n" +
                 "        \"type\": \"item\",\n" +
                 "        \"data\": {\n" +
-                "            \"item\": \"" + iconForFamily(family) + "\"\n" +
+                "            \"item\": \"minecraft:nether_star\"\n" +
                 "        }\n" +
                 "    },\n" +
-                "    \"background\": \"" + backgroundForFamily(family) + "\"\n" +
+                "    \"background\": \"textures/gui/advancements/backgrounds/adventure.png\"\n" +
                 "}\n";
     }
 
-    private static String buildSkillsJson(List<StatType> stats) {
+    private static String buildUnifiedSkillsJson() {
         List<String> entries = new ArrayList<>();
-        for (int column = 0; column < stats.size(); column++) {
-            StatType stat = stats.get(column);
-            for (int row = 0; row < TIER_ORDER.size(); row++) {
-                Perk perk = Perk.byStatAndTier(stat, TIER_ORDER.get(row));
-                if (perk == null) {
-                    continue;
+        for (Map.Entry<StatFamily, List<StatType>> familyEntry : familyStats().entrySet()) {
+            FamilyLayout layout = layoutForFamily(familyEntry.getKey());
+            List<StatType> stats = familyEntry.getValue();
+            for (int statIndex = 0; statIndex < stats.size(); statIndex++) {
+                StatType stat = stats.get(statIndex);
+                for (int row = 0; row < TIER_ORDER.size(); row++) {
+                    int x = layout.rootX() + statIndex * layout.laneDx() + row * layout.tierDx();
+                    int y = layout.rootY() + statIndex * layout.laneDy() + row * layout.tierDy();
+                    Perk perk = Perk.byStatAndTier(stat, TIER_ORDER.get(row));
+                    if (perk == null) {
+                        continue;
+                    }
+                    String id = skillId(perk);
+                    StringBuilder entry = new StringBuilder();
+                    entry.append("    \"").append(id).append("\": {\n");
+                    entry.append("        \"x\": ").append(x).append(",\n");
+                    entry.append("        \"y\": ").append(y).append(",\n");
+                    entry.append("        \"definition\": \"").append(id).append("\"");
+                    if (perk.tier == PerkTier.CORE) {
+                        entry.append(",\n        \"root\": true");
+                    }
+                    entry.append("\n    }");
+                    entries.add(entry.toString());
                 }
-                String id = skillId(perk);
-                StringBuilder entry = new StringBuilder();
-                entry.append("    \"").append(id).append("\": {\n");
-                entry.append("        \"x\": ").append(column * 160).append(",\n");
-                entry.append("        \"y\": ").append(row * 80).append(",\n");
-                entry.append("        \"definition\": \"").append(id).append("\"");
-                if (perk.tier == PerkTier.CORE) {
-                    entry.append(",\n        \"root\": true");
-                }
-                entry.append("\n    }");
-                entries.add(entry.toString());
             }
         }
         return "{\n" + String.join(",\n", entries) + "\n}\n";
     }
 
-    private static String buildDefinitionsJson(List<StatType> stats) {
+    private static String buildUnifiedDefinitionsJson() {
         List<String> entries = new ArrayList<>();
-        for (StatType stat : stats) {
-            for (PerkTier tier : TIER_ORDER) {
-                Perk perk = Perk.byStatAndTier(stat, tier);
-                if (perk == null) {
-                    continue;
-                }
-                String id = skillId(perk);
-                entries.add("    \"" + id + "\": {\n" +
-                        "        \"title\": \"" + escape(perk.name) + "\",\n" +
-                        "        \"description\": \"" + escape(perk.description) + "\",\n" +
-                        "        \"icon\": {\n" +
-                        "            \"type\": \"item\",\n" +
-                        "            \"data\": {\n" +
-                        "                \"item\": \"" + iconForStat(stat) + "\"\n" +
-                        "            }\n" +
-                        "        }\n" +
-                        "    }");
-            }
+        for (Perk perk : Perk.values()) {
+            String id = skillId(perk);
+            entries.add("    \"" + id + "\": {\n" +
+                    "        \"title\": \"" + escape(perk.name) + "\",\n" +
+                    "        \"description\": \"" + escape(perk.description) + "\",\n" +
+                    "        \"icon\": {\n" +
+                    "            \"type\": \"item\",\n" +
+                    "            \"data\": {\n" +
+                    "                \"item\": \"" + iconForStat(perk.stat) + "\"\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }");
         }
         return "{\n" + String.join(",\n", entries) + "\n}\n";
     }
 
-    private static String buildConnectionsJson(List<StatType> stats) {
+    private static String buildUnifiedConnectionsJson() {
         List<String> pairs = new ArrayList<>();
-        for (StatType stat : stats) {
+        for (StatType stat : StatType.values()) {
             Perk previous = null;
             for (PerkTier tier : TIER_ORDER) {
                 Perk perk = Perk.byStatAndTier(stat, tier);
@@ -156,25 +165,24 @@ public final class PuffishFamilyTreeBuilder {
                 "}\n";
     }
 
-    private static String iconForFamily(StatFamily family) {
-        return switch (family) {
-            case FRONTLINE_PHYSICAL_COMBAT -> "minecraft:iron_sword";
-            case RANGED_HUNT_CONTROL -> "minecraft:bow";
-            case MAGICAL_CORE -> "minecraft:enchanted_book";
-            case ELEMENTAL_SPECIALIZATION -> "minecraft:fire_charge";
-            case MENTAL_PRESSURE_RESILIENCE -> "minecraft:totem_of_undying";
-            case CRAFTING_SUPPORT -> "minecraft:anvil";
-        };
+    private static Map<StatFamily, List<StatType>> familyStats() {
+        Map<StatFamily, List<StatType>> byFamily = new LinkedHashMap<>();
+        for (StatFamily family : StatFamily.values()) {
+            byFamily.put(family, Arrays.stream(StatType.values())
+                    .filter(stat -> stat.family() == family)
+                    .toList());
+        }
+        return byFamily;
     }
 
-    private static String backgroundForFamily(StatFamily family) {
+    private static FamilyLayout layoutForFamily(StatFamily family) {
         return switch (family) {
-            case FRONTLINE_PHYSICAL_COMBAT -> "textures/gui/advancements/backgrounds/adventure.png";
-            case RANGED_HUNT_CONTROL -> "textures/gui/advancements/backgrounds/adventure.png";
-            case MAGICAL_CORE -> "textures/gui/advancements/backgrounds/end.png";
-            case ELEMENTAL_SPECIALIZATION -> "textures/gui/advancements/backgrounds/nether.png";
-            case MENTAL_PRESSURE_RESILIENCE -> "textures/gui/advancements/backgrounds/end.png";
-            case CRAFTING_SUPPORT -> "textures/gui/advancements/backgrounds/husbandry.png";
+            case FRONTLINE_PHYSICAL_COMBAT -> new FamilyLayout(780, 430, -55, 52, -95, -60);
+            case RANGED_HUNT_CONTROL -> new FamilyLayout(930, 430, 60, 74, 95, -58);
+            case MAGICAL_CORE -> new FamilyLayout(560, 480, 95, 0, 0, -82);
+            case ELEMENTAL_SPECIALIZATION -> new FamilyLayout(610, 720, 100, 0, 0, 82);
+            case MENTAL_PRESSURE_RESILIENCE -> new FamilyLayout(620, 720, -70, 90, -90, 55);
+            case CRAFTING_SUPPORT -> new FamilyLayout(980, 720, 75, 90, 90, 55);
         };
     }
 
@@ -211,4 +219,13 @@ public final class PuffishFamilyTreeBuilder {
                 .replace("\\", "\\\\")
                 .replace("\"", "\\\"");
     }
+
+    private record FamilyLayout(
+            int rootX,
+            int rootY,
+            int laneDx,
+            int laneDy,
+            int tierDx,
+            int tierDy
+    ) {}
 }

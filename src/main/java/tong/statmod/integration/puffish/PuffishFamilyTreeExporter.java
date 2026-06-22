@@ -1,7 +1,5 @@
 package tong.statmod.integration.puffish;
 
-import tong.statmod.stats.StatFamily;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,14 +17,13 @@ public final class PuffishFamilyTreeExporter {
 
         Path categoriesRoot = root.resolve("categories");
         Files.createDirectories(categoriesRoot);
-        for (StatFamily family : StatFamily.values()) {
-            PuffishFamilyTreeBuilder.GeneratedCategoryFiles files = PuffishFamilyTreeBuilder.categoryFiles(family);
-            Path familyRoot = categoriesRoot.resolve(family.slug);
-            Files.createDirectories(familyRoot);
-            Files.writeString(familyRoot.resolve("category.json"), files.categoryJson());
-            Files.writeString(familyRoot.resolve("skills.json"), files.skillsJson());
-            Files.writeString(familyRoot.resolve("definitions.json"), files.definitionsJson());
-            Files.writeString(familyRoot.resolve("connections.json"), files.connectionsJson());
-        }
+
+        PuffishFamilyTreeBuilder.GeneratedCategoryFiles files = PuffishFamilyTreeBuilder.unifiedCategoryFiles();
+        Path perkRoot = categoriesRoot.resolve("statmod_perks");
+        Files.createDirectories(perkRoot);
+        Files.writeString(perkRoot.resolve("category.json"), files.categoryJson());
+        Files.writeString(perkRoot.resolve("skills.json"), files.skillsJson());
+        Files.writeString(perkRoot.resolve("definitions.json"), files.definitionsJson());
+        Files.writeString(perkRoot.resolve("connections.json"), files.connectionsJson());
     }
 }

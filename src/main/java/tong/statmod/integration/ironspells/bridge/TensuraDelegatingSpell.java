@@ -11,6 +11,7 @@ import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
 import io.redspace.ironsspellbooks.api.spells.SchoolType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -114,15 +115,12 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
         return cooldownTicksBase(profile);
     }
 
-    @Override
-    public ResourceLocation getSpellIconResource() {
-        return ResourceLocation.fromNamespaceAndPath(
-                TensuraWrapperIds.WRAPPER_NAMESPACE,
-                "textures/spell/tensura/default.png");
-    }
+    // getSpellIconResource is final in AbstractSpell — Iron's auto-derives the icon path
+    // from getSpellResource() (namespace + textures/spells/<path>.png). We ship a single
+    // default placeholder at that auto-derived path.
 
     @Override
-    public Component getDisplayName(Player player) {
+    public MutableComponent getDisplayName(Player player) {
         return Component.translatable(TensuraWrapperIds.displayNameTranslationKey(tensuraSkillId));
     }
 
@@ -173,12 +171,18 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     }
 
     private static DefaultConfig buildDefaultConfig(TensuraSpellProfile profile) {
-        // DefaultConfig.Builder fluent API (Iron's Spellbooks). All numbers are MVP baselines.
-        return new DefaultConfig.Builder()
+        // Iron's DefaultConfig is itself fluent (no inner Builder). Mana cost is overridden
+        // separately via getManaCost(int) so it is not part of the config. The school resource
+        // is set here so Iron's validator accepts the spell registration.
+        ResourceLocation schoolResource = ResourceLocation.fromNamespaceAndPath(
+                TensuraSchoolMapping.IRONS_NS,
+                TensuraSchoolMapping.schoolPathFor(profile == null ? null : profile.primaryStat()));
+        return new DefaultConfig()
                 .setMinRarity(io.redspace.ironsspellbooks.api.spells.SpellRarity.COMMON)
                 .setMaxLevel(1)
                 .setCooldownSeconds(cooldownTicksBase(profile) / 20.0)
-                .setManaCostPerLevel(manaCostBase(profile))
+                .setSchoolResource(schoolResource)
+                .setAllowCrafting(false)
                 .build();
     }
 

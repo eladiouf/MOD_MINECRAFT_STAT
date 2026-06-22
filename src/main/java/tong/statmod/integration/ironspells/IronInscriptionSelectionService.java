@@ -24,7 +24,7 @@ public final class IronInscriptionSelectionService {
         if (data == null) {
             return List.of();
         }
-        return IronInscriptionKnownSpellIndex.learnedIronSpellIds(Arrays.asList(data.getLearnedSpells()));
+        return IronInscriptionKnownSpellIndex.learnedCastableSpellIds(Arrays.asList(data.getLearnedSpells()));
     }
 
     public static String resolveSelectedSpellId(PlayerStatData data, int optionIndex) {

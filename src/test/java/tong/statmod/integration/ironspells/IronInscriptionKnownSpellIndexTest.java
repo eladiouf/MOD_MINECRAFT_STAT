@@ -5,19 +5,36 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class IronInscriptionKnownSpellIndexTest {
     @Test
-    void filtersToKnownIronsSpellsOnly() {
-        List<String> ids = IronInscriptionKnownSpellIndex.learnedIronSpellIds(List.of(
-                "tensura:fire_bolt",
+    void filtersToCastableSpellsIronsAndTensuraWrappers() {
+        List<String> ids = IronInscriptionKnownSpellIndex.learnedCastableSpellIds(List.of(
+                "tensura:fire_bolt",                  // raw tensura: filtered out
                 "irons_spellbooks:fireball",
                 "irons_spellbooks:firebolt",
-                "irons_spellbooks:fireball",
+                "irons_spellbooks:fireball",          // duplicate dropped
+                "statmod:tensura_fire_bolt",          // wrapper kept
+                "statmod:tensura_hellfire",
                 "minecraft:stone"
         ));
 
-        assertEquals(List.of("irons_spellbooks:fireball", "irons_spellbooks:firebolt"), ids);
+        assertEquals(List.of(
+                "irons_spellbooks:fireball",
+                "irons_spellbooks:firebolt",
+                "statmod:tensura_fire_bolt",
+                "statmod:tensura_hellfire"
+        ), ids);
+    }
+
+    @Test
+    void deprecatedAliasReturnsTheSameResult() {
+        List<String> via = IronInscriptionKnownSpellIndex.learnedIronSpellIds(List.of(
+                "irons_spellbooks:firebolt",
+                "statmod:tensura_fire_bolt"
+        ));
+        assertEquals(List.of("irons_spellbooks:firebolt", "statmod:tensura_fire_bolt"), via);
     }
 
     @Test
@@ -39,5 +56,14 @@ class IronInscriptionKnownSpellIndexTest {
         assertEquals(List.of("a", "b", "c", "d", "e"), page0);
         assertEquals(List.of("f", "g"), page1);
         assertEquals(1, IronInscriptionKnownSpellIndex.maxPage(List.of("a", "b", "c", "d", "e", "f")));
+    }
+
+    @Test
+    void rawTensuraIdsAreRejectedSinceTheyAreNotInIronsRegistry() {
+        List<String> ids = IronInscriptionKnownSpellIndex.learnedCastableSpellIds(List.of(
+                "tensura:hellfire",
+                "tensura:water_jail"
+        ));
+        assertTrue(ids.isEmpty());
     }
 }

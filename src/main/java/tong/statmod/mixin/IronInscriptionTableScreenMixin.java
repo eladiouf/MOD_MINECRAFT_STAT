@@ -182,7 +182,7 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
     @Unique
     private List<String> statmod$knownIronSpells() {
-        return IronInscriptionKnownSpellIndex.learnedIronSpellIds(ClientMagicCache.getLearnedSpells());
+        return IronInscriptionKnownSpellIndex.learnedCastableSpellIds(ClientMagicCache.getLearnedSpells());
     }
 
     @Unique

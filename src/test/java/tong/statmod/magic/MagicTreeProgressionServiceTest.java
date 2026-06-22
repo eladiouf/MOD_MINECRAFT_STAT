@@ -68,6 +68,9 @@ class MagicTreeProgressionServiceTest {
 
         assertTrue(MagicTreeProgressionService.tryUnlock(d, node, granted::add).success());
         assertTrue(d.hasLearnedSpell("tensura:fire_bolt"));
+        // Reverse bridge: the corresponding Iron's-side wrapper id is also added so the spell
+        // shows up in the inscription menu.
+        assertTrue(d.hasLearnedSpell("statmod:tensura_fire_bolt"));
         assertEquals(java.util.List.of("tensura:fire_bolt"), granted);
     }
 
@@ -95,6 +98,8 @@ class MagicTreeProgressionServiceTest {
         assertEquals(5, d.getSchoolPoints(MagicBranch.FIRE));
         assertFalse(d.hasMagicNode(node.id()));
         assertFalse(d.hasLearnedSpell("tensura:fire_bolt"));
+        // Reverse bridge wrapper id is also rolled back.
+        assertFalse(d.hasLearnedSpell("statmod:tensura_fire_bolt"));
     }
 
     @Test

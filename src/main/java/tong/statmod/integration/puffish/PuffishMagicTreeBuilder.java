@@ -27,6 +27,8 @@ public final class PuffishMagicTreeBuilder {
     ) {}
 
     private static final Map<MagicBranch, BranchLayout> BRANCH_LAYOUTS = buildBranchLayouts();
+    private static final int CANVAS_OFFSET_X = 280;
+    private static final int CANVAS_OFFSET_Y = 240;
     private static final int COMMON_CENTER_X = 760;
     private static final int COMMON_TOP_Y = 200;
 
@@ -223,11 +225,11 @@ public final class PuffishMagicTreeBuilder {
     }
 
     private static void place(Map<String, NodePlacement> placements, String nodeId, int x, int y) {
-        placements.put(nodeId, new NodePlacement(x, y));
+        placements.put(nodeId, new NodePlacement(x + CANVAS_OFFSET_X, y + CANVAS_OFFSET_Y));
     }
 
     private static boolean isRoot(MagicNode node) {
-        return "common/foundation/arcane_focus".equals(node.id()) || node.kind() == MagicNodeKind.BRANCH_OPENER;
+        return "common/foundation/arcane_focus".equals(node.id());
     }
 
     private static String titleFor(MagicNode node) {
@@ -356,21 +358,47 @@ public final class PuffishMagicTreeBuilder {
     }
 
     private static String signatureIcon(MagicNode node) {
-        String id = node.id();
-        if (id.contains("fireball")) return "minecraft:fire_charge";
-        if (id.contains("fire_breath")) return "minecraft:dragon_breath";
-        if (id.contains("hellfire")) return "minecraft:lava_bucket";
-        if (id.contains("burning_dash")) return "minecraft:magma_cream";
-        if (id.contains("snow") || id.contains("frost") || id.contains("ice") || id.contains("blizzard")) return "minecraft:snowball";
-        if (id.contains("lightning") || id.contains("thunder") || id.contains("shock") || id.contains("volt")) return "minecraft:lightning_rod";
-        if (id.contains("poison") || id.contains("acid") || id.contains("root") || id.contains("oakskin")) return "minecraft:spider_eye";
-        if (id.contains("heal") || id.contains("regeneration") || id.contains("blessing") || id.contains("sunbeam")) return "minecraft:golden_apple";
-        if (id.contains("blood") || id.contains("siphon") || id.contains("sacrifice") || id.contains("wither")) return "minecraft:redstone";
-        if (id.contains("portal") || id.contains("teleport") || id.contains("ender") || id.contains("black_hole")) return "minecraft:ender_pearl";
-        if (id.contains("vex") || id.contains("fang") || id.contains("wololo") || id.contains("creeper")) return "minecraft:totem_of_undying";
-        if (id.contains("eldritch") || id.contains("sculk") || id.contains("abyss") || id.contains("dimension")) return "minecraft:echo_shard";
-        if (id.contains("tensura")) return branchSignatureFallback(node.branch());
+        String slug = node.id().substring(node.id().lastIndexOf('/') + 1);
+        if (containsAllTokens(slug, "fireball")) return "minecraft:fire_charge";
+        if (containsAllTokens(slug, "fire", "breath")) return "minecraft:dragon_breath";
+        if (containsAllTokens(slug, "hellfire")) return "minecraft:lava_bucket";
+        if (containsAllTokens(slug, "burning", "dash")) return "minecraft:magma_cream";
+        if (containsAnyToken(slug, "snow", "frost", "ice", "blizzard")) return "minecraft:snowball";
+        if (containsAnyToken(slug, "lightning", "thunder", "shock", "volt")) return "minecraft:lightning_rod";
+        if (containsAnyToken(slug, "poison", "acid", "root", "oakskin")) return "minecraft:spider_eye";
+        if (containsAnyToken(slug, "heal", "healing", "regeneration", "blessing", "sunbeam")) return "minecraft:golden_apple";
+        if (containsAnyToken(slug, "blood", "siphon", "siphoning", "sacrifice", "wither")) return "minecraft:redstone";
+        if (containsAnyToken(slug, "portal", "teleport", "ender", "black", "hole")) return "minecraft:ender_pearl";
+        if (containsAnyToken(slug, "vex", "fang", "wololo", "creeper")) return "minecraft:totem_of_undying";
+        if (containsAnyToken(slug, "eldritch", "sculk", "abyss", "abyssal", "dimension")) return "minecraft:echo_shard";
+        if (containsAnyToken(slug, "tensura")) return branchSignatureFallback(node.branch());
         return branchSignatureFallback(node.branch());
+    }
+
+    private static boolean containsAnyToken(String slug, String... tokens) {
+        for (String token : tokens) {
+            if (containsAllTokens(slug, token)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsAllTokens(String slug, String... tokens) {
+        String[] words = slug.split("_");
+        for (String token : tokens) {
+            boolean found = false;
+            for (String word : words) {
+                if (word.equals(token)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static String branchSignatureFallback(MagicBranch branch) {

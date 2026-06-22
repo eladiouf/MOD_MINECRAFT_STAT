@@ -6,9 +6,11 @@ import tong.statmod.magic.MagicTreeCatalog;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -47,6 +49,36 @@ class PuffishMagicResourceConsistencyTest {
             assertTrue(json.contains("\"water.signature.blizzard\""));
             assertTrue(json.contains("\"blood.signature.sacrifice\""));
             assertTrue(json.contains("\"eldritch.signature.pocket_dimension\""));
+            assertTrue(json.contains("\"blood.signature.sacrifice\": {\n" +
+                    "        \"title\": \"Sacrifice\",\n" +
+                    "        \"description\": \"Learn Sacrifice.\",\n" +
+                    "        \"icon\": {\n" +
+                    "            \"type\": \"item\",\n" +
+                    "            \"data\": {\n" +
+                    "                \"item\": \"minecraft:redstone\""),
+                    "blood sacrifice should keep a blood-themed icon");
+            assertFalse(json.contains("\"blood.signature.sacrifice\": {\n" +
+                    "        \"title\": \"Sacrifice\",\n" +
+                    "        \"description\": \"Learn Sacrifice.\",\n" +
+                    "        \"icon\": {\n" +
+                    "            \"type\": \"item\",\n" +
+                    "            \"data\": {\n" +
+                    "                \"item\": \"minecraft:snowball\""),
+                    "blood sacrifice must not inherit an ice icon from substring matching");
+        }
+
+        try (InputStream stream = loader.getResourceAsStream(
+                "data/statmod/puffish_skills/categories/statmod_magic/skills.json")) {
+            assertNotNull(stream, "missing unified magic skills");
+            String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+            assertTrue(json.contains("\"common.foundation.arcane_focus\": {"),
+                    "the common arcane focus should remain present in the unified tree");
+            assertEquals(1, countOccurrences(json, "\"root\": true"),
+                    "the unified magic tab should expose a single shared root");
+            assertTrue(minCoordinate(json, "\"x\": (-?\\d+)") >= 0,
+                    "all generated magic nodes should stay inside the positive canvas on X");
+            assertTrue(minCoordinate(json, "\"y\": (-?\\d+)") >= 0,
+                    "all generated magic nodes should stay inside the positive canvas on Y");
         }
 
         try (InputStream stream = loader.getResourceAsStream(
@@ -62,5 +94,24 @@ class PuffishMagicResourceConsistencyTest {
         } catch (Exception e) {
             throw new AssertionError("failed to read resource " + path, e);
         }
+    }
+
+    private static int minCoordinate(String json, String pattern) {
+        Matcher matcher = Pattern.compile(pattern).matcher(json);
+        int min = Integer.MAX_VALUE;
+        while (matcher.find()) {
+            min = Math.min(min, Integer.parseInt(matcher.group(1)));
+        }
+        return min;
+    }
+
+    private static int countOccurrences(String json, String needle) {
+        int count = 0;
+        int index = 0;
+        while ((index = json.indexOf(needle, index)) >= 0) {
+            count++;
+            index += needle.length();
+        }
+        return count;
     }
 }

@@ -8,15 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 class PuffishPerkIdsTest {
     @Test
-    void mapsPerkToDeterministicCategoryAndSkillIds() {
-        assertEquals("statmod:frontline_physical_combat", PuffishPerkIds.categoryId(Perk.BLADE_CORE));
+    void mapsEveryPerkToTheUnifiedCategory() {
+        assertEquals("statmod:statmod_perks", PuffishPerkIds.categoryId(Perk.BLADE_CORE));
         assertEquals("blade_technique__blade_core", PuffishPerkIds.skillId(Perk.BLADE_CORE));
-        assertEquals("statmod:frontline_physical_combat", PuffishPerkIds.categoryId(Perk.ENDUR_TRANSCENDENCE));
+        assertEquals("statmod:statmod_perks", PuffishPerkIds.categoryId(Perk.ENDUR_TRANSCENDENCE));
+        assertEquals("statmod:statmod_perks", PuffishPerkIds.categoryId(Perk.WILL_TRANSCENDENCE));
     }
 
     @Test
-    void resolvesPerkBackFromCategoryAndSkill() {
-        assertSame(Perk.BRUTE_CORE, PuffishPerkIds.resolve("statmod:frontline_physical_combat", "brute_force__brute_core"));
-        assertSame(Perk.WILL_TRANSCENDENCE, PuffishPerkIds.resolve("statmod:mental_pressure_resilience", "willpower__will_transcendence"));
+    void resolvesPerkBackFromUnifiedCategoryAndSkill() {
+        assertSame(Perk.BRUTE_CORE,
+                PuffishPerkIds.resolve("statmod:statmod_perks", "brute_force__brute_core"));
+        assertSame(Perk.WILL_TRANSCENDENCE,
+                PuffishPerkIds.resolve("statmod:statmod_perks", "willpower__will_transcendence"));
     }
 }

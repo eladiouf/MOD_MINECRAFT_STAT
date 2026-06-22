@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PuffishSyncServiceTest {
     @Test
-    void mirrorsUnlockedPerksAndPerStatPoints() {
+    void mirrorsUnlockedPerksIntoTheUnifiedCategory() {
         PlayerStatData data = new PlayerStatData();
         data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 3);
         data.addUnlockedPerk(Perk.BRUTE_CORE.id);
@@ -19,45 +19,32 @@ class PuffishSyncServiceTest {
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("unlock:statmod:frontline_physical_combat:brute_force__brute_core"));
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
+        assertTrue(gateway.operations.contains("category:statmod:statmod_perks"));
+        assertTrue(gateway.operations.contains("unlock:statmod:statmod_perks:brute_force__brute_core"));
     }
 
     @Test
-    void mirrorsRemainingPointsAcrossTheWholeFamily() {
-        PlayerStatData data = new PlayerStatData();
-        data.setPerkPoints(Perk.BRUTE_SYNERGY.stat.index, 2);
-        data.addPerkPointsForStat(Perk.BLADE_CORE.stat.index, 1);
-        data.addUnlockedPerk(Perk.BRUTE_SYNERGY.id);
-
-        FakeGateway gateway = new FakeGateway();
-        PuffishSyncService.sync(data, gateway);
-
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
-    }
-
-    @Test
-    void mirrorsOnlyRemainingSpendableFamilyPoints() {
-        PlayerStatData data = new PlayerStatData();
-        data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 0);
-        data.addUnlockedPerk(Perk.BRUTE_CORE.id);
-
-        FakeGateway gateway = new FakeGateway();
-        PuffishSyncService.sync(data, gateway);
-
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:0"));
-    }
-
-    @Test
-    void mirrorsCanonicalFamilyPointsWithoutDoubleCountingSiblingStats() {
+    void mirrorsTotalAvailablePerkPointsAcrossFamilies() {
         PlayerStatData data = new PlayerStatData();
         data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 3);
-        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 3);
+        data.setPerkPoints(Perk.BLADE_CORE.stat.index, 2);
+        data.setPerkPoints(Perk.WILL_CORE.stat.index, 4);
 
         FakeGateway gateway = new FakeGateway();
         PuffishSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("points:statmod:frontline_physical_combat:3"));
+        assertTrue(gateway.operations.contains("points:statmod:statmod_perks:9"));
+    }
+
+    @Test
+    void stillLocksPerksThatAreNotCanonicallyUnlocked() {
+        PlayerStatData data = new PlayerStatData();
+        data.setPerkPoints(Perk.BRUTE_CORE.stat.index, 1);
+
+        FakeGateway gateway = new FakeGateway();
+        PuffishSyncService.sync(data, gateway);
+
+        assertTrue(gateway.operations.contains("lock:statmod:statmod_perks:blade_technique__blade_core"));
     }
 
     static final class FakeGateway implements PuffishMirrorGateway {

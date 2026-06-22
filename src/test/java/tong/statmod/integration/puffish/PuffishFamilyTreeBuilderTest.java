@@ -17,7 +17,7 @@ class PuffishFamilyTreeBuilderTest {
     @Test
     void buildsOneUnifiedPerkTabAlongsideMagicTabs() {
         assertTrue(PuffishFamilyTreeBuilder.configJson().contains("\"statmod_perks\""));
-        assertTrue(PuffishFamilyTreeBuilder.configJson().contains("\"statmod_magic_common\""));
+        assertTrue(PuffishFamilyTreeBuilder.configJson().contains("\"statmod_magic\""));
 
         PuffishFamilyTreeBuilder.GeneratedCategoryFiles files =
                 PuffishFamilyTreeBuilder.unifiedCategoryFiles();

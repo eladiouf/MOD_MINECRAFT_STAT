@@ -29,17 +29,7 @@ public final class PuffishFamilyTreeBuilder {
             PerkTier.TRANSCENDENCE
     );
     private static final List<String> MAGIC_CATEGORY_SLUGS = List.of(
-            "statmod_magic_common",
-            "statmod_magic_fire",
-            "statmod_magic_water",
-            "statmod_magic_air",
-            "statmod_magic_earth",
-            "statmod_magic_holy",
-            "statmod_magic_blood",
-            "statmod_magic_ender",
-            "statmod_magic_evocation",
-            "statmod_magic_eldritch",
-            "statmod_magic_locked"
+            "statmod_magic"
     );
 
     private PuffishFamilyTreeBuilder() {}

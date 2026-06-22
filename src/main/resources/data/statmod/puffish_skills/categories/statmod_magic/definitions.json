@@ -1,0 +1,1432 @@
+{
+    "common.foundation.arcane_focus": {
+        "title": "Arcane Focus",
+        "description": "Anchor your first arcane discipline and awaken the tree.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "common.foundation.mana_well": {
+        "title": "Mana Well",
+        "description": "Deepen your reserves before branching into schools.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:experience_bottle"
+            }
+        }
+    },
+    "common.foundation.cast_discipline": {
+        "title": "Cast Discipline",
+        "description": "Refine control and unlock stronger magical paths.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:book"
+            }
+        }
+    },
+    "common.foundation.multi_school_gate": {
+        "title": "Multi-School Gate",
+        "description": "Bridge multiple schools and prepare for advanced branches.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:nether_star"
+            }
+        }
+    },
+    "fire.opener.ignition": {
+        "title": "Ignition",
+        "description": "Open the Fire school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:flint_and_steel"
+            }
+        }
+    },
+    "fire.tier.ember_path": {
+        "title": "Ember Path",
+        "description": "Advance through tier 1 of the Fire path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.tier.flame_path": {
+        "title": "Flame Path",
+        "description": "Advance through tier 2 of the Fire path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_rod"
+            }
+        }
+    },
+    "fire.tier.inferno_path": {
+        "title": "Inferno Path",
+        "description": "Advance through tier 3 of the Fire path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
+    },
+    "fire.signature.firebolt": {
+        "title": "Firebolt",
+        "description": "Learn Firebolt.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_bolt": {
+        "title": "Tensura Fire Bolt",
+        "description": "Learn Tensura Fire Bolt.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.burning_dash": {
+        "title": "Burning Dash",
+        "description": "Learn Burning Dash.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:magma_cream"
+            }
+        }
+    },
+    "fire.signature.fireball": {
+        "title": "Fireball",
+        "description": "Learn Fireball.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_storm": {
+        "title": "Tensura Fire Storm",
+        "description": "Learn Tensura Fire Storm.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.fire_breath": {
+        "title": "Fire Breath",
+        "description": "Learn Fire Breath.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:dragon_breath"
+            }
+        }
+    },
+    "fire.signature.tensura_hellfire": {
+        "title": "Tensura Hellfire",
+        "description": "Learn Tensura Hellfire.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lava_bucket"
+            }
+        }
+    },
+    "water.opener.ice_awakening": {
+        "title": "Ice Awakening",
+        "description": "Open the Water school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:water_bucket"
+            }
+        }
+    },
+    "water.tier.frost_path": {
+        "title": "Frost Path",
+        "description": "Advance through tier 1 of the Water path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.tier.chill_path": {
+        "title": "Chill Path",
+        "description": "Advance through tier 2 of the Water path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ice"
+            }
+        }
+    },
+    "water.tier.glacier_path": {
+        "title": "Glacier Path",
+        "description": "Advance through tier 3 of the Water path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:packed_ice"
+            }
+        }
+    },
+    "water.signature.snowball": {
+        "title": "Snowball",
+        "description": "Learn Snowball.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.icicle": {
+        "title": "Icicle",
+        "description": "Learn Icicle.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "water.signature.cone_of_cold": {
+        "title": "Cone Of Cold",
+        "description": "Learn Cone Of Cold.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "water.signature.frost_step": {
+        "title": "Frost Step",
+        "description": "Learn Frost Step.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.ray_of_frost": {
+        "title": "Ray Of Frost",
+        "description": "Learn Ray Of Frost.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.frostwave": {
+        "title": "Frostwave",
+        "description": "Learn Frostwave.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.ice_spikes": {
+        "title": "Ice Spikes",
+        "description": "Learn Ice Spikes.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.ice_block": {
+        "title": "Ice Block",
+        "description": "Learn Ice Block.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.blizzard": {
+        "title": "Blizzard",
+        "description": "Learn Blizzard.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.frostbite": {
+        "title": "Frostbite",
+        "description": "Learn Frostbite.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.ice_tomb": {
+        "title": "Ice Tomb",
+        "description": "Learn Ice Tomb.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "water.signature.summon_polar_bear": {
+        "title": "Summon Polar Bear",
+        "description": "Learn Summon Polar Bear.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "air.opener.spark_awakening": {
+        "title": "Spark Awakening",
+        "description": "Open the Air school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.tier.spark_path": {
+        "title": "Spark Path",
+        "description": "Advance through tier 1 of the Air path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.tier.storm_path": {
+        "title": "Storm Path",
+        "description": "Advance through tier 2 of the Air path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:copper_bulb"
+            }
+        }
+    },
+    "air.tier.thunder_path": {
+        "title": "Thunder Path",
+        "description": "Advance through tier 3 of the Air path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.charge": {
+        "title": "Charge",
+        "description": "Learn Charge.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.volt_strike": {
+        "title": "Volt Strike",
+        "description": "Learn Volt Strike.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.lightning_bolt": {
+        "title": "Lightning Bolt",
+        "description": "Learn Lightning Bolt.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.chain_lightning": {
+        "title": "Chain Lightning",
+        "description": "Learn Chain Lightning.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.electrocute": {
+        "title": "Electrocute",
+        "description": "Learn Electrocute.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.shockwave": {
+        "title": "Shockwave",
+        "description": "Learn Shockwave.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.lightning_lance": {
+        "title": "Lightning Lance",
+        "description": "Learn Lightning Lance.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.thunderstorm": {
+        "title": "Thunderstorm",
+        "description": "Learn Thunderstorm.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.ball_lightning": {
+        "title": "Ball Lightning",
+        "description": "Learn Ball Lightning.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.ascension": {
+        "title": "Ascension",
+        "description": "Learn Ascension.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "earth.opener.nature_awakening": {
+        "title": "Nature Awakening",
+        "description": "Open the Earth school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.tier.poison_path": {
+        "title": "Poison Path",
+        "description": "Advance through tier 1 of the Earth path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:vine"
+            }
+        }
+    },
+    "earth.tier.toxin_path": {
+        "title": "Toxin Path",
+        "description": "Advance through tier 2 of the Earth path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:slime_ball"
+            }
+        }
+    },
+    "earth.tier.grand_nature_path": {
+        "title": "Grand Nature Path",
+        "description": "Advance through tier 3 of the Earth path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:emerald"
+            }
+        }
+    },
+    "earth.signature.poison_arrow": {
+        "title": "Poison Arrow",
+        "description": "Learn Poison Arrow.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.poison_splash": {
+        "title": "Poison Splash",
+        "description": "Learn Poison Splash.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.root": {
+        "title": "Root",
+        "description": "Learn Root.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.oakskin": {
+        "title": "Oakskin",
+        "description": "Learn Oakskin.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.acid_orb": {
+        "title": "Acid Orb",
+        "description": "Learn Acid Orb.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.poison_breath": {
+        "title": "Poison Breath",
+        "description": "Learn Poison Breath.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:spider_eye"
+            }
+        }
+    },
+    "earth.signature.stomp": {
+        "title": "Stomp",
+        "description": "Learn Stomp.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.spider_aspect": {
+        "title": "Spider Aspect",
+        "description": "Learn Spider Aspect.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.firefly_swarm": {
+        "title": "Firefly Swarm",
+        "description": "Learn Firefly Swarm.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.blight": {
+        "title": "Blight",
+        "description": "Learn Blight.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.earthquake": {
+        "title": "Earthquake",
+        "description": "Learn Earthquake.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.gluttony": {
+        "title": "Gluttony",
+        "description": "Learn Gluttony.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.touch_dig": {
+        "title": "Touch Dig",
+        "description": "Learn Touch Dig.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "holy.opener.light_awakening": {
+        "title": "Light Awakening",
+        "description": "Open the Holy school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.tier.bless_path": {
+        "title": "Bless Path",
+        "description": "Advance through tier 1 of the Holy path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glow_berries"
+            }
+        }
+    },
+    "holy.tier.grace_path": {
+        "title": "Grace Path",
+        "description": "Advance through tier 2 of the Holy path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.tier.divine_path": {
+        "title": "Divine Path",
+        "description": "Advance through tier 3 of the Holy path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:beacon"
+            }
+        }
+    },
+    "holy.signature.heal": {
+        "title": "Heal",
+        "description": "Learn Heal.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.wisp": {
+        "title": "Wisp",
+        "description": "Learn Wisp.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.guiding_bolt": {
+        "title": "Guiding Bolt",
+        "description": "Learn Guiding Bolt.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.cleanse": {
+        "title": "Cleanse",
+        "description": "Learn Cleanse.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.healing_circle": {
+        "title": "Healing Circle",
+        "description": "Learn Healing Circle.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.haste": {
+        "title": "Haste",
+        "description": "Learn Haste.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.divine_smite": {
+        "title": "Divine Smite",
+        "description": "Learn Divine Smite.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.fortify": {
+        "title": "Fortify",
+        "description": "Learn Fortify.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.blessing_of_life": {
+        "title": "Blessing Of Life",
+        "description": "Learn Blessing Of Life.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.cloud_of_regeneration": {
+        "title": "Cloud Of Regeneration",
+        "description": "Learn Cloud Of Regeneration.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.greater_heal": {
+        "title": "Greater Heal",
+        "description": "Learn Greater Heal.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.sunbeam": {
+        "title": "Sunbeam",
+        "description": "Learn Sunbeam.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "holy.signature.angel_wings": {
+        "title": "Angel Wings",
+        "description": "Learn Angel Wings.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "blood.opener.sanguine_awakening": {
+        "title": "Sanguine Awakening",
+        "description": "Open the Blood school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.tier.hemo_path": {
+        "title": "Hemo Path",
+        "description": "Advance through tier 1 of the Blood path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.tier.sanguine_path": {
+        "title": "Sanguine Path",
+        "description": "Advance through tier 2 of the Blood path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fermented_spider_eye"
+            }
+        }
+    },
+    "blood.tier.exsanguine_path": {
+        "title": "Exsanguine Path",
+        "description": "Advance through tier 3 of the Blood path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:wither_skeleton_skull"
+            }
+        }
+    },
+    "blood.signature.acupuncture": {
+        "title": "Acupuncture",
+        "description": "Learn Acupuncture.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.blood_needles": {
+        "title": "Blood Needles",
+        "description": "Learn Blood Needles.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.blood_slash": {
+        "title": "Blood Slash",
+        "description": "Learn Blood Slash.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.blood_step": {
+        "title": "Blood Step",
+        "description": "Learn Blood Step.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.devour": {
+        "title": "Devour",
+        "description": "Learn Devour.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.heartstop": {
+        "title": "Heartstop",
+        "description": "Learn Heartstop.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.raise_dead": {
+        "title": "Raise Dead",
+        "description": "Learn Raise Dead.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.ray_of_siphoning": {
+        "title": "Ray Of Siphoning",
+        "description": "Learn Ray Of Siphoning.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.wither_skull": {
+        "title": "Wither Skull",
+        "description": "Learn Wither Skull.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:redstone"
+            }
+        }
+    },
+    "blood.signature.sacrifice": {
+        "title": "Sacrifice",
+        "description": "Learn Sacrifice.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:snowball"
+            }
+        }
+    },
+    "ender.opener.void_awakening": {
+        "title": "Void Awakening",
+        "description": "Open the Ender school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.tier.void_path": {
+        "title": "Void Path",
+        "description": "Advance through tier 1 of the Ender path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:chorus_fruit"
+            }
+        }
+    },
+    "ender.tier.rift_path": {
+        "title": "Rift Path",
+        "description": "Advance through tier 2 of the Ender path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:end_crystal"
+            }
+        }
+    },
+    "ender.tier.abyss_path": {
+        "title": "Abyss Path",
+        "description": "Advance through tier 3 of the Ender path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_eye"
+            }
+        }
+    },
+    "ender.signature.magic_arrow": {
+        "title": "Magic Arrow",
+        "description": "Learn Magic Arrow.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.magic_missile": {
+        "title": "Magic Missile",
+        "description": "Learn Magic Missile.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.teleport": {
+        "title": "Teleport",
+        "description": "Learn Teleport.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.summon_ender_chest": {
+        "title": "Summon Ender Chest",
+        "description": "Learn Summon Ender Chest.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.starfall": {
+        "title": "Starfall",
+        "description": "Learn Starfall.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.recall": {
+        "title": "Recall",
+        "description": "Learn Recall.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.portal": {
+        "title": "Portal",
+        "description": "Learn Portal.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.evasion": {
+        "title": "Evasion",
+        "description": "Learn Evasion.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.shadow_slash": {
+        "title": "Shadow Slash",
+        "description": "Learn Shadow Slash.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.echoing_strikes": {
+        "title": "Echoing Strikes",
+        "description": "Learn Echoing Strikes.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.dragon_breath": {
+        "title": "Dragon Breath",
+        "description": "Learn Dragon Breath.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.black_hole": {
+        "title": "Black Hole",
+        "description": "Learn Black Hole.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.summon_swords": {
+        "title": "Summon Swords",
+        "description": "Learn Summon Swords.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.counterspell": {
+        "title": "Counterspell",
+        "description": "Learn Counterspell.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "evocation.opener.trick_awakening": {
+        "title": "Trick Awakening",
+        "description": "Open the Evocation school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.tier.trick_path": {
+        "title": "Trick Path",
+        "description": "Advance through tier 1 of the Evocation path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.tier.illusion_path": {
+        "title": "Illusion Path",
+        "description": "Advance through tier 2 of the Evocation path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:goat_horn"
+            }
+        }
+    },
+    "evocation.tier.mastery_path": {
+        "title": "Mastery Path",
+        "description": "Advance through tier 3 of the Evocation path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.gust": {
+        "title": "Gust",
+        "description": "Learn Gust.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.shield": {
+        "title": "Shield",
+        "description": "Learn Shield.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.slow": {
+        "title": "Slow",
+        "description": "Learn Slow.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.throw": {
+        "title": "Throw",
+        "description": "Learn Throw.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.firecracker": {
+        "title": "Firecracker",
+        "description": "Learn Firecracker.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.invisibility": {
+        "title": "Invisibility",
+        "description": "Learn Invisibility.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.spectral_hammer": {
+        "title": "Spectral Hammer",
+        "description": "Learn Spectral Hammer.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.fang_strike": {
+        "title": "Fang Strike",
+        "description": "Learn Fang Strike.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.fang_ward": {
+        "title": "Fang Ward",
+        "description": "Learn Fang Ward.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.arrow_volley": {
+        "title": "Arrow Volley",
+        "description": "Learn Arrow Volley.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.summon_horse": {
+        "title": "Summon Horse",
+        "description": "Learn Summon Horse.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.chain_creeper": {
+        "title": "Chain Creeper",
+        "description": "Learn Chain Creeper.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.lob_creeper": {
+        "title": "Lob Creeper",
+        "description": "Learn Lob Creeper.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.summon_vex": {
+        "title": "Summon Vex",
+        "description": "Learn Summon Vex.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.arcane_shackle": {
+        "title": "Arcane Shackle",
+        "description": "Learn Arcane Shackle.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.wololo": {
+        "title": "Wololo",
+        "description": "Learn Wololo.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "evocation.signature.fang_swirl": {
+        "title": "Fang Swirl",
+        "description": "Learn Fang Swirl.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:totem_of_undying"
+            }
+        }
+    },
+    "eldritch.opener.dark_awakening": {
+        "title": "Dark Awakening",
+        "description": "Open the Eldritch school.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.tier.dark_path": {
+        "title": "Dark Path",
+        "description": "Advance through tier 1 of the Eldritch path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.tier.void_gaze_path": {
+        "title": "Void Gaze Path",
+        "description": "Advance through tier 2 of the Eldritch path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:sculk"
+            }
+        }
+    },
+    "eldritch.tier.abyssal_path": {
+        "title": "Abyssal Path",
+        "description": "Advance through tier 3 of the Eldritch path.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:sculk_catalyst"
+            }
+        }
+    },
+    "eldritch.signature.eldritch_blast": {
+        "title": "Eldritch Blast",
+        "description": "Learn Eldritch Blast.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.planar_sight": {
+        "title": "Planar Sight",
+        "description": "Learn Planar Sight.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.telekinesis": {
+        "title": "Telekinesis",
+        "description": "Learn Telekinesis.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.sonic_boom": {
+        "title": "Sonic Boom",
+        "description": "Learn Sonic Boom.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.abyssal_shroud": {
+        "title": "Abyssal Shroud",
+        "description": "Learn Abyssal Shroud.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.sculk_tentacles": {
+        "title": "Sculk Tentacles",
+        "description": "Learn Sculk Tentacles.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.pocket_dimension": {
+        "title": "Pocket Dimension",
+        "description": "Learn Pocket Dimension.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    }
+}

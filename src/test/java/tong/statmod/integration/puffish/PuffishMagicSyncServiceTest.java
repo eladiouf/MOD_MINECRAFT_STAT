@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PuffishMagicSyncServiceTest {
     @Test
-    void mirrorsMagicCategoriesPointsAndUnlockedNodes() {
+    void mirrorsMagicNodesIntoTheUnifiedMagicCategory() {
         PlayerStatData data = new PlayerStatData();
         data.setArcanePoints(4);
         data.setSchoolPoints(MagicBranch.FIRE, 2);
@@ -21,22 +21,13 @@ class PuffishMagicSyncServiceTest {
         FakeGateway gateway = new FakeGateway();
         PuffishMagicSyncService.sync(data, gateway);
 
-        assertTrue(gateway.operations.contains("category:statmod:statmod_magic_common"));
-        assertTrue(gateway.operations.contains("category:statmod:statmod_magic_fire"));
-        assertTrue(gateway.operations.contains("category:statmod:statmod_magic_locked"));
+        assertTrue(gateway.operations.contains("category:statmod:statmod_magic"));
+        assertTrue(gateway.operations.contains("points:statmod:statmod_magic:6"));
 
-        assertTrue(gateway.operations.contains("points:statmod:statmod_magic_common:4"));
-        assertTrue(gateway.operations.contains("points:statmod:statmod_magic_fire:2"));
-        assertTrue(gateway.operations.contains("points:statmod:statmod_magic_locked:0"));
-
-        assertTrue(gateway.operations.contains(
-                "unlock:statmod:statmod_magic_common:common.foundation.arcane_focus"));
-        assertTrue(gateway.operations.contains(
-                "unlock:statmod:statmod_magic_fire:fire.opener.ignition"));
-        assertTrue(gateway.operations.contains(
-                "lock:statmod:statmod_magic_common:common.foundation.mana_well"));
-        assertTrue(gateway.operations.contains(
-                "lock:statmod:statmod_magic_locked:blood.locked.anchor"));
+        assertTrue(gateway.operations.contains("unlock:statmod:statmod_magic:common.foundation.arcane_focus"));
+        assertTrue(gateway.operations.contains("unlock:statmod:statmod_magic:fire.opener.ignition"));
+        assertTrue(gateway.operations.contains("lock:statmod:statmod_magic:common.foundation.mana_well"));
+        assertTrue(gateway.operations.contains("lock:statmod:statmod_magic:water.opener.ice_awakening"));
     }
 
     static final class FakeGateway implements PuffishMirrorGateway {

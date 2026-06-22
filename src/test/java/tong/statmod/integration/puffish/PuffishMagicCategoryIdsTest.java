@@ -13,18 +13,19 @@ class PuffishMagicCategoryIdsTest {
     }
 
     @Test
-    void common_skill_in_common_category() {
-        assertEquals("statmod:statmod_magic_common",
+    void every_magic_node_maps_into_the_unified_magic_category() {
+        assertEquals("statmod:statmod_magic",
                 PuffishMagicCategoryIds.categoryFor("common/foundation/arcane_focus"));
-        assertEquals("statmod:statmod_magic_fire",
+        assertEquals("statmod:statmod_magic",
                 PuffishMagicCategoryIds.categoryFor("fire/opener/ignition"));
-        assertEquals("statmod:statmod_magic_locked",
-                PuffishMagicCategoryIds.categoryFor("blood/locked/anchor"));
+        assertEquals("statmod:statmod_magic",
+                PuffishMagicCategoryIds.categoryFor("blood/opener/sanguine_awakening"));
     }
 
     @Test
     void unknown_skill_returns_null() {
         assertNull(PuffishMagicCategoryIds.fromSkillId(null));
         assertNull(PuffishMagicCategoryIds.fromSkillId(""));
+        assertNull(PuffishMagicCategoryIds.categoryFor("unknown/path"));
     }
 }

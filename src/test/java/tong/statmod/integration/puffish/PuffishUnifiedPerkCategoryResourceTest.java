@@ -31,6 +31,14 @@ class PuffishUnifiedPerkCategoryResourceTest {
         }
     }
 
+    @Test
+    void legacy_split_perk_categoriesAreRemoved() throws Exception {
+        try (InputStream stream = PuffishUnifiedPerkCategoryResourceTest.class.getClassLoader()
+                .getResourceAsStream("data/statmod/puffish_skills/categories/frontline_physical_combat/category.json")) {
+            assertTrue(stream == null, "legacy split perk categories should be removed");
+        }
+    }
+
     private static void assertHas(ClassLoader loader, String path) throws Exception {
         try (InputStream stream = loader.getResourceAsStream(path)) {
             assertNotNull(stream, path);

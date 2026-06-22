@@ -13,16 +13,11 @@ public final class PuffishMagicSyncService {
             return;
         }
 
-        gateway.ensureCategoryUnlocked(PuffishMagicCategoryIds.COMMON_CATEGORY);
-        gateway.ensureCategoryUnlocked(PuffishMagicCategoryIds.FIRE_CATEGORY);
-        gateway.ensureCategoryUnlocked(PuffishMagicCategoryIds.LOCKED_CATEGORY);
-
-        gateway.setPoints(PuffishMagicCategoryIds.COMMON_CATEGORY, data.getArcanePoints());
-        gateway.setPoints(PuffishMagicCategoryIds.FIRE_CATEGORY, data.getSchoolPoints(MagicBranch.FIRE));
-        gateway.setPoints(PuffishMagicCategoryIds.LOCKED_CATEGORY, 0);
+        String categoryId = PuffishMagicCategoryIds.UNIFIED_CATEGORY;
+        gateway.ensureCategoryUnlocked(categoryId);
+        gateway.setPoints(categoryId, totalAvailableMagicPoints(data));
 
         for (MagicNode node : MagicTreeCatalog.all()) {
-            String categoryId = PuffishMagicCategoryIds.categoryFor(node.id());
             String skillId = PuffishMagicCategoryIds.toSkillId(node.id());
             if (categoryId == null || skillId == null) {
                 continue;
@@ -34,5 +29,16 @@ public final class PuffishMagicSyncService {
                 gateway.lock(categoryId, skillId);
             }
         }
+    }
+
+    static int totalAvailableMagicPoints(PlayerStatData data) {
+        int total = data == null ? 0 : data.getArcanePoints();
+        if (data == null) {
+            return total;
+        }
+        for (MagicBranch branch : MagicBranch.values()) {
+            total += data.getSchoolPoints(branch);
+        }
+        return total;
     }
 }

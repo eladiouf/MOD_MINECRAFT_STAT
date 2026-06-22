@@ -44,7 +44,7 @@ public final class PuffishSkillsCompat {
                         if (isSyncing(player)) return;
                         PlayerStatData data = player.getData(ModAttachments.STATS);
 
-                        if (categoryId != null && categoryId.startsWith("statmod:statmod_magic_")) {
+                        if (categoryId != null && categoryId.startsWith("statmod:statmod_magic")) {
                             String nodeId = PuffishMagicCategoryIds.fromSkillId(skillId);
                             MagicNode node = MagicTreeCatalog.byId(nodeId);
                             if (node == null) return;
@@ -79,6 +79,10 @@ public final class PuffishSkillsCompat {
             registerEvent("net.puffish.skillsmod.api.Events$SkillLock", "registerSkillLockEvent",
                     (player, categoryId, skillId) -> {
                         if (isSyncing(player)) {
+                            return;
+                        }
+                        if (categoryId != null && categoryId.startsWith("statmod:statmod_magic")) {
+                            SyncHelper.syncMagic(player);
                             return;
                         }
                         SyncHelper.syncPerks(player);

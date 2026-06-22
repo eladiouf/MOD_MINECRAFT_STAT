@@ -16,6 +16,7 @@ import tong.statmod.integration.TensuraEventSubscriber;
 import tong.statmod.integration.epicfight.EpicFightCompat;
 import tong.statmod.integration.parcool.ParcoolCompat;
 import tong.statmod.integration.ironspells.IronSpellsCompat;
+import tong.statmod.integration.ironspells.bridge.TensuraSpellWrapperRegistry;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.tensura.MagiculeScalingHandler;
 import tong.statmod.integration.tensura.RacePhysicalEffects;
@@ -48,6 +49,7 @@ public class STATMod {
         ModItems.register(modBus);
         ModSounds.register(modBus);
         ModLootModifiers.register(modBus);
+        TensuraSpellWrapperRegistry.register(modBus);
         NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->
                 StatCommands.register(event.getDispatcher()));
         NeoForge.EVENT_BUS.register(CombatXPHandler.class);

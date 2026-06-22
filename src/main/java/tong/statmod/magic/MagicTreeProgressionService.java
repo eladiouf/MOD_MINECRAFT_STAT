@@ -1,6 +1,9 @@
 package tong.statmod.magic;
 
 import net.minecraft.world.entity.player.Player;
+import tong.statmod.integration.ironspells.bridge.TensuraSpellWrapperRegistry;
+import tong.statmod.integration.ironspells.bridge.TensuraWrapperIds;
+import tong.statmod.integration.tensura.TensuraSkillIds;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.ArrayList;
@@ -43,9 +46,21 @@ public final class MagicTreeProgressionService {
         }
         data.addMagicNode(node.id());
         List<String> newlyLearned = new ArrayList<>();
+        List<String> wrapperIdsAdded = new ArrayList<>();
         for (String spell : node.learnedSpells()) {
             if (data.learnSpell(spell)) {
                 newlyLearned.add(spell);
+                // Pour chaque skill Tensura, ajouter aussi l'ID du wrapper Iron's Spellbooks
+                // afin qu'il soit visible dans l'inscription menu (reverse bridge).
+                if (spell != null && spell.startsWith("tensura:")) {
+                    String canonical = TensuraSkillIds.canonicalize(spell);
+                    if (TensuraSpellWrapperRegistry.hasWrapperFor(canonical)) {
+                        String wrapperId = TensuraWrapperIds.wrapperIdFor(canonical);
+                        if (data.learnSpell(wrapperId)) {
+                            wrapperIdsAdded.add(wrapperId);
+                        }
+                    }
+                }
             }
         }
         MagicNodeRuntimeRewards.GrantSummary rewardSummary = MagicNodeRuntimeRewards.apply(newlyLearned, tensuraGrantSink);
@@ -57,6 +72,9 @@ public final class MagicTreeProgressionService {
         }
         if (tensuraGrantSink != null && rewardSummary.tensuraGranted() < expectedTensuraRewards) {
             rollbackUnlock(data, node, adjusted, newlyLearned);
+            for (String wrapperId : wrapperIdsAdded) {
+                data.forgetSpell(wrapperId);
+            }
             return UnlockResult.fail(MagicEligibilityResolver.Failure.RUNTIME_GRANT_FAILED);
         }
         return UnlockResult.ok(adjusted);

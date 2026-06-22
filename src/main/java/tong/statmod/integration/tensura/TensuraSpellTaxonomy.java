@@ -3,6 +3,7 @@ package tong.statmod.integration.tensura;
 import tong.statmod.stats.StatType;
 import tong.statmod.perks.PerkTier;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,16 @@ public final class TensuraSpellTaxonomy {
     );
 
     private TensuraSpellTaxonomy() {}
+
+    /** Snapshot of every Tensura skill profile registered in the taxonomy. */
+    public static Collection<TensuraSpellProfile> allProfiles() {
+        return Collections.unmodifiableCollection(PROFILES.values());
+    }
+
+    /** All registered Tensura skill IDs in deterministic insertion order. */
+    public static Collection<String> allSkillIds() {
+        return Collections.unmodifiableCollection(PROFILES.keySet());
+    }
 
     private static Map.Entry<String, TensuraSpellProfile> entry(
             String skillId,

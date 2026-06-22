@@ -1,9 +1,9 @@
 package tong.statmod.magic;
 
 import net.minecraft.world.entity.player.Player;
-import tong.statmod.integration.ironspells.bridge.TensuraSpellWrapperRegistry;
 import tong.statmod.integration.ironspells.bridge.TensuraWrapperIds;
 import tong.statmod.integration.tensura.TensuraSkillIds;
+import tong.statmod.integration.tensura.TensuraSpellTaxonomy;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public final class MagicTreeProgressionService {
                 // afin qu'il soit visible dans l'inscription menu (reverse bridge).
                 if (spell != null && spell.startsWith("tensura:")) {
                     String canonical = TensuraSkillIds.canonicalize(spell);
-                    if (TensuraSpellWrapperRegistry.hasWrapperFor(canonical)) {
+                    if (TensuraSpellTaxonomy.profile(canonical) != null) {
                         String wrapperId = TensuraWrapperIds.wrapperIdFor(canonical);
                         if (data.learnSpell(wrapperId)) {
                             wrapperIdsAdded.add(wrapperId);

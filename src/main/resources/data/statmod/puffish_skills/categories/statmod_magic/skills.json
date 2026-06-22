@@ -41,38 +41,38 @@
         "definition": "fire.tier.inferno_path"
     },
     "fire.signature.firebolt": {
-        "x": 525,
-        "y": 385,
+        "x": 752,
+        "y": 704,
         "definition": "fire.signature.firebolt"
     },
     "fire.signature.tensura_fire_bolt": {
-        "x": 579,
-        "y": 307,
+        "x": 805,
+        "y": 625,
         "definition": "fire.signature.tensura_fire_bolt"
     },
     "fire.signature.burning_dash": {
-        "x": 366,
-        "y": 335,
+        "x": 593,
+        "y": 654,
         "definition": "fire.signature.burning_dash"
     },
     "fire.signature.fireball": {
-        "x": 419,
-        "y": 256,
+        "x": 646,
+        "y": 575,
         "definition": "fire.signature.fireball"
     },
     "fire.signature.tensura_fire_storm": {
-        "x": 472,
-        "y": 177,
+        "x": 699,
+        "y": 496,
         "definition": "fire.signature.tensura_fire_storm"
     },
     "fire.signature.fire_breath": {
-        "x": 259,
-        "y": 206,
+        "x": 539,
+        "y": 446,
         "definition": "fire.signature.fire_breath"
     },
     "fire.signature.tensura_hellfire": {
-        "x": 313,
-        "y": 128,
+        "x": 593,
+        "y": 368,
         "definition": "fire.signature.tensura_hellfire"
     },
     "water.opener.ice_awakening": {
@@ -96,63 +96,63 @@
         "definition": "water.tier.glacier_path"
     },
     "water.signature.snowball": {
-        "x": 1449,
-        "y": 228,
+        "x": 1649,
+        "y": 349,
         "definition": "water.signature.snowball"
     },
     "water.signature.icicle": {
-        "x": 1502,
-        "y": 307,
+        "x": 1703,
+        "y": 428,
         "definition": "water.signature.icicle"
     },
     "water.signature.cone_of_cold": {
-        "x": 1556,
-        "y": 385,
+        "x": 1756,
+        "y": 507,
         "definition": "water.signature.cone_of_cold"
     },
     "water.signature.frost_step": {
-        "x": 1609,
-        "y": 464,
+        "x": 1809,
+        "y": 586,
         "definition": "water.signature.frost_step"
     },
     "water.signature.ray_of_frost": {
-        "x": 1581,
-        "y": 138,
+        "x": 1808,
+        "y": 299,
         "definition": "water.signature.ray_of_frost"
     },
     "water.signature.frostwave": {
-        "x": 1634,
-        "y": 217,
+        "x": 1861,
+        "y": 378,
         "definition": "water.signature.frostwave"
     },
     "water.signature.ice_spikes": {
-        "x": 1688,
-        "y": 295,
+        "x": 1914,
+        "y": 457,
         "definition": "water.signature.ice_spikes"
     },
     "water.signature.ice_block": {
-        "x": 1741,
-        "y": 374,
+        "x": 1968,
+        "y": 535,
         "definition": "water.signature.ice_block"
     },
     "water.signature.blizzard": {
-        "x": 1714,
-        "y": 49,
+        "x": 1968,
+        "y": 249,
         "definition": "water.signature.blizzard"
     },
     "water.signature.frostbite": {
-        "x": 1767,
-        "y": 128,
+        "x": 2021,
+        "y": 328,
         "definition": "water.signature.frostbite"
     },
     "water.signature.ice_tomb": {
-        "x": 1821,
-        "y": 206,
+        "x": 2074,
+        "y": 407,
         "definition": "water.signature.ice_tomb"
     },
     "water.signature.summon_polar_bear": {
-        "x": 1874,
-        "y": 285,
+        "x": 2127,
+        "y": 486,
         "definition": "water.signature.summon_polar_bear"
     },
     "air.opener.spark_awakening": {
@@ -176,53 +176,53 @@
         "definition": "air.tier.thunder_path"
     },
     "air.signature.charge": {
-        "x": 398,
-        "y": 989,
+        "x": 704,
+        "y": 1359,
         "definition": "air.signature.charge"
     },
     "air.signature.volt_strike": {
-        "x": 380,
-        "y": 903,
+        "x": 686,
+        "y": 1272,
         "definition": "air.signature.volt_strike"
     },
     "air.signature.lightning_bolt": {
-        "x": 362,
-        "y": 817,
+        "x": 669,
+        "y": 1186,
         "definition": "air.signature.lightning_bolt"
     },
     "air.signature.chain_lightning": {
-        "x": 249,
-        "y": 1064,
+        "x": 547,
+        "y": 1391,
         "definition": "air.signature.chain_lightning"
     },
     "air.signature.electrocute": {
-        "x": 232,
-        "y": 978,
+        "x": 529,
+        "y": 1304,
         "definition": "air.signature.electrocute"
     },
     "air.signature.shockwave": {
-        "x": 214,
-        "y": 892,
+        "x": 512,
+        "y": 1218,
         "definition": "air.signature.shockwave"
     },
     "air.signature.lightning_lance": {
-        "x": 197,
-        "y": 806,
+        "x": 494,
+        "y": 1132,
         "definition": "air.signature.lightning_lance"
     },
     "air.signature.thunderstorm": {
-        "x": 84,
-        "y": 1053,
+        "x": 381,
+        "y": 1379,
         "definition": "air.signature.thunderstorm"
     },
     "air.signature.ball_lightning": {
-        "x": 66,
-        "y": 967,
+        "x": 364,
+        "y": 1293,
         "definition": "air.signature.ball_lightning"
     },
     "air.signature.ascension": {
-        "x": 48,
-        "y": 881,
+        "x": 346,
+        "y": 1207,
         "definition": "air.signature.ascension"
     },
     "earth.opener.nature_awakening": {
@@ -246,68 +246,68 @@
         "definition": "earth.tier.grand_nature_path"
     },
     "earth.signature.poison_arrow": {
-        "x": 1726,
-        "y": 774,
+        "x": 2033,
+        "y": 884,
         "definition": "earth.signature.poison_arrow"
     },
     "earth.signature.poison_splash": {
-        "x": 1709,
-        "y": 860,
+        "x": 2015,
+        "y": 971,
         "definition": "earth.signature.poison_splash"
     },
     "earth.signature.root": {
-        "x": 1691,
-        "y": 946,
+        "x": 1998,
+        "y": 1057,
         "definition": "earth.signature.root"
     },
     "earth.signature.oakskin": {
-        "x": 1674,
-        "y": 1032,
+        "x": 1980,
+        "y": 1143,
         "definition": "earth.signature.oakskin"
     },
     "earth.signature.acid_orb": {
-        "x": 1892,
-        "y": 763,
+        "x": 2190,
+        "y": 916,
         "definition": "earth.signature.acid_orb"
     },
     "earth.signature.poison_breath": {
-        "x": 1875,
-        "y": 849,
+        "x": 2172,
+        "y": 1003,
         "definition": "earth.signature.poison_breath"
     },
     "earth.signature.stomp": {
-        "x": 1857,
-        "y": 935,
+        "x": 2155,
+        "y": 1089,
         "definition": "earth.signature.stomp"
     },
     "earth.signature.spider_aspect": {
-        "x": 1839,
-        "y": 1021,
+        "x": 2137,
+        "y": 1175,
         "definition": "earth.signature.spider_aspect"
     },
     "earth.signature.firefly_swarm": {
-        "x": 1822,
-        "y": 1107,
+        "x": 2119,
+        "y": 1261,
         "definition": "earth.signature.firefly_swarm"
     },
     "earth.signature.blight": {
-        "x": 2040,
-        "y": 838,
+        "x": 2329,
+        "y": 1035,
         "definition": "earth.signature.blight"
     },
     "earth.signature.earthquake": {
-        "x": 2023,
-        "y": 924,
+        "x": 2312,
+        "y": 1121,
         "definition": "earth.signature.earthquake"
     },
     "earth.signature.gluttony": {
-        "x": 2005,
-        "y": 1010,
+        "x": 2294,
+        "y": 1207,
         "definition": "earth.signature.gluttony"
     },
     "earth.signature.touch_dig": {
-        "x": 1988,
-        "y": 1096,
+        "x": 2276,
+        "y": 1293,
         "definition": "earth.signature.touch_dig"
     },
     "holy.opener.light_awakening": {
@@ -331,68 +331,68 @@
         "definition": "holy.tier.divine_path"
     },
     "holy.signature.heal": {
-        "x": 450,
-        "y": 1493,
+        "x": 788,
+        "y": 1801,
         "definition": "holy.signature.heal"
     },
     "holy.signature.wisp": {
-        "x": 391,
-        "y": 1424,
+        "x": 730,
+        "y": 1733,
         "definition": "holy.signature.wisp"
     },
     "holy.signature.guiding_bolt": {
-        "x": 333,
-        "y": 1356,
+        "x": 671,
+        "y": 1664,
         "definition": "holy.signature.guiding_bolt"
     },
     "holy.signature.cleanse": {
-        "x": 274,
-        "y": 1287,
+        "x": 613,
+        "y": 1596,
         "definition": "holy.signature.cleanse"
     },
     "holy.signature.healing_circle": {
-        "x": 386,
-        "y": 1665,
+        "x": 783,
+        "y": 2042,
         "definition": "holy.signature.healing_circle"
     },
     "holy.signature.haste": {
-        "x": 328,
-        "y": 1597,
+        "x": 725,
+        "y": 1973,
         "definition": "holy.signature.haste"
     },
     "holy.signature.divine_smite": {
-        "x": 269,
-        "y": 1528,
+        "x": 666,
+        "y": 1905,
         "definition": "holy.signature.divine_smite"
     },
     "holy.signature.fortify": {
-        "x": 211,
-        "y": 1460,
+        "x": 608,
+        "y": 1837,
         "definition": "holy.signature.fortify"
     },
     "holy.signature.blessing_of_life": {
-        "x": 152,
-        "y": 1391,
+        "x": 549,
+        "y": 1768,
         "definition": "holy.signature.blessing_of_life"
     },
     "holy.signature.cloud_of_regeneration": {
-        "x": 94,
-        "y": 1323,
+        "x": 491,
+        "y": 1700,
         "definition": "holy.signature.cloud_of_regeneration"
     },
     "holy.signature.greater_heal": {
-        "x": 178,
-        "y": 1666,
+        "x": 516,
+        "y": 1975,
         "definition": "holy.signature.greater_heal"
     },
     "holy.signature.sunbeam": {
-        "x": 119,
-        "y": 1598,
+        "x": 458,
+        "y": 1906,
         "definition": "holy.signature.sunbeam"
     },
     "holy.signature.angel_wings": {
-        "x": 61,
-        "y": 1530,
+        "x": 399,
+        "y": 1838,
         "definition": "holy.signature.angel_wings"
     },
     "blood.opener.sanguine_awakening": {
@@ -416,53 +416,53 @@
         "definition": "blood.tier.exsanguine_path"
     },
     "blood.signature.acupuncture": {
-        "x": 772,
-        "y": 1614,
+        "x": 1052,
+        "y": 1854,
         "definition": "blood.signature.acupuncture"
     },
     "blood.signature.blood_needles": {
-        "x": 694,
-        "y": 1586,
+        "x": 974,
+        "y": 1826,
         "definition": "blood.signature.blood_needles"
     },
     "blood.signature.blood_slash": {
-        "x": 797,
-        "y": 1793,
+        "x": 1077,
+        "y": 2033,
         "definition": "blood.signature.blood_slash"
     },
     "blood.signature.blood_step": {
-        "x": 718,
-        "y": 1764,
+        "x": 998,
+        "y": 2004,
         "definition": "blood.signature.blood_step"
     },
     "blood.signature.devour": {
-        "x": 640,
-        "y": 1736,
+        "x": 920,
+        "y": 1976,
         "definition": "blood.signature.devour"
     },
     "blood.signature.heartstop": {
-        "x": 561,
-        "y": 1707,
+        "x": 841,
+        "y": 1947,
         "definition": "blood.signature.heartstop"
     },
     "blood.signature.raise_dead": {
-        "x": 742,
-        "y": 1944,
+        "x": 1022,
+        "y": 2184,
         "definition": "blood.signature.raise_dead"
     },
     "blood.signature.ray_of_siphoning": {
-        "x": 663,
-        "y": 1915,
+        "x": 943,
+        "y": 2155,
         "definition": "blood.signature.ray_of_siphoning"
     },
     "blood.signature.wither_skull": {
-        "x": 585,
-        "y": 1887,
+        "x": 865,
+        "y": 2127,
         "definition": "blood.signature.wither_skull"
     },
     "blood.signature.sacrifice": {
-        "x": 506,
-        "y": 1858,
+        "x": 786,
+        "y": 2098,
         "definition": "blood.signature.sacrifice"
     },
     "ender.opener.void_awakening": {
@@ -486,73 +486,73 @@
         "definition": "ender.tier.abyss_path"
     },
     "ender.signature.magic_arrow": {
-        "x": 1169,
-        "y": 1680,
+        "x": 1578,
+        "y": 1920,
         "definition": "ender.signature.magic_arrow"
     },
     "ender.signature.magic_missile": {
-        "x": 1083,
-        "y": 1680,
+        "x": 1492,
+        "y": 1920,
         "definition": "ender.signature.magic_missile"
     },
     "ender.signature.teleport": {
-        "x": 997,
-        "y": 1680,
+        "x": 1406,
+        "y": 1920,
         "definition": "ender.signature.teleport"
     },
     "ender.signature.summon_ender_chest": {
-        "x": 911,
-        "y": 1680,
+        "x": 1320,
+        "y": 1920,
         "definition": "ender.signature.summon_ender_chest"
     },
     "ender.signature.starfall": {
-        "x": 1255,
-        "y": 1840,
+        "x": 1621,
+        "y": 2080,
         "definition": "ender.signature.starfall"
     },
     "ender.signature.recall": {
-        "x": 1169,
-        "y": 1840,
+        "x": 1535,
+        "y": 2080,
         "definition": "ender.signature.recall"
     },
     "ender.signature.portal": {
-        "x": 1083,
-        "y": 1840,
+        "x": 1449,
+        "y": 2080,
         "definition": "ender.signature.portal"
     },
     "ender.signature.evasion": {
-        "x": 997,
-        "y": 1840,
+        "x": 1363,
+        "y": 2080,
         "definition": "ender.signature.evasion"
     },
     "ender.signature.shadow_slash": {
-        "x": 911,
-        "y": 1840,
+        "x": 1277,
+        "y": 2080,
         "definition": "ender.signature.shadow_slash"
     },
     "ender.signature.echoing_strikes": {
-        "x": 825,
-        "y": 1840,
+        "x": 1191,
+        "y": 2080,
         "definition": "ender.signature.echoing_strikes"
     },
     "ender.signature.dragon_breath": {
-        "x": 1169,
-        "y": 2000,
+        "x": 1492,
+        "y": 2240,
         "definition": "ender.signature.dragon_breath"
     },
     "ender.signature.black_hole": {
-        "x": 1083,
-        "y": 2000,
+        "x": 1406,
+        "y": 2240,
         "definition": "ender.signature.black_hole"
     },
     "ender.signature.summon_swords": {
-        "x": 997,
-        "y": 2000,
+        "x": 1320,
+        "y": 2240,
         "definition": "ender.signature.summon_swords"
     },
     "ender.signature.counterspell": {
-        "x": 911,
-        "y": 2000,
+        "x": 1234,
+        "y": 2240,
         "definition": "ender.signature.counterspell"
     },
     "evocation.opener.trick_awakening": {
@@ -576,88 +576,88 @@
         "definition": "evocation.tier.mastery_path"
     },
     "evocation.signature.gust": {
-        "x": 1505,
-        "y": 1543,
+        "x": 1982,
+        "y": 1711,
         "definition": "evocation.signature.gust"
     },
     "evocation.signature.shield": {
-        "x": 1426,
-        "y": 1571,
+        "x": 1903,
+        "y": 1740,
         "definition": "evocation.signature.shield"
     },
     "evocation.signature.slow": {
-        "x": 1347,
-        "y": 1600,
+        "x": 1824,
+        "y": 1769,
         "definition": "evocation.signature.slow"
     },
     "evocation.signature.throw": {
-        "x": 1268,
-        "y": 1629,
+        "x": 1745,
+        "y": 1797,
         "definition": "evocation.signature.throw"
     },
     "evocation.signature.firecracker": {
-        "x": 1189,
-        "y": 1657,
+        "x": 1666,
+        "y": 1826,
         "definition": "evocation.signature.firecracker"
     },
     "evocation.signature.invisibility": {
-        "x": 1598,
-        "y": 1679,
+        "x": 1997,
+        "y": 1876,
         "definition": "evocation.signature.invisibility"
     },
     "evocation.signature.spectral_hammer": {
-        "x": 1519,
-        "y": 1707,
+        "x": 1918,
+        "y": 1904,
         "definition": "evocation.signature.spectral_hammer"
     },
     "evocation.signature.fang_strike": {
-        "x": 1440,
-        "y": 1736,
+        "x": 1839,
+        "y": 1933,
         "definition": "evocation.signature.fang_strike"
     },
     "evocation.signature.fang_ward": {
-        "x": 1362,
-        "y": 1764,
+        "x": 1760,
+        "y": 1961,
         "definition": "evocation.signature.fang_ward"
     },
     "evocation.signature.arrow_volley": {
-        "x": 1283,
-        "y": 1793,
+        "x": 1681,
+        "y": 1990,
         "definition": "evocation.signature.arrow_volley"
     },
     "evocation.signature.summon_horse": {
-        "x": 1204,
-        "y": 1821,
+        "x": 1602,
+        "y": 2019,
         "definition": "evocation.signature.summon_horse"
     },
     "evocation.signature.chain_creeper": {
-        "x": 1653,
-        "y": 1830,
+        "x": 2012,
+        "y": 2041,
         "definition": "evocation.signature.chain_creeper"
     },
     "evocation.signature.lob_creeper": {
-        "x": 1574,
-        "y": 1858,
+        "x": 1933,
+        "y": 2070,
         "definition": "evocation.signature.lob_creeper"
     },
     "evocation.signature.summon_vex": {
-        "x": 1495,
-        "y": 1887,
+        "x": 1854,
+        "y": 2098,
         "definition": "evocation.signature.summon_vex"
     },
     "evocation.signature.arcane_shackle": {
-        "x": 1417,
-        "y": 1915,
+        "x": 1775,
+        "y": 2127,
         "definition": "evocation.signature.arcane_shackle"
     },
     "evocation.signature.wololo": {
-        "x": 1338,
-        "y": 1944,
+        "x": 1697,
+        "y": 2155,
         "definition": "evocation.signature.wololo"
     },
     "evocation.signature.fang_swirl": {
-        "x": 1259,
-        "y": 1972,
+        "x": 1618,
+        "y": 2184,
         "definition": "evocation.signature.fang_swirl"
     },
     "eldritch.opener.dark_awakening": {
@@ -681,38 +681,303 @@
         "definition": "eldritch.tier.abyssal_path"
     },
     "eldritch.signature.eldritch_blast": {
-        "x": 1747,
-        "y": 1356,
+        "x": 2115,
+        "y": 1493,
         "definition": "eldritch.signature.eldritch_blast"
     },
     "eldritch.signature.planar_sight": {
-        "x": 1689,
-        "y": 1424,
+        "x": 2057,
+        "y": 1562,
         "definition": "eldritch.signature.planar_sight"
     },
     "eldritch.signature.telekinesis": {
-        "x": 1869,
-        "y": 1460,
+        "x": 2208,
+        "y": 1631,
         "definition": "eldritch.signature.telekinesis"
     },
     "eldritch.signature.sonic_boom": {
-        "x": 1811,
-        "y": 1528,
+        "x": 2149,
+        "y": 1700,
         "definition": "eldritch.signature.sonic_boom"
     },
     "eldritch.signature.abyssal_shroud": {
-        "x": 2020,
-        "y": 1530,
+        "x": 2329,
+        "y": 1735,
         "definition": "eldritch.signature.abyssal_shroud"
     },
     "eldritch.signature.sculk_tentacles": {
-        "x": 1961,
-        "y": 1598,
+        "x": 2270,
+        "y": 1804,
         "definition": "eldritch.signature.sculk_tentacles"
     },
     "eldritch.signature.pocket_dimension": {
-        "x": 1903,
-        "y": 1666,
+        "x": 2212,
+        "y": 1872,
         "definition": "eldritch.signature.pocket_dimension"
+    },
+    "fire.signature.tensura_fire_aspectual": {
+        "x": 859,
+        "y": 547,
+        "definition": "fire.signature.tensura_fire_aspectual"
+    },
+    "fire.signature.tensura_fire_ball": {
+        "x": 912,
+        "y": 468,
+        "definition": "fire.signature.tensura_fire_ball"
+    },
+    "fire.signature.tensura_fire_lance": {
+        "x": 752,
+        "y": 417,
+        "definition": "fire.signature.tensura_fire_lance"
+    },
+    "fire.signature.tensura_fire_wall": {
+        "x": 805,
+        "y": 338,
+        "definition": "fire.signature.tensura_fire_wall"
+    },
+    "water.signature.tensura_healing": {
+        "x": 1862,
+        "y": 665,
+        "definition": "water.signature.tensura_healing"
+    },
+    "water.signature.tensura_recovery": {
+        "x": 1915,
+        "y": 744,
+        "definition": "water.signature.tensura_recovery"
+    },
+    "water.signature.tensura_antidote": {
+        "x": 1969,
+        "y": 823,
+        "definition": "water.signature.tensura_antidote"
+    },
+    "water.signature.tensura_water_jail": {
+        "x": 2021,
+        "y": 614,
+        "definition": "water.signature.tensura_water_jail"
+    },
+    "water.signature.tensura_healing_rain": {
+        "x": 2074,
+        "y": 693,
+        "definition": "water.signature.tensura_healing_rain"
+    },
+    "water.signature.tensura_full_recovery": {
+        "x": 2180,
+        "y": 565,
+        "definition": "water.signature.tensura_full_recovery"
+    },
+    "air.signature.tensura_wind_gust": {
+        "x": 651,
+        "y": 1100,
+        "definition": "air.signature.tensura_wind_gust"
+    },
+    "air.signature.tensura_wind_protection": {
+        "x": 634,
+        "y": 1014,
+        "definition": "air.signature.tensura_wind_protection"
+    },
+    "air.signature.tensura_wind_blade": {
+        "x": 616,
+        "y": 927,
+        "definition": "air.signature.tensura_wind_blade"
+    },
+    "air.signature.tensura_tornado_blade": {
+        "x": 477,
+        "y": 1046,
+        "definition": "air.signature.tensura_tornado_blade"
+    },
+    "air.signature.tensura_wind_cutter": {
+        "x": 459,
+        "y": 959,
+        "definition": "air.signature.tensura_wind_cutter"
+    },
+    "air.signature.tensura_lightning_lance": {
+        "x": 328,
+        "y": 1121,
+        "definition": "air.signature.tensura_lightning_lance"
+    },
+    "air.signature.tensura_aerial_blade": {
+        "x": 311,
+        "y": 1035,
+        "definition": "air.signature.tensura_aerial_blade"
+    },
+    "earth.signature.tensura_earth_wall": {
+        "x": 1962,
+        "y": 1229,
+        "definition": "earth.signature.tensura_earth_wall"
+    },
+    "earth.signature.tensura_earth_lock": {
+        "x": 1945,
+        "y": 1315,
+        "definition": "earth.signature.tensura_earth_lock"
+    },
+    "earth.signature.tensura_earth_spikes": {
+        "x": 1927,
+        "y": 1402,
+        "definition": "earth.signature.tensura_earth_spikes"
+    },
+    "earth.signature.tensura_earth_jail": {
+        "x": 2102,
+        "y": 1347,
+        "definition": "earth.signature.tensura_earth_jail"
+    },
+    "earth.signature.tensura_earth_storm": {
+        "x": 2084,
+        "y": 1434,
+        "definition": "earth.signature.tensura_earth_storm"
+    },
+    "earth.signature.tensura_magma_surge": {
+        "x": 2259,
+        "y": 1379,
+        "definition": "earth.signature.tensura_magma_surge"
+    },
+    "holy.signature.tensura_magic_wall": {
+        "x": 554,
+        "y": 1527,
+        "definition": "holy.signature.tensura_magic_wall"
+    },
+    "holy.signature.tensura_barrier": {
+        "x": 496,
+        "y": 1459,
+        "definition": "holy.signature.tensura_barrier"
+    },
+    "holy.signature.tensura_reinforced_barrier": {
+        "x": 432,
+        "y": 1631,
+        "definition": "holy.signature.tensura_reinforced_barrier"
+    },
+    "holy.signature.tensura_anti_shock_area": {
+        "x": 374,
+        "y": 1563,
+        "definition": "holy.signature.tensura_anti_shock_area"
+    },
+    "holy.signature.tensura_magic_barrier": {
+        "x": 315,
+        "y": 1495,
+        "definition": "holy.signature.tensura_magic_barrier"
+    },
+    "holy.signature.tensura_healthcare": {
+        "x": 257,
+        "y": 1426,
+        "definition": "holy.signature.tensura_healthcare"
+    },
+    "holy.signature.tensura_multilayer_barrier": {
+        "x": 341,
+        "y": 1770,
+        "definition": "holy.signature.tensura_multilayer_barrier"
+    },
+    "holy.signature.tensura_anti_magic_area": {
+        "x": 282,
+        "y": 1701,
+        "definition": "holy.signature.tensura_anti_magic_area"
+    },
+    "ender.signature.tensura_lighten": {
+        "x": 1234,
+        "y": 1920,
+        "definition": "ender.signature.tensura_lighten"
+    },
+    "ender.signature.tensura_float": {
+        "x": 1148,
+        "y": 1920,
+        "definition": "ender.signature.tensura_float"
+    },
+    "ender.signature.tensura_escape": {
+        "x": 1062,
+        "y": 1920,
+        "definition": "ender.signature.tensura_escape"
+    },
+    "ender.signature.tensura_warp_portal": {
+        "x": 1105,
+        "y": 2080,
+        "definition": "ender.signature.tensura_warp_portal"
+    },
+    "ender.signature.tensura_teleport": {
+        "x": 1019,
+        "y": 2080,
+        "definition": "ender.signature.tensura_teleport"
+    },
+    "ender.signature.tensura_gate": {
+        "x": 1148,
+        "y": 2240,
+        "definition": "ender.signature.tensura_gate"
+    },
+    "evocation.signature.tensura_analyze": {
+        "x": 1588,
+        "y": 1854,
+        "definition": "evocation.signature.tensura_analyze"
+    },
+    "evocation.signature.tensura_search_enemy": {
+        "x": 1509,
+        "y": 1883,
+        "definition": "evocation.signature.tensura_search_enemy"
+    },
+    "evocation.signature.tensura_doppelganger": {
+        "x": 1430,
+        "y": 1911,
+        "definition": "evocation.signature.tensura_doppelganger"
+    },
+    "evocation.signature.tensura_magic_aura": {
+        "x": 1351,
+        "y": 1940,
+        "definition": "evocation.signature.tensura_magic_aura"
+    },
+    "evocation.signature.tensura_magic_bullet": {
+        "x": 1272,
+        "y": 1969,
+        "definition": "evocation.signature.tensura_magic_bullet"
+    },
+    "evocation.signature.tensura_clairvoyance": {
+        "x": 1523,
+        "y": 2047,
+        "definition": "evocation.signature.tensura_clairvoyance"
+    },
+    "evocation.signature.tensura_spatial_storage": {
+        "x": 1444,
+        "y": 2076,
+        "definition": "evocation.signature.tensura_spatial_storage"
+    },
+    "evocation.signature.tensura_magic_space_transform": {
+        "x": 1365,
+        "y": 2104,
+        "definition": "evocation.signature.tensura_magic_space_transform"
+    },
+    "evocation.signature.tensura_dimension_cutter": {
+        "x": 1539,
+        "y": 2212,
+        "definition": "evocation.signature.tensura_dimension_cutter"
+    },
+    "evocation.signature.tensura_maximum_magic_bullet": {
+        "x": 1460,
+        "y": 2241,
+        "definition": "evocation.signature.tensura_maximum_magic_bullet"
+    },
+    "eldritch.signature.tensura_darkness": {
+        "x": 1998,
+        "y": 1630,
+        "definition": "eldritch.signature.tensura_darkness"
+    },
+    "eldritch.signature.tensura_shadow_bind": {
+        "x": 1940,
+        "y": 1698,
+        "definition": "eldritch.signature.tensura_shadow_bind"
+    },
+    "eldritch.signature.tensura_dark_cube": {
+        "x": 1881,
+        "y": 1767,
+        "definition": "eldritch.signature.tensura_dark_cube"
+    },
+    "eldritch.signature.tensura_curse_bind": {
+        "x": 2091,
+        "y": 1768,
+        "definition": "eldritch.signature.tensura_curse_bind"
+    },
+    "eldritch.signature.tensura_darkness_cannon": {
+        "x": 2032,
+        "y": 1837,
+        "definition": "eldritch.signature.tensura_darkness_cannon"
+    },
+    "eldritch.signature.tensura_true_darkness": {
+        "x": 2153,
+        "y": 1941,
+        "definition": "eldritch.signature.tensura_true_darkness"
     }
 }

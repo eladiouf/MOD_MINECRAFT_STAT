@@ -195,7 +195,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:snowball"
+                "item": "minecraft:prismarine_crystals"
             }
         }
     },
@@ -245,7 +245,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:snowball"
+                "item": "minecraft:prismarine_crystals"
             }
         }
     },
@@ -285,7 +285,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:snowball"
+                "item": "minecraft:prismarine_crystals"
             }
         }
     },
@@ -405,7 +405,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "item": "minecraft:feather"
             }
         }
     },
@@ -425,7 +425,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "item": "minecraft:feather"
             }
         }
     },
@@ -975,7 +975,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -985,7 +985,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1015,7 +1015,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1025,7 +1025,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1045,7 +1045,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1055,7 +1055,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1065,7 +1065,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1075,7 +1075,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1095,7 +1095,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1105,7 +1105,7 @@
         "icon": {
             "type": "item",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "item": "minecraft:ender_eye"
             }
         }
     },
@@ -1422,6 +1422,536 @@
     "eldritch.signature.pocket_dimension": {
         "title": "Pocket Dimension",
         "description": "Learn Pocket Dimension.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_aspectual": {
+        "title": "Tensura Fire Aspectual",
+        "description": "Learn Tensura Fire Aspectual.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_ball": {
+        "title": "Tensura Fire Ball",
+        "description": "Learn Tensura Fire Ball.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_lance": {
+        "title": "Tensura Fire Lance",
+        "description": "Learn Tensura Fire Lance.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "fire.signature.tensura_fire_wall": {
+        "title": "Tensura Fire Wall",
+        "description": "Learn Tensura Fire Wall.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_powder"
+            }
+        }
+    },
+    "water.signature.tensura_healing": {
+        "title": "Tensura Healing",
+        "description": "Learn Tensura Healing.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "water.signature.tensura_recovery": {
+        "title": "Tensura Recovery",
+        "description": "Learn Tensura Recovery.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "water.signature.tensura_antidote": {
+        "title": "Tensura Antidote",
+        "description": "Learn Tensura Antidote.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "water.signature.tensura_water_jail": {
+        "title": "Tensura Water Jail",
+        "description": "Learn Tensura Water Jail.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "water.signature.tensura_healing_rain": {
+        "title": "Tensura Healing Rain",
+        "description": "Learn Tensura Healing Rain.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:golden_apple"
+            }
+        }
+    },
+    "water.signature.tensura_full_recovery": {
+        "title": "Tensura Full Recovery",
+        "description": "Learn Tensura Full Recovery.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:prismarine_crystals"
+            }
+        }
+    },
+    "air.signature.tensura_wind_gust": {
+        "title": "Tensura Wind Gust",
+        "description": "Learn Tensura Wind Gust.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.tensura_wind_protection": {
+        "title": "Tensura Wind Protection",
+        "description": "Learn Tensura Wind Protection.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.tensura_wind_blade": {
+        "title": "Tensura Wind Blade",
+        "description": "Learn Tensura Wind Blade.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.tensura_tornado_blade": {
+        "title": "Tensura Tornado Blade",
+        "description": "Learn Tensura Tornado Blade.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.tensura_wind_cutter": {
+        "title": "Tensura Wind Cutter",
+        "description": "Learn Tensura Wind Cutter.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "air.signature.tensura_lightning_lance": {
+        "title": "Tensura Lightning Lance",
+        "description": "Learn Tensura Lightning Lance.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "air.signature.tensura_aerial_blade": {
+        "title": "Tensura Aerial Blade",
+        "description": "Learn Tensura Aerial Blade.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "earth.signature.tensura_earth_wall": {
+        "title": "Tensura Earth Wall",
+        "description": "Learn Tensura Earth Wall.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.tensura_earth_lock": {
+        "title": "Tensura Earth Lock",
+        "description": "Learn Tensura Earth Lock.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.tensura_earth_spikes": {
+        "title": "Tensura Earth Spikes",
+        "description": "Learn Tensura Earth Spikes.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.tensura_earth_jail": {
+        "title": "Tensura Earth Jail",
+        "description": "Learn Tensura Earth Jail.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.tensura_earth_storm": {
+        "title": "Tensura Earth Storm",
+        "description": "Learn Tensura Earth Storm.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "earth.signature.tensura_magma_surge": {
+        "title": "Tensura Magma Surge",
+        "description": "Learn Tensura Magma Surge.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:moss_block"
+            }
+        }
+    },
+    "holy.signature.tensura_magic_wall": {
+        "title": "Tensura Magic Wall",
+        "description": "Learn Tensura Magic Wall.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_barrier": {
+        "title": "Tensura Barrier",
+        "description": "Learn Tensura Barrier.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_reinforced_barrier": {
+        "title": "Tensura Reinforced Barrier",
+        "description": "Learn Tensura Reinforced Barrier.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_anti_shock_area": {
+        "title": "Tensura Anti Shock Area",
+        "description": "Learn Tensura Anti Shock Area.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:lightning_rod"
+            }
+        }
+    },
+    "holy.signature.tensura_magic_barrier": {
+        "title": "Tensura Magic Barrier",
+        "description": "Learn Tensura Magic Barrier.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_healthcare": {
+        "title": "Tensura Healthcare",
+        "description": "Learn Tensura Healthcare.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_multilayer_barrier": {
+        "title": "Tensura Multilayer Barrier",
+        "description": "Learn Tensura Multilayer Barrier.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "holy.signature.tensura_anti_magic_area": {
+        "title": "Tensura Anti Magic Area",
+        "description": "Learn Tensura Anti Magic Area.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:glowstone_dust"
+            }
+        }
+    },
+    "ender.signature.tensura_lighten": {
+        "title": "Tensura Lighten",
+        "description": "Learn Tensura Lighten.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_eye"
+            }
+        }
+    },
+    "ender.signature.tensura_float": {
+        "title": "Tensura Float",
+        "description": "Learn Tensura Float.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_eye"
+            }
+        }
+    },
+    "ender.signature.tensura_escape": {
+        "title": "Tensura Escape",
+        "description": "Learn Tensura Escape.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_eye"
+            }
+        }
+    },
+    "ender.signature.tensura_warp_portal": {
+        "title": "Tensura Warp Portal",
+        "description": "Learn Tensura Warp Portal.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.tensura_teleport": {
+        "title": "Tensura Teleport",
+        "description": "Learn Tensura Teleport.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_pearl"
+            }
+        }
+    },
+    "ender.signature.tensura_gate": {
+        "title": "Tensura Gate",
+        "description": "Learn Tensura Gate.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:ender_eye"
+            }
+        }
+    },
+    "evocation.signature.tensura_analyze": {
+        "title": "Tensura Analyze",
+        "description": "Learn Tensura Analyze.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_search_enemy": {
+        "title": "Tensura Search Enemy",
+        "description": "Learn Tensura Search Enemy.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_doppelganger": {
+        "title": "Tensura Doppelganger",
+        "description": "Learn Tensura Doppelganger.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_magic_aura": {
+        "title": "Tensura Magic Aura",
+        "description": "Learn Tensura Magic Aura.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_magic_bullet": {
+        "title": "Tensura Magic Bullet",
+        "description": "Learn Tensura Magic Bullet.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_clairvoyance": {
+        "title": "Tensura Clairvoyance",
+        "description": "Learn Tensura Clairvoyance.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_spatial_storage": {
+        "title": "Tensura Spatial Storage",
+        "description": "Learn Tensura Spatial Storage.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_magic_space_transform": {
+        "title": "Tensura Magic Space Transform",
+        "description": "Learn Tensura Magic Space Transform.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_dimension_cutter": {
+        "title": "Tensura Dimension Cutter",
+        "description": "Learn Tensura Dimension Cutter.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "evocation.signature.tensura_maximum_magic_bullet": {
+        "title": "Tensura Maximum Magic Bullet",
+        "description": "Learn Tensura Maximum Magic Bullet.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:amethyst_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_darkness": {
+        "title": "Tensura Darkness",
+        "description": "Learn Tensura Darkness.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_shadow_bind": {
+        "title": "Tensura Shadow Bind",
+        "description": "Learn Tensura Shadow Bind.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_dark_cube": {
+        "title": "Tensura Dark Cube",
+        "description": "Learn Tensura Dark Cube.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_curse_bind": {
+        "title": "Tensura Curse Bind",
+        "description": "Learn Tensura Curse Bind.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_darkness_cannon": {
+        "title": "Tensura Darkness Cannon",
+        "description": "Learn Tensura Darkness Cannon.",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:echo_shard"
+            }
+        }
+    },
+    "eldritch.signature.tensura_true_darkness": {
+        "title": "Tensura True Darkness",
+        "description": "Learn Tensura True Darkness.",
         "icon": {
             "type": "item",
             "data": {

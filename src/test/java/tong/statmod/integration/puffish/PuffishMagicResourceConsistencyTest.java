@@ -49,6 +49,10 @@ class PuffishMagicResourceConsistencyTest {
             assertTrue(json.contains("\"water.signature.blizzard\""));
             assertTrue(json.contains("\"blood.signature.sacrifice\""));
             assertTrue(json.contains("\"eldritch.signature.pocket_dimension\""));
+            assertTrue(json.contains("\"holy.signature.tensura_magic_barrier\""));
+            assertTrue(json.contains("\"ender.signature.tensura_teleport\""));
+            assertTrue(json.contains("\"evocation.signature.tensura_analyze\""));
+            assertTrue(json.contains("\"eldritch.signature.tensura_true_darkness\""));
             assertTrue(json.contains("\"blood.signature.sacrifice\": {\n" +
                     "        \"title\": \"Sacrifice\",\n" +
                     "        \"description\": \"Learn Sacrifice.\",\n" +

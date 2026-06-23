@@ -17,6 +17,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.zip.ZipFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.IOException;
 
 public final class PuffishMagicTreeBuilder {
     public record GeneratedCategoryFiles(
@@ -27,10 +34,26 @@ public final class PuffishMagicTreeBuilder {
     ) {}
 
     private static final Map<MagicBranch, BranchLayout> BRANCH_LAYOUTS = buildBranchLayouts();
-    private static final int CANVAS_OFFSET_X = 280;
+    private static final int CANVAS_OFFSET_X = 230;
     private static final int CANVAS_OFFSET_Y = 240;
     private static final int COMMON_CENTER_X = 760;
-    private static final int COMMON_TOP_Y = 200;
+    private static final int COMMON_TOP_Y = 80;
+    private static final int CONSTELLATION_CENTER_X = COMMON_CENTER_X;
+    private static final int CONSTELLATION_CENTER_Y = 700;
+    private static final int DEFAULT_VIEWPORT_LEFT_PADDING = 48;
+    private static final double MIN_NODE_SPACING = 46.0;
+    private static final int RELAX_ITERATIONS = 220;
+    private static final double RELAX_SPRING = 0.04;
+    private static final double RELAX_MAX_STEP = 20.0;
+    private static final int OPENER_RADIUS = 195;
+    private static final int TIER_RADIUS_STEP = 118;
+    private static final int SIGNATURE_FORWARD_OFFSET = 74;
+    private static final int SIGNATURE_ROW_DEPTH = 58;
+    private static final int SIGNATURE_SIDE_OFFSET = 52;
+    private static final int MAX_SIGNATURES_PER_ROW = 4;
+    private static final Path LIBS_DIR = Path.of("libs");
+    private static final Path RUN_MODS_DIR = Path.of("runs", "client", "mods");
+    private static final Map<String, String> DISCOVERED_SPELL_TEXTURES = discoverSpellTextures();
 
     private PuffishMagicTreeBuilder() {}
 
@@ -38,12 +61,14 @@ public final class PuffishMagicTreeBuilder {
         if (!ModList.get().isLoaded("puffish_skills") || !PuffishSkillsCompat.isLoaded()) return;
         PlayerStatData data = player.getData(ModAttachments.STATS);
         if (data == null) return;
-        try {
-            PuffishMagicSyncService.sync(data, new PuffishReflectionGateway(player));
-        } catch (Throwable t) {
-            STATMod.LOGGER.debug("Puffish magic mirror sync failed for {}: {}",
-                    player.getName().getString(), t.getMessage());
-        }
+        PuffishSkillsCompat.runGuarded(player, () -> {
+            try {
+                PuffishMagicSyncService.sync(data, new PuffishReflectionGateway(player));
+            } catch (Throwable t) {
+                STATMod.LOGGER.debug("Puffish magic mirror sync failed for {}: {}",
+                        player.getName().getString(), t.getMessage());
+            }
+        });
     }
 
     public static GeneratedCategoryFiles unifiedCategoryFiles() {
@@ -99,15 +124,12 @@ public final class PuffishMagicTreeBuilder {
             if (skillId == null) {
                 continue;
             }
+            IconSpec icon = iconFor(node);
             entries.add("    \"" + skillId + "\": {\n" +
                     "        \"title\": \"" + escape(titleFor(node)) + "\",\n" +
                     "        \"description\": \"" + escape(descriptionFor(node)) + "\",\n" +
-                    "        \"icon\": {\n" +
-                    "            \"type\": \"item\",\n" +
-                    "            \"data\": {\n" +
-                    "                \"item\": \"" + iconFor(node) + "\"\n" +
-                    "            }\n" +
-                    "        }\n" +
+                    icon.jsonBlock() + ",\n" +
+                    "        \"size\": " + formatSize(sizeFor(node)) + "\n" +
                     "    }");
         }
         return "{\n" + String.join(",\n", entries) + "\n}\n";
@@ -120,19 +142,18 @@ public final class PuffishMagicTreeBuilder {
             if (skillId == null) {
                 continue;
             }
-            for (String prerequisite : node.prerequisites()) {
-                if (MagicTreeCatalog.LOCKED_SENTINEL.equals(prerequisite)) {
-                    continue;
-                }
-                String prerequisiteSkillId = PuffishMagicCategoryIds.toSkillId(prerequisite);
-                if (prerequisiteSkillId == null) {
-                    continue;
-                }
-                pairs.add("            [\n" +
-                        "                \"" + prerequisiteSkillId + "\",\n" +
-                        "                \"" + skillId + "\"\n" +
-                        "            ]");
+            String visualParent = visualParentId(node);
+            if (visualParent == null || MagicTreeCatalog.LOCKED_SENTINEL.equals(visualParent)) {
+                continue;
             }
+            String prerequisiteSkillId = PuffishMagicCategoryIds.toSkillId(visualParent);
+            if (prerequisiteSkillId == null) {
+                continue;
+            }
+            pairs.add("            [\n" +
+                    "                \"" + prerequisiteSkillId + "\",\n" +
+                    "                \"" + skillId + "\"\n" +
+                    "            ]");
         }
         return "{\n" +
                 "    \"normal\": {\n" +
@@ -147,9 +168,9 @@ public final class PuffishMagicTreeBuilder {
         Map<String, NodePlacement> placements = new LinkedHashMap<>();
 
         place(placements, "common/foundation/arcane_focus", COMMON_CENTER_X, COMMON_TOP_Y);
-        place(placements, "common/foundation/mana_well", COMMON_CENTER_X - 70, COMMON_TOP_Y + 140);
-        place(placements, "common/foundation/cast_discipline", COMMON_CENTER_X + 70, COMMON_TOP_Y + 280);
-        place(placements, "common/foundation/multi_school_gate", COMMON_CENTER_X, COMMON_TOP_Y + 430);
+        place(placements, "common/foundation/mana_well", COMMON_CENTER_X, COMMON_TOP_Y + 130);
+        place(placements, "common/foundation/cast_discipline", COMMON_CENTER_X, COMMON_TOP_Y + 260);
+        place(placements, "common/foundation/multi_school_gate", COMMON_CENTER_X, COMMON_TOP_Y + 390);
 
         for (MagicBranch branch : MagicBranch.values()) {
             if (branch == MagicBranch.COMMON) {
@@ -158,6 +179,8 @@ public final class PuffishMagicTreeBuilder {
             placeBranch(placements, branch);
         }
 
+        relaxSignaturePlacements(placements);
+        recenterForDefaultViewport(placements);
         return placements;
     }
 
@@ -171,14 +194,13 @@ public final class PuffishMagicTreeBuilder {
         if (opener == null) {
             return;
         }
-        place(placements, opener.id(), layout.rootX(), layout.rootY());
+        int openerRadius = layout.openerRadius();
+        placePolar(placements, opener.id(), layout.angleDegrees(), openerRadius);
 
         List<MagicNode> tiers = nodesOf(branch, MagicNodeKind.BRANCH_TIER);
         for (int index = 0; index < tiers.size(); index++) {
-            int distance = 150 + index * 160;
-            place(placements, tiers.get(index).id(),
-                    offsetX(layout.rootX(), layout.directionX(), distance),
-                    offsetY(layout.rootY(), layout.directionY(), distance));
+            int radius = openerRadius + (index + 1) * layout.tierRadiusStep();
+            placePolar(placements, tiers.get(index).id(), layout.angleDegrees(), radius);
         }
 
         Map<String, List<MagicNode>> signaturesByPrereq = new LinkedHashMap<>();
@@ -187,22 +209,59 @@ public final class PuffishMagicTreeBuilder {
             signaturesByPrereq.computeIfAbsent(prerequisite, ignored -> new ArrayList<>()).add(node);
         }
 
+        int clusterIndex = 0;
+        int clusterCount = signaturesByPrereq.size();
         for (Map.Entry<String, List<MagicNode>> entry : signaturesByPrereq.entrySet()) {
             NodePlacement anchor = placements.get(entry.getKey());
             if (anchor == null) {
                 continue;
             }
-            List<MagicNode> nodes = entry.getValue();
-            double center = (nodes.size() - 1) / 2.0;
-            for (int index = 0; index < nodes.size(); index++) {
-                double lateral = (index - center) * layout.signatureSpread();
-                int x = offsetX(anchor.x(), layout.directionX(), layout.signatureForward())
-                        + offsetX(0, -layout.directionY(), lateral);
-                int y = offsetY(anchor.y(), layout.directionY(), layout.signatureForward())
-                        + offsetY(0, layout.directionX(), lateral);
-                place(placements, nodes.get(index).id(), x, y);
+            placeSignatureCluster(placements, layout, anchor, entry.getValue(), clusterIndex++, clusterCount);
+        }
+    }
+
+    private static void placeSignatureCluster(Map<String, NodePlacement> placements,
+                                              BranchLayout layout,
+                                              NodePlacement anchor,
+                                              List<MagicNode> nodes,
+                                              int clusterIndex,
+                                              int clusterCount) {
+        int localAnchorX = anchor.x() - CANVAS_OFFSET_X;
+        int localAnchorY = anchor.y() - CANVAS_OFFSET_Y;
+        double clusterOrdinal = clusterCount <= 1 ? 0.0 : clusterIndex - (clusterCount - 1) / 2.0;
+        double clusterAngle = layout.angleDegrees() + clusterOrdinal * layout.clusterFanDegrees();
+        double radialX = Math.cos(Math.toRadians(clusterAngle));
+        double radialY = Math.sin(Math.toRadians(clusterAngle));
+        double tangentX = -radialY;
+        double tangentY = radialX;
+        double sideShift = layout.signatureSideBias() * layout.signatureSideOffset()
+                + clusterOrdinal * layout.clusterTangentSeparation();
+        double baseX = localAnchorX + tangentX * sideShift;
+        double baseY = localAnchorY + tangentY * sideShift;
+
+        List<Integer> rowSizes = balancedRowSizes(nodes.size());
+        int index = 0;
+        for (int row = 0; row < rowSizes.size(); row++) {
+            int rowSize = rowSizes.get(row);
+            double forward = layout.signatureForwardOffset() + row * layout.signatureRowDepth();
+            for (int col = 0; col < rowSize; col++) {
+                double lane = (col - (rowSize - 1) / 2.0) * layout.signatureLaneStep();
+                int x = (int) Math.round(baseX + radialX * forward + tangentX * lane);
+                int y = (int) Math.round(baseY + radialY * forward + tangentY * lane);
+                place(placements, nodes.get(index++).id(), x, y);
             }
         }
+    }
+
+    private static List<Integer> balancedRowSizes(int total) {
+        int rows = Math.max(1, (int) Math.ceil(total / (double) MAX_SIGNATURES_PER_ROW));
+        int base = total / rows;
+        int remainder = total % rows;
+        List<Integer> sizes = new ArrayList<>(rows);
+        for (int row = 0; row < rows; row++) {
+            sizes.add(base + (row < remainder ? 1 : 0));
+        }
+        return sizes;
     }
 
     private static List<MagicNode> nodesOf(MagicBranch branch, MagicNodeKind kind) {
@@ -226,6 +285,128 @@ public final class PuffishMagicTreeBuilder {
 
     private static void place(Map<String, NodePlacement> placements, String nodeId, int x, int y) {
         placements.put(nodeId, new NodePlacement(x + CANVAS_OFFSET_X, y + CANVAS_OFFSET_Y));
+    }
+
+    private static void placePolar(Map<String, NodePlacement> placements, String nodeId, double angleDegrees, int radius) {
+        double radians = Math.toRadians(angleDegrees);
+        int x = CONSTELLATION_CENTER_X + (int) Math.round(Math.cos(radians) * radius);
+        int y = CONSTELLATION_CENTER_Y + (int) Math.round(Math.sin(radians) * radius);
+        place(placements, nodeId, x, y);
+    }
+
+    private static void relaxSignaturePlacements(Map<String, NodePlacement> placements) {
+        Map<String, MutablePlacement> working = new LinkedHashMap<>();
+        for (Map.Entry<String, NodePlacement> entry : placements.entrySet()) {
+            NodePlacement point = entry.getValue();
+            working.put(entry.getKey(), new MutablePlacement(point.x(), point.y(), point.x(), point.y()));
+        }
+
+        List<String> ids = new ArrayList<>(working.keySet());
+        for (int iteration = 0; iteration < RELAX_ITERATIONS; iteration++) {
+            Map<String, double[]> deltas = new LinkedHashMap<>();
+            for (String id : ids) {
+                deltas.put(id, new double[2]);
+            }
+
+            for (int i = 0; i < ids.size(); i++) {
+                String aId = ids.get(i);
+                MutablePlacement a = working.get(aId);
+                boolean aMovable = isRelaxMovable(aId);
+                for (int j = i + 1; j < ids.size(); j++) {
+                    String bId = ids.get(j);
+                    MutablePlacement b = working.get(bId);
+                    boolean bMovable = isRelaxMovable(bId);
+                    if (!aMovable && !bMovable) {
+                        continue;
+                    }
+
+                    double dx = b.x - a.x;
+                    double dy = b.y - a.y;
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance >= MIN_NODE_SPACING) {
+                        continue;
+                    }
+
+                    double nx;
+                    double ny;
+                    if (distance < 0.001) {
+                        double angle = (Math.abs(aId.hashCode() ^ bId.hashCode()) % 360) * Math.PI / 180.0;
+                        nx = Math.cos(angle);
+                        ny = Math.sin(angle);
+                        distance = 1.0;
+                    } else {
+                        nx = dx / distance;
+                        ny = dy / distance;
+                    }
+
+                    double push = MIN_NODE_SPACING - distance;
+                    double[] aDelta = deltas.get(aId);
+                    double[] bDelta = deltas.get(bId);
+                    if (aMovable && bMovable) {
+                        aDelta[0] -= nx * push * 0.5;
+                        aDelta[1] -= ny * push * 0.5;
+                        bDelta[0] += nx * push * 0.5;
+                        bDelta[1] += ny * push * 0.5;
+                    } else if (aMovable) {
+                        aDelta[0] -= nx * push;
+                        aDelta[1] -= ny * push;
+                    } else {
+                        bDelta[0] += nx * push;
+                        bDelta[1] += ny * push;
+                    }
+                }
+            }
+
+            for (String id : ids) {
+                MutablePlacement point = working.get(id);
+                if (!isRelaxMovable(id)) {
+                    continue;
+                }
+                double[] delta = deltas.get(id);
+                delta[0] += (point.originX - point.x) * RELAX_SPRING;
+                delta[1] += (point.originY - point.y) * RELAX_SPRING;
+                double step = Math.sqrt(delta[0] * delta[0] + delta[1] * delta[1]);
+                if (step > RELAX_MAX_STEP) {
+                    double scale = RELAX_MAX_STEP / step;
+                    delta[0] *= scale;
+                    delta[1] *= scale;
+                }
+                point.x += delta[0];
+                point.y += delta[1];
+            }
+        }
+
+        for (Map.Entry<String, MutablePlacement> entry : working.entrySet()) {
+            MutablePlacement point = entry.getValue();
+            placements.put(entry.getKey(), new NodePlacement(
+                    (int) Math.round(Math.max(0.0, point.x)),
+                    (int) Math.round(Math.max(0.0, point.y))));
+        }
+    }
+
+    private static boolean isRelaxMovable(String nodeId) {
+        MagicNode node = MagicTreeCatalog.byId(nodeId);
+        return node != null && node.kind() == MagicNodeKind.SIGNATURE_SPELL;
+    }
+
+    private static void recenterForDefaultViewport(Map<String, NodePlacement> placements) {
+        int minX = Integer.MAX_VALUE;
+        for (NodePlacement placement : placements.values()) {
+            minX = Math.min(minX, placement.x());
+        }
+        if (minX == Integer.MAX_VALUE) {
+            return;
+        }
+
+        int shiftX = DEFAULT_VIEWPORT_LEFT_PADDING - minX;
+        if (shiftX == 0) {
+            return;
+        }
+
+        for (Map.Entry<String, NodePlacement> entry : placements.entrySet()) {
+            NodePlacement placement = entry.getValue();
+            entry.setValue(new NodePlacement(placement.x() + shiftX, placement.y()));
+        }
     }
 
     private static boolean isRoot(MagicNode node) {
@@ -255,6 +436,12 @@ public final class PuffishMagicTreeBuilder {
         if (node == null) {
             return "Magic node";
         }
+        String base = baseDescriptionFor(node);
+        String requirements = requirementsLineFor(node);
+        return requirements.isEmpty() ? base : base + "\n\n" + requirements;
+    }
+
+    private static String baseDescriptionFor(MagicNode node) {
         return switch (node.id()) {
             case "common/foundation/arcane_focus" -> "Anchor your first arcane discipline and awaken the tree.";
             case "common/foundation/mana_well" -> "Deepen your reserves before branching into schools.";
@@ -270,24 +457,147 @@ public final class PuffishMagicTreeBuilder {
         };
     }
 
-    private static String iconFor(MagicNode node) {
+    /**
+     * Construit le bloc de requirements lisible pour le tooltip Puffish — affiche les 3 gates
+     * de stats (ARCANE_POWER + ERUDITION + tertiaire) avec leurs seuils <b>de base</b> (sans
+     * deltas race, car la spec sérialisée n'a pas accès à l'état joueur runtime). Pour le
+     * vrai check ajusté à la race, voir {@link tong.statmod.magic.MagicEligibilityResolver}.
+     */
+    private static String requirementsLineFor(MagicNode node) {
+        tong.statmod.magic.MagicNodeStatRequirements.Requirements req =
+                tong.statmod.magic.MagicNodeStatRequirements.forNode(node);
+        if (req == null) return "";
+        StringBuilder sb = new StringBuilder("Requirements:");
+        appendGate(sb, req.arcane());
+        appendGate(sb, req.erudition());
+        appendGate(sb, req.tertiary());
+        return sb.toString();
+    }
+
+    private static void appendGate(StringBuilder sb,
+                                    tong.statmod.magic.MagicNodeStatRequirements.StatGate gate) {
+        if (gate == null) return;
+        sb.append("\n• ").append(gate.stat().displayName)
+                .append(" ≥ ").append(gate.minLevel());
+    }
+
+    private static IconSpec iconFor(MagicNode node) {
         if (node == null) {
-            return "minecraft:enchanted_book";
+            return IconSpec.item("minecraft:enchanted_book");
         }
         return switch (node.id()) {
-            case "common/foundation/arcane_focus" -> "minecraft:ender_pearl";
-            case "common/foundation/mana_well" -> "minecraft:experience_bottle";
-            case "common/foundation/cast_discipline" -> "minecraft:book";
-            case "common/foundation/multi_school_gate" -> "minecraft:nether_star";
+            case "common/foundation/arcane_focus" -> IconSpec.item("minecraft:ender_pearl");
+            case "common/foundation/mana_well" -> IconSpec.item("minecraft:experience_bottle");
+            case "common/foundation/cast_discipline" -> IconSpec.item("minecraft:book");
+            case "common/foundation/multi_school_gate" -> IconSpec.item("minecraft:nether_star");
             default -> {
+                String texture = textureIconFor(node);
+                if (texture != null) {
+                    yield IconSpec.texture(texture);
+                }
                 if (node.kind() == MagicNodeKind.BRANCH_OPENER) {
-                    yield openerIcon(node.branch());
+                    yield IconSpec.item(openerIcon(node.branch()));
                 }
                 if (node.kind() == MagicNodeKind.BRANCH_TIER) {
-                    yield tierIcon(node.branch(), node.tier());
+                    yield IconSpec.item(tierIcon(node.branch(), node.tier()));
                 }
-                yield signatureIcon(node);
+                yield IconSpec.item(signatureItemFallback(node));
             }
+        };
+    }
+
+    private static String textureIconFor(MagicNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.kind() == MagicNodeKind.SIGNATURE_SPELL) {
+            for (String spellId : sortedSpellIds(node.learnedSpells())) {
+                String texture = DISCOVERED_SPELL_TEXTURES.get(spellId);
+                if (texture != null) {
+                    return texture;
+                }
+            }
+        }
+        String representativeSpellId = representativeSpellId(node);
+        return representativeSpellId == null ? null : DISCOVERED_SPELL_TEXTURES.get(representativeSpellId);
+    }
+
+    private static List<String> sortedSpellIds(Set<String> spellIds) {
+        List<String> sorted = new ArrayList<>(spellIds);
+        sorted.sort(Comparator
+                .comparingInt(PuffishMagicTreeBuilder::spellNamespacePriority)
+                .thenComparing(String::toString));
+        return sorted;
+    }
+
+    private static int spellNamespacePriority(String spellId) {
+        if (spellId == null) {
+            return Integer.MAX_VALUE;
+        }
+        String namespace = spellId.contains(":") ? spellId.substring(0, spellId.indexOf(':')) : "";
+        return switch (namespace) {
+            case "tensura" -> 0;
+            case "darkdoppelganger" -> 1;
+            case "legendarymage" -> 2;
+            case "gametechbcs_spellbooks" -> 3;
+            case "wind_spellbooks" -> 4;
+            case "spells_gone_wrong" -> 5;
+            case "irons_spellbooks" -> 6;
+            default -> 7;
+        };
+    }
+
+    private static String representativeSpellId(MagicNode node) {
+        if (node == null) {
+            return null;
+        }
+        return switch (node.branch()) {
+            case FIRE -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:firebolt";
+                case T2 -> "irons_spellbooks:fireball";
+                case T3, T4 -> "gametechbcs_spellbooks:meteor_storm";
+            };
+            case WATER -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:snowball";
+                case T2 -> "irons_spellbooks:ray_of_frost";
+                case T3, T4 -> "irons_spellbooks:blizzard";
+            };
+            case AIR -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:charge";
+                case T2 -> "irons_spellbooks:chain_lightning";
+                case T3, T4 -> "irons_spellbooks:thunderstorm";
+            };
+            case EARTH -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:poison_arrow";
+                case T2 -> "irons_spellbooks:acid_orb";
+                case T3, T4 -> "irons_spellbooks:earthquake";
+            };
+            case HOLY -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:heal";
+                case T2 -> "irons_spellbooks:healing_circle";
+                case T3, T4 -> "irons_spellbooks:sunbeam";
+            };
+            case BLOOD -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:acupuncture";
+                case T2 -> "irons_spellbooks:devour";
+                case T3, T4 -> "legendarymage:resurrection_rune";
+            };
+            case ENDER -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:magic_arrow";
+                case T2 -> "irons_spellbooks:portal";
+                case T3, T4 -> "irons_spellbooks:black_hole";
+            };
+            case EVOCATION -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:gust";
+                case T2 -> "irons_spellbooks:invisibility";
+                case T3, T4 -> "irons_spellbooks:chain_creeper";
+            };
+            case ELDRITCH -> switch (node.tier()) {
+                case T1 -> "irons_spellbooks:eldritch_blast";
+                case T2 -> "irons_spellbooks:telekinesis";
+                case T3, T4 -> "irons_spellbooks:abyssal_shroud";
+            };
+            case COMMON -> null;
         };
     }
 
@@ -357,7 +667,7 @@ public final class PuffishMagicTreeBuilder {
         };
     }
 
-    private static String signatureIcon(MagicNode node) {
+    private static String signatureItemFallback(MagicNode node) {
         String slug = node.id().substring(node.id().lastIndexOf('/') + 1);
         if (containsAllTokens(slug, "fireball")) return "minecraft:fire_charge";
         if (containsAllTokens(slug, "fire", "breath")) return "minecraft:dragon_breath";
@@ -416,6 +726,33 @@ public final class PuffishMagicTreeBuilder {
         };
     }
 
+    private static String visualParentId(MagicNode node) {
+        if (node == null || isRoot(node)) {
+            return null;
+        }
+        return switch (node.id()) {
+            case "common/foundation/mana_well" -> "common/foundation/arcane_focus";
+            case "common/foundation/cast_discipline" -> "common/foundation/mana_well";
+            case "common/foundation/multi_school_gate" -> "common/foundation/cast_discipline";
+            default -> {
+                if (node.kind() == MagicNodeKind.BRANCH_OPENER) {
+                    yield node.branch().lateGame
+                            ? "common/foundation/multi_school_gate"
+                            : "common/foundation/cast_discipline";
+                }
+                for (String prerequisite : node.prerequisites()) {
+                    if (MagicTreeCatalog.LOCKED_SENTINEL.equals(prerequisite)) {
+                        continue;
+                    }
+                    if (prerequisite.startsWith(node.branch().id + "/")) {
+                        yield prerequisite;
+                    }
+                }
+                yield node.prerequisites().isEmpty() ? null : node.prerequisites().get(0);
+            }
+        };
+    }
+
     private static String prettySpellName(String spellId) {
         if (spellId == null || spellId.isBlank()) {
             return "Spell";
@@ -458,12 +795,37 @@ public final class PuffishMagicTreeBuilder {
         };
     }
 
-    private static int offsetX(int originX, double directionX, double distance) {
-        return originX + (int) Math.round(directionX * distance);
+    private static int radialDistance(int x, int y) {
+        int localX = x - CANVAS_OFFSET_X;
+        int localY = y - CANVAS_OFFSET_Y;
+        int dx = localX - CONSTELLATION_CENTER_X;
+        int dy = localY - CONSTELLATION_CENTER_Y;
+        return (int) Math.round(Math.sqrt(dx * dx + dy * dy));
     }
 
-    private static int offsetY(int originY, double directionY, double distance) {
-        return originY + (int) Math.round(directionY * distance);
+    private static float sizeFor(MagicNode node) {
+        if (node == null) {
+            return 1.0f;
+        }
+        return switch (node.id()) {
+            case "common/foundation/arcane_focus" -> 2.35f;
+            case "common/foundation/mana_well",
+                    "common/foundation/cast_discipline" -> 1.7f;
+            case "common/foundation/multi_school_gate" -> 1.9f;
+            default -> switch (node.kind()) {
+                case BRANCH_OPENER -> 1.3f;
+                case BRANCH_TIER -> 1.12f;
+                case SIGNATURE_SPELL, TRUNK_FOUNDATION, LATEGAME_GATE -> 1.0f;
+            };
+        };
+    }
+
+    private static String formatSize(float size) {
+        String raw = String.format(Locale.ROOT, "%.2f", size);
+        while (raw.contains(".") && (raw.endsWith("0") || raw.endsWith("."))) {
+            raw = raw.substring(0, raw.length() - 1);
+        }
+        return raw;
     }
 
     private static String escape(String input) {
@@ -474,26 +836,128 @@ public final class PuffishMagicTreeBuilder {
 
     private static Map<MagicBranch, BranchLayout> buildBranchLayouts() {
         Map<MagicBranch, BranchLayout> layouts = new EnumMap<>(MagicBranch.class);
-        layouts.put(MagicBranch.FIRE, new BranchLayout(500, 260, -0.83, -0.56, 125, 95));
-        layouts.put(MagicBranch.WATER, new BranchLayout(1020, 260, 0.83, -0.56, 125, 95));
-        layouts.put(MagicBranch.AIR, new BranchLayout(360, 610, -0.98, 0.20, 115, 88));
-        layouts.put(MagicBranch.EARTH, new BranchLayout(1160, 610, 0.98, 0.20, 115, 88));
-        layouts.put(MagicBranch.HOLY, new BranchLayout(280, 980, -0.76, 0.65, 110, 90));
-        layouts.put(MagicBranch.BLOOD, new BranchLayout(540, 1120, -0.34, 0.94, 105, 84));
-        layouts.put(MagicBranch.ENDER, new BranchLayout(760, 1180, 0.0, 1.0, 110, 86));
-        layouts.put(MagicBranch.EVOCATION, new BranchLayout(980, 1120, 0.34, 0.94, 105, 84));
-        layouts.put(MagicBranch.ELDRITCH, new BranchLayout(1240, 980, 0.76, 0.65, 110, 90));
+        layouts.put(MagicBranch.FIRE, new BranchLayout(232.0, OPENER_RADIUS, TIER_RADIUS_STEP,
+                56.0, 0.0, SIGNATURE_FORWARD_OFFSET, SIGNATURE_ROW_DEPTH, 0, 12.0, 28.0));
+        layouts.put(MagicBranch.WATER, new BranchLayout(308.0, OPENER_RADIUS, TIER_RADIUS_STEP,
+                56.0, 0.0, SIGNATURE_FORWARD_OFFSET, SIGNATURE_ROW_DEPTH, 0, 12.0, 28.0));
+        layouts.put(MagicBranch.AIR, new BranchLayout(188.0, OPENER_RADIUS, TIER_RADIUS_STEP,
+                56.0, 0.0, SIGNATURE_FORWARD_OFFSET, SIGNATURE_ROW_DEPTH, 0, 12.0, 28.0));
+        layouts.put(MagicBranch.EARTH, new BranchLayout(352.0, OPENER_RADIUS, TIER_RADIUS_STEP,
+                56.0, 0.0, SIGNATURE_FORWARD_OFFSET, SIGNATURE_ROW_DEPTH, 0, 12.0, 28.0));
+        layouts.put(MagicBranch.HOLY, new BranchLayout(165.0, 250, 132,
+                64.0, 24.0, 112.0, 78.0, 1, 16.0, 52.0));
+        layouts.put(MagicBranch.BLOOD, new BranchLayout(120.0, 240, 132,
+                72.0, 36.0, 112.0, 80.0, 1, 16.0, 60.0));
+        layouts.put(MagicBranch.ENDER, new BranchLayout(90.0, 250, 136,
+                52.0, 18.0, 116.0, 86.0, 1, 18.0, 46.0));
+        layouts.put(MagicBranch.EVOCATION, new BranchLayout(60.0, 240, 132,
+                72.0, 36.0, 112.0, 80.0, -1, 16.0, 60.0));
+        layouts.put(MagicBranch.ELDRITCH, new BranchLayout(15.0, 250, 132,
+                64.0, 24.0, 112.0, 78.0, -1, 16.0, 52.0));
         return layouts;
     }
 
+    private static Map<String, String> discoverSpellTextures() {
+        Map<String, String> textures = new LinkedHashMap<>();
+        scanSpellTextures(LIBS_DIR, textures);
+        scanSpellTextures(RUN_MODS_DIR, textures);
+        return textures;
+    }
+
+    private static void scanSpellTextures(Path directory, Map<String, String> textures) {
+        if (directory == null || !Files.isDirectory(directory)) {
+            return;
+        }
+        try {
+            try (var jars = Files.list(directory)) {
+                jars.filter(path -> path.getFileName().toString().endsWith(".jar"))
+                        .forEach(path -> scanSpellTexturesInJar(path, textures));
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private static void scanSpellTexturesInJar(Path jarPath, Map<String, String> textures) {
+        try (ZipFile zip = new ZipFile(jarPath.toFile())) {
+            zip.stream()
+                    .map(entry -> entry.getName())
+                    .filter(PuffishMagicTreeBuilder::isSpellTextureEntry)
+                    .forEach(entry -> registerTextureEntry(entry, textures));
+        } catch (IOException ignored) {
+        }
+    }
+
+    private static boolean isSpellTextureEntry(String entry) {
+        if (entry == null || !entry.startsWith("assets/") || !entry.endsWith(".png")) {
+            return false;
+        }
+        if (entry.contains("/textures/gui/spell_icons/")) {
+            return true;
+        }
+        return entry.startsWith("assets/tensura/textures/magic/")
+                || entry.startsWith("assets/tensura/textures/battlewill/");
+    }
+
+    private static void registerTextureEntry(String entry, Map<String, String> textures) {
+        String[] parts = entry.split("/");
+        if (parts.length < 4) {
+            return;
+        }
+        String namespace = parts[1];
+        String relativePath = entry.substring(("assets/" + namespace + "/").length());
+        String fileName = parts[parts.length - 1];
+        if (!fileName.endsWith(".png")) {
+            return;
+        }
+        String stem = fileName.substring(0, fileName.length() - 4);
+        textures.putIfAbsent(namespace + ":" + stem, namespace + ":" + relativePath);
+    }
+
     private record BranchLayout(
-            int rootX,
-            int rootY,
-            double directionX,
-            double directionY,
-            int signatureForward,
-            int signatureSpread
+            double angleDegrees,
+            int openerRadius,
+            int tierRadiusStep,
+            double signatureLaneStep,
+            double signatureSideOffset,
+            double signatureForwardOffset,
+            double signatureRowDepth,
+            int signatureSideBias,
+            double clusterFanDegrees,
+            double clusterTangentSeparation
     ) {}
 
     private record NodePlacement(int x, int y) {}
+
+    private static final class MutablePlacement {
+        private double x;
+        private double y;
+        private final double originX;
+        private final double originY;
+
+        private MutablePlacement(double x, double y, double originX, double originY) {
+            this.x = x;
+            this.y = y;
+            this.originX = originX;
+            this.originY = originY;
+        }
+    }
+
+    private record IconSpec(String type, String key, String value) {
+        static IconSpec item(String itemId) {
+            return new IconSpec("item", "item", itemId);
+        }
+
+        static IconSpec texture(String textureId) {
+            return new IconSpec("texture", "texture", textureId);
+        }
+
+        String jsonBlock() {
+            return "        \"icon\": {\n" +
+                    "            \"type\": \"" + type + "\",\n" +
+                    "            \"data\": {\n" +
+                    "                \"" + key + "\": \"" + value + "\"\n" +
+                    "            }\n" +
+                    "        }";
+        }
+    }
 }

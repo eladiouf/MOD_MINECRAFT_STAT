@@ -127,23 +127,32 @@ git commit -m "feat(perks): add node presentation model"
 **Files:**
 - Modify: `src/main/java/tong/statmod/client/gui/PerkNodeWidget.java`
 - Modify: `src/main/java/tong/statmod/client/gui/TalentTreePanel.java`
+- Modify: `src/test/java/tong/statmod/client/gui/TalentTreePanelTest.java`
+- Create: `src/test/java/tong/statmod/client/gui/PerkNodeWidgetTest.java`
 
-- [ ] **Step 1: Write the failing UI-state test**
+- [ ] **Step 1: Write the failing UI-state rendering tests**
 
 ```java
 @Test
-void selectedNodeKeepsVisualFocusAfterClick() {
-    TalentTreePanel panel = new TalentTreePanel(List.of(StatType.BRUTE_FORCE), 0, 0, 220, 220);
+void selectedNodeUsesDifferentFillThanHoveredNode() {
+    int hovered = PerkNodeWidget.fillColor(PerkNodeVisualState.AVAILABLE, true, false);
+    int selected = PerkNodeWidget.fillColor(PerkNodeVisualState.AVAILABLE, false, true);
 
-    assertTrue(panel.debugSelectFirstVisibleNode());
-    assertNotNull(panel.debugSelectedPerkId());
+    assertNotEquals(hovered, selected);
+}
+
+@Test
+void ignoresClicksOutsidePanel() {
+    TalentTreePanel panel = new TalentTreePanel(List.of(StatType.values()), 0, 0, 300, 300);
+    assertFalse(panel.mouseClicked(350, 350, 0));
+    assertFalse(panel.mouseClicked(-10, -10, 0));
 }
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `.\gradlew.bat test --tests tong.statmod.client.gui.TalentTreePanelTest`
-Expected: FAIL because no debug accessor or selected-node state exists
+Run: `.\gradlew.bat test --tests tong.statmod.client.gui.PerkNodeWidgetTest --tests tong.statmod.client.gui.TalentTreePanelTest`
+Expected: FAIL because `fillColor(...)` does not exist yet
 
 - [ ] **Step 3: Implement state-aware node styling**
 
@@ -171,13 +180,13 @@ renderNode(graphics, font, sx, ny, perk, presentation, hovered, selected);
 
 - [ ] **Step 4: Run tests to verify behavior**
 
-Run: `.\gradlew.bat test --tests tong.statmod.client.gui.TalentTreePanelTest --tests tong.statmod.client.gui.PerkNodePresentationTest`
+Run: `.\gradlew.bat test --tests tong.statmod.client.gui.PerkNodeWidgetTest --tests tong.statmod.client.gui.TalentTreePanelTest --tests tong.statmod.client.gui.PerkNodePresentationTest`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/main/java/tong/statmod/client/gui/PerkNodeWidget.java src/main/java/tong/statmod/client/gui/TalentTreePanel.java src/test/java/tong/statmod/client/gui/TalentTreePanelTest.java
+git add src/main/java/tong/statmod/client/gui/PerkNodeWidget.java src/main/java/tong/statmod/client/gui/TalentTreePanel.java src/test/java/tong/statmod/client/gui/PerkNodeWidgetTest.java src/test/java/tong/statmod/client/gui/TalentTreePanelTest.java
 git commit -m "feat(perks): restyle perk tree node states"
 ```
 
@@ -270,7 +279,7 @@ Expected: only intended perk-tree UX files staged or modified for commit
 - [ ] **Step 4: Commit the finished implementation**
 
 ```bash
-git add src/main/java/tong/statmod/client/gui/PerkNodeVisualState.java src/main/java/tong/statmod/client/gui/PerkNodePresentation.java src/main/java/tong/statmod/client/gui/PerkNodeWidget.java src/main/java/tong/statmod/client/gui/TalentTreePanel.java src/test/java/tong/statmod/client/gui/PerkNodePresentationTest.java src/test/java/tong/statmod/client/gui/TalentTreePanelTest.java
+git add src/main/java/tong/statmod/client/gui/PerkNodeVisualState.java src/main/java/tong/statmod/client/gui/PerkNodePresentation.java src/main/java/tong/statmod/client/gui/PerkNodeWidget.java src/main/java/tong/statmod/client/gui/TalentTreePanel.java src/test/java/tong/statmod/client/gui/PerkNodePresentationTest.java src/test/java/tong/statmod/client/gui/PerkNodeWidgetTest.java src/test/java/tong/statmod/client/gui/TalentTreePanelTest.java
 git commit -m "feat(perks): improve perk tree readability"
 ```
 

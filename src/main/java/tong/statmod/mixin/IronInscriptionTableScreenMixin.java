@@ -24,17 +24,34 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tong.statmod.STATMod;
 import tong.statmod.client.ClientMagicCache;
+import tong.statmod.client.inscription.KnownSpellFilters;
 import tong.statmod.client.inscription.KnownSpellIconButton;
 import tong.statmod.client.inscription.KnownSpellUiState;
 import tong.statmod.integration.ironspells.IronInscriptionKnownSpellIndex;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 @Mixin(InscriptionTableScreen.class)
 public abstract class IronInscriptionTableScreenMixin extends AbstractContainerScreen<InscriptionTableMenu> {
+    @Unique private static final int statmod$schoolButtonWidth = 20;
+    @Unique private static final int statmod$schoolButtonHeight = 14;
+    @Unique private static final int statmod$schoolButtonGap = 2;
+    @Unique private static final SchoolFilterSpec[] statmod$schoolFilters = new SchoolFilterSpec[] {
+            new SchoolFilterSpec("fire", "Fi"),
+            new SchoolFilterSpec("ice", "Ic"),
+            new SchoolFilterSpec("nature", "Na"),
+            new SchoolFilterSpec("lightning", "Li"),
+            new SchoolFilterSpec("evocation", "Ev"),
+            new SchoolFilterSpec("holy", "Ho"),
+            new SchoolFilterSpec("blood", "Bl"),
+            new SchoolFilterSpec("ender", "En"),
+            new SchoolFilterSpec("eldritch", "El")
+    };
+
     @Shadow protected Button inscribeButton;
     @Shadow private int selectedSpellIndex;
     @Shadow private void setSelectedIndex(int index) {}
@@ -46,6 +63,8 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
     @Unique
     private Button statmod$nextKnownSpellPageButton;
     @Unique
+    private List<Button> statmod$schoolFilterButtons = new ArrayList<>();
+    @Unique
     private int statmod$knownSpellPage;
     @Unique
     private Integer statmod$selectedKnownSpellOption;
@@ -55,6 +74,8 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
     private EditBox statmod$searchBox;
     @Unique
     private String statmod$searchQuery = "";
+    @Unique
+    private Set<String> statmod$activeSchoolFilters = new LinkedHashSet<>();
 
     private IronInscriptionTableScreenMixin(InscriptionTableMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -90,6 +111,17 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
             this.statmod$refreshKnownSpellButtons();
         });
         this.addRenderableWidget(this.statmod$searchBox);
+
+        this.statmod$schoolFilterButtons = new ArrayList<>();
+        for (SchoolFilterSpec filter : statmod$schoolFilters) {
+            Button button = Button.builder(statmod$schoolButtonLabel(filter), b -> {
+                statmod$toggleSchoolFilter(filter.id());
+                b.setMessage(statmod$schoolButtonLabel(filter));
+            }).bounds(0, 0, statmod$schoolButtonWidth, statmod$schoolButtonHeight).build();
+            button.setTooltip(net.minecraft.client.gui.components.Tooltip.create(
+                    Component.translatable("statmod.spell.filter.school", statmod$schoolDisplayName(filter.id()))));
+            this.statmod$schoolFilterButtons.add(this.addRenderableWidget(button));
+        }
 
         this.statmod$refreshKnownSpellButtons();
     }
@@ -183,14 +215,26 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
         List<String> page = visible;
         int baseX = this.leftPos + this.imageWidth + 6;
-        int searchBoxHeight = 14;
-        int baseY = this.topPos + 18 + searchBoxHeight + 4;
+        int searchBoxHeight = statmod$schoolButtonHeight;
+        int schoolRows = (int) Math.ceil(statmod$schoolFilters.length / 3.0);
+        int schoolFiltersHeight = schoolRows * statmod$schoolButtonHeight + Math.max(0, schoolRows - 1) * statmod$schoolButtonGap;
+        int baseY = this.topPos + 18 + searchBoxHeight + 4 + schoolFiltersHeight + 4;
         int rowStep = KnownSpellIconButton.SIZE + 2;
 
         if (this.statmod$searchBox != null) {
             this.statmod$searchBox.setX(baseX);
             this.statmod$searchBox.setY(this.topPos + 18);
-            this.statmod$searchBox.setWidth(KnownSpellIconButton.SIZE);
+            this.statmod$searchBox.setWidth(statmod$schoolButtonWidth * 3 + statmod$schoolButtonGap * 2);
+        }
+
+        for (int i = 0; i < this.statmod$schoolFilterButtons.size(); i++) {
+            Button button = this.statmod$schoolFilterButtons.get(i);
+            int col = i % 3;
+            int row = i / 3;
+            button.setX(baseX + col * (statmod$schoolButtonWidth + statmod$schoolButtonGap));
+            button.setY(this.topPos + 18 + searchBoxHeight + 4 + row * (statmod$schoolButtonHeight + statmod$schoolButtonGap));
+            button.visible = true;
+            button.active = true;
         }
 
         for (int i = 0; i < this.statmod$knownSpellButtons.size(); i++) {
@@ -250,47 +294,56 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
         return IronInscriptionKnownSpellIndex.learnedCastableSpellIds(ClientMagicCache.getLearnedSpells());
     }
 
-    /**
-     * Filtre la liste de sorts par sous-chaîne (case-insensitive) sur le nom du sort
-     * (display name si possible, sinon last segment de l'ID). Sortie inchangée si la query
-     * est vide. Utilisé par le widget de recherche.
-     */
-    @Unique
-    private List<String> statmod$filterBySearch(List<String> all) {
-        String query = this.statmod$searchQuery;
-        if (query == null || query.isBlank()) {
-            return all;
-        }
-        String needle = query.trim().toLowerCase(java.util.Locale.ROOT);
-        List<String> filtered = new ArrayList<>();
-        for (String spellId : all) {
-            if (statmod$matchesQuery(spellId, needle)) {
-                filtered.add(spellId);
-            }
-        }
-        return List.copyOf(filtered);
-    }
-
     @Unique
     private boolean statmod$matchesActiveFilters(String spellId) {
-        String query = this.statmod$searchQuery;
-        if (query == null || query.isBlank()) {
-            return true;
-        }
-        return statmod$matchesQuery(spellId, query.trim().toLowerCase(java.util.Locale.ROOT));
+        return KnownSpellFilters.matches(
+                spellId,
+                new KnownSpellFilters.Criteria(this.statmod$searchQuery, this.statmod$activeSchoolFilters),
+                this::statmod$displayNameForFilter,
+                this::statmod$schoolIdForFilter);
     }
 
     @Unique
-    private boolean statmod$matchesQuery(String spellId, String needle) {
-        if (spellId == null) return false;
-        if (spellId.toLowerCase(java.util.Locale.ROOT).contains(needle)) return true;
+    private String statmod$displayNameForFilter(String spellId) {
         AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
-        if (spell == null) return false;
+        if (spell == null) return null;
         if (this.minecraft == null || this.minecraft.player == null) {
-            return spell.getSpellName().toLowerCase(java.util.Locale.ROOT).contains(needle);
+            return spell.getSpellName();
         }
-        String display = spell.getDisplayName(this.minecraft.player).getString();
-        return display.toLowerCase(java.util.Locale.ROOT).contains(needle);
+        return spell.getDisplayName(this.minecraft.player).getString();
+    }
+
+    @Unique
+    private String statmod$schoolIdForFilter(String spellId) {
+        AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
+        if (spell == null || spell.getSchoolType() == null || spell.getSchoolType().getId() == null) {
+            return null;
+        }
+        return spell.getSchoolType().getId().getPath();
+    }
+
+    @Unique
+    private void statmod$toggleSchoolFilter(String schoolId) {
+        if (!this.statmod$activeSchoolFilters.add(schoolId)) {
+            this.statmod$activeSchoolFilters.remove(schoolId);
+        }
+        this.statmod$knownSpellPage = 0;
+        for (int i = 0; i < statmod$schoolFilters.length; i++) {
+            SchoolFilterSpec filter = statmod$schoolFilters[i];
+            this.statmod$schoolFilterButtons.get(i).setMessage(statmod$schoolButtonLabel(filter));
+        }
+        this.statmod$refreshKnownSpellButtons();
+    }
+
+    @Unique
+    private Component statmod$schoolButtonLabel(SchoolFilterSpec filter) {
+        boolean active = this.statmod$activeSchoolFilters.contains(filter.id());
+        return Component.literal(active ? "[" + filter.shortLabel() + "]" : filter.shortLabel());
+    }
+
+    @Unique
+    private Component statmod$schoolDisplayName(String schoolId) {
+        return Component.translatable("statmod.spell.school." + schoolId);
     }
 
     /**
@@ -323,4 +376,6 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
         return bound;
     }
 
+    @Unique
+    private record SchoolFilterSpec(String id, String shortLabel) {}
 }

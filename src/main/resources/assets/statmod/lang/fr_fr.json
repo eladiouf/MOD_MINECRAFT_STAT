@@ -31,5 +31,15 @@
   "statmod.spell.tooltip.mana": "Mana : %d",
   "statmod.spell.tooltip.cooldown": "Recharge : %s",
   "statmod.spell.tooltip.bound": "Déjà inscrit dans ce grimoire",
-  "statmod.spell.search.placeholder": "Rechercher…"
+  "statmod.spell.search.placeholder": "Rechercher…",
+  "statmod.spell.filter.school": "Filtre d'école : %s",
+  "statmod.spell.school.fire": "Feu",
+  "statmod.spell.school.ice": "Glace",
+  "statmod.spell.school.nature": "Nature",
+  "statmod.spell.school.lightning": "Foudre",
+  "statmod.spell.school.evocation": "Évocation",
+  "statmod.spell.school.holy": "Sacré",
+  "statmod.spell.school.blood": "Sang",
+  "statmod.spell.school.ender": "Ender",
+  "statmod.spell.school.eldritch": "Occulte"
 }

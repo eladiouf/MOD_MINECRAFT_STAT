@@ -133,12 +133,20 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
     @Unique
     private void statmod$selectKnownSpell(int visibleIndex) {
-        List<String> page = IronInscriptionKnownSpellIndex.page(statmod$knownIronSpells(), this.statmod$knownSpellPage);
+        List<String> known = statmod$knownIronSpells();
+        List<String> page = IronInscriptionKnownSpellIndex.page(
+                known,
+                this.statmod$knownSpellPage,
+                this::statmod$matchesActiveFilters);
         if (visibleIndex < 0 || visibleIndex >= page.size()) {
             return;
         }
 
-        int globalIndex = this.statmod$knownSpellPage * IronInscriptionKnownSpellIndex.PAGE_SIZE + visibleIndex;
+        String spellId = page.get(visibleIndex);
+        int globalIndex = IronInscriptionKnownSpellIndex.optionIndexOf(known, spellId);
+        if (globalIndex < 0) {
+            return;
+        }
         this.statmod$selectedKnownSpellOption = globalIndex;
         Minecraft minecraft = this.minecraft;
         if (minecraft != null && minecraft.gameMode != null) {
@@ -150,14 +158,15 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
     @Unique
     private void statmod$refreshKnownSpellButtons() {
-        List<String> known = statmod$filterBySearch(statmod$knownIronSpells());
-        int maxPage = IronInscriptionKnownSpellIndex.maxPage(known);
+        List<String> known = statmod$knownIronSpells();
+        int maxPage = IronInscriptionKnownSpellIndex.maxPage(known, this::statmod$matchesActiveFilters);
         this.statmod$knownSpellPage = Mth.clamp(this.statmod$knownSpellPage, 0, maxPage);
         boolean spellBookSlotted = this.menu.getSpellBookSlot().hasItem();
         int selectedIndex = this.statmod$selectedKnownSpellOption == null ? -1 : this.statmod$selectedKnownSpellOption;
         Set<String> boundSpellIds = statmod$collectBoundSpellIds();
+        List<String> visible = IronInscriptionKnownSpellIndex.page(known, this.statmod$knownSpellPage, this::statmod$matchesActiveFilters);
         KnownSpellUiState nextState = KnownSpellUiState.capture(
-                known,
+                visible,
                 this.statmod$knownSpellPage,
                 selectedIndex,
                 spellBookSlotted,
@@ -169,10 +178,10 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
         if (STATMod.LOGGER.isDebugEnabled()) {
             STATMod.LOGGER.debug("KnownSpellButtons refreshed: {} filtered irons_spellbooks spells, page={}/{}",
-                    known.size(), this.statmod$knownSpellPage, maxPage);
+                    visible.size(), this.statmod$knownSpellPage, maxPage);
         }
 
-        List<String> page = IronInscriptionKnownSpellIndex.page(known, this.statmod$knownSpellPage);
+        List<String> page = visible;
         int baseX = this.leftPos + this.imageWidth + 6;
         int searchBoxHeight = 14;
         int baseY = this.topPos + 18 + searchBoxHeight + 4;
@@ -189,8 +198,8 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
             button.setX(baseX);
             button.setY(baseY + i * rowStep);
             if (i < page.size()) {
-                int globalIndex = this.statmod$knownSpellPage * IronInscriptionKnownSpellIndex.PAGE_SIZE + i;
                 String spellId = page.get(i);
+                int globalIndex = IronInscriptionKnownSpellIndex.optionIndexOf(known, spellId);
                 AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
                 button.visible = spell != null;
                 button.active = spellBookSlotted && spell != null;
@@ -260,6 +269,15 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
             }
         }
         return List.copyOf(filtered);
+    }
+
+    @Unique
+    private boolean statmod$matchesActiveFilters(String spellId) {
+        String query = this.statmod$searchQuery;
+        if (query == null || query.isBlank()) {
+            return true;
+        }
+        return statmod$matchesQuery(spellId, query.trim().toLowerCase(java.util.Locale.ROOT));
     }
 
     @Unique

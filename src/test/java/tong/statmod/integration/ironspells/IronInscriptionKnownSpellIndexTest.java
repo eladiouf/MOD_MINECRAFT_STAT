@@ -3,6 +3,7 @@ package tong.statmod.integration.ironspells;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -65,5 +66,39 @@ class IronInscriptionKnownSpellIndexTest {
                 "tensura:water_jail"
         ));
         assertTrue(ids.isEmpty());
+    }
+
+    @Test
+    void filteredPagingAppliesPredicateBeforePaginating() {
+        List<String> spells = List.of(
+                "fireball",
+                "frostbolt",
+                "firebolt",
+                "heal",
+                "firestorm",
+                "blink",
+                "fire_wave"
+        );
+        Predicate<String> fireOnly = id -> id.contains("fire");
+
+        List<String> page0 = IronInscriptionKnownSpellIndex.page(spells, 0, fireOnly);
+        List<String> page1 = IronInscriptionKnownSpellIndex.page(spells, 1, fireOnly);
+
+        assertEquals(List.of("fireball", "firebolt", "firestorm", "fire_wave"), page0);
+        assertEquals(List.of(), page1);
+        assertEquals(0, IronInscriptionKnownSpellIndex.maxPage(spells, fireOnly));
+    }
+
+    @Test
+    void optionIndexOfReturnsStableIndexFromUnfilteredList() {
+        List<String> known = List.of(
+                "irons_spellbooks:chain_lightning",
+                "irons_spellbooks:fireball",
+                "irons_spellbooks:firebolt",
+                "irons_spellbooks:heal"
+        );
+
+        assertEquals(2, IronInscriptionKnownSpellIndex.optionIndexOf(known, "irons_spellbooks:firebolt"));
+        assertEquals(-1, IronInscriptionKnownSpellIndex.optionIndexOf(known, "irons_spellbooks:blink"));
     }
 }

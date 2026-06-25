@@ -18,8 +18,8 @@ class MagicStateSyncServiceTest {
         PlayerStatData data = new PlayerStatData();
         data.addMagicNode("common/foundation/arcane_focus");
         data.learnSpell("irons_spellbooks:firebolt");
-        data.setArcanePoints(4);
-        data.setSchoolPoints(MagicBranch.FIRE, 2);
+        data.setMagicPoints(4);
+        data.setSchoolMasteryProgress(MagicBranch.FIRE, 2);
         data.setMagicRace(MagicRace.DWARF);
         data.setChosenStartBranch(MagicBranch.FIRE);
 
@@ -27,8 +27,8 @@ class MagicStateSyncServiceTest {
 
         assertArrayEquals(new String[]{"common/foundation/arcane_focus"}, payload.magicNodes());
         assertArrayEquals(new String[]{"irons_spellbooks:firebolt"}, payload.learnedSpells());
-        assertEquals(4, payload.arcanePoints());
-        assertEquals(2, payload.schoolPoints()[MagicBranch.FIRE.ordinal()]);
+        assertEquals(4, payload.magicPoints());
+        assertEquals(2, payload.masteryProgress()[MagicBranch.FIRE.ordinal()]);
         assertEquals(MagicRace.DWARF.ordinal(), payload.raceOrdinal());
         assertEquals(MagicBranch.FIRE.ordinal(), payload.startBranchOrdinal());
     }
@@ -36,13 +36,13 @@ class MagicStateSyncServiceTest {
     @Test
     void syncSendsPayloadAndRefreshesMirrorOnce() {
         PlayerStatData data = new PlayerStatData();
-        data.setArcanePoints(7);
+        data.setMagicPoints(7);
         AtomicReference<SyncMagicPayload> sent = new AtomicReference<>();
         AtomicInteger mirrorRuns = new AtomicInteger();
 
         MagicStateSyncService.sync(data, sent::set, mirrorRuns::incrementAndGet);
 
-        assertEquals(7, sent.get().arcanePoints());
+        assertEquals(7, sent.get().magicPoints());
         assertEquals(1, mirrorRuns.get());
     }
 

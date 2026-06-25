@@ -101,4 +101,18 @@ class IronInscriptionKnownSpellIndexTest {
         assertEquals(2, IronInscriptionKnownSpellIndex.optionIndexOf(known, "irons_spellbooks:firebolt"));
         assertEquals(-1, IronInscriptionKnownSpellIndex.optionIndexOf(known, "irons_spellbooks:blink"));
     }
+
+    @Test
+    void normalizeSelectedOptionClearsSelectionWhenHiddenByFilters() {
+        List<String> known = List.of(
+                "irons_spellbooks:fireball",
+                "irons_spellbooks:heal",
+                "irons_spellbooks:ice_spike"
+        );
+        Predicate<String> fireOnly = id -> id.contains("fire");
+
+        assertEquals(0, IronInscriptionKnownSpellIndex.normalizeSelectedOption(known, 0, fireOnly));
+        assertEquals(-1, IronInscriptionKnownSpellIndex.normalizeSelectedOption(known, 1, fireOnly));
+        assertEquals(-1, IronInscriptionKnownSpellIndex.normalizeSelectedOption(known, 99, fireOnly));
+    }
 }

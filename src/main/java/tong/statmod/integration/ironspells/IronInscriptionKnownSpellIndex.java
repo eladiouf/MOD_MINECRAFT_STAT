@@ -77,6 +77,17 @@ public final class IronInscriptionKnownSpellIndex {
         return all.indexOf(spellId);
     }
 
+    public static int normalizeSelectedOption(List<String> all, int selectedIndex, Predicate<String> predicate) {
+        if (all == null || selectedIndex < 0 || selectedIndex >= all.size()) {
+            return -1;
+        }
+        String selectedSpellId = all.get(selectedIndex);
+        if (selectedSpellId == null) {
+            return -1;
+        }
+        return predicate == null || predicate.test(selectedSpellId) ? selectedIndex : -1;
+    }
+
     public static List<String> page(List<String> all, int page) {
         return page(all, page, null);
     }

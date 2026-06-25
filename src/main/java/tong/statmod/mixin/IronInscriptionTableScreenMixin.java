@@ -195,6 +195,11 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
         this.statmod$knownSpellPage = Mth.clamp(this.statmod$knownSpellPage, 0, maxPage);
         boolean spellBookSlotted = this.menu.getSpellBookSlot().hasItem();
         int selectedIndex = this.statmod$selectedKnownSpellOption == null ? -1 : this.statmod$selectedKnownSpellOption;
+        selectedIndex = IronInscriptionKnownSpellIndex.normalizeSelectedOption(
+                known,
+                selectedIndex,
+                this::statmod$matchesActiveFilters);
+        this.statmod$selectedKnownSpellOption = selectedIndex >= 0 ? selectedIndex : null;
         Set<String> boundSpellIds = statmod$collectBoundSpellIds();
         List<String> visible = IronInscriptionKnownSpellIndex.page(known, this.statmod$knownSpellPage, this::statmod$matchesActiveFilters);
         KnownSpellUiState nextState = KnownSpellUiState.capture(

@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
 import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.integration.SkillPerkGate;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkTier;
 import tong.statmod.stats.StatFamily;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 @OnlyIn(Dist.CLIENT)
 public class TalentTreePanel {
@@ -41,6 +43,7 @@ public class TalentTreePanel {
     private final List<StatFamily> familyOrder = new ArrayList<>();
     private final Map<StatType, List<Perk>> statPerks = new LinkedHashMap<>();
     private final List<Slot> slots = new ArrayList<>();
+    private Perk selectedPerk;
     private int totalContentH;
     private int scrollOffset;
 
@@ -147,12 +150,11 @@ public class TalentTreePanel {
                 for (Perk perk : entry.getValue()) {
                     int ny = baseY + row * (NODE_H + NODE_GAP);
                     if (ny + NODE_H > y && ny < y + panelHeight) {
-                        boolean unlocked = ClientPerkCache.isUnlocked(perk);
-                        boolean meetsLevel = statLevel >= perk.tier.requiredStatLevel;
-                        boolean canAfford = points >= perk.tier.cost;
                         boolean hovered = mouseX >= sx && mouseX < sx + NODE_W && mouseY >= ny && mouseY < ny + NODE_H;
+                        PerkNodePresentation presentation = resolvePresentation(perk, statLevel, points, player);
+                        boolean selected = perk == selectedPerk;
 
-                        renderNode(graphics, font, sx, ny, perk, unlocked, meetsLevel, canAfford, hovered);
+                        renderNode(graphics, font, sx, ny, perk, presentation, hovered, selected);
                     }
                     row++;
                 }
@@ -167,24 +169,19 @@ public class TalentTreePanel {
     }
 
     private void renderNode(GuiGraphics graphics, Font font, int nx, int ny, Perk perk,
-                            boolean unlocked, boolean meetsLevel, boolean canAfford, boolean hovered) {
-        int borderColor = PerkNodeWidget.tierColor(perk.tier);
-        int fillColor;
-        if (unlocked) fillColor = 0xFF2A2A2A;
-        else if (meetsLevel && canAfford) fillColor = 0xFF1A1A2A;
-        else fillColor = 0xFF111111;
-        if (hovered) fillColor = 0xFF2A2A3A;
+                            PerkNodePresentation presentation, boolean hovered, boolean selected) {
+        int borderColor = PerkNodeWidget.borderColor(perk.tier, selected);
+        int fillColor = PerkNodeWidget.fillColor(presentation.state(), hovered, selected);
+        int textColor = PerkNodeWidget.textColor(presentation.state());
 
         graphics.fill(nx, ny, nx + NODE_W, ny + NODE_H, fillColor);
         graphics.fill(nx, ny, nx + NODE_W, ny + 1, borderColor);
         graphics.fill(nx, ny, nx + 1, ny + NODE_H, borderColor);
         graphics.fill(nx + NODE_W - 1, ny, nx + NODE_W, ny + NODE_H, borderColor);
         graphics.fill(nx, ny + NODE_H - 1, nx + NODE_W, ny + NODE_H, borderColor);
-
-        int textColor;
-        if (unlocked) textColor = 0xFFFFFFFF;
-        else if (meetsLevel && canAfford) textColor = 0xFF55FF55;
-        else textColor = 0xFF666666;
+        if (selected) {
+            graphics.fill(nx + 2, ny + 2, nx + NODE_W - 2, ny + 3, 0xFFF4E7B3);
+        }
 
         String display = perk.name;
         while (!display.isEmpty() && font.width(display) > NODE_W - 6) {
@@ -193,34 +190,29 @@ public class TalentTreePanel {
         graphics.drawString(font, display, nx + (NODE_W - font.width(display)) / 2, ny + (NODE_H - 9) / 2, textColor);
 
         if (hovered) {
-            renderTooltip(graphics, font, nx, ny, perk, unlocked, meetsLevel, canAfford);
+            renderTooltip(graphics, font, nx, ny, perk, presentation);
         }
     }
 
     private void renderTooltip(GuiGraphics graphics, Font font, int nx, int ny, Perk perk,
-                               boolean unlocked, boolean meetsLevel, boolean canAfford) {
+                               PerkNodePresentation presentation) {
         int mouseX = nx + NODE_W / 2;
         int mouseY = ny + NODE_H / 2;
         int tooltipX = mouseX + 8;
         int tooltipY = mouseY - 12;
 
-        var player = Minecraft.getInstance().player;
-        int statLevel = player != null
-                ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
-                : ClientStatCache.getLevel(perk.stat.index);
-        int points = ClientPerkCache.getPointsForStat(perk.stat.index);
+        List<Component> tooltip = presentation.tooltipLines(
+                Component.literal(perk.name),
+                Component.literal(perk.description),
+                Component.literal(perk.tier.name() + " • " + perk.stat.displayName),
+                Component.literal("Cost: " + perk.tier.cost + " point" + (perk.tier.cost > 1 ? "s" : "")));
 
-        String tierName = perk.tier.name();
-        String costText = "Cost: " + perk.tier.cost + " pt" + (perk.tier.cost > 1 ? "s" : "");
-        String reqText = "Req: " + perk.tier.requiredStatLevel;
-        String pointsText = "Points: " + points;
-
-        int tw = Math.max(
-            Math.max(font.width(perk.name), font.width(perk.description)),
-            Math.max(font.width(tierName), font.width(costText + " | " + reqText + " | " + pointsText))
-        ) + 10;
-        int th = 52;
-        if (perk.synergyStat != null) th += 10;
+        int tw = 0;
+        for (Component line : tooltip) {
+            tw = Math.max(tw, font.width(line));
+        }
+        tw += 10;
+        int th = 8 + tooltip.size() * 10;
 
         if (tooltipX + tw > graphics.guiWidth()) tooltipX = mouseX - tw - 8;
         if (tooltipY < 0) tooltipY = mouseY + 12;
@@ -234,22 +226,9 @@ public class TalentTreePanel {
         graphics.fill(tooltipX, tooltipY + th - 1, tooltipX + tw, tooltipY + th, borderColor);
 
         int ly = tooltipY + 4;
-        graphics.drawString(font, Component.literal("\u00a7f" + perk.name + "\u00a7r"), tooltipX + 5, ly, 0xFFFFFFFF);
-        ly += 10;
-        graphics.drawString(font, Component.literal("\u00a77" + perk.description + "\u00a7r"), tooltipX + 5, ly, 0xFFBBBBBB);
-        ly += 10;
-        graphics.drawString(font, Component.literal("\u00a7e" + tierName + "\u00a7r  \u00a7a" + costText + "\u00a7r  \u00a7b" + reqText + "\u00a7r  \u00a7d" + pointsText + "\u00a7r"), tooltipX + 5, ly, 0xFFCCCCCC);
-        ly += 10;
-        if (perk.synergyStat != null) {
-            graphics.drawString(font, Component.literal("\u00a75Synergy: " + perk.synergyStat.displayName + "\u00a7r"), tooltipX + 5, ly, 0xFFAA55FF);
+        for (Component line : tooltip) {
+            graphics.drawString(font, line, tooltipX + 5, ly, 0xFFFFFFFF);
             ly += 10;
-        }
-        if (!meetsLevel) {
-            graphics.drawString(font, Component.literal("\u00a7cStat level too low (" + statLevel + "/" + perk.tier.requiredStatLevel + ")\u00a7r"), tooltipX + 5, ly, 0xFFFF5555);
-        } else if (!canAfford) {
-            graphics.drawString(font, Component.literal("\u00a7cNot enough perk points (" + points + "/" + perk.tier.cost + ")\u00a7r"), tooltipX + 5, ly, 0xFFFF5555);
-        } else if (!unlocked) {
-            graphics.drawString(font, Component.literal("\u00a7aClick to unlock!\u00a7r"), tooltipX + 5, ly, 0xFF55FF55);
         }
     }
 
@@ -263,6 +242,7 @@ public class TalentTreePanel {
             if (mouseX >= sx && mouseX < sx + NODE_W && mouseY >= sy && mouseY < sy + NODE_H) {
                 Perk perk = slot.perk;
                 if (perk == null) return false;
+                selectedPerk = perk;
                 boolean unlocked = ClientPerkCache.isUnlocked(perk);
                 if (unlocked) {
                     PerkFeedbackToast.show(PerkNodeWidget.ClickResult.ALREADY_UNLOCKED);
@@ -273,12 +253,18 @@ public class TalentTreePanel {
                         ? RaceEffectApplier.getEffectiveLevel(player, perk.stat.index)
                         : ClientStatCache.getLevel(perk.stat.index);
                 int points = ClientPerkCache.getPointsForStat(perk.stat.index);
+                PerkNodePresentation presentation = resolvePresentation(perk, statLevel, points, player);
                 if (statLevel < perk.tier.requiredStatLevel) {
                     PerkFeedbackToast.show(PerkNodeWidget.ClickResult.LEVEL_TOO_LOW);
                     return true;
                 }
                 if (points < perk.tier.cost) {
                     PerkFeedbackToast.show(PerkNodeWidget.ClickResult.NOT_ENOUGH_POINTS);
+                    return true;
+                }
+                if (presentation.state() == PerkNodeVisualState.LOCKED_PREREQ || presentation.state() == PerkNodeVisualState.LOCKED_MIXED || presentation.state() == PerkNodeVisualState.LOCKED_STAT) {
+                    net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                            new tong.statmod.network.UnlockPerkPayload(perk.id));
                     return true;
                 }
                 net.neoforged.neoforge.network.PacketDistributor.sendToServer(
@@ -307,5 +293,60 @@ public class TalentTreePanel {
             case MENTAL_PRESSURE_RESILIENCE -> 0xCC442244;
             case CRAFTING_SUPPORT -> 0xCC445522;
         };
+    }
+
+    private static PerkNodePresentation resolvePresentation(Perk perk, int statLevel, int points, net.minecraft.world.entity.player.Player player) {
+        int synergyLevel = perk.synergyStat != null
+                ? (player != null
+                ? RaceEffectApplier.getEffectiveLevel(player, perk.synergyStat.index)
+                : ClientStatCache.getLevel(perk.synergyStat.index))
+                : 0;
+        List<String> externalRequirements = externalRequirements(perk);
+        boolean meetsExternalRequirements = externalRequirements.isEmpty()
+                || (player != null && SkillPerkGate.canUnlock(player, perk));
+        return PerkNodePresentation.resolve(
+                perk,
+                ClientPerkCache.isUnlocked(perk),
+                statLevel,
+                points,
+                synergyLevel,
+                meetsExternalRequirements,
+                externalRequirements);
+    }
+
+    private static List<String> externalRequirements(Perk perk) {
+        List<String> requirements = new ArrayList<>();
+        String race = SkillPerkGate.requiredRace(perk.id);
+        if (race != null) {
+            requirements.add(humanizeRequirement(race) + " race");
+        }
+        for (String skill : SkillPerkGate.requiredSkills(perk.id)) {
+            requirements.add(humanizeRequirement(skill));
+        }
+        return requirements;
+    }
+
+    private static String humanizeRequirement(String raw) {
+        String path = raw;
+        int separator = path.indexOf(':');
+        if (separator >= 0 && separator + 1 < path.length()) {
+            path = path.substring(separator + 1);
+        }
+
+        String[] words = path.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String word : words) {
+            if (word.isEmpty()) {
+                continue;
+            }
+            if (builder.length() > 0) {
+                builder.append(' ');
+            }
+            builder.append(word.substring(0, 1).toUpperCase(Locale.ROOT));
+            if (word.length() > 1) {
+                builder.append(word.substring(1));
+            }
+        }
+        return builder.toString();
     }
 }

@@ -28,22 +28,14 @@ public final class PuffishFamilyTreeBuilder {
             PerkTier.MASTERY,
             PerkTier.TRANSCENDENCE
     );
-    private static final List<String> MAGIC_CATEGORY_SLUGS = List.of(
-            "statmod_magic"
-    );
-
     private PuffishFamilyTreeBuilder() {}
 
     public static String configJson() {
-        List<String> categories = new ArrayList<>();
-        categories.add("        \"statmod_perks\"");
-        for (String magicCategory : MAGIC_CATEGORY_SLUGS) {
-            categories.add("        \"" + magicCategory + "\"");
-        }
         return "{\n" +
                 "    \"version\": 3,\n" +
                 "    \"categories\": [\n" +
-                String.join(",\n", categories) + "\n" +
+                "        \"statmod_perks\",\n" +
+                "        \"statmod_magic\"\n" +
                 "    ]\n" +
                 "}\n";
     }

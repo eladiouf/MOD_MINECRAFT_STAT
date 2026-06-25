@@ -12,7 +12,7 @@ class RaceEffectApplierTest {
         PlayerStatData data = new PlayerStatData();
         data.setSoulLevel(50);
 
-        assertEquals(150, RaceEffectApplier.scaleXpAmount(null, 0, 100, data));
+        assertEquals(150, RaceEffectApplier.scaleXpAmount(null, 0, 100, data, false));
     }
 
     @Test

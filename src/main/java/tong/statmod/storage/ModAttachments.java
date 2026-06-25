@@ -65,6 +65,7 @@ public class ModAttachments {
             int[] freeGranted = tag.getIntArray("FreeGrantedPerks");
             if (freeGranted.length > 0) data.setFreeGrantedPerks(freeGranted);
             if (tag.contains("SoulLevel")) data.setSoulLevel(tag.getInt("SoulLevel"));
+            if (tag.contains("LastPerkGrantTier")) data.setLastPerkGrantTier(tag.getInt("LastPerkGrantTier"));
 
             MagicStateSerializer.deserialize(tag, data);
 
@@ -80,6 +81,7 @@ public class ModAttachments {
             tag.putIntArray("UnlockedPerks", data.getUnlockedPerks());
             tag.putIntArray("FreeGrantedPerks", data.getFreeGrantedPerks());
             tag.putInt("SoulLevel", data.getSoulLevel());
+            tag.putInt("LastPerkGrantTier", data.getLastPerkGrantTier());
 
             CompoundTag magicTag = MagicStateSerializer.serialize(data);
             for (String key : magicTag.getAllKeys()) {

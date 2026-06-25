@@ -25,5 +25,11 @@
   "sound.statmod.perk_tree_open": "Arbre de Perks Ouvert",
   "sound.statmod.stat_up": "Stat Augmentée",
   "statmod.magic.irons_not_loaded": "Iron's Spellbooks n'est pas installé",
-  "statmod.menu.virtual_inscription": "Codex de Sorts"
+  "statmod.menu.virtual_inscription": "Codex de Sorts",
+  "statmod.spell.tooltip.school": "École : %s",
+  "statmod.spell.tooltip.rarity": "Rareté : %s",
+  "statmod.spell.tooltip.mana": "Mana : %d",
+  "statmod.spell.tooltip.cooldown": "Recharge : %s",
+  "statmod.spell.tooltip.bound": "Déjà inscrit dans ce grimoire",
+  "statmod.spell.search.placeholder": "Rechercher…"
 }

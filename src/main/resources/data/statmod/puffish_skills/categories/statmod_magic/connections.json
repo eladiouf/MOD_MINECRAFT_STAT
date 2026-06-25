@@ -14,11 +14,7 @@
                 "common.foundation.multi_school_gate"
             ],
             [
-                "common.foundation.arcane_focus",
-                "fire.opener.ignition"
-            ],
-            [
-                "common.foundation.mana_well",
+                "common.foundation.cast_discipline",
                 "fire.opener.ignition"
             ],
             [
@@ -31,10 +27,6 @@
             ],
             [
                 "fire.tier.flame_path",
-                "fire.tier.inferno_path"
-            ],
-            [
-                "common.foundation.cast_discipline",
                 "fire.tier.inferno_path"
             ],
             [
@@ -66,11 +58,59 @@
                 "fire.signature.tensura_hellfire"
             ],
             [
-                "common.foundation.arcane_focus",
-                "water.opener.ice_awakening"
+                "fire.tier.ember_path",
+                "fire.signature.fire_arrow"
             ],
             [
-                "common.foundation.mana_well",
+                "fire.tier.ember_path",
+                "fire.signature.scorch"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.heat_surge"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.flaming_strike"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.wall_of_fire"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.magma_bomb"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.blaze_storm"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.flaming_barrage"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.raise_hell"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.flames_reborn"
+            ],
+            [
+                "fire.tier.flame_path",
+                "fire.signature.ashen_breath"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.meteor_storm"
+            ],
+            [
+                "fire.tier.inferno_path",
+                "fire.signature.pyromaniac"
+            ],
+            [
+                "common.foundation.cast_discipline",
                 "water.opener.ice_awakening"
             ],
             [
@@ -83,10 +123,6 @@
             ],
             [
                 "water.tier.chill_path",
-                "water.tier.glacier_path"
-            ],
-            [
-                "common.foundation.cast_discipline",
                 "water.tier.glacier_path"
             ],
             [
@@ -138,11 +174,31 @@
                 "water.signature.summon_polar_bear"
             ],
             [
-                "common.foundation.arcane_focus",
-                "air.opener.spark_awakening"
+                "water.tier.chill_path",
+                "water.signature.shatterpoint"
             ],
             [
-                "common.foundation.mana_well",
+                "water.tier.glacier_path",
+                "water.signature.legendary_blizzard"
+            ],
+            [
+                "water.tier.chill_path",
+                "water.signature.focused_ice_cone"
+            ],
+            [
+                "water.tier.glacier_path",
+                "water.signature.giant_snowball"
+            ],
+            [
+                "water.tier.chill_path",
+                "water.signature.ice_explosion_cone"
+            ],
+            [
+                "water.tier.glacier_path",
+                "water.signature.living_ice_sculpture"
+            ],
+            [
+                "common.foundation.cast_discipline",
                 "air.opener.spark_awakening"
             ],
             [
@@ -155,10 +211,6 @@
             ],
             [
                 "air.tier.storm_path",
-                "air.tier.thunder_path"
-            ],
-            [
-                "common.foundation.cast_discipline",
                 "air.tier.thunder_path"
             ],
             [
@@ -202,11 +254,39 @@
                 "air.signature.ascension"
             ],
             [
-                "common.foundation.arcane_focus",
-                "earth.opener.nature_awakening"
+                "air.tier.storm_path",
+                "air.signature.thunder_step"
             ],
             [
-                "common.foundation.mana_well",
+                "air.tier.spark_path",
+                "air.signature.wind_jump"
+            ],
+            [
+                "air.tier.spark_path",
+                "air.signature.wind_blade"
+            ],
+            [
+                "air.tier.spark_path",
+                "air.signature.iron_slash"
+            ],
+            [
+                "air.tier.storm_path",
+                "air.signature.tailwind"
+            ],
+            [
+                "air.tier.storm_path",
+                "air.signature.aeropic"
+            ],
+            [
+                "air.tier.storm_path",
+                "air.signature.almighty_push"
+            ],
+            [
+                "air.tier.thunder_path",
+                "air.signature.tornado"
+            ],
+            [
+                "common.foundation.cast_discipline",
                 "earth.opener.nature_awakening"
             ],
             [
@@ -219,10 +299,6 @@
             ],
             [
                 "earth.tier.toxin_path",
-                "earth.tier.grand_nature_path"
-            ],
-            [
-                "common.foundation.cast_discipline",
                 "earth.tier.grand_nature_path"
             ],
             [
@@ -276,6 +352,18 @@
             [
                 "earth.tier.grand_nature_path",
                 "earth.signature.touch_dig"
+            ],
+            [
+                "earth.tier.poison_path",
+                "earth.signature.ensnare"
+            ],
+            [
+                "earth.tier.toxin_path",
+                "earth.signature.acid_rain"
+            ],
+            [
+                "earth.tier.grand_nature_path",
+                "earth.signature.aerial_collapse"
             ],
             [
                 "common.foundation.multi_school_gate",
@@ -346,6 +434,18 @@
                 "holy.signature.angel_wings"
             ],
             [
+                "holy.tier.divine_path",
+                "holy.signature.angel_wing"
+            ],
+            [
+                "holy.tier.grace_path",
+                "holy.signature.banish"
+            ],
+            [
+                "holy.tier.divine_path",
+                "holy.signature.nullflare"
+            ],
+            [
                 "common.foundation.multi_school_gate",
                 "blood.opener.sanguine_awakening"
             ],
@@ -400,6 +500,18 @@
             [
                 "blood.tier.exsanguine_path",
                 "blood.signature.sacrifice"
+            ],
+            [
+                "blood.tier.sanguine_path",
+                "blood.signature.crimson_downpour"
+            ],
+            [
+                "blood.tier.exsanguine_path",
+                "blood.signature.call_forth_the_dead_king"
+            ],
+            [
+                "blood.tier.exsanguine_path",
+                "blood.signature.resurrection_rune"
             ],
             [
                 "common.foundation.multi_school_gate",
@@ -472,6 +584,26 @@
             [
                 "ender.tier.abyss_path",
                 "ender.signature.counterspell"
+            ],
+            [
+                "ender.tier.abyss_path",
+                "ender.signature.gravity_fissure"
+            ],
+            [
+                "ender.tier.rift_path",
+                "ender.signature.astral_sense"
+            ],
+            [
+                "ender.tier.rift_path",
+                "ender.signature.displacement"
+            ],
+            [
+                "ender.tier.rift_path",
+                "ender.signature.doppel_portal"
+            ],
+            [
+                "ender.tier.abyss_path",
+                "ender.signature.implosion"
             ],
             [
                 "common.foundation.multi_school_gate",
@@ -558,6 +690,30 @@
                 "evocation.signature.fang_swirl"
             ],
             [
+                "evocation.tier.illusion_path",
+                "evocation.signature.lingering_strain"
+            ],
+            [
+                "evocation.tier.mastery_path",
+                "evocation.signature.creeper_revenge"
+            ],
+            [
+                "evocation.tier.mastery_path",
+                "evocation.signature.nucreeper_strike"
+            ],
+            [
+                "evocation.tier.mastery_path",
+                "evocation.signature.shotgun_creeper"
+            ],
+            [
+                "evocation.tier.mastery_path",
+                "evocation.signature.elemental_burst"
+            ],
+            [
+                "evocation.tier.mastery_path",
+                "evocation.signature.magic_shotgun"
+            ],
+            [
                 "common.foundation.multi_school_gate",
                 "eldritch.opener.dark_awakening"
             ],
@@ -600,6 +756,30 @@
             [
                 "eldritch.tier.abyssal_path",
                 "eldritch.signature.pocket_dimension"
+            ],
+            [
+                "eldritch.tier.dark_path",
+                "eldritch.signature.blackout"
+            ],
+            [
+                "eldritch.tier.void_gaze_path",
+                "eldritch.signature.psychic_bolt"
+            ],
+            [
+                "eldritch.tier.void_gaze_path",
+                "eldritch.signature.spectral_blink"
+            ],
+            [
+                "eldritch.tier.abyssal_path",
+                "eldritch.signature.reversal"
+            ],
+            [
+                "eldritch.tier.abyssal_path",
+                "eldritch.signature.void_tentacles"
+            ],
+            [
+                "eldritch.tier.abyssal_path",
+                "eldritch.signature.summon_doppel_minion"
             ],
             [
                 "fire.tier.ember_path",

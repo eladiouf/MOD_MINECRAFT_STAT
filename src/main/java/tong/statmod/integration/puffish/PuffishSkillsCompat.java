@@ -53,7 +53,8 @@ public final class PuffishSkillsCompat {
                                 SoundHelper.playPerkUnlock(player);
                             } else {
                                 MagicUnlockFeedbackMessageFactory.MagicUnlockFeedbackMessage feedback =
-                                        MagicUnlockFeedbackMessageFactory.forFailure(node, result.failure());
+                                        MagicUnlockFeedbackMessageFactory.forFailure(
+                                                node, result.failure(), result.missingStats());
                                 PacketDistributor.sendToPlayer(player, new PerkFeedbackPayload(
                                         feedback.title().getString(),
                                         feedback.message().getString()));
@@ -102,11 +103,17 @@ public final class PuffishSkillsCompat {
         if (!loaded) {
             return;
         }
+        runGuarded(player, () -> PuffishSyncService.sync(data, new PuffishReflectionGateway(player)));
+    }
 
+    public static void runGuarded(ServerPlayer player, Runnable action) {
+        if (player == null || action == null) {
+            return;
+        }
         UUID uuid = player.getUUID();
         SYNC_GUARD.add(uuid);
         try {
-            PuffishSyncService.sync(data, new PuffishReflectionGateway(player));
+            action.run();
         } finally {
             SYNC_GUARD.remove(uuid);
         }

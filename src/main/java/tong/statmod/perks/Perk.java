@@ -92,7 +92,7 @@ public enum Perk {
     INTIM_SYNERGY(74, StatType.INTIMIDATION, PerkTier.SYNERGY, "Feared", "Synergy: mobs flee at low HP", StatType.WILLPOWER),
     INTIM_SITUATIONAL(75, StatType.INTIMIDATION, PerkTier.SITUATIONAL, "Mark of Fear", "Marked mobs take +25% damage"),
     INTIM_MASTERY(76, StatType.INTIMIDATION, PerkTier.MASTERY, "Dread Lord", "Kills cause nearby mobs to flee"),
-    INTIM_TRANSCENDENCE(77, StatType.INTIMIDATION, PerkTier.TRANSCENDENCE, "Absolute Dominion", "Control one mob for 10s"),
+    INTIM_TRANSCENDENCE(77, StatType.INTIMIDATION, PerkTier.TRANSCENDENCE, "Absolute Dominion", "Target mob loses aggro and regenerates for 10s"),
 
     WILL_CORE(78, StatType.WILLPOWER, PerkTier.CORE, "Iron Will", "Status effects last 10% less"),
     WILL_ACTIVE(79, StatType.WILLPOWER, PerkTier.ACTIVE, "Focused Mind", "Resist knockback when blocking"),

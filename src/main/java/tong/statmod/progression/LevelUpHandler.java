@@ -5,18 +5,21 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
+import tong.statmod.config.Config;
 import tong.statmod.perks.PerkPointAllocator;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+/**
+ * Au passage d'un palier (tier) du global level, crédite des perk points à toutes les familles.
+ *
+ * <p>Le dernier tier crédité est <b>persisté</b> sur {@link PlayerStatData#getLastPerkGrantTier()},
+ * pas dans une HashMap statique, pour éviter le bug pré-Mission-L : au restart serveur la map
+ * se vidait et un joueur déjà au tier 5 se faisait recréditer 5 × N perk points au tick
+ * suivant (duplicate grant).
+ */
 @EventBusSubscriber(modid = STATMod.MODID)
 public class LevelUpHandler {
-    // Last milestone tier granted per player (e.g. 1 = 10 global lvls awarded, 2 = 20, etc.)
-    private static final Map<UUID, Integer> lastGrantedTier = new HashMap<>();
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -27,13 +30,12 @@ public class LevelUpHandler {
         PlayerStatData data = player.getData(ModAttachments.STATS);
         int globalLevel = data.getGlobalLevel();
         int tier = globalLevel / 10;
-        UUID uuid = player.getUUID();
-        int already = lastGrantedTier.getOrDefault(uuid, 0);
+        int already = data.getLastPerkGrantTier();
 
         if (tier > already) {
-            int granted = tier - already;
+            int granted = (tier - already) * Config.getBasePerkPointsPerLevel();
             PerkPointAllocator.grantPointsToAllFamilies(data, granted);
-            lastGrantedTier.put(uuid, tier);
+            data.setLastPerkGrantTier(tier);
             STATMod.LOGGER.info("Granted {} perk point(s) to each perk family for {} (global level {})",
                     granted, player.getName().getString(), globalLevel);
         }

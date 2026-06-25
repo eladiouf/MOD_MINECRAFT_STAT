@@ -26,28 +26,22 @@ public abstract class IronInscriptionTableMenuMixin {
     private String statmod$selectedKnownSpellId;
 
     @Inject(method = "clickMenuButton", at = @At("HEAD"), cancellable = true)
-    private void statmod$selectKnownTreeSpell(Player player, int buttonId, CallbackInfoReturnable<Boolean> cir) {
+    private void statmod$handleKnownSpellClick(Player player, int buttonId, CallbackInfoReturnable<Boolean> cir) {
         int optionIndex = IronInscriptionKnownSpellIndex.optionIndexFromButtonId(buttonId);
-        if (optionIndex < 0) {
+        if (optionIndex >= 0) {
+            PlayerStatData data = player.getData(ModAttachments.STATS);
+            this.statmod$selectedKnownSpellId = IronInscriptionSelectionService.resolveSelectedSpellId(data, optionIndex);
+            cir.setReturnValue(this.statmod$selectedKnownSpellId != null);
             return;
         }
 
-        PlayerStatData data = player.getData(ModAttachments.STATS);
-        this.statmod$selectedKnownSpellId = IronInscriptionSelectionService.resolveSelectedSpellId(data, optionIndex);
-        cir.setReturnValue(this.statmod$selectedKnownSpellId != null);
-    }
-
-    @Inject(method = "clickMenuButton", at = @At("HEAD"), cancellable = true)
-    private void statmod$inscribeKnownTreeSpell(Player player, int buttonId, CallbackInfoReturnable<Boolean> cir) {
-        if (buttonId != -1 || this.statmod$selectedKnownSpellId == null || this.getScrollSlot().hasItem()) {
-            return;
+        if (buttonId == -1 && this.statmod$selectedKnownSpellId != null && !this.getScrollSlot().hasItem()) {
+            boolean success = IronInscriptionSelectionService.inscribeSelectedSpell(
+                    (InscriptionTableMenu) (Object) this,
+                    this.selectedSpellIndex,
+                    this.statmod$selectedKnownSpellId,
+                    player);
+            cir.setReturnValue(success);
         }
-
-        boolean success = IronInscriptionSelectionService.inscribeSelectedSpell(
-                (InscriptionTableMenu) (Object) this,
-                this.selectedSpellIndex,
-                this.statmod$selectedKnownSpellId,
-                player);
-        cir.setReturnValue(success);
     }
 }

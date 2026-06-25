@@ -17,11 +17,11 @@ class MagicTreeViewModelTest {
     }
 
     @Test
-    void nodeState_locked_sentinel_for_locked_nodes() {
-        ClientMagicCache.update(new String[0], new String[0], 0, new int[10], -1, -1);
-        MagicNode node = MagicTreeCatalog.byId("water/locked/anchor");
+    void nodeState_missing_prereq_for_lategame_opener() {
+        ClientMagicCache.update(new String[0], new String[0], 99, new int[10], -1, -1);
+        MagicNode node = MagicTreeCatalog.byId("holy/opener/light_awakening");
         assertNotNull(node);
-        assertEquals(MagicTreeNodeState.LOCKED_SENTINEL, MagicTreeViewModel.nodeState(node));
+        assertEquals(MagicTreeNodeState.MISSING_PREREQ, MagicTreeViewModel.nodeState(node));
     }
 
     @Test
@@ -88,9 +88,9 @@ class MagicTreeViewModelTest {
     }
 
     @Test
-    void isVisible_hides_locked_sentinel() {
+    void isVisible_hides_node_with_missing_prereq_for_lategame() {
         ClientMagicCache.update(new String[0], new String[0], 0, new int[10], -1, -1);
-        assertFalse(MagicTreeViewModel.isVisible(MagicTreeCatalog.byId("water/locked/anchor")));
+        assertFalse(MagicTreeViewModel.isVisible(MagicTreeCatalog.byId("holy/opener/light_awakening")));
     }
 
     @Test

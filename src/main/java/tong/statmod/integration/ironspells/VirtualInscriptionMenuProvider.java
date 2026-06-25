@@ -1,6 +1,5 @@
 package tong.statmod.integration.ironspells;
 
-import io.redspace.ironsspellbooks.gui.inscription_table.InscriptionTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -32,7 +31,7 @@ public final class VirtualInscriptionMenuProvider implements MenuProvider {
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), playerPos(player));
-        return new InscriptionTableMenu(containerId, inventory, access);
+        return new VirtualInscriptionTableMenu(containerId, inventory, access);
     }
 
     private static BlockPos playerPos(Player player) {

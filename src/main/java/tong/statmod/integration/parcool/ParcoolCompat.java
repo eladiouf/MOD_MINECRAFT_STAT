@@ -19,11 +19,22 @@ import tong.statmod.storage.PlayerStatData;
 
 import java.lang.reflect.Method;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public final class ParcoolCompat {
     private static boolean loaded = false;
+
+    /**
+     * Cooldown serveur pour limiter le grind PHYSICAL_ENDURANCE en wallrun/cling/hangdown.
+     * Sans ce throttler, un joueur qui se colle à un mur pendant 60 secondes gagne 60 XP, ce
+     * qui suffit largement à passer plusieurs niveaux d'ENDURANCE base 0. Avec throttler à
+     * 5 secondes : max 12 XP par minute de parkour, cohérent avec les autres sources.
+     */
+    private static final int ENDURANCE_TICK_COOLDOWN = 100; // 5 secondes serveur
+    private static final Map<UUID, Long> lastEnduranceGain = new HashMap<>();
 
     private ParcoolCompat() {}
 
@@ -89,6 +100,13 @@ public final class ParcoolCompat {
         String name = event.getAction().getClass().getSimpleName().toLowerCase(Locale.ROOT);
         if (name.equals("wallrun") || name.equals("clingtocliff")
                 || name.equals("hangdown") || name.equals("wallslide")) {
+            UUID uuid = player.getUUID();
+            long now = player.level().getGameTime();
+            long last = lastEnduranceGain.getOrDefault(uuid, Long.MIN_VALUE);
+            if (now - last < ENDURANCE_TICK_COOLDOWN) {
+                return; // throttled
+            }
+            lastEnduranceGain.put(uuid, now);
             boolean leveled = addXp(player, StatType.PHYSICAL_ENDURANCE, 1);
             if (leveled) SoundHelper.playLevelUp(serverPlayer);
             SyncHelper.syncStats(serverPlayer);
@@ -255,7 +273,7 @@ public final class ParcoolCompat {
 
     private static boolean addXp(Player player, StatType stat, int amount) {
         return RaceEffectApplier.addScaledXp(player, stat.index, amount,
-                player.getData(tong.statmod.storage.ModAttachments.STATS));
+                player.getData(tong.statmod.storage.ModAttachments.STATS), false);
     }
 
     private static boolean awardRewards(Player player, Map<StatType, Integer> rewards) {

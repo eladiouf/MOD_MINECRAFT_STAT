@@ -3,9 +3,16 @@ package tong.statmod.magic;
 import org.junit.jupiter.api.Test;
 import tong.statmod.integration.tensura.TensuraSpellTaxonomy;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,11 +74,85 @@ class MagicTreeCatalogTest {
     }
 
     @Test
+    void all_spell_ids_from_supported_lib_jars_are_represented() throws Exception {
+        Set<String> covered = new LinkedHashSet<>();
+        for (MagicNode node : MagicTreeCatalog.all()) {
+            covered.addAll(node.learnedSpells());
+        }
+
+        for (String jarName : List.of(
+                "irons_spellbooks-1.21.1-3.16.1.jar",
+                "darkdoppelganger-3.3.0-1.21.1.jar",
+                "gametechbcs_spellbooks-3.0.0-1.21.1.jar",
+                "legendarymage-1.0.9.jar",
+                "spells_gone_wrong-1.21.1-2.0.0.jar",
+                "wind_spellbooks-1.0.4.jar")) {
+            for (String spellId : baseSpellIdsFromJar(jarName)) {
+                assertTrue(covered.contains(spellId), "missing jar spell in MagicTreeCatalog: " + spellId);
+            }
+        }
+    }
+
+    @Test
     void advanced_tensura_lines_land_in_coherent_branches() {
         assertSpellLivesInBranch("tensura:magic_barrier", MagicBranch.HOLY);
         assertSpellLivesInBranch("tensura:teleport", MagicBranch.ENDER);
         assertSpellLivesInBranch("tensura:analyze", MagicBranch.EVOCATION);
         assertSpellLivesInBranch("tensura:true_darkness", MagicBranch.ELDRITCH);
+    }
+
+    @Test
+    void curated_irons_and_addon_spells_are_present_in_expected_branches() {
+        assertSpellsLiveInBranch(MagicBranch.FIRE,
+                "irons_spellbooks:blaze_storm",
+                "irons_spellbooks:fire_arrow",
+                "irons_spellbooks:flaming_barrage",
+                "irons_spellbooks:flaming_strike",
+                "irons_spellbooks:heat_surge",
+                "irons_spellbooks:magma_bomb",
+                "irons_spellbooks:raise_hell",
+                "irons_spellbooks:scorch",
+                "irons_spellbooks:wall_of_fire",
+                "gametechbcs_spellbooks:ashen_breath",
+                "gametechbcs_spellbooks:flames_reborn",
+                "gametechbcs_spellbooks:meteor_storm");
+        assertSpellsLiveInBranch(MagicBranch.WATER,
+                "gametechbcs_spellbooks:shatterpoint");
+        assertSpellsLiveInBranch(MagicBranch.AIR,
+                "irons_spellbooks:thunder_step",
+                "wind_spellbooks:aeropic",
+                "wind_spellbooks:almighty_push",
+                "wind_spellbooks:iron_slash",
+                "wind_spellbooks:tailwind",
+                "wind_spellbooks:tornado",
+                "wind_spellbooks:wind_blade",
+                "wind_spellbooks:wind_jump");
+        assertSpellsLiveInBranch(MagicBranch.EARTH,
+                "gametechbcs_spellbooks:acid_rain",
+                "gametechbcs_spellbooks:aerial_collapse",
+                "gametechbcs_spellbooks:ensnare");
+        assertSpellsLiveInBranch(MagicBranch.HOLY,
+                "irons_spellbooks:angel_wing",
+                "gametechbcs_spellbooks:banish",
+                "gametechbcs_spellbooks:nullflare");
+        assertSpellsLiveInBranch(MagicBranch.BLOOD,
+                "gametechbcs_spellbooks:call_forth_the_dead_king",
+                "gametechbcs_spellbooks:crimson_downpour");
+        assertSpellsLiveInBranch(MagicBranch.ENDER,
+                "irons_spellbooks:gravity_fissure",
+                "gametechbcs_spellbooks:astral_sense",
+                "gametechbcs_spellbooks:displacement");
+        assertSpellsLiveInBranch(MagicBranch.EVOCATION,
+                "irons_spellbooks:creeper_revenge",
+                "gametechbcs_spellbooks:lingering_strain",
+                "spells_gone_wrong:nucreeper_strike",
+                "spells_gone_wrong:shotgun_creeper");
+        assertSpellsLiveInBranch(MagicBranch.ELDRITCH,
+                "irons_spellbooks:void_tentacles",
+                "gametechbcs_spellbooks:blackout",
+                "gametechbcs_spellbooks:psychic_bolt",
+                "gametechbcs_spellbooks:reversal",
+                "gametechbcs_spellbooks:spectral_blink");
     }
 
     @Test
@@ -104,5 +185,32 @@ class MagicTreeCatalogTest {
         boolean found = MagicTreeCatalog.byBranch(branch).stream()
                 .anyMatch(node -> node.learnedSpells().contains(spellId));
         assertTrue(found, "expected " + spellId + " to live in branch " + branch);
+    }
+
+    private static void assertSpellsLiveInBranch(MagicBranch branch, String... spellIds) {
+        for (String spellId : spellIds) {
+            assertSpellLivesInBranch(spellId, branch);
+        }
+    }
+
+    private static Set<String> baseSpellIdsFromJar(String jarName) throws IOException {
+        Path jarPath = Path.of("libs", jarName);
+        Pattern pattern = Pattern.compile("\"spell\\.([a-z0-9_\\-]+)\\.([a-z0-9_]+)\"\\s*:");
+        Set<String> spellIds = new LinkedHashSet<>();
+        try (ZipFile zip = new ZipFile(jarPath.toFile())) {
+            ZipEntry entry = zip.stream()
+                    .filter(e -> e.getName().matches("assets/.+/lang/en_us\\.json"))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("missing lang file in " + jarName));
+            String json = new String(zip.getInputStream(entry).readAllBytes(), StandardCharsets.UTF_8);
+            Matcher matcher = pattern.matcher(json);
+            while (matcher.find()) {
+                String spellId = matcher.group(1) + ":" + matcher.group(2);
+                if (!spellId.endsWith(":none")) {
+                    spellIds.add(spellId);
+                }
+            }
+        }
+        return spellIds;
     }
 }

@@ -131,7 +131,7 @@ public final class OvergearedCompat {
 
     private static void award(Player player, StatType stat, int amount) {
         if (amount <= 0) return;
-        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, amount, player.getData(ModAttachments.STATS));
+        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, amount, player.getData(ModAttachments.STATS), false);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
     }

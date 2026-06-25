@@ -411,12 +411,14 @@ public final class EpicFightCompat {
         if (player.level().isClientSide) return;
 
         boolean leveled = addXp(player, StatType.AGILITY, 5);
+        // KEEN_SENSES — esquiver demande de la perception, pas juste de l'agilité.
+        tong.statmod.progression.DefensiveXPHandler.awardKeenSensesForDodge(player, 3);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
     }
 
     private static boolean addXp(Player player, StatType stat, int amount) {
         return RaceEffectApplier.addScaledXp(player, stat.index, amount,
-                player.getData(ModAttachments.STATS));
+                player.getData(ModAttachments.STATS), true);
     }
 }

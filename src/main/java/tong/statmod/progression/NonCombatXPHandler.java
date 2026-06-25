@@ -1,8 +1,10 @@
 package tong.statmod.progression;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,6 +16,8 @@ import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
+
+import java.util.Set;
 
 @EventBusSubscriber(modid = STATMod.MODID)
 public class NonCombatXPHandler {
@@ -56,21 +60,30 @@ public class NonCombatXPHandler {
         award(player, StatType.ALCHEMY, 2);
     }
 
-    private static boolean isOre(net.minecraft.world.level.block.Block block) {
-        return block == Blocks.COAL_ORE || block == Blocks.DEEPSLATE_COAL_ORE
-                || block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE
-                || block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE
-                || block == Blocks.DIAMOND_ORE || block == Blocks.DEEPSLATE_DIAMOND_ORE
-                || block == Blocks.EMERALD_ORE || block == Blocks.DEEPSLATE_EMERALD_ORE
-                || block == Blocks.LAPIS_ORE || block == Blocks.DEEPSLATE_LAPIS_ORE
-                || block == Blocks.REDSTONE_ORE || block == Blocks.DEEPSLATE_REDSTONE_ORE
-                || block == Blocks.COPPER_ORE || block == Blocks.DEEPSLATE_COPPER_ORE
-                || block == Blocks.NETHER_QUARTZ_ORE || block == Blocks.NETHER_GOLD_ORE
-                || block == Blocks.ANCIENT_DEBRIS;
+    static boolean isOre(Block block) {
+        if (block == null) return false;
+        return isOrePath(BuiltInRegistries.BLOCK.getKey(block).getPath());
     }
 
+    static boolean isOrePath(String path) {
+        return path != null && ORE_PATHS.contains(path);
+    }
+
+    private static final Set<String> ORE_PATHS = Set.of(
+            "coal_ore", "deepslate_coal_ore",
+            "iron_ore", "deepslate_iron_ore",
+            "gold_ore", "deepslate_gold_ore",
+            "diamond_ore", "deepslate_diamond_ore",
+            "emerald_ore", "deepslate_emerald_ore",
+            "lapis_ore", "deepslate_lapis_ore",
+            "redstone_ore", "deepslate_redstone_ore",
+            "copper_ore", "deepslate_copper_ore",
+            "nether_quartz_ore", "nether_gold_ore",
+            "ancient_debris"
+    );
+
     private static void award(Player player, StatType stat, int amount) {
-        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, amount, player.getData(ModAttachments.STATS));
+        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, amount, player.getData(ModAttachments.STATS), false);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
     }

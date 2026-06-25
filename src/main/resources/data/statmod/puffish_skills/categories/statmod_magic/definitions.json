@@ -1,1962 +1,3982 @@
 {
     "common.foundation.arcane_focus": {
         "title": "Arcane Focus",
-        "description": "Anchor your first arcane discipline and awaken the tree.",
+        "description": "Anchor your first arcane discipline and awaken the tree.
+
+Requirements:
+• Arcane Power ≥ 1
+• Erudition ≥ 1",
         "icon": {
             "type": "item",
             "data": {
                 "item": "minecraft:ender_pearl"
             }
-        }
+        },
+        "size": 2.35
     },
     "common.foundation.mana_well": {
         "title": "Mana Well",
-        "description": "Deepen your reserves before branching into schools.",
+        "description": "Deepen your reserves before branching into schools.
+
+Requirements:
+• Arcane Power ≥ 1
+• Erudition ≥ 1",
         "icon": {
             "type": "item",
             "data": {
                 "item": "minecraft:experience_bottle"
             }
-        }
+        },
+        "size": 1.7
     },
     "common.foundation.cast_discipline": {
         "title": "Cast Discipline",
-        "description": "Refine control and unlock stronger magical paths.",
+        "description": "Refine control and unlock stronger magical paths.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2",
         "icon": {
             "type": "item",
             "data": {
                 "item": "minecraft:book"
             }
-        }
+        },
+        "size": 1.7
     },
     "common.foundation.multi_school_gate": {
         "title": "Multi-School Gate",
-        "description": "Bridge multiple schools and prepare for advanced branches.",
+        "description": "Bridge multiple schools and prepare for advanced branches.
+
+Requirements:
+• Arcane Power ≥ 3
+• Erudition ≥ 3",
         "icon": {
             "type": "item",
             "data": {
                 "item": "minecraft:nether_star"
             }
-        }
+        },
+        "size": 1.9
     },
     "fire.opener.ignition": {
         "title": "Ignition",
-        "description": "Open the Fire school.",
+        "description": "Open the Fire school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Fire Affinity ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:flint_and_steel"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/firebolt.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "fire.tier.ember_path": {
         "title": "Ember Path",
-        "description": "Advance through tier 1 of the Fire path.",
+        "description": "Advance through tier 1 of the Fire path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Fire Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/firebolt.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "fire.tier.flame_path": {
         "title": "Flame Path",
-        "description": "Advance through tier 2 of the Fire path.",
+        "description": "Advance through tier 2 of the Fire path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Fire Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fireball.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "fire.tier.inferno_path": {
         "title": "Inferno Path",
-        "description": "Advance through tier 3 of the Fire path.",
+        "description": "Advance through tier 3 of the Fire path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:fire_charge"
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/meteor_storm.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "fire.signature.firebolt": {
         "title": "Firebolt",
-        "description": "Learn Firebolt.",
+        "description": "Learn Firebolt.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Fire Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/firebolt.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_bolt": {
         "title": "Tensura Fire Bolt",
-        "description": "Learn Tensura Fire Bolt.",
+        "description": "Learn Tensura Fire Bolt.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Fire Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/spiritual/fire_bolt.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.burning_dash": {
         "title": "Burning Dash",
-        "description": "Learn Burning Dash.",
+        "description": "Learn Burning Dash.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Agility ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:magma_cream"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/burning_dash.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.fireball": {
         "title": "Fireball",
-        "description": "Learn Fireball.",
+        "description": "Learn Fireball.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:fire_charge"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fireball.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_storm": {
         "title": "Tensura Fire Storm",
-        "description": "Learn Tensura Fire Storm.",
+        "description": "Learn Tensura Fire Storm.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/aspectual/fire_storm.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.fire_breath": {
         "title": "Fire Breath",
-        "description": "Learn Fire Breath.",
+        "description": "Learn Fire Breath.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:dragon_breath"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fire_breath.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_hellfire": {
         "title": "Tensura Hellfire",
-        "description": "Learn Tensura Hellfire.",
+        "description": "Learn Tensura Hellfire.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lava_bucket"
+                "texture": "tensura:textures/magic/spiritual/hellfire.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "fire.signature.fire_arrow": {
+        "title": "Fire Arrow",
+        "description": "Learn Fire Arrow.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fire_arrow.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.scorch": {
+        "title": "Scorch",
+        "description": "Learn Scorch.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/scorch.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.heat_surge": {
+        "title": "Heat Surge",
+        "description": "Learn Heat Surge.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Fire Affinity ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/heat_surge.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.flaming_strike": {
+        "title": "Flaming Strike",
+        "description": "Learn Flaming Strike.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Fire Affinity ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/flaming_strike.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.wall_of_fire": {
+        "title": "Wall Of Fire",
+        "description": "Learn Wall Of Fire.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/wall_of_fire.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.magma_bomb": {
+        "title": "Magma Bomb",
+        "description": "Learn Magma Bomb.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/magma_bomb.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.blaze_storm": {
+        "title": "Blaze Storm",
+        "description": "Learn Blaze Storm.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blaze_storm.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.flaming_barrage": {
+        "title": "Flaming Barrage",
+        "description": "Learn Flaming Barrage.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Fire Affinity ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/flaming_barrage.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.raise_hell": {
+        "title": "Raise Hell",
+        "description": "Learn Raise Hell.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/raise_hell.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.flames_reborn": {
+        "title": "Flames Reborn",
+        "description": "Learn Flames Reborn.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Physical Endurance ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/flames_reborn.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.ashen_breath": {
+        "title": "Ashen Breath",
+        "description": "Learn Ashen Breath.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/ashen_breath.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.meteor_storm": {
+        "title": "Meteor Storm",
+        "description": "Learn Meteor Storm.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/meteor_storm.png"
+            }
+        },
+        "size": 1
+    },
+    "fire.signature.pyromaniac": {
+        "title": "Pyromaniac",
+        "description": "Learn Pyromaniac.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Fire Affinity ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/pyromaniac.png"
+            }
+        },
+        "size": 1
     },
     "water.opener.ice_awakening": {
         "title": "Ice Awakening",
-        "description": "Open the Water school.",
+        "description": "Open the Water school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Water Affinity ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:water_bucket"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/snowball.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "water.tier.frost_path": {
         "title": "Frost Path",
-        "description": "Advance through tier 1 of the Water path.",
+        "description": "Advance through tier 1 of the Water path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Water Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/snowball.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "water.tier.chill_path": {
         "title": "Chill Path",
-        "description": "Advance through tier 2 of the Water path.",
+        "description": "Advance through tier 2 of the Water path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Water Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ice"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ray_of_frost.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "water.tier.glacier_path": {
         "title": "Glacier Path",
-        "description": "Advance through tier 3 of the Water path.",
+        "description": "Advance through tier 3 of the Water path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Magic Resistance ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:packed_ice"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blizzard.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "water.signature.snowball": {
         "title": "Snowball",
-        "description": "Learn Snowball.",
+        "description": "Learn Snowball.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Water Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/snowball.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.icicle": {
         "title": "Icicle",
-        "description": "Learn Icicle.",
+        "description": "Learn Icicle.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/icicle.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.cone_of_cold": {
         "title": "Cone Of Cold",
-        "description": "Learn Cone Of Cold.",
+        "description": "Learn Cone Of Cold.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Water Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/cone_of_cold.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.frost_step": {
         "title": "Frost Step",
-        "description": "Learn Frost Step.",
+        "description": "Learn Frost Step.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Agility ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/frost_step.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.ray_of_frost": {
         "title": "Ray Of Frost",
-        "description": "Learn Ray Of Frost.",
+        "description": "Learn Ray Of Frost.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Precision ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ray_of_frost.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.frostwave": {
         "title": "Frostwave",
-        "description": "Learn Frostwave.",
+        "description": "Learn Frostwave.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Water Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/frostwave.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.ice_spikes": {
         "title": "Ice Spikes",
-        "description": "Learn Ice Spikes.",
+        "description": "Learn Ice Spikes.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Precision ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ice_spikes.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.ice_block": {
         "title": "Ice Block",
-        "description": "Learn Ice Block.",
+        "description": "Learn Ice Block.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Magic Resistance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ice_block.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.blizzard": {
         "title": "Blizzard",
-        "description": "Learn Blizzard.",
+        "description": "Learn Blizzard.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blizzard.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.frostbite": {
         "title": "Frostbite",
-        "description": "Learn Frostbite.",
+        "description": "Learn Frostbite.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Casting Speed ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/frostbite.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.ice_tomb": {
         "title": "Ice Tomb",
-        "description": "Learn Ice Tomb.",
+        "description": "Learn Ice Tomb.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Casting Speed ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:snowball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ice_tomb.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.summon_polar_bear": {
         "title": "Summon Polar Bear",
-        "description": "Learn Summon Polar Bear.",
+        "description": "Learn Summon Polar Bear.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Tracking ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/summon_polar_bear.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "water.signature.shatterpoint": {
+        "title": "Shatterpoint",
+        "description": "Learn Shatterpoint.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Casting Speed ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/shatterpoint.png"
+            }
+        },
+        "size": 1
+    },
+    "water.signature.legendary_blizzard": {
+        "title": "Blizzard",
+        "description": "Learn Blizzard.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/blizzard.png"
+            }
+        },
+        "size": 1
+    },
+    "water.signature.focused_ice_cone": {
+        "title": "Focused Ice Cone",
+        "description": "Learn Focused Ice Cone.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Water Affinity ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/focused_ice_cone.png"
+            }
+        },
+        "size": 1
+    },
+    "water.signature.giant_snowball": {
+        "title": "Giant Snowball",
+        "description": "Learn Giant Snowball.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Water Affinity ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/giant_snowball.png"
+            }
+        },
+        "size": 1
+    },
+    "water.signature.ice_explosion_cone": {
+        "title": "Ice Explosion Cone",
+        "description": "Learn Ice Explosion Cone.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Water Affinity ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/ice_explosion_cone.png"
+            }
+        },
+        "size": 1
+    },
+    "water.signature.living_ice_sculpture": {
+        "title": "Living Ice Sculpture",
+        "description": "Learn Living Ice Sculpture.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Water Affinity ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/living_ice_sculpture.png"
+            }
+        },
+        "size": 1
     },
     "air.opener.spark_awakening": {
         "title": "Spark Awakening",
-        "description": "Open the Air school.",
+        "description": "Open the Air school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Air Affinity ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/charge.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "air.tier.spark_path": {
         "title": "Spark Path",
-        "description": "Advance through tier 1 of the Air path.",
+        "description": "Advance through tier 1 of the Air path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Air Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/charge.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "air.tier.storm_path": {
         "title": "Storm Path",
-        "description": "Advance through tier 2 of the Air path.",
+        "description": "Advance through tier 2 of the Air path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Air Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:copper_bulb"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/chain_lightning.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "air.tier.thunder_path": {
         "title": "Thunder Path",
-        "description": "Advance through tier 3 of the Air path.",
+        "description": "Advance through tier 3 of the Air path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Agility ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/thunderstorm.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "air.signature.charge": {
         "title": "Charge",
-        "description": "Learn Charge.",
+        "description": "Learn Charge.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Physical Endurance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/charge.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.volt_strike": {
         "title": "Volt Strike",
-        "description": "Learn Volt Strike.",
+        "description": "Learn Volt Strike.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Air Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/volt_strike.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.lightning_bolt": {
         "title": "Lightning Bolt",
-        "description": "Learn Lightning Bolt.",
+        "description": "Learn Lightning Bolt.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/lightning_bolt.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.chain_lightning": {
         "title": "Chain Lightning",
-        "description": "Learn Chain Lightning.",
+        "description": "Learn Chain Lightning.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Air Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/chain_lightning.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.electrocute": {
         "title": "Electrocute",
-        "description": "Learn Electrocute.",
+        "description": "Learn Electrocute.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Air Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/electrocute.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.shockwave": {
         "title": "Shockwave",
-        "description": "Learn Shockwave.",
+        "description": "Learn Shockwave.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/shockwave.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.lightning_lance": {
         "title": "Lightning Lance",
-        "description": "Learn Lightning Lance.",
+        "description": "Learn Lightning Lance.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Precision ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/lightning_lance.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.thunderstorm": {
         "title": "Thunderstorm",
-        "description": "Learn Thunderstorm.",
+        "description": "Learn Thunderstorm.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/thunderstorm.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.ball_lightning": {
         "title": "Ball Lightning",
-        "description": "Learn Ball Lightning.",
+        "description": "Learn Ball Lightning.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Air Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ball_lightning.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.ascension": {
         "title": "Ascension",
-        "description": "Learn Ascension.",
+        "description": "Learn Ascension.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Agility ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ascension.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "air.signature.thunder_step": {
+        "title": "Thunder Step",
+        "description": "Learn Thunder Step.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Agility ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/chain_lightning.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.wind_jump": {
+        "title": "Wind Jump",
+        "description": "Learn Wind Jump.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Agility ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/wind_jump.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.wind_blade": {
+        "title": "Wind Blade",
+        "description": "Learn Wind Blade.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/wind_blade.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.iron_slash": {
+        "title": "Iron Slash",
+        "description": "Learn Iron Slash.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/iron_slash.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.tailwind": {
+        "title": "Tailwind",
+        "description": "Learn Tailwind.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Physical Endurance ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/tailwind.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.aeropic": {
+        "title": "Aeropic",
+        "description": "Learn Aeropic.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Air Affinity ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/aeropic.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.almighty_push": {
+        "title": "Almighty Push",
+        "description": "Learn Almighty Push.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/almighty_push.png"
+            }
+        },
+        "size": 1
+    },
+    "air.signature.tornado": {
+        "title": "Tornado",
+        "description": "Learn Tornado.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "wind_spellbooks:textures/gui/spell_icons/tornado.png"
+            }
+        },
+        "size": 1
     },
     "earth.opener.nature_awakening": {
         "title": "Nature Awakening",
-        "description": "Open the Earth school.",
+        "description": "Open the Earth school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Earth Affinity ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/poison_arrow.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "earth.tier.poison_path": {
         "title": "Poison Path",
-        "description": "Advance through tier 1 of the Earth path.",
+        "description": "Advance through tier 1 of the Earth path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Earth Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:vine"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/poison_arrow.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "earth.tier.toxin_path": {
         "title": "Toxin Path",
-        "description": "Advance through tier 2 of the Earth path.",
+        "description": "Advance through tier 2 of the Earth path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Earth Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:slime_ball"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/acid_orb.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "earth.tier.grand_nature_path": {
         "title": "Grand Nature Path",
-        "description": "Advance through tier 3 of the Earth path.",
+        "description": "Advance through tier 3 of the Earth path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Physical Endurance ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:emerald"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/earthquake.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "earth.signature.poison_arrow": {
         "title": "Poison Arrow",
-        "description": "Learn Poison Arrow.",
+        "description": "Learn Poison Arrow.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/poison_arrow.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.poison_splash": {
         "title": "Poison Splash",
-        "description": "Learn Poison Splash.",
+        "description": "Learn Poison Splash.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/poison_splash.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.root": {
         "title": "Root",
-        "description": "Learn Root.",
+        "description": "Learn Root.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Casting Speed ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/root.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.oakskin": {
         "title": "Oakskin",
-        "description": "Learn Oakskin.",
+        "description": "Learn Oakskin.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Magic Resistance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/oakskin.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.acid_orb": {
         "title": "Acid Orb",
-        "description": "Learn Acid Orb.",
+        "description": "Learn Acid Orb.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Earth Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/acid_orb.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.poison_breath": {
         "title": "Poison Breath",
-        "description": "Learn Poison Breath.",
+        "description": "Learn Poison Breath.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/poison_breath.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.stomp": {
         "title": "Stomp",
-        "description": "Learn Stomp.",
+        "description": "Learn Stomp.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Casting Speed ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/stomp.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.spider_aspect": {
         "title": "Spider Aspect",
-        "description": "Learn Spider Aspect.",
+        "description": "Learn Spider Aspect.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Tracking ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/spider_aspect.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.firefly_swarm": {
         "title": "Firefly Swarm",
-        "description": "Learn Firefly Swarm.",
+        "description": "Learn Firefly Swarm.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Tracking ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/firefly_swarm.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.blight": {
         "title": "Blight",
-        "description": "Learn Blight.",
+        "description": "Learn Blight.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blight.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.earthquake": {
         "title": "Earthquake",
-        "description": "Learn Earthquake.",
+        "description": "Learn Earthquake.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/earthquake.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.gluttony": {
         "title": "Gluttony",
-        "description": "Learn Gluttony.",
+        "description": "Learn Gluttony.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Earth Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/gluttony.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.touch_dig": {
         "title": "Touch Dig",
-        "description": "Learn Touch Dig.",
+        "description": "Learn Touch Dig.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Earth Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/touch_dig.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "earth.signature.ensnare": {
+        "title": "Ensnare",
+        "description": "Learn Ensnare.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Casting Speed ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/ensnare.png"
+            }
+        },
+        "size": 1
+    },
+    "earth.signature.acid_rain": {
+        "title": "Acid Rain",
+        "description": "Learn Acid Rain.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/acid_rain.png"
+            }
+        },
+        "size": 1
+    },
+    "earth.signature.aerial_collapse": {
+        "title": "Aerial Collapse",
+        "description": "Learn Aerial Collapse.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/aerial_collapse.png"
+            }
+        },
+        "size": 1
     },
     "holy.opener.light_awakening": {
         "title": "Light Awakening",
-        "description": "Open the Holy school.",
+        "description": "Open the Holy school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Willpower ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/heal.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "holy.tier.bless_path": {
         "title": "Bless Path",
-        "description": "Advance through tier 1 of the Holy path.",
+        "description": "Advance through tier 1 of the Holy path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glow_berries"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/heal.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "holy.tier.grace_path": {
         "title": "Grace Path",
-        "description": "Advance through tier 2 of the Holy path.",
+        "description": "Advance through tier 2 of the Holy path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Erudition ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/healing_circle.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "holy.tier.divine_path": {
         "title": "Divine Path",
-        "description": "Advance through tier 3 of the Holy path.",
+        "description": "Advance through tier 3 of the Holy path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:beacon"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sunbeam.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "holy.signature.heal": {
         "title": "Heal",
-        "description": "Learn Heal.",
+        "description": "Learn Heal.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/heal.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.wisp": {
         "title": "Wisp",
-        "description": "Learn Wisp.",
+        "description": "Learn Wisp.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Tracking ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/wisp.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.guiding_bolt": {
         "title": "Guiding Bolt",
-        "description": "Learn Guiding Bolt.",
+        "description": "Learn Guiding Bolt.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/guiding_bolt.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.cleanse": {
         "title": "Cleanse",
-        "description": "Learn Cleanse.",
+        "description": "Learn Cleanse.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/cleanse.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.healing_circle": {
         "title": "Healing Circle",
-        "description": "Learn Healing Circle.",
+        "description": "Learn Healing Circle.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/healing_circle.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.haste": {
         "title": "Haste",
-        "description": "Learn Haste.",
+        "description": "Learn Haste.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Physical Endurance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/haste.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.divine_smite": {
         "title": "Divine Smite",
-        "description": "Learn Divine Smite.",
+        "description": "Learn Divine Smite.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Physical Endurance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/divine_smite.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.fortify": {
         "title": "Fortify",
-        "description": "Learn Fortify.",
+        "description": "Learn Fortify.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Magic Resistance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fortify.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.blessing_of_life": {
         "title": "Blessing Of Life",
-        "description": "Learn Blessing Of Life.",
+        "description": "Learn Blessing Of Life.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Physical Endurance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blessing_of_life.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.cloud_of_regeneration": {
         "title": "Cloud Of Regeneration",
-        "description": "Learn Cloud Of Regeneration.",
+        "description": "Learn Cloud Of Regeneration.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/cloud_of_regeneration.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.greater_heal": {
         "title": "Greater Heal",
-        "description": "Learn Greater Heal.",
+        "description": "Learn Greater Heal.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/greater_heal.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.sunbeam": {
         "title": "Sunbeam",
-        "description": "Learn Sunbeam.",
+        "description": "Learn Sunbeam.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sunbeam.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.angel_wings": {
         "title": "Angel Wings",
-        "description": "Learn Angel Wings.",
+        "description": "Learn Angel Wings.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Magic Resistance ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sunbeam.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "holy.signature.angel_wing": {
+        "title": "Angel Wing",
+        "description": "Learn Angel Wing.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/angel_wing.png"
+            }
+        },
+        "size": 1
+    },
+    "holy.signature.banish": {
+        "title": "Banish",
+        "description": "Learn Banish.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Casting Speed ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/healing_circle.png"
+            }
+        },
+        "size": 1
+    },
+    "holy.signature.nullflare": {
+        "title": "Nullflare",
+        "description": "Learn Nullflare.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/nullflare.png"
+            }
+        },
+        "size": 1
     },
     "blood.opener.sanguine_awakening": {
         "title": "Sanguine Awakening",
-        "description": "Open the Blood school.",
+        "description": "Open the Blood school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Physical Endurance ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/acupuncture.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "blood.tier.hemo_path": {
         "title": "Hemo Path",
-        "description": "Advance through tier 1 of the Blood path.",
+        "description": "Advance through tier 1 of the Blood path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Physical Endurance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/acupuncture.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "blood.tier.sanguine_path": {
         "title": "Sanguine Path",
-        "description": "Advance through tier 2 of the Blood path.",
+        "description": "Advance through tier 2 of the Blood path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:fermented_spider_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/devour.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "blood.tier.exsanguine_path": {
         "title": "Exsanguine Path",
-        "description": "Advance through tier 3 of the Blood path.",
+        "description": "Advance through tier 3 of the Blood path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:wither_skeleton_skull"
+                "texture": "legendarymage:textures/gui/spell_icons/resurrection_rune.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "blood.signature.acupuncture": {
         "title": "Acupuncture",
-        "description": "Learn Acupuncture.",
+        "description": "Learn Acupuncture.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/acupuncture.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.blood_needles": {
         "title": "Blood Needles",
-        "description": "Learn Blood Needles.",
+        "description": "Learn Blood Needles.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blood_needles.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.blood_slash": {
         "title": "Blood Slash",
-        "description": "Learn Blood Slash.",
+        "description": "Learn Blood Slash.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Precision ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blood_slash.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.blood_step": {
         "title": "Blood Step",
-        "description": "Learn Blood Step.",
+        "description": "Learn Blood Step.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Agility ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/blood_step.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.devour": {
         "title": "Devour",
-        "description": "Learn Devour.",
+        "description": "Learn Devour.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/devour.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.heartstop": {
         "title": "Heartstop",
-        "description": "Learn Heartstop.",
+        "description": "Learn Heartstop.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/heartstop.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.raise_dead": {
         "title": "Raise Dead",
-        "description": "Learn Raise Dead.",
+        "description": "Learn Raise Dead.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Tracking ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/raise_dead.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.ray_of_siphoning": {
         "title": "Ray Of Siphoning",
-        "description": "Learn Ray Of Siphoning.",
+        "description": "Learn Ray Of Siphoning.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Precision ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/ray_of_siphoning.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.wither_skull": {
         "title": "Wither Skull",
-        "description": "Learn Wither Skull.",
+        "description": "Learn Wither Skull.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/wither_skull.png"
             }
-        }
+        },
+        "size": 1
     },
     "blood.signature.sacrifice": {
         "title": "Sacrifice",
-        "description": "Learn Sacrifice.",
+        "description": "Learn Sacrifice.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:redstone"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sacrifice.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "blood.signature.crimson_downpour": {
+        "title": "Crimson Downpour",
+        "description": "Learn Crimson Downpour.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/crimson_downpour.png"
+            }
+        },
+        "size": 1
+    },
+    "blood.signature.call_forth_the_dead_king": {
+        "title": "Call Forth The Dead King",
+        "description": "Learn Call Forth The Dead King.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/call_forth_the_dead_king.png"
+            }
+        },
+        "size": 1
+    },
+    "blood.signature.resurrection_rune": {
+        "title": "Resurrection Rune",
+        "description": "Learn Resurrection Rune.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/resurrection_rune.png"
+            }
+        },
+        "size": 1
     },
     "ender.opener.void_awakening": {
         "title": "Void Awakening",
-        "description": "Open the Ender school.",
+        "description": "Open the Ender school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Keen Senses ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/magic_arrow.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "ender.tier.void_path": {
         "title": "Void Path",
-        "description": "Advance through tier 1 of the Ender path.",
+        "description": "Advance through tier 1 of the Ender path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:chorus_fruit"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/magic_arrow.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "ender.tier.rift_path": {
         "title": "Rift Path",
-        "description": "Advance through tier 2 of the Ender path.",
+        "description": "Advance through tier 2 of the Ender path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:end_crystal"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/portal.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "ender.tier.abyss_path": {
         "title": "Abyss Path",
-        "description": "Advance through tier 3 of the Ender path.",
+        "description": "Advance through tier 3 of the Ender path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/black_hole.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "ender.signature.magic_arrow": {
         "title": "Magic Arrow",
-        "description": "Learn Magic Arrow.",
+        "description": "Learn Magic Arrow.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/magic_arrow.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.magic_missile": {
         "title": "Magic Missile",
-        "description": "Learn Magic Missile.",
+        "description": "Learn Magic Missile.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/magic_missile.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.teleport": {
         "title": "Teleport",
-        "description": "Learn Teleport.",
+        "description": "Learn Teleport.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/teleport.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.summon_ender_chest": {
         "title": "Summon Ender Chest",
-        "description": "Learn Summon Ender Chest.",
+        "description": "Learn Summon Ender Chest.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Tracking ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/summon_ender_chest.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.starfall": {
         "title": "Starfall",
-        "description": "Learn Starfall.",
+        "description": "Learn Starfall.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/starfall.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.recall": {
         "title": "Recall",
-        "description": "Learn Recall.",
+        "description": "Learn Recall.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/recall.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.portal": {
         "title": "Portal",
-        "description": "Learn Portal.",
+        "description": "Learn Portal.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/portal.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.evasion": {
         "title": "Evasion",
-        "description": "Learn Evasion.",
+        "description": "Learn Evasion.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/evasion.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.shadow_slash": {
         "title": "Shadow Slash",
-        "description": "Learn Shadow Slash.",
+        "description": "Learn Shadow Slash.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/shadow_slash.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.echoing_strikes": {
         "title": "Echoing Strikes",
-        "description": "Learn Echoing Strikes.",
+        "description": "Learn Echoing Strikes.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/echoing_strikes.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.dragon_breath": {
         "title": "Dragon Breath",
-        "description": "Learn Dragon Breath.",
+        "description": "Learn Dragon Breath.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/dragon_breath.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.black_hole": {
         "title": "Black Hole",
-        "description": "Learn Black Hole.",
+        "description": "Learn Black Hole.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/black_hole.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.summon_swords": {
         "title": "Summon Swords",
-        "description": "Learn Summon Swords.",
+        "description": "Learn Summon Swords.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Tracking ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/summon_swords.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.counterspell": {
         "title": "Counterspell",
-        "description": "Learn Counterspell.",
+        "description": "Learn Counterspell.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/counterspell.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "ender.signature.gravity_fissure": {
+        "title": "Gravity Fissure",
+        "description": "Learn Gravity Fissure.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/black_hole.png"
+            }
+        },
+        "size": 1
+    },
+    "ender.signature.astral_sense": {
+        "title": "Astral Sense",
+        "description": "Learn Astral Sense.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/astral_sense.png"
+            }
+        },
+        "size": 1
+    },
+    "ender.signature.displacement": {
+        "title": "Displacement",
+        "description": "Learn Displacement.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/displacement.png"
+            }
+        },
+        "size": 1
+    },
+    "ender.signature.doppel_portal": {
+        "title": "Doppel Portal",
+        "description": "Learn Doppel Portal.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "darkdoppelganger:textures/gui/spell_icons/doppel_portal.png"
+            }
+        },
+        "size": 1
+    },
+    "ender.signature.implosion": {
+        "title": "Implosion",
+        "description": "Learn Implosion.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/implosion.png"
+            }
+        },
+        "size": 1
     },
     "evocation.opener.trick_awakening": {
         "title": "Trick Awakening",
-        "description": "Open the Evocation school.",
+        "description": "Open the Evocation school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Tracking ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/gust.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "evocation.tier.trick_path": {
         "title": "Trick Path",
-        "description": "Advance through tier 1 of the Evocation path.",
+        "description": "Advance through tier 1 of the Evocation path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Erudition ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/gust.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "evocation.tier.illusion_path": {
         "title": "Illusion Path",
-        "description": "Advance through tier 2 of the Evocation path.",
+        "description": "Advance through tier 2 of the Evocation path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Tracking ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:goat_horn"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/invisibility.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "evocation.tier.mastery_path": {
         "title": "Mastery Path",
-        "description": "Advance through tier 3 of the Evocation path.",
+        "description": "Advance through tier 3 of the Evocation path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Erudition ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/chain_creeper.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "evocation.signature.gust": {
         "title": "Gust",
-        "description": "Learn Gust.",
+        "description": "Learn Gust.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Intimidation ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/gust.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.shield": {
         "title": "Shield",
-        "description": "Learn Shield.",
+        "description": "Learn Shield.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Magic Resistance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/shield.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.slow": {
         "title": "Slow",
-        "description": "Learn Slow.",
+        "description": "Learn Slow.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Intimidation ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/slow.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.throw": {
         "title": "Throw",
-        "description": "Learn Throw.",
+        "description": "Learn Throw.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Intimidation ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/throw.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.firecracker": {
         "title": "Firecracker",
-        "description": "Learn Firecracker.",
+        "description": "Learn Firecracker.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Intimidation ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/firecracker.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.invisibility": {
         "title": "Invisibility",
-        "description": "Learn Invisibility.",
+        "description": "Learn Invisibility.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/invisibility.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.spectral_hammer": {
         "title": "Spectral Hammer",
-        "description": "Learn Spectral Hammer.",
+        "description": "Learn Spectral Hammer.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/spectral_hammer.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.fang_strike": {
         "title": "Fang Strike",
-        "description": "Learn Fang Strike.",
+        "description": "Learn Fang Strike.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fang_strike.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.fang_ward": {
         "title": "Fang Ward",
-        "description": "Learn Fang Ward.",
+        "description": "Learn Fang Ward.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fang_ward.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.arrow_volley": {
         "title": "Arrow Volley",
-        "description": "Learn Arrow Volley.",
+        "description": "Learn Arrow Volley.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/arrow_volley.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.summon_horse": {
         "title": "Summon Horse",
-        "description": "Learn Summon Horse.",
+        "description": "Learn Summon Horse.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Tracking ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/summon_horse.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.chain_creeper": {
         "title": "Chain Creeper",
-        "description": "Learn Chain Creeper.",
+        "description": "Learn Chain Creeper.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/chain_creeper.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.lob_creeper": {
         "title": "Lob Creeper",
-        "description": "Learn Lob Creeper.",
+        "description": "Learn Lob Creeper.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/lob_creeper.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.summon_vex": {
         "title": "Summon Vex",
-        "description": "Learn Summon Vex.",
+        "description": "Learn Summon Vex.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Tracking ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/summon_vex.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.arcane_shackle": {
         "title": "Arcane Shackle",
-        "description": "Learn Arcane Shackle.",
+        "description": "Learn Arcane Shackle.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/arcane_shackle.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.wololo": {
         "title": "Wololo",
-        "description": "Learn Wololo.",
+        "description": "Learn Wololo.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/wololo.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.fang_swirl": {
         "title": "Fang Swirl",
-        "description": "Learn Fang Swirl.",
+        "description": "Learn Fang Swirl.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:totem_of_undying"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/fang_swirl.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "evocation.signature.lingering_strain": {
+        "title": "Lingering Strain",
+        "description": "Learn Lingering Strain.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/lingering_strain.png"
+            }
+        },
+        "size": 1
+    },
+    "evocation.signature.creeper_revenge": {
+        "title": "Creeper Revenge",
+        "description": "Learn Creeper Revenge.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/creeper_revenge.png"
+            }
+        },
+        "size": 1
+    },
+    "evocation.signature.nucreeper_strike": {
+        "title": "Nucreeper Strike",
+        "description": "Learn Nucreeper Strike.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "spells_gone_wrong:textures/gui/spell_icons/nucreeper_strike.png"
+            }
+        },
+        "size": 1
+    },
+    "evocation.signature.shotgun_creeper": {
+        "title": "Shotgun Creeper",
+        "description": "Learn Shotgun Creeper.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "spells_gone_wrong:textures/gui/spell_icons/shotgun_creeper.png"
+            }
+        },
+        "size": 1
+    },
+    "evocation.signature.elemental_burst": {
+        "title": "Elemental Burst",
+        "description": "Learn Elemental Burst.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/elemental_burst.png"
+            }
+        },
+        "size": 1
+    },
+    "evocation.signature.magic_shotgun": {
+        "title": "Magic Shotgun",
+        "description": "Learn Magic Shotgun.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "legendarymage:textures/gui/spell_icons/magic_shotgun.png"
+            }
+        },
+        "size": 1
     },
     "eldritch.opener.dark_awakening": {
         "title": "Dark Awakening",
-        "description": "Open the Eldritch school.",
+        "description": "Open the Eldritch school.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 1
+• Willpower ≥ 2",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/eldritch_blast.png"
             }
-        }
+        },
+        "size": 1.3
     },
     "eldritch.tier.dark_path": {
         "title": "Dark Path",
-        "description": "Advance through tier 1 of the Eldritch path.",
+        "description": "Advance through tier 1 of the Eldritch path.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Magic Resistance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/eldritch_blast.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "eldritch.tier.void_gaze_path": {
         "title": "Void Gaze Path",
-        "description": "Advance through tier 2 of the Eldritch path.",
+        "description": "Advance through tier 2 of the Eldritch path.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:sculk"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/telekinesis.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "eldritch.tier.abyssal_path": {
         "title": "Abyssal Path",
-        "description": "Advance through tier 3 of the Eldritch path.",
+        "description": "Advance through tier 3 of the Eldritch path.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:sculk_catalyst"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/abyssal_shroud.png"
             }
-        }
+        },
+        "size": 1.12
     },
     "eldritch.signature.eldritch_blast": {
         "title": "Eldritch Blast",
-        "description": "Learn Eldritch Blast.",
+        "description": "Learn Eldritch Blast.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/eldritch_blast.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.planar_sight": {
         "title": "Planar Sight",
-        "description": "Learn Planar Sight.",
+        "description": "Learn Planar Sight.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/planar_sight.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.telekinesis": {
         "title": "Telekinesis",
-        "description": "Learn Telekinesis.",
+        "description": "Learn Telekinesis.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/telekinesis.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.sonic_boom": {
         "title": "Sonic Boom",
-        "description": "Learn Sonic Boom.",
+        "description": "Learn Sonic Boom.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sonic_boom.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.abyssal_shroud": {
         "title": "Abyssal Shroud",
-        "description": "Learn Abyssal Shroud.",
+        "description": "Learn Abyssal Shroud.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/abyssal_shroud.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.sculk_tentacles": {
         "title": "Sculk Tentacles",
-        "description": "Learn Sculk Tentacles.",
+        "description": "Learn Sculk Tentacles.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sculk_tentacles.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.pocket_dimension": {
         "title": "Pocket Dimension",
-        "description": "Learn Pocket Dimension.",
+        "description": "Learn Pocket Dimension.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/pocket_dimension.png"
             }
-        }
+        },
+        "size": 1
+    },
+    "eldritch.signature.blackout": {
+        "title": "Blackout",
+        "description": "Learn Blackout.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/blackout.png"
+            }
+        },
+        "size": 1
+    },
+    "eldritch.signature.psychic_bolt": {
+        "title": "Psychic Bolt",
+        "description": "Learn Psychic Bolt.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/psychic_bolt.png"
+            }
+        },
+        "size": 1
+    },
+    "eldritch.signature.spectral_blink": {
+        "title": "Spectral Blink",
+        "description": "Learn Spectral Blink.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/spectral_blink.png"
+            }
+        },
+        "size": 1
+    },
+    "eldritch.signature.reversal": {
+        "title": "Reversal",
+        "description": "Learn Reversal.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Willpower ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "gametechbcs_spellbooks:textures/gui/spell_icons/reversal.png"
+            }
+        },
+        "size": 1
+    },
+    "eldritch.signature.void_tentacles": {
+        "title": "Void Tentacles",
+        "description": "Learn Void Tentacles.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "irons_spellbooks:textures/gui/spell_icons/void_tentacles.png"
+            }
+        },
+        "size": 1
+    },
+    "eldritch.signature.summon_doppel_minion": {
+        "title": "Summon Doppel Minion",
+        "description": "Learn Summon Doppel Minion.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Tracking ≥ 5",
+        "icon": {
+            "type": "texture",
+            "data": {
+                "texture": "darkdoppelganger:textures/gui/spell_icons/summon_doppel_minion.png"
+            }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_aspectual": {
         "title": "Tensura Fire Aspectual",
-        "description": "Learn Tensura Fire Aspectual.",
+        "description": "Learn Tensura Fire Aspectual.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Fire Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/aspectual/fire_aspectual.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_ball": {
         "title": "Tensura Fire Ball",
-        "description": "Learn Tensura Fire Ball.",
+        "description": "Learn Tensura Fire Ball.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Fire Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/aspectual/fire_ball.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_lance": {
         "title": "Tensura Fire Lance",
-        "description": "Learn Tensura Fire Lance.",
+        "description": "Learn Tensura Fire Lance.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Precision ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/aspectual/fire_lance.png"
             }
-        }
+        },
+        "size": 1
     },
     "fire.signature.tensura_fire_wall": {
         "title": "Tensura Fire Wall",
-        "description": "Learn Tensura Fire Wall.",
+        "description": "Learn Tensura Fire Wall.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Fire Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:blaze_powder"
+                "texture": "tensura:textures/magic/aspectual/fire_wall.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_healing": {
         "title": "Tensura Healing",
-        "description": "Learn Tensura Healing.",
+        "description": "Learn Tensura Healing.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "tensura:textures/magic/aspectual/healing.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_recovery": {
         "title": "Tensura Recovery",
-        "description": "Learn Tensura Recovery.",
+        "description": "Learn Tensura Recovery.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Water Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "tensura:textures/magic/aspectual/recovery.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_antidote": {
         "title": "Tensura Antidote",
-        "description": "Learn Tensura Antidote.",
+        "description": "Learn Tensura Antidote.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Water Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "tensura:textures/magic/aspectual/antidote.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_water_jail": {
         "title": "Tensura Water Jail",
-        "description": "Learn Tensura Water Jail.",
+        "description": "Learn Tensura Water Jail.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Water Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "tensura:textures/magic/aspectual/water_jail.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_healing_rain": {
         "title": "Tensura Healing Rain",
-        "description": "Learn Tensura Healing Rain.",
+        "description": "Learn Tensura Healing Rain.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:golden_apple"
+                "texture": "tensura:textures/magic/aspectual/healing_rain.png"
             }
-        }
+        },
+        "size": 1
     },
     "water.signature.tensura_full_recovery": {
         "title": "Tensura Full Recovery",
-        "description": "Learn Tensura Full Recovery.",
+        "description": "Learn Tensura Full Recovery.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Water Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:prismarine_crystals"
+                "texture": "tensura:textures/magic/aspectual/full_recovery.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_wind_gust": {
         "title": "Tensura Wind Gust",
-        "description": "Learn Tensura Wind Gust.",
+        "description": "Learn Tensura Wind Gust.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Air Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/aspectual/wind_gust.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_wind_protection": {
         "title": "Tensura Wind Protection",
-        "description": "Learn Tensura Wind Protection.",
+        "description": "Learn Tensura Wind Protection.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Air Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/aspectual/wind_protection.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_wind_blade": {
         "title": "Tensura Wind Blade",
-        "description": "Learn Tensura Wind Blade.",
+        "description": "Learn Tensura Wind Blade.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/spiritual/wind_blade.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_tornado_blade": {
         "title": "Tensura Tornado Blade",
-        "description": "Learn Tensura Tornado Blade.",
+        "description": "Learn Tensura Tornado Blade.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/aspectual/tornado_blade.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_wind_cutter": {
         "title": "Tensura Wind Cutter",
-        "description": "Learn Tensura Wind Cutter.",
+        "description": "Learn Tensura Wind Cutter.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Air Affinity ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/aspectual/wind_cutter.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_lightning_lance": {
         "title": "Tensura Lightning Lance",
-        "description": "Learn Tensura Lightning Lance.",
+        "description": "Learn Tensura Lightning Lance.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Precision ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "tensura:textures/magic/spiritual/lightning_lance.png"
             }
-        }
+        },
+        "size": 1
     },
     "air.signature.tensura_aerial_blade": {
         "title": "Tensura Aerial Blade",
-        "description": "Learn Tensura Aerial Blade.",
+        "description": "Learn Tensura Aerial Blade.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Air Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:feather"
+                "texture": "tensura:textures/magic/spiritual/aerial_blade.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_earth_wall": {
         "title": "Tensura Earth Wall",
-        "description": "Learn Tensura Earth Wall.",
+        "description": "Learn Tensura Earth Wall.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Earth Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/aspectual/earth_wall.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_earth_lock": {
         "title": "Tensura Earth Lock",
-        "description": "Learn Tensura Earth Lock.",
+        "description": "Learn Tensura Earth Lock.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Casting Speed ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/aspectual/earth_lock.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_earth_spikes": {
         "title": "Tensura Earth Spikes",
-        "description": "Learn Tensura Earth Spikes.",
+        "description": "Learn Tensura Earth Spikes.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Earth Affinity ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/spiritual/earth_spikes.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_earth_jail": {
         "title": "Tensura Earth Jail",
-        "description": "Learn Tensura Earth Jail.",
+        "description": "Learn Tensura Earth Jail.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Casting Speed ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/spiritual/earth_jail.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_earth_storm": {
         "title": "Tensura Earth Storm",
-        "description": "Learn Tensura Earth Storm.",
+        "description": "Learn Tensura Earth Storm.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/spiritual/earth_storm.png"
             }
-        }
+        },
+        "size": 1
     },
     "earth.signature.tensura_magma_surge": {
         "title": "Tensura Magma Surge",
-        "description": "Learn Tensura Magma Surge.",
+        "description": "Learn Tensura Magma Surge.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Earth Affinity ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:moss_block"
+                "texture": "tensura:textures/magic/spiritual/magma_surge.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_magic_wall": {
         "title": "Tensura Magic Wall",
-        "description": "Learn Tensura Magic Wall.",
+        "description": "Learn Tensura Magic Wall.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Magic Resistance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/magic_wall.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_barrier": {
         "title": "Tensura Barrier",
-        "description": "Learn Tensura Barrier.",
+        "description": "Learn Tensura Barrier.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Magic Resistance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/barrier.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_reinforced_barrier": {
         "title": "Tensura Reinforced Barrier",
-        "description": "Learn Tensura Reinforced Barrier.",
+        "description": "Learn Tensura Reinforced Barrier.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Magic Resistance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/reinforced_barrier.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_anti_shock_area": {
         "title": "Tensura Anti Shock Area",
-        "description": "Learn Tensura Anti Shock Area.",
+        "description": "Learn Tensura Anti Shock Area.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Magic Resistance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:lightning_rod"
+                "texture": "tensura:textures/magic/aspectual/anti_shock_area.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_magic_barrier": {
         "title": "Tensura Magic Barrier",
-        "description": "Learn Tensura Magic Barrier.",
+        "description": "Learn Tensura Magic Barrier.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Magic Resistance ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/magic_barrier.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_healthcare": {
         "title": "Tensura Healthcare",
-        "description": "Learn Tensura Healthcare.",
+        "description": "Learn Tensura Healthcare.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Willpower ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/healthcare.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_multilayer_barrier": {
         "title": "Tensura Multilayer Barrier",
-        "description": "Learn Tensura Multilayer Barrier.",
+        "description": "Learn Tensura Multilayer Barrier.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Magic Resistance ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/sunbeam.png"
             }
-        }
+        },
+        "size": 1
     },
     "holy.signature.tensura_anti_magic_area": {
         "title": "Tensura Anti Magic Area",
-        "description": "Learn Tensura Anti Magic Area.",
+        "description": "Learn Tensura Anti Magic Area.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Magic Resistance ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:glowstone_dust"
+                "texture": "tensura:textures/magic/aspectual/anti_magic_area.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_lighten": {
         "title": "Tensura Lighten",
-        "description": "Learn Tensura Lighten.",
+        "description": "Learn Tensura Lighten.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "tensura:textures/magic/aspectual/lighten.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_float": {
         "title": "Tensura Float",
-        "description": "Learn Tensura Float.",
+        "description": "Learn Tensura Float.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "tensura:textures/magic/aspectual/float.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_escape": {
         "title": "Tensura Escape",
-        "description": "Learn Tensura Escape.",
+        "description": "Learn Tensura Escape.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "tensura:textures/magic/aspectual/escape.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_warp_portal": {
         "title": "Tensura Warp Portal",
-        "description": "Learn Tensura Warp Portal.",
+        "description": "Learn Tensura Warp Portal.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "tensura:textures/magic/aspectual/warp_portal.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_teleport": {
         "title": "Tensura Teleport",
-        "description": "Learn Tensura Teleport.",
+        "description": "Learn Tensura Teleport.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_pearl"
+                "texture": "tensura:textures/magic/spiritual/teleport.png"
             }
-        }
+        },
+        "size": 1
     },
     "ender.signature.tensura_gate": {
         "title": "Tensura Gate",
-        "description": "Learn Tensura Gate.",
+        "description": "Learn Tensura Gate.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Keen Senses ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:ender_eye"
+                "texture": "tensura:textures/magic/spiritual/gate.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_analyze": {
         "title": "Tensura Analyze",
-        "description": "Learn Tensura Analyze.",
+        "description": "Learn Tensura Analyze.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/magic/aspectual/analyze.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_search_enemy": {
         "title": "Tensura Search Enemy",
-        "description": "Learn Tensura Search Enemy.",
+        "description": "Learn Tensura Search Enemy.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Keen Senses ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/magic/aspectual/search_enemy.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_doppelganger": {
         "title": "Tensura Doppelganger",
-        "description": "Learn Tensura Doppelganger.",
+        "description": "Learn Tensura Doppelganger.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Tracking ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/magic/aspectual/doppelganger.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_magic_aura": {
         "title": "Tensura Magic Aura",
-        "description": "Learn Tensura Magic Aura.",
+        "description": "Learn Tensura Magic Aura.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Physical Endurance ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/gust.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_magic_bullet": {
         "title": "Tensura Magic Bullet",
-        "description": "Learn Tensura Magic Bullet.",
+        "description": "Learn Tensura Magic Bullet.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Precision ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/battlewill/magic_bullet.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_clairvoyance": {
         "title": "Tensura Clairvoyance",
-        "description": "Learn Tensura Clairvoyance.",
+        "description": "Learn Tensura Clairvoyance.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/magic/aspectual/clairvoyance.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_spatial_storage": {
         "title": "Tensura Spatial Storage",
-        "description": "Learn Tensura Spatial Storage.",
+        "description": "Learn Tensura Spatial Storage.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Keen Senses ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/magic/aspectual/spatial_storage.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_magic_space_transform": {
         "title": "Tensura Magic Space Transform",
-        "description": "Learn Tensura Magic Space Transform.",
+        "description": "Learn Tensura Magic Space Transform.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "irons_spellbooks:textures/gui/spell_icons/invisibility.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_dimension_cutter": {
         "title": "Tensura Dimension Cutter",
-        "description": "Learn Tensura Dimension Cutter.",
+        "description": "Learn Tensura Dimension Cutter.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/aspectual/dimension_cutter.png"
             }
-        }
+        },
+        "size": 1
     },
     "evocation.signature.tensura_maximum_magic_bullet": {
         "title": "Tensura Maximum Magic Bullet",
-        "description": "Learn Tensura Maximum Magic Bullet.",
+        "description": "Learn Tensura Maximum Magic Bullet.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Precision ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:amethyst_shard"
+                "texture": "tensura:textures/battlewill/maximum_magic_bullet.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_darkness": {
         "title": "Tensura Darkness",
-        "description": "Learn Tensura Darkness.",
+        "description": "Learn Tensura Darkness.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/darkness.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_shadow_bind": {
         "title": "Tensura Shadow Bind",
-        "description": "Learn Tensura Shadow Bind.",
+        "description": "Learn Tensura Shadow Bind.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Casting Speed ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/shadow_bind.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_dark_cube": {
         "title": "Tensura Dark Cube",
-        "description": "Learn Tensura Dark Cube.",
+        "description": "Learn Tensura Dark Cube.
+
+Requirements:
+• Arcane Power ≥ 2
+• Erudition ≥ 2
+• Willpower ≥ 1",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/dark_cube.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_curse_bind": {
         "title": "Tensura Curse Bind",
-        "description": "Learn Tensura Curse Bind.",
+        "description": "Learn Tensura Curse Bind.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Casting Speed ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/curse_bind.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_darkness_cannon": {
         "title": "Tensura Darkness Cannon",
-        "description": "Learn Tensura Darkness Cannon.",
+        "description": "Learn Tensura Darkness Cannon.
+
+Requirements:
+• Arcane Power ≥ 4
+• Erudition ≥ 3
+• Intimidation ≥ 3",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/darkness_cannon.png"
             }
-        }
+        },
+        "size": 1
     },
     "eldritch.signature.tensura_true_darkness": {
         "title": "Tensura True Darkness",
-        "description": "Learn Tensura True Darkness.",
+        "description": "Learn Tensura True Darkness.
+
+Requirements:
+• Arcane Power ≥ 6
+• Erudition ≥ 5
+• Intimidation ≥ 5",
         "icon": {
-            "type": "item",
+            "type": "texture",
             "data": {
-                "item": "minecraft:echo_shard"
+                "texture": "tensura:textures/magic/spiritual/true_darkness.png"
             }
-        }
+        },
+        "size": 1
     }
 }

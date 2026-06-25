@@ -28,12 +28,18 @@ public class CombatXPHandler {
         int xp = Math.max(1, Math.round(target.getMaxHealth() * 1.5f));
         StatType stat = resolveWeaponStat(player.getMainHandItem());
 
-        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, player.getData(ModAttachments.STATS));
+        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, player.getData(ModAttachments.STATS), true);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
+
+        // Bonus TRACKING pour les kills longue distance (>= 8 blocs).
+        if (event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile) {
+            double distance = player.distanceTo(target);
+            DefensiveXPHandler.awardTrackingForRangedKill(player, target, distance);
+        }
     }
 
-    private static Player resolveAttacker(Entity source, Entity direct) {
+    static Player resolveAttacker(Entity source, Entity direct) {
         if (source instanceof Player player) {
             return player;
         }
@@ -46,7 +52,7 @@ public class CombatXPHandler {
         return null;
     }
 
-    private static StatType resolveWeaponStat(ItemStack stack) {
+    static StatType resolveWeaponStat(ItemStack stack) {
         return WeaponResolver.statFor(stack);
     }
 }

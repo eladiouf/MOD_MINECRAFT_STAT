@@ -1,6 +1,7 @@
 package tong.statmod;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.magic.MagicRace;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,10 +93,17 @@ class PlayerStatDataTest {
 
     @Test
     void testGlobalLevel() {
+        // Sous Mission S : globalLevel = moyenne des stats ≥ 1 uniquement. Plus de pénalité
+        // pour les stats jamais montées. Une seule stat active à 46 → globalLevel = 46.
         PlayerStatData data = new PlayerStatData();
-        assertEquals(0, data.getGlobalLevel());
+        data.setMagicRace(MagicRace.HUMAN);
+        assertEquals(0, data.getGlobalLevel(), "pas de stat ≥ 1 → globalLevel = 0");
         data.setLevel(0, 46);
-        assertEquals(2, data.getGlobalLevel());
+        assertEquals(46, data.getGlobalLevel(),
+                "une seule stat à 46 → globalLevel = 46");
+        data.setLevel(1, 10);
+        assertEquals(28, data.getGlobalLevel(),
+                "deux stats actives (46 + 10) / 2 = 28");
     }
 
     @Test

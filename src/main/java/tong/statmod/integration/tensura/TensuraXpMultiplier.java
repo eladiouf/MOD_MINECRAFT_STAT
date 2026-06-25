@@ -1,6 +1,5 @@
 package tong.statmod.integration.tensura;
 
-import tong.statmod.progression.ActionType;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
@@ -32,10 +31,6 @@ public final class TensuraXpMultiplier {
 
     public static double applyEpMultiplier(PlayerStatData data, String actionType, double baseEp) {
         return Math.max(0.0d, baseEp) * getEpMultiplier(data, actionType);
-    }
-
-    public static float getEpMultiplierForAction(PlayerStatData data, ActionType actionType) {
-        return actionType == null ? 1.0f : getEpMultiplier(data, actionType.name().toLowerCase());
     }
 
     private static String normalizeActionType(String actionType) {

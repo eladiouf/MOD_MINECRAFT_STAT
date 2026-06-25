@@ -44,5 +44,8 @@ public class NetworkHandler {
 
         registrar.playToServer(OpenVirtualInscriptionPayload.TYPE, OpenVirtualInscriptionPayload.CODEC,
                 ServerPayloadHandler::handleOpenVirtualInscription);
+
+        registrar.playToClient(BridgeTensuraSkillPayload.TYPE, BridgeTensuraSkillPayload.CODEC,
+                ClientPayloadHandler::handleBridgeTensuraSkill);
     }
 }

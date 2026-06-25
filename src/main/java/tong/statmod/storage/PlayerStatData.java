@@ -1,5 +1,6 @@
 package tong.statmod.storage;
 
+import tong.statmod.config.Config;
 import tong.statmod.stats.StatFamily;
 import tong.statmod.stats.StatType;
 
@@ -13,10 +14,34 @@ public class PlayerStatData {
     private int[] freeGrantedPerks = new int[0];
     private int soulLevel;
 
-    // Magic tree state
+    // Magic tree state - unified economy (Mission δ).
+    /**
+     * Monnaie unifiée du magic tree. Sous le nouveau modèle, c'est le seul pool dépensé pour
+     * déverrouiller des nœuds. Migration depuis les anciens champs {@code arcanePoints} +
+     * {@code schoolPoints} est gérée par {@link MagicStateSerializer} (capped à 100).
+     */
+    private int magicPoints;
+    /**
+     * @deprecated Ne plus écrire — conservé en lecture pour la migration depuis les saves
+     *             pré-Mission-δ. La somme est draînée vers {@link #magicPoints} au load.
+     */
+    @Deprecated
     private int arcanePoints;
+    /**
+     * @deprecated Idem {@link #arcanePoints} — pool par école drainé dans {@link #magicPoints}
+     *             à la migration.
+     */
+    @Deprecated
     private final int[] schoolPoints = new int[tong.statmod.magic.MagicBranch.values().length];
     private final int[] schoolMasteryProgress = new int[tong.statmod.magic.MagicBranch.values().length];
+
+    /**
+     * Dernière tranche de niveau global pour laquelle des perk points ont été crédités.
+     * Persisté pour éviter le bug de duplicate grant après un restart serveur (l'ancienne
+     * HashMap statique {@code LevelUpHandler.lastGrantedTier} se vidait à chaque restart
+     * et re-créditait au tick suivant).
+     */
+    private int lastPerkGrantTier;
     private String[] magicNodes = new String[0];
     private String[] learnedSpells = new String[0];
     private tong.statmod.magic.MagicRace magicRace;
@@ -116,19 +141,86 @@ public class PlayerStatData {
 
     public void setSoulLevel(int level) { soulLevel = Math.max(0, level); }
 
-    public int getArcanePoints() { return arcanePoints; }
-    public void setArcanePoints(int v) { arcanePoints = Math.max(0, v); }
-    public void addArcanePoints(int delta) { arcanePoints = Math.max(0, arcanePoints + delta); }
+    public int getLastPerkGrantTier() { return lastPerkGrantTier; }
+    public void setLastPerkGrantTier(int tier) { lastPerkGrantTier = Math.max(0, tier); }
 
+    /**
+     * @deprecated Lecture du buffer legacy (utilisée par la migration). Pour lire les points
+     *             actuels, utiliser {@link #getMagicPoints()}.
+     */
+    @Deprecated
+    public int getArcanePoints() { return arcanePoints; }
+    /**
+     * @deprecated Écrit dans le buffer legacy. À conserver pour deserialization des saves
+     *             pré-Mission-δ. Les nouveaux callers doivent utiliser {@link #setMagicPoints(int)}.
+     */
+    @Deprecated
+    public void setArcanePoints(int v) { arcanePoints = Math.max(0, v); }
+    /**
+     * Sous le modèle unifié, additionner des "points arcane" verse directement dans le pool
+     * unifié. La signature est conservée pour ne pas casser les callers existants
+     * ({@code CastRewardPolicy}, etc.) en attendant Mission ε qui renommera les variables.
+     */
+    public void addArcanePoints(int delta) { addMagicPoints(delta); }
+
+    /** Monnaie unifiée du magic tree. */
+    public int getMagicPoints() { return magicPoints; }
+
+    public void setMagicPoints(int v) { magicPoints = Math.max(0, v); }
+
+    public void addMagicPoints(int delta) { magicPoints = Math.max(0, magicPoints + delta); }
+
+    /**
+     * Cap absolu pour la migration des saves pré-Mission-δ. Évite qu'un joueur dev avec un
+     * stock absurde de points historiques se retrouve à débloquer tout le tree d'un coup.
+     */
+    public static final int MIGRATION_CAP = 100;
+
+    /**
+     * Migre les pools legacy ({@code arcanePoints} + {@code schoolPoints}) vers
+     * {@link #magicPoints}. Idempotent : si {@code magicPoints} est déjà ≥ 0 et qu'aucun
+     * point legacy n'est présent, ne fait rien. Appelé par {@link MagicStateSerializer} au
+     * load. Retourne le nombre de points migrés (0 si rien à migrer).
+     */
+    public int migrateLegacyPointsToUnified() {
+        if (arcanePoints == 0) {
+            boolean schoolsEmpty = true;
+            for (int s : schoolPoints) if (s != 0) { schoolsEmpty = false; break; }
+            if (schoolsEmpty) return 0;
+        }
+        int legacy = arcanePoints;
+        for (int s : schoolPoints) legacy += s;
+        int merged = magicPoints + legacy;
+        int capped = Math.min(merged, MIGRATION_CAP);
+        magicPoints = capped;
+        arcanePoints = 0;
+        for (int i = 0; i < schoolPoints.length; i++) schoolPoints[i] = 0;
+        return legacy;
+    }
+
+    /**
+     * @deprecated Lecture du pool legacy par école — non-pertinent sous monnaie unifiée.
+     *             Conservé pour deserialization. Pour lire les points actuels :
+     *             {@link #getMagicPoints()}.
+     */
+    @Deprecated
     public int getSchoolPoints(tong.statmod.magic.MagicBranch b) {
         return b == null ? 0 : schoolPoints[b.ordinal()];
     }
+    /** @deprecated Idem. */
+    @Deprecated
     public int[] getSchoolPointsArray() { return schoolPoints.clone(); }
+    /** @deprecated Écrit dans le pool legacy — utiliser {@link #setMagicPoints(int)}. */
+    @Deprecated
     public void setSchoolPoints(tong.statmod.magic.MagicBranch b, int v) {
         if (b != null) schoolPoints[b.ordinal()] = Math.max(0, v);
     }
+    /**
+     * Sous le modèle unifié, additionner des "school points" verse dans le pool unifié.
+     * Conservé pour compat callers existants ({@code SchoolProgressTracker}).
+     */
     public void addSchoolPoints(tong.statmod.magic.MagicBranch b, int delta) {
-        if (b != null) schoolPoints[b.ordinal()] = Math.max(0, schoolPoints[b.ordinal()] + delta);
+        addMagicPoints(delta);
     }
 
     public int getSchoolMasteryProgress(tong.statmod.magic.MagicBranch b) {
@@ -202,19 +294,35 @@ public class PlayerStatData {
     public void setChosenStartBranch(tong.statmod.magic.MagicBranch b) { chosenStartBranch = b; }
 
     public int maxStatLevel() {
-        return soulLevel > 0 ? Math.min(soulLevel, 100) : 100;
+        int configMax = Config.getMaxStatLevel();
+        return soulLevel > 0 ? Math.min(soulLevel, configMax) : configMax;
     }
 
     public boolean addXp(int index, int amount) {
+        return addXpWithEffectiveStartLevel(index, amount, 0);
+    }
+
+    /**
+     * Version de {@link #addXp(int, int)} qui calcule la courbe XP en utilisant le niveau
+     * <b>effectif</b> (base + flatBonus race) plutôt que le base level seul. Évite l'incohérence
+     * où un joueur Ogre +5 ENDURANCE voit son affichage à Lv 5 mais paie la courbe XP de
+     * Lv 0→1 (10 XP) pour passer à l'affichage Lv 6.
+     *
+     * <p>Sous la nouvelle formule : un joueur affiché Lv 5 paie {@code requiredXp(5) = 360}
+     * pour passer Lv 6, peu importe que ces 5 niveaux viennent du base ou du race bonus.
+     */
+    public boolean addXpWithEffectiveStartLevel(int index, int amount, int startLevel) {
         if (index < 0 || index >= STAT_COUNT || amount <= 0) return false;
         xp[index] += amount;
-        int required = requiredXp(levels[index]);
+        int effective = Math.max(0, startLevel) + levels[index];
+        int required = requiredXp(effective);
         int cap = maxStatLevel();
         boolean leveledUp = false;
         while (xp[index] >= required && levels[index] < cap) {
             levels[index]++;
             xp[index] -= required;
-            required = requiredXp(levels[index]);
+            effective = Math.max(0, startLevel) + levels[index];
+            required = requiredXp(effective);
             leveledUp = true;
         }
         return leveledUp;
@@ -241,10 +349,36 @@ public class PlayerStatData {
         }
     }
 
+    /**
+     * Niveau global pondéré utilisé par {@link tong.statmod.progression.LevelUpHandler} pour
+     * les paliers de perk grants.
+     *
+     * <p><b>Refonte Mission S</b> : la formule originale faisait la moyenne arithmétique de
+     * toutes les 23 stats, ce qui punissait sévèrement les builds spécialisés. Un joueur
+     * full-mage à FIRE_AFFINITY Lv 10 avait un global level ≈ 0 (10 / 23) parce qu'aucune
+     * stat physique / craft n'avait monté.
+     *
+     * <p>Nouvelle formule : moyenne des stats <b>≥ 1</b>. Les stats jamais montées sont
+     * exclues du diviseur. Préserve l'ancien comportement "magic locked si pas de race" qui
+     * excluait les stats magiques avant l'unlock.
+     *
+     * <p>Cas dégénéré : si aucune stat n'a été montée du tout, retourne 0.
+     */
     public int getGlobalLevel() {
         int sum = 0;
-        for (int l : levels) sum += l;
-        return sum / STAT_COUNT;
+        int divisor = 0;
+        boolean magicLocked = (magicRace == null);
+        for (int i = 0; i < STAT_COUNT; i++) {
+            int level = levels[i];
+            // Skip les stats magiques quand pas de race choisie.
+            if (magicLocked && i >= 7 && i <= 15 && level == 0) continue;
+            // Skip les stats jamais montées — n'inclure que celles avec ≥ 1.
+            if (level == 0) continue;
+            sum += level;
+            divisor++;
+        }
+        if (divisor == 0) return 0;
+        return sum / divisor;
     }
 
     public static int requiredXp(int level) {

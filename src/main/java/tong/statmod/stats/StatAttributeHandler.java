@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.storage.ModAttachments;
@@ -41,6 +42,13 @@ public class StatAttributeHandler {
 
         applyModifier(player, Attributes.MOVEMENT_SPEED, AGILITY_ID,
                 RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index), lastAgility, uuid, 0.001);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        UUID uuid = event.getEntity().getUUID();
+        lastRapidite.remove(uuid);
+        lastAgility.remove(uuid);
     }
 
     private static void applyModifier(Player player, Holder<Attribute> attribute,

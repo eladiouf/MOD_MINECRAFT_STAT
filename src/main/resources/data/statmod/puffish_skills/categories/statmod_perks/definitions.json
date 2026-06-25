@@ -771,7 +771,7 @@
     },
     "intimidation__intim_transcendence": {
         "title": "Absolute Dominion",
-        "description": "Control one mob for 10s",
+        "description": "Target mob loses aggro and regenerates for 10s",
         "icon": {
             "type": "item",
             "data": {

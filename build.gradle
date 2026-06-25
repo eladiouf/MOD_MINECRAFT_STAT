@@ -111,3 +111,14 @@ tasks.withType(JavaCompile).configureEach {
 test {
     useJUnitPlatform()
 }
+
+// Regen des JSON Puffish statiques après modif de descriptionFor / catalog. Pas une vraie
+// datagen NeoForge — juste un main() qui sérialise PuffishMagicTreeBuilder dans le repo.
+tasks.register('regenPuffishJson', JavaExec) {
+    group = 'statmod'
+    description = 'Regenerate src/main/resources/.../statmod_magic/*.json from PuffishMagicTreeBuilder'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'tong.statmod.integration.puffish.PuffishMagicJsonGenerator'
+    workingDir = project.projectDir
+    dependsOn 'classes'
+}

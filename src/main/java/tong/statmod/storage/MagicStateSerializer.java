@@ -1,10 +1,10 @@
 package tong.statmod.storage;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import tong.statmod.STATMod;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.magic.MagicRace;
 
@@ -13,15 +13,14 @@ public final class MagicStateSerializer {
 
     public static CompoundTag serialize(PlayerStatData data) {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("arcanePoints", data.getArcanePoints());
+        // Monnaie unifiée — la seule source de vérité depuis Mission δ.
+        tag.putInt("magicPoints", data.getMagicPoints());
 
-        int[] sp = new int[MagicBranch.values().length];
-        int[] sm = new int[sp.length];
+        // Mastery par école : tracker pour les paliers de Mission ε. Conservé tel quel.
+        int[] sm = new int[MagicBranch.values().length];
         for (MagicBranch b : MagicBranch.values()) {
-            sp[b.ordinal()] = data.getSchoolPoints(b);
             sm[b.ordinal()] = data.getSchoolMasteryProgress(b);
         }
-        tag.putIntArray("schoolPoints", sp);
         tag.putIntArray("schoolMastery", sm);
 
         ListTag nodes = new ListTag();
@@ -38,14 +37,41 @@ public final class MagicStateSerializer {
         return tag;
     }
 
+    @SuppressWarnings("deprecation")
     public static void deserialize(CompoundTag tag, PlayerStatData data) {
-        data.setArcanePoints(tag.getInt("arcanePoints"));
+        // --- Migration legacy ---
+        // Saves pré-Mission-δ contiennent arcanePoints + schoolPoints. On les charge dans les
+        // anciens champs, puis on appelle migrateLegacyPointsToUnified() qui draine vers
+        // magicPoints (capped). Les saves post-δ ont juste "magicPoints".
+        boolean hasLegacyArcane = tag.contains("arcanePoints");
+        boolean hasLegacySchool = tag.contains("schoolPoints");
+        boolean hasUnified = tag.contains("magicPoints");
 
-        int[] sp = tag.getIntArray("schoolPoints");
+        if (hasUnified) {
+            data.setMagicPoints(tag.getInt("magicPoints"));
+        }
+        if (hasLegacyArcane) {
+            data.setArcanePoints(tag.getInt("arcanePoints"));
+        }
+        if (hasLegacySchool) {
+            int[] sp = tag.getIntArray("schoolPoints");
+            for (MagicBranch b : MagicBranch.values()) {
+                int idx = b.ordinal();
+                if (idx < sp.length) data.setSchoolPoints(b, sp[idx]);
+            }
+        }
+        if (hasLegacyArcane || hasLegacySchool) {
+            int migrated = data.migrateLegacyPointsToUnified();
+            if (migrated > 0) {
+                STATMod.LOGGER.info("Migrated {} legacy magic points → unified pool (capped at {})",
+                        migrated, PlayerStatData.MIGRATION_CAP);
+            }
+        }
+
+        // --- Mastery (inchangé) ---
         int[] sm = tag.getIntArray("schoolMastery");
         for (MagicBranch b : MagicBranch.values()) {
             int idx = b.ordinal();
-            if (idx < sp.length) data.setSchoolPoints(b, sp[idx]);
             if (idx < sm.length) data.setSchoolMasteryProgress(b, sm[idx]);
         }
 

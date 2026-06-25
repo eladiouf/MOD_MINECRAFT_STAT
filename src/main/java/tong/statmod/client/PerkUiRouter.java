@@ -13,10 +13,10 @@ public final class PerkUiRouter {
     }
 
     public static void openFromClient(boolean puffishLoaded) {
-        if (shouldUsePuffish(puffishLoaded)) {
+        if (puffishLoaded) {
             PacketDistributor.sendToServer(new OpenPerkTreePayload());
-            return;
+        } else {
+            Minecraft.getInstance().setScreen(new PerkScreen());
         }
-        Minecraft.getInstance().setScreen(new PerkScreen());
     }
 }

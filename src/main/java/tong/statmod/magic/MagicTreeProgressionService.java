@@ -10,12 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MagicTreeProgressionService {
-    public record UnlockResult(boolean success, MagicEligibilityResolver.Failure failure, int spent) {
+    public record UnlockResult(boolean success,
+                                MagicEligibilityResolver.Failure failure,
+                                int spent,
+                                java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
         public static UnlockResult ok(int spent) {
-            return new UnlockResult(true, MagicEligibilityResolver.Failure.NONE, spent);
+            return new UnlockResult(true, MagicEligibilityResolver.Failure.NONE, spent, java.util.List.of());
         }
         public static UnlockResult fail(MagicEligibilityResolver.Failure f) {
-            return new UnlockResult(false, f, 0);
+            return new UnlockResult(false, f, 0, java.util.List.of());
+        }
+        public static UnlockResult fail(MagicEligibilityResolver.Result eval) {
+            return new UnlockResult(false, eval.failure(), 0, eval.missingStats());
         }
     }
 
@@ -37,13 +43,11 @@ public final class MagicTreeProgressionService {
                                          MagicNodeRuntimeRewards.TensuraGrantSink tensuraGrantSink) {
         MagicEligibilityResolver.Result eval = MagicEligibilityResolver.evaluate(data, node);
         if (eval.failure() != MagicEligibilityResolver.Failure.NONE) {
-            return UnlockResult.fail(eval.failure());
+            return UnlockResult.fail(eval);
         }
         int adjusted = eval.adjustedCost();
-        switch (node.currency()) {
-            case ARCANE -> data.addArcanePoints(-adjusted);
-            case SCHOOL -> data.addSchoolPoints(node.branch(), -adjusted);
-        }
+        // Économie unifiée — plus de switch par currency. Mission δ retirera MagicCurrency.
+        data.addMagicPoints(-adjusted);
         data.addMagicNode(node.id());
         List<String> newlyLearned = new ArrayList<>();
         List<String> wrapperIdsAdded = new ArrayList<>();
@@ -84,10 +88,8 @@ public final class MagicTreeProgressionService {
         if (data == null || node == null) {
             return;
         }
-        switch (node.currency()) {
-            case ARCANE -> data.addArcanePoints(adjustedCost);
-            case SCHOOL -> data.addSchoolPoints(node.branch(), adjustedCost);
-        }
+        // Rollback unifié — rend les magicPoints à l'arcane bucket (Mission δ unifiera).
+        data.addMagicPoints(adjustedCost);
         data.removeMagicNode(node.id());
         if (newlyLearned == null) {
             return;

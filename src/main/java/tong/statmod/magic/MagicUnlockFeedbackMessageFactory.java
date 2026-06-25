@@ -14,6 +14,44 @@ public final class MagicUnlockFeedbackMessageFactory {
         );
     }
 
+    /**
+     * Overload qui enrichit le message avec la liste des stats manquantes quand la failure
+     * est {@link MagicEligibilityResolver.Failure#STAT_REQUIREMENT_NOT_MET}. Pour les autres
+     * failures, équivalent à l'overload simple.
+     */
+    public static MagicUnlockFeedbackMessage forFailure(MagicNode node,
+                                                         MagicEligibilityResolver.Result result) {
+        if (result == null) {
+            return forFailure(node, MagicEligibilityResolver.Failure.NONE);
+        }
+        return buildMessage(node, result.failure(), result.missingStats());
+    }
+
+    /** Variante consommée par {@link MagicTreeProgressionService} via son {@code UnlockResult}. */
+    public static MagicUnlockFeedbackMessage forFailure(MagicNode node,
+                                                         MagicEligibilityResolver.Failure failure,
+                                                         java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
+        return buildMessage(node, failure, missingStats == null ? java.util.List.of() : missingStats);
+    }
+
+    private static MagicUnlockFeedbackMessage buildMessage(MagicNode node,
+                                                            MagicEligibilityResolver.Failure failure,
+                                                            java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
+        String message = messageFor(failure);
+        if (failure == MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET
+                && missingStats != null && !missingStats.isEmpty()) {
+            StringBuilder sb = new StringBuilder(message).append(':');
+            for (MagicNodeStatRequirements.StatGate gate : missingStats) {
+                sb.append("\n• ").append(gate.stat().displayName).append(" ≥ ").append(gate.minLevel());
+            }
+            message = sb.toString();
+        }
+        return new MagicUnlockFeedbackMessage(
+                Component.literal(titleFor(node)),
+                Component.literal(message)
+        );
+    }
+
     private static String titleFor(MagicNode node) {
         if (node == null || node.id() == null || node.id().isBlank()) {
             return "Magic unavailable";
@@ -48,6 +86,7 @@ public final class MagicUnlockFeedbackMessageFactory {
             case LOCKED -> "This branch is not available yet";
             case ALREADY_UNLOCKED -> "Already unlocked";
             case RUNTIME_GRANT_FAILED -> "Spell unlock failed at runtime";
+            case STAT_REQUIREMENT_NOT_MET -> "Stat requirements not met";
             case NONE -> "Magic requirements not met";
         };
     }

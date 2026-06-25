@@ -1,90 +1,77 @@
 package tong.statmod.magic;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
-import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * Tests pour le resolver refondu sous la nouvelle économie : monnaie unique
+ * {@code magicPoints} + 3 gates stats (ARCANE_POWER + ERUDITION + tertiaire) avec deltas race.
+ *
+ * <p>L'ancien comportement {@code affinityAdjustedCost} (race modifie le coût en points) est
+ * supprimé — la race agit sur les seuils de stats désormais. Voir
+ * {@code MagicNodeStatRequirementsTest} pour les détails race.
+ */
 class MagicEligibilityResolverTest {
-    private PlayerStatData fresh() {
+
+    private static PlayerStatData fullyEquipped(MagicRace race, MagicBranch chosenStart) {
         PlayerStatData d = new PlayerStatData();
-        d.setMagicRace(MagicRace.ELF);
+        d.setMagicRace(race);
+        d.setChosenStartBranch(chosenStart);
+        d.addArcanePoints(99); // pool unifié = arcane + school sous transition
+        // Sature les stats pour que les 3 gates passent.
+        d.setLevel(StatType.ARCANE_POWER.index, 20);
+        d.setLevel(StatType.ERUDITION.index, 20);
+        for (StatType s : StatType.values()) {
+            d.setLevel(s.index, Math.max(d.getLevel(s.index), 20));
+        }
         return d;
     }
 
+    // ---------- Failures legacy ----------
+
     @Test
     void missing_prereq_fails() {
-        PlayerStatData d = fresh();
-        d.addArcanePoints(99);
-        MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
+        PlayerStatData d = fullyEquipped(MagicRace.ELF, MagicBranch.AIR);
+        MagicNode fireOpener = MagicTreeCatalog.byId("fire/opener/ignition");
+        // arcane_focus + mana_well sont prereqs — non débloqués → MISSING_PREREQ
         assertEquals(MagicEligibilityResolver.Failure.MISSING_PREREQ,
-                MagicEligibilityResolver.evaluate(d, opener).failure());
+                MagicEligibilityResolver.evaluate(d, fireOpener).failure());
     }
 
     @Test
-    void not_enough_arcane_fails() {
-        PlayerStatData d = fresh();
+    void not_enough_points_fails() {
+        PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(MagicRace.ELF);
+        // 0 magic points + saturated stats → bloqué par cost
+        d.setLevel(StatType.ARCANE_POWER.index, 20);
+        d.setLevel(StatType.ERUDITION.index, 20);
         MagicNode root = MagicTreeCatalog.byId("common/foundation/arcane_focus");
         assertEquals(MagicEligibilityResolver.Failure.NOT_ENOUGH_POINTS,
                 MagicEligibilityResolver.evaluate(d, root).failure());
     }
 
     @Test
-    void ok_when_prereqs_met_and_points_enough() {
-        PlayerStatData d = fresh();
+    void common_trunk_allowed_without_race() {
+        PlayerStatData d = new PlayerStatData();
         d.addArcanePoints(5);
-        d.addMagicNode("common/foundation/arcane_focus");
-        d.addMagicNode("common/foundation/mana_well");
-        MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
+        d.setLevel(StatType.ARCANE_POWER.index, 5);
+        d.setLevel(StatType.ERUDITION.index, 5);
+        MagicNode node = MagicTreeCatalog.byId("common/foundation/arcane_focus");
         assertEquals(MagicEligibilityResolver.Failure.NONE,
-                MagicEligibilityResolver.evaluate(d, opener).failure());
-    }
-
-    @Test
-    void natural_affinity_does_not_change_cost_but_out_of_affinity_inflates_school_cost() {
-        PlayerStatData d = fresh();
-        d.addMagicNode("fire/opener/ignition");
-        d.addSchoolPoints(MagicBranch.FIRE, 1);
-        MagicNode ember = MagicTreeCatalog.byId("fire/tier/ember_path");
-        var eval = MagicEligibilityResolver.evaluate(d, ember);
-        assertEquals(2, eval.adjustedCost());
-        assertEquals(MagicEligibilityResolver.Failure.NOT_ENOUGH_POINTS, eval.failure());
-    }
-
-    @Test
-    void natural_affinity_keeps_base_cost_for_dwarf_fire() {
-        PlayerStatData d = new PlayerStatData();
-        d.setMagicRace(MagicRace.DWARF);
-        d.addMagicNode("fire/opener/ignition");
-        d.addSchoolPoints(MagicBranch.FIRE, 1);
-        MagicNode ember = MagicTreeCatalog.byId("fire/tier/ember_path");
-        var eval = MagicEligibilityResolver.evaluate(d, ember);
-        assertEquals(1, eval.adjustedCost());
-        assertEquals(MagicEligibilityResolver.Failure.NONE, eval.failure());
-    }
-
-    @Test
-    void second_natural_branch_cheap_after_first_taken() {
-        PlayerStatData d = new PlayerStatData();
-        d.setMagicRace(MagicRace.ELF);
-        d.setChosenStartBranch(MagicBranch.AIR);
-        int adjustedWater = MagicEligibilityResolver.affinityAdjustedCost(d, MagicBranch.WATER, 4);
-        int adjustedFire = MagicEligibilityResolver.affinityAdjustedCost(d, MagicBranch.FIRE, 4);
-        assertTrue(adjustedWater < adjustedFire, "second natural branch must be cheaper than out-of-affinity");
-    }
-
-    @Test
-    void locked_sentinel_prereq_is_unsatisfiable() {
-        PlayerStatData d = fresh();
-        d.addArcanePoints(99);
-        MagicNode lockedAnchor = MagicTreeCatalog.byId("water/locked/anchor");
-        assertEquals(MagicEligibilityResolver.Failure.LOCKED,
-                MagicEligibilityResolver.evaluate(d, lockedAnchor).failure());
+                MagicEligibilityResolver.evaluate(d, node).failure());
     }
 
     @Test
     void non_common_node_fails_with_no_race_selected() {
         PlayerStatData d = new PlayerStatData();
         d.addArcanePoints(99);
+        d.setLevel(StatType.ARCANE_POWER.index, 20);
+        d.setLevel(StatType.ERUDITION.index, 20);
         d.addMagicNode("common/foundation/arcane_focus");
         d.addMagicNode("common/foundation/mana_well");
         MagicNode node = MagicTreeCatalog.byId("fire/opener/ignition");
@@ -92,39 +79,71 @@ class MagicEligibilityResolverTest {
                 MagicEligibilityResolver.evaluate(d, node).failure());
     }
 
+    // ---------- 3 gates stats ----------
+
     @Test
-    void common_trunk_allowed_without_race() {
+    void low_arcane_power_blocks_with_STAT_REQUIREMENT_NOT_MET() {
+        PlayerStatData d = fullyEquipped(MagicRace.ELF, MagicBranch.FIRE);
+        d.setLevel(StatType.ARCANE_POWER.index, 0); // sous le seuil
+        d.addMagicNode("common/foundation/arcane_focus");
+        d.addMagicNode("common/foundation/mana_well");
+        MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
+        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, opener);
+        assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
+        assertFalse(result.missingStats().isEmpty(), "missing stats should list ARCANE_POWER");
+        assertTrue(result.missingStats().stream()
+                .anyMatch(g -> g.stat() == StatType.ARCANE_POWER));
+    }
+
+    @Test
+    void low_tertiary_blocks_for_mobility_spell() {
+        // Start branch != Water pour que le delta -1 ne ramène pas AGILITY à 0.
+        PlayerStatData d = fullyEquipped(MagicRace.HUMAN, MagicBranch.FIRE);
+        d.setLevel(StatType.AGILITY.index, 0); // sort de mobilité → AGILITY ≥ 1 required
+        d.addMagicNode("common/foundation/arcane_focus");
+        d.addMagicNode("common/foundation/mana_well");
+        d.addMagicNode("water/opener/ice_awakening");
+        d.addMagicNode("water/tier/frost_path");
+        MagicNode frostStep = MagicTreeCatalog.byId("water/signature/frost_step");
+        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, frostStep);
+        assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
+        assertTrue(result.missingStats().stream()
+                .anyMatch(g -> g.stat() == StatType.AGILITY));
+    }
+
+    @Test
+    void all_gates_met_returns_NONE() {
+        PlayerStatData d = fullyEquipped(MagicRace.HUMAN, MagicBranch.FIRE);
+        d.addMagicNode("common/foundation/arcane_focus");
+        d.addMagicNode("common/foundation/mana_well");
+        MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
+        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, opener);
+        assertEquals(MagicEligibilityResolver.Failure.NONE, result.failure());
+        assertTrue(result.missingStats().isEmpty());
+    }
+
+    // ---------- Race deltas on universal gates ----------
+
+    @Test
+    void human_passes_T1_with_minimum_stats() {
         PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(MagicRace.HUMAN);
         d.addArcanePoints(5);
-        MagicNode node = MagicTreeCatalog.byId("common/foundation/arcane_focus");
+        d.setLevel(StatType.ARCANE_POWER.index, 0); // base 1 - 1 (human) = 0 → OK
+        d.setLevel(StatType.ERUDITION.index, 0);    // idem
+        MagicNode trunk = MagicTreeCatalog.byId("common/foundation/arcane_focus");
         assertEquals(MagicEligibilityResolver.Failure.NONE,
-                MagicEligibilityResolver.evaluate(d, node).failure());
+                MagicEligibilityResolver.evaluate(d, trunk).failure());
     }
 
-    @Test
-    void beast_purity_penalty_triples_out_of_affinity_cost() {
-        int cost = MagicEligibilityResolver.affinityAdjustedCost(
-                dataWithRace(MagicRace.BEAST), MagicBranch.FIRE, 4);
-        assertEquals(12, cost);
-    }
+    // ---------- Compat shim ----------
 
     @Test
-    void human_flexible_cost_for_out_of_affinity_doubles() {
-        int cost = MagicEligibilityResolver.affinityAdjustedCost(
-                dataWithRace(MagicRace.HUMAN), MagicBranch.BLOOD, 4);
-        assertEquals(8, cost);
-    }
-
-    @Test
-    void null_race_doubles_cost() {
+    void deprecated_affinity_adjusted_cost_returns_base() {
         PlayerStatData d = new PlayerStatData();
+        d.setMagicRace(MagicRace.BEAST);
         int cost = MagicEligibilityResolver.affinityAdjustedCost(d, MagicBranch.FIRE, 4);
-        assertEquals(8, cost);
-    }
-
-    private static PlayerStatData dataWithRace(MagicRace race) {
-        PlayerStatData d = new PlayerStatData();
-        d.setMagicRace(race);
-        return d;
+        assertEquals(4, cost,
+                "Under unified economy, race no longer modifies cost — returns base");
     }
 }

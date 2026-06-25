@@ -1,9 +1,5 @@
 package tong.statmod.perks;
 
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,11 +17,15 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tong.statmod.STATMod;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -35,6 +35,9 @@ public final class PerkEffectHandler {
 
     private static final ResourceLocation SPEED_MOD_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "speed_mod");
     private static final ResourceLocation ATTACK_SPEED_MOD_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "attack_speed_mod");
+    private static final ResourceLocation FOCUSED_KB_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "focused_mind_kb");
+
+    private static final Map<UUID, Double> savedArmorBase = new ConcurrentHashMap<>();
 
     private static PerkManager managerFor(Player player) {
         PlayerStatData data = player.getData(ModAttachments.STATS);
@@ -152,9 +155,13 @@ public final class PerkEffectHandler {
                     .forEach(e -> e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0, false, false)));
         }
 
-        // WILL_TRANSCENDENCE id=83: Transcendence — immune to all effects
+        // WILL_TRANSCENDENCE id=83: Transcendence — immune to all negative effects
         if (perks.isUnlocked(Perk.byId(83))) {
-            player.removeAllEffects();
+            player.getActiveEffects().stream()
+                    .filter(inst -> !inst.getEffect().value().isBeneficial())
+                    .map(MobEffectInstance::getEffect)
+                    .toList()
+                    .forEach(player::removeEffect);
         }
 
         // INTIM_SYNERGY id=74: Feared — mobs flee at low HP
@@ -162,7 +169,10 @@ public final class PerkEffectHandler {
             player.level().getEntitiesOfClass(Mob.class,
                     player.getBoundingBox().inflate(12),
                     e -> e.isAlive() && e.getTarget() == player)
-                    .forEach(e -> e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 3, false, false)));
+                    .forEach(e -> {
+                        e.setTarget(null);
+                        e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 3, false, false));
+                    });
         }
 
         // RAPID_SITUATIONAL id=15: Flurry — attacks faster as combo builds
@@ -305,7 +315,10 @@ public final class PerkEffectHandler {
             // PRECI_TRANSCENDENCE id=41: True Strike — ignore armor
             if (perks.isUnlocked(Perk.byId(41)) && event.getEntity() instanceof LivingEntity target) {
                 AttributeInstance armor = target.getAttribute(Attributes.ARMOR);
-                if (armor != null) armor.setBaseValue(0);
+                if (armor != null) {
+                    savedArmorBase.put(target.getUUID(), armor.getBaseValue());
+                    armor.setBaseValue(0);
+                }
             }
 
             // INTIM_SITUATIONAL id=75: Mark of Fear — marked targets take +25%
@@ -407,7 +420,10 @@ public final class PerkEffectHandler {
 
             // WILL_ACTIVE id=79: Focused Mind — resist knockback when blocking
             if (perks.isUnlocked(Perk.byId(79)) && victim.isBlocking()) {
-                victim.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 4, false, false));
+                AttributeInstance kb = victim.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+                if (kb != null) {
+                    kb.addTransientModifier(new AttributeModifier(FOCUSED_KB_ID, 1.0, AttributeModifier.Operation.ADD_VALUE));
+                }
             }
 
             // WILL_SYNERGY id=80: Unbreakable — damage resistance with shield
@@ -448,6 +464,21 @@ public final class PerkEffectHandler {
         if (Math.abs(dmg - event.getNewDamage()) > 0.001f) {
             event.setNewDamage(Math.max(0f, dmg));
         }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamagePost(LivingDamageEvent.Post event) {
+        LivingEntity target = event.getEntity();
+        UUID uuid = target.getUUID();
+
+        Double saved = savedArmorBase.remove(uuid);
+        if (saved != null) {
+            AttributeInstance armor = target.getAttribute(Attributes.ARMOR);
+            if (armor != null) armor.setBaseValue(saved);
+        }
+
+        AttributeInstance kb = target.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+        if (kb != null) kb.removeModifier(FOCUSED_KB_ID);
     }
 
     @SubscribeEvent
@@ -505,8 +536,8 @@ public final class PerkEffectHandler {
                         player.getBoundingBox().inflate(16),
                         e -> e.isAlive())
                         .forEach(e -> {
-                            e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1, false, false));
-                            e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 2, false, false));
+                            e.setTarget(null);
+                            e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 3, false, false));
                         });
             }
 
@@ -554,6 +585,13 @@ public final class PerkEffectHandler {
     }
 
 
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        UUID uuid = event.getEntity().getUUID();
+        PerkState.clearPlayer(uuid);
+        savedArmorBase.remove(uuid);
+    }
 
     @SubscribeEvent
     public static void onLivingFall(LivingFallEvent event) {

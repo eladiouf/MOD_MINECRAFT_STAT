@@ -15,7 +15,6 @@ public final class WeaponResolver {
         // BRUTE (priority: longer/more specific first)
         pattern("great_sword", StatType.BRUTE_FORCE, "melee_axe"),
         pattern("greatsword", StatType.BRUTE_FORCE, "melee_axe"),
-        pattern("odachi", StatType.BRUTE_FORCE, "melee_axe"),
         pattern("scythe", StatType.BRUTE_FORCE, "melee_axe"),
         pattern("club", StatType.BRUTE_FORCE, "melee_axe"),
         pattern("hammer", StatType.BRUTE_FORCE, "melee_axe"),
@@ -29,6 +28,9 @@ public final class WeaponResolver {
         pattern("katana", StatType.BLADE_TECHNIQUE, "melee_sword"),
         pattern("tachi", StatType.BLADE_TECHNIQUE, "melee_sword"),
         pattern("kodachi", StatType.RAPIDITE, "melee_sword"),
+
+        // BRUTE (odachi after kodachi so "kodachi".contains("odachi") doesn't misclassify)
+        pattern("odachi", StatType.BRUTE_FORCE, "melee_axe"),
         pattern("dagger", StatType.BLADE_TECHNIQUE, "melee_sword"),
         pattern("sickle", StatType.BLADE_TECHNIQUE, "melee_sword"),
         pattern("rapier", StatType.BLADE_TECHNIQUE, "melee_sword"),

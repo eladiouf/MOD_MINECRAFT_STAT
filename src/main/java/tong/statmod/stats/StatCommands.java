@@ -88,14 +88,18 @@ public class StatCommands {
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("§6=== Magic Status ==="), true);
                                 ctx.getSource().sendSuccess(() ->
-                                        Component.literal("§bArcane Points:§r " + data.getArcanePoints()), true);
+                                        Component.literal("§bMagic Points:§r " + data.getMagicPoints()
+                                                + " §8(unified pool)§r"), true);
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("§bRace:§r " + (data.getMagicRace() != null ? data.getMagicRace().name() : "§7not set§r")), true);
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("§bStart Branch:§r " + (data.getChosenStartBranch() != null ? data.getChosenStartBranch().id : "§7not set§r")), true);
+                                ctx.getSource().sendSuccess(() ->
+                                        Component.literal("§bArcane Power §7Lv§r " + data.getLevel(tong.statmod.stats.StatType.ARCANE_POWER.index)
+                                                + "  §bErudition §7Lv§r " + data.getLevel(tong.statmod.stats.StatType.ERUDITION.index)), true);
                                 for (MagicBranch b : MagicBranch.values()) {
                                     if (b == MagicBranch.COMMON) continue;
-                                    int sp = data.getSchoolPoints(b);
+                                    int sp = 0; // pool legacy non utilisé sous l'économie unifiée
                                     int mp = data.getSchoolMasteryProgress(b);
                                     if (sp > 0 || mp > 0) {
                                         ctx.getSource().sendSuccess(() ->
@@ -106,6 +110,35 @@ public class StatCommands {
                                         Component.literal("§6Nodes unlocked:§r " + data.getMagicNodes().length), true);
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("§6Spells learned:§r " + data.getLearnedSpells().length), true);
+
+                                // Mission Q : audit éligibilité des nœuds disponibles.
+                                int unlockable = 0;
+                                int blockedByPoints = 0;
+                                int blockedByStats = 0;
+                                int blockedByPrereq = 0;
+                                tong.statmod.magic.MagicEligibilityResolver.Failure dominant =
+                                        tong.statmod.magic.MagicEligibilityResolver.Failure.NONE;
+                                for (tong.statmod.magic.MagicNode node : tong.statmod.magic.MagicTreeCatalog.all()) {
+                                    if (data.hasMagicNode(node.id())) continue;
+                                    var result = tong.statmod.magic.MagicEligibilityResolver.evaluate(data, node);
+                                    switch (result.failure()) {
+                                        case NONE -> unlockable++;
+                                        case NOT_ENOUGH_POINTS -> blockedByPoints++;
+                                        case STAT_REQUIREMENT_NOT_MET -> blockedByStats++;
+                                        case MISSING_PREREQ -> blockedByPrereq++;
+                                        default -> {}
+                                    }
+                                }
+                                final int finalUnlockable = unlockable;
+                                final int finalByPoints = blockedByPoints;
+                                final int finalByStats = blockedByStats;
+                                final int finalByPrereq = blockedByPrereq;
+                                ctx.getSource().sendSuccess(() ->
+                                        Component.literal("§a✓ Unlockable now:§r " + finalUnlockable), true);
+                                ctx.getSource().sendSuccess(() ->
+                                        Component.literal("§c✗ Blocked:§r §epoints=" + finalByPoints
+                                                + "§r §estats=" + finalByStats
+                                                + "§r §eprereqs=" + finalByPrereq), true);
                             }
                             return 1;
                         }))

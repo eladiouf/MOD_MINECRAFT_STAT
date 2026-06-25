@@ -32,11 +32,39 @@ public class Config {
         SPEC = BUILDER.build();
     }
 
-    public static void register() {
-        // Registration is handled in STATMod constructor via ModContainer
-    }
-
     public static ModConfigSpec getSpec() {
         return SPEC;
+    }
+
+    public static int getMaxStatLevel() {
+        try {
+            return MAX_STAT_LEVEL.get();
+        } catch (IllegalStateException e) {
+            return 100;
+        }
+    }
+
+    public static double getCombatXpMultiplier() {
+        try {
+            return COMBAT_XP_MULTIPLIER.get();
+        } catch (IllegalStateException e) {
+            return 1.0;
+        }
+    }
+
+    public static double getNonCombatXpMultiplier() {
+        try {
+            return NON_COMBAT_XP_MULTIPLIER.get();
+        } catch (IllegalStateException e) {
+            return 1.0;
+        }
+    }
+
+    public static int getBasePerkPointsPerLevel() {
+        try {
+            return BASE_PERK_POINTS_PER_LEVEL.get();
+        } catch (IllegalStateException e) {
+            return 1;
+        }
     }
 }

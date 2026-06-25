@@ -1,9 +1,13 @@
 package tong.statmod.network;
 
+import io.github.manasmods.manascore.skill.api.SkillAPI;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import tong.statmod.STATMod;
 import tong.statmod.client.ClientMagicCache;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
@@ -47,5 +51,26 @@ public final class ClientPayloadHandler {
                 payload.magicNodes(), payload.learnedSpells(),
                 payload.arcanePoints(), payload.schoolPoints(),
                 payload.raceOrdinal(), payload.startBranchOrdinal()));
+    }
+
+    /**
+     * Door for the reverse bridge — emulate a Tensura keybind press/release on the
+     * client so Tensura's full native flow runs (magic circle, charge, projectile).
+     */
+    public static void handleBridgeTensuraSkill(BridgeTensuraSkillPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!ModList.get().isLoaded("tensura")) return;
+            try {
+                ResourceLocation rl = ResourceLocation.parse(payload.tensuraSkillId());
+                if (payload.release()) {
+                    SkillAPI.skillReleasePacket(rl, 0, 0);
+                } else {
+                    SkillAPI.skillActivationPacket(rl, 0, 0);
+                }
+            } catch (Throwable t) {
+                STATMod.LOGGER.warn("Bridge Tensura skill {} ({}) failed: {}",
+                        payload.tensuraSkillId(), payload.release() ? "release" : "press", t.toString());
+            }
+        });
     }
 }

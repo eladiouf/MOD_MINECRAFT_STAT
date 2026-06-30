@@ -56,14 +56,14 @@ public class RaceCosmeticLayer extends RenderLayer<AbstractClientPlayer, PlayerM
         VertexConsumer vc = buffer.getBuffer(RenderType.entityCutoutNoCull(skin));
         PlayerModel<AbstractClientPlayer> model = getParentModel();
 
-        switch (raceId) {
-            case "tensura:elf" -> renderOnHead(pose, vc, packedLight, model, elfEars);
-            case "tensura:dwarf" -> renderOnHead(pose, vc, packedLight, model, dwarfBeard);
-            case "tensura:beastfolk" -> {
+        switch (RaceCosmeticProfile.resolve(raceId)) {
+            case ELF -> renderOnHead(pose, vc, packedLight, model, elfEars);
+            case DWARF -> renderOnHead(pose, vc, packedLight, model, dwarfBeard);
+            case BEASTFOLK -> {
                 renderOnHead(pose, vc, packedLight, model, beastfolkEars);
                 renderOnBody(pose, vc, packedLight, model, beastfolkTail);
             }
-            default -> { /* human or unknown — render nothing */ }
+            case NONE -> { /* human or unknown — render nothing */ }
         }
     }
 

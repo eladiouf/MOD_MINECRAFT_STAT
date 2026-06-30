@@ -1,6 +1,5 @@
 package tong.statmod.network;
 
-import commonnetwork.api.Network;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -13,7 +12,6 @@ public class NetworkHandler {
     @SubscribeEvent
     public static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("1");
-        Network.registerCompatPayloads(event);
 
         registrar.playToClient(SyncPerksPayload.TYPE, SyncPerksPayload.CODEC,
                 ClientPayloadHandler::handleSyncPerks);
@@ -47,5 +45,11 @@ public class NetworkHandler {
 
         registrar.playToClient(BridgeTensuraSkillPayload.TYPE, BridgeTensuraSkillPayload.CODEC,
                 ClientPayloadHandler::handleBridgeTensuraSkill);
+
+        registrar.playToClient(OpenMageCodexPayload.TYPE, OpenMageCodexPayload.CODEC,
+                ClientPayloadHandler::handleOpenMageCodex);
+
+        registrar.playToServer(ChangeStartBranchPayload.TYPE, ChangeStartBranchPayload.CODEC,
+                ServerPayloadHandler::handleChangeStartBranch);
     }
 }

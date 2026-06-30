@@ -90,7 +90,15 @@ public final class PuffishMagicTreeBuilder {
                 "            \"item\": \"minecraft:enchanted_book\"\n" +
                 "        }\n" +
                 "    },\n" +
-                "    \"background\": \"textures/gui/advancements/backgrounds/end.png\"\n" +
+                "    \"background\": \"textures/block/deepslate_tiles.png\",\n" +
+                "    \"colors\": {\n" +
+                "        \"connections\": {\n" +
+                "            \"locked\":     { \"stroke\": \"#3A3F46FF\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"affordable\": { \"stroke\": \"#D4FF0099\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"unlocked\":   { \"stroke\": \"#D4FF00FF\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"excluded\":   { \"stroke\": \"#5A1E1EFF\", \"fill\": \"#0E1014FF\" }\n" +
+                "        }\n" +
+                "    }\n" +
                 "}\n";
     }
 
@@ -458,27 +466,46 @@ public final class PuffishMagicTreeBuilder {
     }
 
     /**
-     * Construit le bloc de requirements lisible pour le tooltip Puffish — affiche les 3 gates
-     * de stats (ARCANE_POWER + ERUDITION + tertiaire) avec leurs seuils <b>de base</b> (sans
-     * deltas race, car la spec sérialisée n'a pas accès à l'état joueur runtime). Pour le
-     * vrai check ajusté à la race, voir {@link tong.statmod.magic.MagicEligibilityResolver}.
+     * Construit le bloc de requirements lisible pour le tooltip Puffish — extrait les
+     * descriptions du {@link Condition} tree du node. Pour le vrai check runtime avec
+     * ajustements race, voir {@link tong.statmod.magic.MagicEligibilityResolver}.
      */
     private static String requirementsLineFor(MagicNode node) {
-        tong.statmod.magic.MagicNodeStatRequirements.Requirements req =
-                tong.statmod.magic.MagicNodeStatRequirements.forNode(node);
-        if (req == null) return "";
+        tong.statmod.magic.Condition cond = node.condition();
+        if (cond == null) return "";
         StringBuilder sb = new StringBuilder("Requirements:");
-        appendGate(sb, req.arcane());
-        appendGate(sb, req.erudition());
-        appendGate(sb, req.tertiary());
+        describeCondition(sb, cond, 0);
         return sb.toString();
     }
 
-    private static void appendGate(StringBuilder sb,
-                                    tong.statmod.magic.MagicNodeStatRequirements.StatGate gate) {
-        if (gate == null) return;
-        sb.append("\n• ").append(gate.stat().displayName)
-                .append(" ≥ ").append(gate.minLevel());
+    private static void describeCondition(StringBuilder sb, tong.statmod.magic.Condition cond, int depth) {
+        switch (cond) {
+            case tong.statmod.magic.Condition.And and -> {
+                for (tong.statmod.magic.Condition c : and.children()) {
+                    describeCondition(sb, c, depth);
+                }
+            }
+            case tong.statmod.magic.Condition.Or or -> {
+                sb.append("\n").append("  ".repeat(depth)).append("• One of:");
+                for (tong.statmod.magic.Condition c : or.children()) {
+                    describeCondition(sb, c, depth + 1);
+                }
+            }
+            case tong.statmod.magic.Condition.StatCondition sc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• ")
+                  .append(sc.stat().displayName).append(" ≥ ").append(sc.minLevel());
+            case tong.statmod.magic.Condition.RaceCondition rc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• Race: ").append(rc.race().name());
+            case tong.statmod.magic.Condition.HasSpellCondition hsc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• Spell: ").append(hsc.spellId());
+            case tong.statmod.magic.Condition.HasNodeCondition hnc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• Node: ").append(hnc.nodeId());
+            case tong.statmod.magic.Condition.BranchTierCondition btc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• ").append(btc.branch().id)
+                  .append(" tier ≥ ").append(btc.minTier());
+            case tong.statmod.magic.Condition.GlobalLevelCondition glc ->
+                sb.append("\n").append("  ".repeat(depth)).append("• Global Level ≥ ").append(glc.minLevel());
+        }
     }
 
     private static IconSpec iconFor(MagicNode node) {

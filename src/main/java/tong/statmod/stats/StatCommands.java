@@ -81,6 +81,17 @@ public class StatCommands {
     private static void registerMagic(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("magic")
                 .requires(s -> s.hasPermission(2))
+                .then(Commands.literal("codex")
+                        .executes(ctx -> {
+                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                // SyncMagic d'abord pour que le client ait l'état frais.
+                                tong.statmod.network.SyncHelper.syncMagic(player);
+                                tong.statmod.network.SyncHelper.syncStats(player);
+                                net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(
+                                        player, new tong.statmod.network.OpenMageCodexPayload());
+                            }
+                            return 1;
+                        }))
                 .then(Commands.literal("info")
                         .executes(ctx -> {
                             if (ctx.getSource().getEntity() instanceof ServerPlayer player) {

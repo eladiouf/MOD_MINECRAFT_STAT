@@ -28,7 +28,7 @@ runs {
 
     server {
         systemProperty 'forge.enabledGameTestNamespaces', mod_id
-        programArgument '--nogui'
+        argument '--nogui'
     }
 
     gameTestServer {
@@ -36,7 +36,7 @@ runs {
     }
 
     data {
-        programArguments.addAll '--mod', mod_id, '--all',
+        arguments.addAll '--mod', mod_id, '--all',
                 '--output', file('src/generated/resources/').absolutePath,
                 '--existing', file('src/main/resources/').absolutePath
     }
@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    implementation fileTree(dir: 'libs', include: '*.jar', exclude: ['elementals*.jar', 'mahoutsukai*.jar'])
+    implementation fileTree(dir: 'libs', include: '*.jar', exclude: ['elementals*.jar'])
     implementation fileTree(dir: 'libs/META-INF/jars', include: '*.jar')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 }
@@ -119,6 +119,17 @@ tasks.register('regenPuffishJson', JavaExec) {
     description = 'Regenerate src/main/resources/.../statmod_magic/*.json from PuffishMagicTreeBuilder'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'tong.statmod.integration.puffish.PuffishMagicJsonGenerator'
+    workingDir = project.projectDir
+    dependsOn 'classes'
+}
+
+// Audit catalog : dump la classification (role) de tous les nœuds pour repérer les mauvaises
+// inferences automatiques et préparer les overrides manuels.
+tasks.register('runMagicCatalogAudit', JavaExec) {
+    group = 'statmod'
+    description = 'Dump the SpellRole classification for all 249 magic nodes'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'tong.statmod.magic.MagicCatalogAuditTool'
     workingDir = project.projectDir
     dependsOn 'classes'
 }

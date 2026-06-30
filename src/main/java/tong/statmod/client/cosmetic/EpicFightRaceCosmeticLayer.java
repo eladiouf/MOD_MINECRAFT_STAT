@@ -48,6 +48,7 @@ public final class EpicFightRaceCosmeticLayer extends PatchedLayer<
                 player.getSkin().model(),
                 model -> new RaceCosmeticLayer(playerRenderer, Minecraft.getInstance().getEntityModels())
         );
+        PlayerModel<AbstractClientPlayer> playerModel = playerRenderer.getModel();
 
         float limbSwingAmount = 0.0f;
         float limbSwing = 0.0f;
@@ -68,6 +69,13 @@ public final class EpicFightRaceCosmeticLayer extends PatchedLayer<
 
         float headPitch = Mth.lerp(partialTicks, player.xRotO, player.getXRot());
         float ageInTicks = player.tickCount + partialTicks;
+        boolean shouldSit = player.isPassenger() && player.getVehicle() != null && player.getVehicle().shouldRiderSit();
+
+        playerModel.attackTime = player.getAttackAnim(partialTicks);
+        playerModel.riding = shouldSit;
+        playerModel.young = player.isBaby();
+        playerModel.prepareMobModel(player, limbSwing, limbSwingAmount, partialTicks);
+        playerModel.setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
 
         cosmeticLayer.render(
                 poseStack,

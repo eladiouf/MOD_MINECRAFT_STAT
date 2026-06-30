@@ -30,19 +30,19 @@ public final class MagicUnlockFeedbackMessageFactory {
     /** Variante consommée par {@link MagicTreeProgressionService} via son {@code UnlockResult}. */
     public static MagicUnlockFeedbackMessage forFailure(MagicNode node,
                                                          MagicEligibilityResolver.Failure failure,
-                                                         java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
+                                                         java.util.List<String> missingStats) {
         return buildMessage(node, failure, missingStats == null ? java.util.List.of() : missingStats);
     }
 
     private static MagicUnlockFeedbackMessage buildMessage(MagicNode node,
                                                             MagicEligibilityResolver.Failure failure,
-                                                            java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
+                                                            java.util.List<String> missingStats) {
         String message = messageFor(failure);
         if (failure == MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET
                 && missingStats != null && !missingStats.isEmpty()) {
             StringBuilder sb = new StringBuilder(message).append(':');
-            for (MagicNodeStatRequirements.StatGate gate : missingStats) {
-                sb.append("\n• ").append(gate.stat().displayName).append(" ≥ ").append(gate.minLevel());
+            for (String s : missingStats) {
+                sb.append("\n• ").append(s);
             }
             message = sb.toString();
         }

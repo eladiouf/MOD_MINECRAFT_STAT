@@ -307,17 +307,13 @@ class PuffishMagicResourceConsistencyTest {
     }
 
     private static void assertDefinitionUsesTexture(String json, String skillId, String texture) {
-        String normalized = json.toLowerCase(Locale.ROOT);
-        String block = "\"" + skillId + "\": {";
-        int start = normalized.indexOf(block);
-        assertTrue(start >= 0, "missing definition for " + skillId);
-        int end = normalized.indexOf("\n    }", start);
-        assertTrue(end > start, "unable to isolate definition for " + skillId);
-        String definition = normalized.substring(start, end);
-        assertTrue(definition.contains("\"type\": \"texture\""),
-                skillId + " should use a texture icon");
-        assertTrue(definition.contains("\"texture\": \"" + texture.toLowerCase(Locale.ROOT) + "\""),
-                skillId + " should use texture " + texture);
+        String quoted = Pattern.quote(skillId);
+        String texQuoted = Pattern.quote(texture.toLowerCase(Locale.ROOT));
+        Pattern pattern = Pattern.compile(
+                "\"" + quoted + "\"\\s*:\\s*\\{.*?\"type\"\\s*:\\s*\"texture\".*?\"texture\"\\s*:\\s*\"" + texQuoted + "\"",
+                Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(json);
+        assertTrue(matcher.find(), skillId + " should use texture " + texture);
     }
 
     private record Bounds(int minX, int maxX, int minY, int maxY) {

@@ -1,0 +1,299 @@
+---- Minecraft Crash Report ----
+// Hey, that tickles! Hehehe!
+
+Time: 2026-06-30 20:27:45
+Description: Rendering screen
+
+java.lang.NoClassDefFoundError: tong/statmod/magic/MagicRace
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.md838348$statmod$lambda$filterStartingRaces$0$0(ReincarnationMenu.java:545) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178) ~[?:?] {}
+	at java.base/java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:722) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627) ~[?:?] {}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.filterStartingRaces(ReincarnationMenu.java:546) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.handler$zgm000$statmod$restrictStartingRacePool(ReincarnationMenu.java:523) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.getRacePool(ReincarnationMenu.java:113) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.getSelectedRace(ReincarnationScreen.java:189) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.renderRace(ReincarnationScreen.java:77) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.renderBg(ReincarnationScreen.java:64) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.inventory.AbstractContainerScreen.renderBackground(AbstractContainerScreen.java:157) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:manascore_inventory.mixins.json:MixinAbstractContainerScreen from mod manascore_inventory,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.inventory.AbstractContainerScreen.render(AbstractContainerScreen.java:95) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:manascore_inventory.mixins.json:MixinAbstractContainerScreen from mod manascore_inventory,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.Screen.renderWithTooltip(Screen.java:112) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:computing_frames,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/neoforge@21.1.228/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:429) ~[neoforge-21.1.228.jar%23196!/:?] {re:classloading,re:mixin}
+	at TRANSFORMER/neoforge@21.1.228/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:423) ~[neoforge-21.1.228.jar%23196!/:?] {re:classloading,re:mixin}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:1092) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:tensura.mixins.json:client.MixinGameRenderer from mod tensura,pl:mixin:APP:epicfight.mixins.json:client.MixinGameRenderer from mod epicfight,pl:mixin:APP:block_factorys_bosses.mixins.json:client.GameRendererMixin from mod block_factorys_bosses,pl:mixin:APP:block_factorys_bosses.mixins.json:client.GameRendererNightVisionMixin from mod block_factorys_bosses,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.runTick(Minecraft.java:1195) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.run(Minecraft.java:807) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.main.Main.main(Main.java:230) ~[neoforge-21.1.228.jar%23195!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {re:mixin}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:124) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+Caused by: java.lang.ClassNotFoundException: tong.statmod.magic.MagicRace
+	... 40 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.md838348$statmod$lambda$filterStartingRaces$0$0(ReincarnationMenu.java:545) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178) ~[?:?] {}
+	at java.base/java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:722) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575) ~[?:?] {}
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622) ~[?:?] {}
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627) ~[?:?] {}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.filterStartingRaces(ReincarnationMenu.java:546) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.handler$zgm000$statmod$restrictStartingRacePool(ReincarnationMenu.java:523) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.menu.ReincarnationMenu.getRacePool(ReincarnationMenu.java:113) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:mixin,re:classloading,pl:mixin:A}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.getSelectedRace(ReincarnationScreen.java:189) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.renderRace(ReincarnationScreen.java:77) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/tensura@2.0.1.0/io.github.manasmods.tensura.client.screen.ReincarnationScreen.renderBg(ReincarnationScreen.java:64) ~[tensura-neoforge-2.0.1.0.jar%23243!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.inventory.AbstractContainerScreen.renderBackground(AbstractContainerScreen.java:157) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:manascore_inventory.mixins.json:MixinAbstractContainerScreen from mod manascore_inventory,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.inventory.AbstractContainerScreen.render(AbstractContainerScreen.java:95) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:manascore_inventory.mixins.json:MixinAbstractContainerScreen from mod manascore_inventory,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.gui.screens.Screen.renderWithTooltip(Screen.java:112) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:computing_frames,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/neoforge@21.1.228/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:429) ~[neoforge-21.1.228.jar%23196!/:?] {re:classloading,re:mixin}
+	at TRANSFORMER/neoforge@21.1.228/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:423) ~[neoforge-21.1.228.jar%23196!/:?] {re:classloading,re:mixin}
+-- Screen render details --
+Details:
+	Screen name: io.github.manasmods.tensura.client.screen.ReincarnationScreen
+	Mouse location: Scaled: (163, 214). Absolute: (652.000000, 855.000000)
+	Screen size: Scaled: (480, 265). Absolute: (1920, 1057). Scale factor of 4.000000
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:1092) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:tensura.mixins.json:client.MixinGameRenderer from mod tensura,pl:mixin:APP:epicfight.mixins.json:client.MixinGameRenderer from mod epicfight,pl:mixin:APP:block_factorys_bosses.mixins.json:client.GameRendererMixin from mod block_factorys_bosses,pl:mixin:APP:block_factorys_bosses.mixins.json:client.GameRendererNightVisionMixin from mod block_factorys_bosses,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.runTick(Minecraft.java:1195) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.run(Minecraft.java:807) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.main.Main.main(Main.java:230) ~[neoforge-21.1.228.jar%23195!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {re:mixin}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:124) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+
+
+-- Uptime --
+Details:
+	JVM uptime: 82.668s
+	Wall uptime: 66.287s
+	High-res time: 64.241s
+	Client ticks: 634 ticks / 31.700s
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.fillReport(Minecraft.java:2394) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.emergencySaveAndCrash(Minecraft.java:868) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.run(Minecraft.java:825) ~[neoforge-21.1.228.jar%23195!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:puffish_skills.mixins.json:MinecraftClientMixin from mod puffish_skills,pl:mixin:APP:epicfight.mixins.json:client.MixinMinecraft from mod epicfight,pl:mixin:APP:irons_spellbooks.mixins.json:MinecraftMixin from mod irons_spellbooks,pl:mixin:APP:architectury.mixins.json:MixinMinecraft from mod architectury,pl:mixin:APP:tensura.mixins.json:client.MixinMinecraft from mod tensura,pl:mixin:APP:cdmoveset.mixins.json:MinecraftClientMixin from mod cdmoveset,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.main.Main.main(Main.java:230) ~[neoforge-21.1.228.jar%23195!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {re:mixin}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:124) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23150!/:4.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%23132!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [LocalPlayer['Dev'/145, l='ClientLevel', x=8.50, y=65.00, z=8.50]]
+	Chunk stats: 961, 0
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (8,64,8), Section: (at 8,0,8 in 0,4,0; chunk contains blocks 0,-64,0 to 15,319,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,-64,0 to 511,319,511)
+	Level time: 14 game time, 381 day time
+	Server brand: neoforge
+	Server type: Integrated singleplayer server
+	Tracked entity count: 1
+
+-- Last reload --
+Details:
+	Reload number: 1
+	Reload reason: initial
+	Finished: Yes
+	Packs: vanilla, mod_resources, mod/smartbrainlib, mod/puffish_skills, mod/geckolib, mod/playeranimator, mod/irons_lib, mod/commonnetworking, mod/caelus, mod/epicfight, mod/invincible, mod/epicfight_dd, mod/neoforge, mod/default_skill_trees, mod/darkdoppelganger, mod/impactful, mod/cloth_config, mod/fzzy_config, mod/overgeared, mod/p1nero_bow, mod/statmod, mod/aces_spell_utils, mod/terrablender, mod/block_factorys_bosses, mod/wind_spellbooks, mod/gtbcs_spell_lib, mod/kotlinforforge, mod/curios, mod/sablecompanion, mod/parcool, mod/spells_gone_wrong, mod/irons_spellbooks, mod/gametechbcs_spellbooks, mod/efiscompat, mod/epicfight_curios_compat, mod/indestructible, mod/architectury, mod/manascore_config, mod/manascore_attribute, mod/manascore_architectury, mod/magistuarmory, mod/manascore_inventory, mod/magistuarmoryaddon, mod/manascore_command, mod/simplyswords, mod/epicfightcompat, mod/simplytooltips, mod/manascore, mod/tensura_iron_spells, mod/manascore_keybind, mod/manascore_network, mod/manascore_storage, mod/manascore_race, mod/manascore_skill, mod/tensura, mod/epicparcool, mod/legendarymage, mod/dualaxes, mod/tensuramoreskills, mod/hazentouvelib, mod/cdmoveset, mod/darkagesarmory, mod/xbbsroaringknightmod, mod/jinxedlib
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 21.0.11, Eclipse Adoptium
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Eclipse Adoptium
+	Memory: 524376864 bytes (500 MiB) / 2420113408 bytes (2308 MiB) up to 4253024256 bytes (4056 MiB)
+	CPUs: 12
+	Processor Vendor: GenuineIntel
+	Processor Name: 12th Gen Intel(R) Core(TM) i5-12400F
+	Identifier: Intel64 Family 6 Model 151 Stepping 5
+	Microarchitecture: Alder Lake
+	Frequency (GHz): 2.50
+	Number of physical packages: 1
+	Number of physical CPUs: 6
+	Number of logical CPUs: 12
+	Graphics card #0 name: NVIDIA GeForce GTX 1080
+	Graphics card #0 vendor: NVIDIA
+	Graphics card #0 VRAM (MiB): 8192.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.15.8180
+	Memory slot #0 capacity (MiB): 4096.00
+	Memory slot #0 clockSpeed (GHz): 2.40
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 4096.00
+	Memory slot #1 clockSpeed (GHz): 2.40
+	Memory slot #1 type: DDR4
+	Memory slot #2 capacity (MiB): 8192.00
+	Memory slot #2 clockSpeed (GHz): 2.13
+	Memory slot #2 type: DDR4
+	Virtual memory max (MiB): 36703.39
+	Virtual memory used (MiB): 27624.69
+	Swap memory total (MiB): 20480.00
+	Swap memory used (MiB): 1704.49
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 2363.41, total: 476052.00
+	Space in storage for workdir (MiB): available: 2363.16, total: 476052.00
+	JVM Flags: 1 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	Launched Version: 21.1.228
+	Backend library: LWJGL version 3.3.3+5
+	Backend API: NVIDIA GeForce GTX 1080/PCIe/SSE2 GL version 4.6.0 NVIDIA 581.80, NVIDIA Corporation
+	Window size: 1920x1057
+	GFLW Platform: win32
+	GL Caps: Using framebuffer using OpenGL 3.2
+	GL debug messages: 
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Universe: 400921fb54442d18
+	Type: Integrated Server (map_client.txt)
+	Graphics mode: fancy
+	Render Distance: 12/12 chunks
+	Resource Packs: vanilla, mod_resources, mod/smartbrainlib (incompatible), mod/puffish_skills (incompatible), mod/geckolib, mod/playeranimator, mod/irons_lib, mod/commonnetworking (incompatible), mod/caelus (incompatible), mod/epicfight, mod/invincible (incompatible), mod/epicfight_dd (incompatible), mod/neoforge, mod/default_skill_trees, mod/darkdoppelganger, mod/impactful (incompatible), mod/cloth_config (incompatible), mod/fzzy_config, mod/overgeared, mod/p1nero_bow (incompatible), mod/statmod, mod/aces_spell_utils, mod/terrablender (incompatible), mod/block_factorys_bosses (incompatible), mod/wind_spellbooks, mod/gtbcs_spell_lib, mod/kotlinforforge (incompatible), mod/curios (incompatible), mod/sablecompanion, mod/parcool (incompatible), mod/spells_gone_wrong (incompatible), mod/irons_spellbooks, mod/gametechbcs_spellbooks (incompatible), mod/efiscompat (incompatible), mod/epicfight_curios_compat (incompatible), mod/indestructible, mod/architectury (incompatible), mod/manascore_config, mod/manascore_attribute, mod/manascore_architectury, mod/magistuarmory, mod/manascore_inventory, mod/magistuarmoryaddon (incompatible), mod/manascore_command, mod/simplyswords (incompatible), mod/epicfightcompat, mod/simplytooltips, mod/manascore, mod/tensura_iron_spells, mod/manascore_keybind, mod/manascore_network, mod/manascore_storage, mod/manascore_race, mod/manascore_skill, mod/tensura, mod/epicparcool (incompatible), mod/legendarymage, mod/dualaxes, mod/tensuramoreskills, mod/hazentouvelib, mod/cdmoveset (incompatible), mod/darkagesarmory (incompatible), mod/xbbsroaringknightmod, mod/jinxedlib (incompatible)
+	Current Language: en_us
+	Locale: en_US
+	System encoding: UTF-8
+	File encoding: UTF-8
+	CPU: 12x 12th Gen Intel(R) Core(TM) i5-12400F
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/145, l='ServerLevel[New World]', x=54.50, y=69.00, z=-70.50]]
+	Active Data Packs: vanilla, mod_data, mod/smartbrainlib (incompatible), mod/puffish_skills (incompatible), mod/geckolib, mod/playeranimator, mod/irons_lib, mod/commonnetworking (incompatible), mod/caelus (incompatible), mod/epicfight, mod/invincible (incompatible), mod/epicfight_dd (incompatible), mod/neoforge, mod/default_skill_trees, mod/darkdoppelganger, mod/impactful (incompatible), mod/cloth_config (incompatible), mod/fzzy_config, mod/overgeared, mod/p1nero_bow (incompatible), mod/statmod, mod/aces_spell_utils, mod/terrablender (incompatible), mod/block_factorys_bosses, mod/wind_spellbooks, mod/gtbcs_spell_lib, mod/kotlinforforge (incompatible), mod/curios (incompatible), mod/sablecompanion, mod/parcool (incompatible), mod/spells_gone_wrong (incompatible), mod/irons_spellbooks (incompatible), mod/gametechbcs_spellbooks, mod/efiscompat (incompatible), mod/epicfight_curios_compat (incompatible), mod/indestructible (incompatible), mod/architectury (incompatible), mod/manascore_config, mod/manascore_attribute, mod/manascore_architectury, mod/magistuarmory (incompatible), mod/manascore_inventory, mod/magistuarmoryaddon (incompatible), mod/manascore_command, mod/simplyswords (incompatible), mod/epicfightcompat (incompatible), mod/simplytooltips, mod/manascore, mod/tensura_iron_spells, mod/manascore_keybind, mod/manascore_network, mod/manascore_storage, mod/manascore_race, mod/manascore_skill, mod/tensura, mod/epicparcool (incompatible), mod/legendarymage (incompatible), mod/dualaxes, mod/tensuramoreskills, mod/hazentouvelib, mod/cdmoveset (incompatible), mod/darkagesarmory (incompatible), mod/xbbsroaringknightmod, mod/jinxedlib (incompatible)
+	Available Data Packs: bundle, trade_rebalance, vanilla, mod/aces_spell_utils, mod/architectury (incompatible), mod/block_factorys_bosses, mod/caelus (incompatible), mod/cdmoveset (incompatible), mod/cloth_config (incompatible), mod/commonnetworking (incompatible), mod/curios (incompatible), mod/darkagesarmory (incompatible), mod/darkdoppelganger, mod/default_skill_trees, mod/dualaxes, mod/efiscompat (incompatible), mod/epicfight, mod/epicfight_curios_compat (incompatible), mod/epicfight_dd (incompatible), mod/epicfightcompat (incompatible), mod/epicparcool (incompatible), mod/fzzy_config, mod/gametechbcs_spellbooks, mod/geckolib, mod/gtbcs_spell_lib, mod/hazentouvelib, mod/impactful (incompatible), mod/indestructible (incompatible), mod/invincible (incompatible), mod/irons_lib, mod/irons_spellbooks (incompatible), mod/jinxedlib (incompatible), mod/kotlinforforge (incompatible), mod/legendarymage (incompatible), mod/magistuarmory (incompatible), mod/magistuarmoryaddon (incompatible), mod/manascore, mod/manascore_architectury, mod/manascore_attribute, mod/manascore_command, mod/manascore_config, mod/manascore_inventory, mod/manascore_keybind, mod/manascore_network, mod/manascore_race, mod/manascore_skill, mod/manascore_storage, mod/neoforge, mod/overgeared, mod/p1nero_bow (incompatible), mod/parcool (incompatible), mod/playeranimator, mod/puffish_skills (incompatible), mod/sablecompanion, mod/simplyswords (incompatible), mod/simplytooltips, mod/smartbrainlib (incompatible), mod/spells_gone_wrong (incompatible), mod/statmod, mod/tensura, mod/tensura_iron_spells, mod/tensuramoreskills, mod/terrablender (incompatible), mod/wind_spellbooks, mod/xbbsroaringknightmod, mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: 3175075537270673869
+	ModLauncher: 11.0.5+main.901c6ea8
+	ModLauncher launch target: forgeclientdev
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-4.0.42.jar slf4jfixer PLUGINSERVICE 
+		loader-4.0.42.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-10.0.1.jar accesstransformer PLUGINSERVICE 
+		loader-4.0.42.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-11.0.5.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-11.0.5.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		kotlinforforge@5.11.0
+		javafml@4.0
+		lowcodefml@4.0
+		minecraft@4.0
+	Mod List: 
+		aces_spell_utils-1.2.6.1-1.21.1.jar               |Ace's Spell Utils             |aces_spell_utils              |1.2.6.1-1.21.1      |Manifest: NOSIGNATURE
+		architectury-13.0.8-neoforge.jar                  |Architectury                  |architectury                  |13.0.8              |Manifest: NOSIGNATURE
+		block_factorys_bosses-2.1.2-neo-1.21.1.jar        |Bosses'Rise                   |block_factorys_bosses         |2.1.2               |Manifest: NOSIGNATURE
+		caelus-neoforge-7.0.1+1.21.1.jar                  |Caelus API                    |caelus                        |7.0.1+1.21.1        |Manifest: NOSIGNATURE
+		cloth-config-15.0.140-neoforge.jar                |Cloth Config v15 API          |cloth_config                  |15.0.140            |Manifest: NOSIGNATURE
+		common-network.jar                                |Common Networking             |commonnetworking              |1.0.21-1.21.1       |Manifest: NOSIGNATURE
+		curios-neoforge-9.5.1+1.21.1.jar                  |Curios API                    |curios                        |9.5.1+1.21.1        |Manifest: NOSIGNATURE
+		darkdoppelganger-3.3.0-1.21.1.jar                 |DarkDoppelganger              |darkdoppelganger              |3.3.0-1.21.1        |Manifest: NOSIGNATURE
+		default_skill_trees-1.1.jar                       |Default Skill Trees           |default_skill_trees           |1.1                 |Manifest: NOSIGNATURE
+		dualaxes-21.1.3.jar                               |DualAxes                      |dualaxes                      |21.1.3              |Manifest: NOSIGNATURE
+		epic-fight-21.17.3.1-mc1.21.1-neoforge.jar        |Epic Fight                    |epicfight                     |21.17.3.1           |Manifest: NOSIGNATURE
+		efiscompat-3.0.0 (1).jar                          |Epic Fight & Iron's Spellbook |efiscompat                    |3.0.0               |Manifest: NOSIGNATURE
+		invincible-21.15.8.1-mc1.21.1-neoforge.jar        |Epic Fight - Invincible       |invincible                    |21.15.8.1           |Manifest: NOSIGNATURE
+		epicfightcompat-1.1.0-mc1.21.1-neoforge.jar       |Epic Fight Compat             |epicfightcompat               |1.1.0               |Manifest: NOSIGNATURE
+		epic-knights-addon-2.5-1.21.1-neoforge.jar        |Epic Knights: Addon           |magistuarmoryaddon            |2.5                 |Manifest: NOSIGNATURE
+		epic-knights-1.21.1-neoforge-10.12.jar            |Epic Knights: Shields, Armor a|magistuarmory                 |10.12               |Manifest: NOSIGNATURE
+		[1.21.1-neoforge]-Epic-Knights-Dark-Ages-1.1.jar  |Epic Knights: Slavic Armory   |darkagesarmory                |1.1                 |Manifest: NOSIGNATURE
+		epic x parcool-neoforge-21.0.0-1.21.1.jar         |Epic Parcool                  |epicparcool                   |21.0.0              |Manifest: NOSIGNATURE
+		Epic Fight x Curios Compat 2.2.jar                |EpicFight x Curios Compat     |epicfight_curios_compat       |1.4                 |Manifest: NOSIGNATURE
+		cdmoveset-2.0-neoforge1.21.1.jar                  |EpicFight-Resurrection        |cdmoveset                     |2.0-neoforge1.21.1  |Manifest: NOSIGNATURE
+		epic-fight-dawn-day-21.17.1.0-mc1.21.1-neoforge.ja|EpicFight:Dawnday             |epicfight_dd                  |21.17.1.1.0         |Manifest: NOSIGNATURE
+		fzzy_config-0.7.6+1.21+neoforge.jar               |Fzzy Config                   |fzzy_config                   |0.7.6+1.21+neoforge |Manifest: NOSIGNATURE
+		gametechbcs_spellbooks-3.0.0-1.21.1.jar           |GameTechBC's Spellbooks       |gametechbcs_spellbooks        |3.0.0-1.21.1        |Manifest: NOSIGNATURE
+		geckolib-neoforge-1.21.1-4.8.4.jar                |GeckoLib 4                    |geckolib                      |4.8.4               |Manifest: NOSIGNATURE
+		gtbcs_spell_lib-1.5.0-1.21.1.jar                  |GTBC's SpellLib               |gtbcs_spell_lib               |1.5.0-1.21.1        |Manifest: NOSIGNATURE
+		hazentouvelib-1.0.8.jar                           |HazentouveLib                 |hazentouvelib                 |1.0.8               |Manifest: NOSIGNATURE
+		impactful-21.16.2+-neoforge1.21.1.jar             |Impactful                     |impactful                     |20.14.2-neoforge1.21|Manifest: NOSIGNATURE
+		indestructible-21.16.3-1.21.1.jar                 |Indestructible                |indestructible                |21.16.3-1.21.1      |Manifest: NOSIGNATURE
+		irons_lib-1.21.1-1.0.2.jar                        |Iron's Lib                    |irons_lib                     |1.21.1-1.0.2        |Manifest: NOSIGNATURE
+		irons_spellbooks-1.21.1-3.16.1.jar                |Iron's Spells 'n Spellbooks   |irons_spellbooks              |1.21.1-3.16.1       |Manifest: NOSIGNATURE
+		jinxedlib-neoforge-1.21.1-1.0.3.jar               |JinxedLib                     |jinxedlib                     |1.0.3               |Manifest: NOSIGNATURE
+		thedarkcolour.kffmod-5.11.0.jar                   |Kotlin For Forge              |kotlinforforge                |5.11.0              |Manifest: NOSIGNATURE
+		legendarymage-1.0.9.jar                           |Legendary Mage                |legendarymage                 |1.0.9               |Manifest: NOSIGNATURE
+		manascore-neoforge-4.0.0.2.jar                    |ManasCore                     |manascore                     |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-architectury-neoforge-4.0.0.2.jar       |ManasCore - Architectury      |manascore_architectury        |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-attribute-neoforge-4.0.0.2.jar          |ManasCore - Attribute         |manascore_attribute           |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-command-neoforge-4.0.0.2.jar            |ManasCore - Command           |manascore_command             |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-config-neoforge-4.0.0.2.jar             |ManasCore - Config            |manascore_config              |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-inventory-neoforge-4.0.0.2.jar          |ManasCore - Inventory         |manascore_inventory           |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-keybind-neoforge-4.0.0.2.jar            |ManasCore - Keybind           |manascore_keybind             |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-network-neoforge-4.0.0.2.jar            |ManasCore - Network           |manascore_network             |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-race-neoforge-4.0.0.2.jar               |ManasCore - Race              |manascore_race                |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-skill-neoforge-4.0.0.2.jar              |ManasCore - Skill             |manascore_skill               |4.0.0.2             |Manifest: NOSIGNATURE
+		manascore-storage-neoforge-4.0.0.2.jar            |ManasCore - Storage           |manascore_storage             |4.0.0.2             |Manifest: NOSIGNATURE
+		neoforge-21.1.228.jar                             |Minecraft                     |minecraft                     |1.21.1              |Manifest: NOSIGNATURE
+		neoforge-21.1.228.jar                             |NeoForge                      |neoforge                      |21.1.228            |Manifest: NOSIGNATURE
+		overgeared-1.21.1-1.6.14.jar                      |Overgeared: A Blacksmith Mod  |overgeared                    |1.21.1-1.6.14       |Manifest: NOSIGNATURE
+		p1nero_bow-neoforge1.21.1-21.16.1.0-neoforge.jar  |P1nero's Epic Fight Bow       |p1nero_bow                    |21.16.1.0-neoforge  |Manifest: NOSIGNATURE
+		ParCool-1.21.1-3.4.3.3-NF.jar                     |ParCool!                      |parcool                       |3.4.3.3             |Manifest: NOSIGNATURE
+		player-animation-lib-forge-2.0.4+1.21.1.jar       |Player Animator               |playeranimator                |2.0.4+1.21.1        |Manifest: NOSIGNATURE
+		puffish_skills-0.18.0-1.21-neoforge.jar           |Pufferfish's Skills           |puffish_skills                |0.18.0              |Manifest: NOSIGNATURE
+		sable-companion-common-1.21.1-1.6.0.jar           |Sable Companion               |sablecompanion                |1.6.0               |Manifest: NOSIGNATURE
+		simplyswords-neoforge-1.63.0-1.21.1.jar           |Simply Swords                 |simplyswords                  |1.63.0-1.21.1       |Manifest: NOSIGNATURE
+		SimplyTooltips-neoforge-0.1.3.jar                 |Simply Tooltips               |simplytooltips                |0.1.3               |Manifest: NOSIGNATURE
+		SmartBrainLib-neoforge-1.21.1-1.16.11.jar         |SmartBrainLib                 |smartbrainlib                 |1.16.11             |Manifest: NOSIGNATURE
+		spells_gone_wrong-1.21.1-2.0.0.jar                |Spells Gone Wrong             |spells_gone_wrong             |1.21.1-2.0.0        |Manifest: NOSIGNATURE
+		main                                              |STAT Mod                      |statmod                       |1.2.0               |Manifest: NOSIGNATURE
+		tensura_iron_spells-neoforge-2.0.0.0.jar          |TenSura Compat: Iron's Spells |tensura_iron_spells           |2.0.0.0             |Manifest: NOSIGNATURE
+		tensura-neoforge-2.0.1.0.jar                      |Tensura: Reincarnated         |tensura                       |2.0.1.0             |Manifest: NOSIGNATURE
+		tensuramoreskills-0.0.4.3.jar                     |TensuraMoreSkills             |tensuramoreskills             |0.0.4.3             |Manifest: NOSIGNATURE
+		TerraBlender-neoforge-1.21.1-4.1.0.8.jar          |TerraBlender                  |terrablender                  |4.1.0.8             |Manifest: NOSIGNATURE
+		wind_spellbooks-1.0.4.jar                         |Wind's Spellbooks : Iron's Spe|wind_spellbooks               |1.0.4               |Manifest: NOSIGNATURE
+		xbbsroaringknightmod-2.0.1-1.21.1-NeoForge.jar    |XBB's Roaring Knight Mod      |xbbsroaringknightmod          |2.0.1               |Manifest: NOSIGNATURE
+	Crash Report UUID: 2de0501d-2536-40c4-9f5f-59f7229d04f7
+	FML: 4.0.42
+	NeoForge: 21.1.228

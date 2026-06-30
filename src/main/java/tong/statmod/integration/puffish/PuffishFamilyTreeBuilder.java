@@ -67,7 +67,15 @@ public final class PuffishFamilyTreeBuilder {
                 "            \"item\": \"minecraft:nether_star\"\n" +
                 "        }\n" +
                 "    },\n" +
-                "    \"background\": \"textures/gui/advancements/backgrounds/adventure.png\"\n" +
+                "    \"background\": \"textures/block/deepslate_tiles.png\",\n" +
+                "    \"colors\": {\n" +
+                "        \"connections\": {\n" +
+                "            \"locked\":     { \"stroke\": \"#3A3F46FF\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"affordable\": { \"stroke\": \"#D4FF0099\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"unlocked\":   { \"stroke\": \"#D4FF00FF\", \"fill\": \"#0E1014FF\" },\n" +
+                "            \"excluded\":   { \"stroke\": \"#5A1E1EFF\", \"fill\": \"#0E1014FF\" }\n" +
+                "        }\n" +
+                "    }\n" +
                 "}\n";
     }
 
@@ -158,13 +166,23 @@ public final class PuffishFamilyTreeBuilder {
     }
 
     private static FamilyLayout layoutForFamily(StatFamily family) {
+        // Origin (0,0) = visual center. Each family is a spoke radiating outward from the
+        // center. Core (root) sits near the center, tiers move outward, lanes fan out
+        // perpendicular to the spoke direction. Compact spacing pour tenir dans une vue
+        // par défaut Puffish (scale 1.0, fenêtre ~480×260 visible).
         return switch (family) {
-            case FRONTLINE_PHYSICAL_COMBAT -> new FamilyLayout(780, 430, -55, 52, -95, -60);
-            case RANGED_HUNT_CONTROL -> new FamilyLayout(930, 430, 60, 74, 95, -58);
-            case MAGICAL_CORE -> new FamilyLayout(560, 480, 95, 0, 0, -82);
-            case ELEMENTAL_SPECIALIZATION -> new FamilyLayout(610, 720, 100, 0, 0, 82);
-            case MENTAL_PRESSURE_RESILIENCE -> new FamilyLayout(620, 720, -70, 90, -90, 55);
-            case CRAFTING_SUPPORT -> new FamilyLayout(980, 720, 75, 90, 90, 55);
+            // North-west spoke — 6 stats fanning vertically, tiers going up-left
+            case FRONTLINE_PHYSICAL_COMBAT -> new FamilyLayout(-90, -40, -40, 38, -68, -42);
+            // North-east spoke — 3 stats fanning vertically, tiers going up-right
+            case RANGED_HUNT_CONTROL      -> new FamilyLayout( 90, -40,  40, 52,  68, -42);
+            // North spoke — 5 stats fanning horizontally, tiers going up
+            case MAGICAL_CORE             -> new FamilyLayout(-110, -80, 55,  0,   0, -58);
+            // South spoke — 4 stats fanning horizontally, tiers going down
+            case ELEMENTAL_SPECIALIZATION -> new FamilyLayout( -80, 130, 55,  0,   0,  58);
+            // South-west spoke — 2 stats fanning vertically, tiers going down-left
+            case MENTAL_PRESSURE_RESILIENCE -> new FamilyLayout(-100, 110, -50, 64, -64, 40);
+            // South-east spoke — 3 stats fanning vertically, tiers going down-right
+            case CRAFTING_SUPPORT         -> new FamilyLayout( 100, 110,  50, 64,  64, 40);
         };
     }
 

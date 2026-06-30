@@ -433,29 +433,15 @@ public final class MagicTreeCatalog {
     }
 
     private static void add(MagicNode node) {
-        MagicNode tagged = ensureRoleTagged(node);
-        if (BY_ID.put(tagged.id(), tagged) != null) {
-            throw new IllegalStateException("duplicate node id " + tagged.id());
+        MagicNode finalNode = node.condition() == null
+                ? new MagicNode(node.id(), node.branch(), node.kind(), node.tier(),
+                        node.currency(), node.cost(), node.prerequisites(),
+                        node.learnedSpells(), MagicNodeMigration.defaultCondition(node))
+                : node;
+        if (BY_ID.put(finalNode.id(), finalNode) != null) {
+            throw new IllegalStateException("duplicate node id " + finalNode.id());
         }
-        BY_BRANCH.computeIfAbsent(tagged.branch(), k -> new ArrayList<>()).add(tagged);
-    }
-
-    /**
-     * Auto-tag les nœuds construits via l'ancien constructeur (sans {@link SpellRole}). Au
-     * moment où Mission β tagué via inférence par mots-clés. Cas exotiques peuvent être
-     * surchargés manuellement en appelant le constructeur 9-args explicite avec un role.
-     */
-    private static MagicNode ensureRoleTagged(MagicNode node) {
-        if (node.role() != null) {
-            return node;
-        }
-        SpellRole inferred = SpellRoleInference.infer(
-                node.branch(), node.kind(), node.id(), node.learnedSpells());
-        return new MagicNode(
-                node.id(), node.branch(), node.kind(), node.tier(),
-                node.currency(), node.cost(),
-                node.prerequisites(), node.learnedSpells(),
-                inferred);
+        BY_BRANCH.computeIfAbsent(finalNode.branch(), k -> new ArrayList<>()).add(finalNode);
     }
 
     public static MagicNode byId(String id) {

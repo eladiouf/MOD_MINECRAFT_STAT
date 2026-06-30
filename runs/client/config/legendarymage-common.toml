@@ -1,0 +1,593 @@
+	[spells.resurrectionRune]
+		#Spell power multiplier for Resurrection Rune spell. Higher values make spell power more effective.
+		#Default: 1.0 (100% effectiveness)
+		#Range: 0.1 - 5.0
+		# Default: 1.0
+		# Range: 0.1 ~ 5.0
+		spellPowerMultiplier = 1.0
+		#Whether to enable buff effects for players and summons within the resurrection rune area.
+		#Default: true
+		buffEnabled = true
+		#Interval in ticks between buff applications.
+		#Default: 40 ticks (2 seconds)
+		#Range: 20 - 200
+		# Default: 40
+		# Range: 20 ~ 200
+		buffInterval = 40
+		#Buff strength multiplier. Higher values make buffs stronger.
+		#Default: 1.0 (100% effectiveness)
+		#Range: 0.1 - 3.0
+		# Default: 1.0
+		# Range: 0.1 ~ 3.0
+		buffMultiplier = 1.0
+
+	[spells.pyromaniac]
+		#Whether Pyromaniac spell can affect allies and summons.
+		#Default: false (will not affect allies)
+		affectAllies = false
+		#Whether Pyromaniac spell can affect summons.
+		#Default: false (will not affect summons)
+		affectSummons = false
+
+	[spells.implosion]
+		#Spell power multiplier for Implosion spell. Higher values make spell power more effective.
+		#Default: 1.0 (100% effectiveness)
+		#Range: 0.1 - 5.0
+		# Default: 1.0
+		# Range: 0.1 ~ 5.0
+		spellPowerMultiplier = 1.0
+		#Pull strength for Implosion spell. Higher values pull enemies faster.
+		#Default: 0.8
+		#Range: 0.1 - 2.0
+		# Default: 0.8
+		# Range: 0.1 ~ 2.0
+		pullStrength = 0.8
+		#Delay in ticks between pull and explosion for Implosion spell.
+		#Default: 10 ticks (0.5 seconds)
+		#Range: 0 - 60
+		# Default: 10
+		# Range: 0 ~ 60
+		explosionDelayTicks = 10
+		#Duration in seconds that targets are set on fire after explosion.
+		#Default: 5 seconds
+		#Range: 0 - 30
+		# Default: 5
+		# Range: 0 ~ 30
+		fireDurationSeconds = 5
+
+	[spells.livingIceSculpture]
+		#Interval in ticks between spawning new ice sculptures.
+		#Default: 40 ticks (2 seconds)
+		#Range: 20 - 200
+		# Default: 40
+		# Range: 20 ~ 200
+		spawnInterval = 40
+		#Maximum number of ice sculptures that can exist simultaneously per spell cast.
+		#Default: 8 sculptures
+		#Range: 1 - 20
+		# Default: 8
+		# Range: 1 ~ 20
+		maxSculptures = 8
+		#Lifetime of ice sculpture in ticks before converting to living sculpture.
+		#Default: 400 ticks (20 seconds)
+		#Range: 100 - 1200
+		# Default: 400
+		# Range: 100 ~ 1200
+		lifetimeTicks = 400
+		#Base health for ice sculptures.
+		#Default: 50.0
+		#Range: 10.0 - 200.0
+		# Default: 50.0
+		# Range: 10.0 ~ 200.0
+		healthBase = 50.0
+		#Additional health per spell power point.
+		#Default: 5.0
+		#Range: 0.0 - 20.0
+		# Default: 5.0
+		# Range: 0.0 ~ 20.0
+		healthPerSpellPower = 5.0
+		#Base attack damage for living ice sculptures.
+		#Default: 10.0
+		#Range: 1.0 - 50.0
+		# Default: 10.0
+		# Range: 1.0 ~ 50.0
+		damageBase = 10.0
+		#Additional attack damage per spell power point.
+		#Default: 1.0
+		#Range: 0.0 - 5.0
+		# Default: 1.0
+		# Range: 0.0 ~ 5.0
+		damagePerSpellPower = 1.0
+		#Base shatter damage when ice sculpture is destroyed.
+		#Default: 10.0
+		#Range: 0.0 - 50.0
+		# Default: 10.0
+		# Range: 0.0 ~ 50.0
+		shatterDamageBase = 10.0
+		#Additional shatter damage per spell power point.
+		#Default: 1.0
+		#Range: 0.0 - 5.0
+		# Default: 1.0
+		# Range: 0.0 ~ 5.0
+		shatterDamagePerSpellPower = 1.0
+		#Lifetime of living ice sculpture entity in ticks before naturally shattering.
+		#Default: 3600 ticks (3 minutes)
+		#Range: 600 - 7200
+		# Default: 3600
+		# Range: 600 ~ 7200
+		entityLifetimeTicks = 3600
+
+	[spells.blizzard]
+		#Spell power multiplier for Blizzard spell. Higher values make spell power more effective.
+		#Default: 1.0 (100% effectiveness)
+		#Range: 0.1 - 5.0
+		# Default: 1.0
+		# Range: 0.1 ~ 5.0
+		spellPowerMultiplier = 1.0
+		#Base range of the blizzard area in blocks.
+		#Default: 8.0 blocks
+		#Range: 1.0 - 20.0
+		# Default: 8.0
+		# Range: 1.0 ~ 20.0
+		baseRange = 8.0
+		#Additional range per spell level in blocks.
+		#Default: 1.0 block per level
+		#Range: 0.0 - 5.0
+		# Default: 1.0
+		# Range: 0.0 ~ 5.0
+		rangePerLevel = 1.0
+		#Base damage dealt by the blizzard per hit.
+		#Default: 5.0 damage
+		#Range: 1.0 - 50.0
+		# Default: 5.0
+		# Range: 1.0 ~ 50.0
+		baseDamage = 5.0
+		#Additional damage per spell level.
+		#Default: 5.0 damage per level
+		#Range: 0.0 - 20.0
+		# Default: 5.0
+		# Range: 0.0 ~ 20.0
+		damagePerLevel = 5.0
+		#Base duration of the blizzard in seconds.
+		#Default: 20 seconds
+		#Range: 5 - 60
+		# Default: 20
+		# Range: 5 ~ 60
+		baseDurationSeconds = 20
+		#Additional duration per spell level in seconds.
+		#Default: 2 seconds per level
+		#Range: 0 - 10
+		# Default: 2
+		# Range: 0 ~ 10
+		durationPerLevel = 2
+		#Interval between damage ticks in ticks.
+		#Default: 10 ticks (0.5 seconds)
+		#Range: 5 - 100
+		# Default: 10
+		# Range: 5 ~ 100
+		damageIntervalTicks = 10
+		#Whether Blizzard spell can affect allies and summons.
+		#Default: false (will not affect allies)
+		affectAllies = false
+		#Whether Blizzard spell can affect summons.
+		#Default: false (will not affect summons)
+		affectSummons = false
+		#Duration of slowness effect applied to targets in ticks.
+		#Default: 40 ticks (2 seconds)
+		#Range: 20 - 200
+		# Default: 40
+		# Range: 20 ~ 200
+		slownessDurationTicks = 40
+		#Amplifier (level) of slowness effect. 0 = level 1, 1 = level 2, etc.
+		#Default: 1 (level 2 slowness)
+		#Range: 0 - 4
+		# Default: 1
+		# Range: 0 ~ 4
+		slownessAmplifier = 1
+
+	[spells.magicShotgun]
+		#Enable Magic Shotgun spell.
+		#Default: true
+		enabled = true
+		#Mana cost for Magic Shotgun spell.
+		#Default: 40
+		# Default: 40
+		# Range: 10 ~ 200
+		mana_cost = 40
+		#Cooldown in seconds for Magic Shotgun spell.
+		#Default: 15
+		# Default: 15
+		# Range: 0 ~ 120
+		cooldown = 15
+		#Base damage for Magic Shotgun spell.
+		#Default: 15.0
+		# Default: 15.0
+		# Range: 1.0 ~ 100.0
+		base_damage = 15.0
+		#Additional damage per spell level.
+		#Default: 5.0
+		# Default: 5.0
+		# Range: 0.0 ~ 20.0
+		damage_per_level = 5.0
+		#Effect radius in blocks.
+		#Default: 3.0
+		# Default: 3.0
+		# Range: 1.0 ~ 10.0
+		effect_radius = 3.0
+		#Mana cost per shot.
+		#Default: 10
+		# Default: 10
+		# Range: 0 ~ 50
+		mana_cost_per_shot = 10
+		#Maximum mana reduction percentage.
+		#Default: -0.30 (-30%)
+		#Range: -0.9 to 0.0
+		# Default: -0.3
+		# Range: -0.9 ~ 0.0
+		max_mana_reduction = -0.3
+
+	[spells.iceExplosionCone]
+		#Enable Ice Explosion Cone spell.
+		#Default: true
+		enabled = true
+		#Mana cost for Ice Explosion Cone spell.
+		#Default: 50
+		# Default: 50
+		# Range: 10 ~ 200
+		mana_cost = 50
+		#Cooldown in seconds.
+		#Default: 20
+		# Default: 20
+		# Range: 0 ~ 120
+		cooldown = 20
+		#Base damage.
+		#Default: 12.0
+		# Default: 12.0
+		# Range: 1.0 ~ 100.0
+		base_damage = 12.0
+		#Damage per level.
+		#Default: 4.0
+		# Default: 4.0
+		# Range: 0.0 ~ 20.0
+		damage_per_level = 4.0
+		#Explosion radius.
+		#Default: 3.0
+		# Default: 3.0
+		# Range: 1.0 ~ 10.0
+		explosion_radius = 3.0
+		#Projectile speed.
+		#Default: 1.2
+		# Default: 1.2
+		# Range: 0.5 ~ 5.0
+		projectile_speed = 1.2
+
+	[spells.focusedIceCone]
+		#Enable Focused Ice Cone spell.
+		#Default: true
+		enabled = true
+		#Mana cost.
+		#Default: 70
+		# Default: 70
+		# Range: 10 ~ 200
+		mana_cost = 70
+		#Cooldown in seconds.
+		#Default: 25
+		# Default: 25
+		# Range: 0 ~ 120
+		cooldown = 25
+		#Base damage.
+		#Default: 18.0
+		# Default: 18.0
+		# Range: 1.0 ~ 100.0
+		base_damage = 18.0
+		#Damage per level.
+		#Default: 6.0
+		# Default: 6.0
+		# Range: 0.0 ~ 20.0
+		damage_per_level = 6.0
+		#Maximum pierce count.
+		#Default: 3
+		# Default: 3
+		# Range: 0 ~ 10
+		max_pierce = 3
+		#Damage reduction per pierce.
+		#Default: 0.2
+		# Default: 0.2
+		# Range: 0.0 ~ 0.9
+		pierce_damage_reduction = 0.2
+		#Explosion radius.
+		#Default: 4.0
+		# Default: 4.0
+		# Range: 1.0 ~ 10.0
+		explosion_radius = 4.0
+		#Explosion damage.
+		#Default: 25.0
+		# Default: 25.0
+		# Range: 0.0 ~ 100.0
+		explosion_damage = 25.0
+
+	[spells.giantSnowball]
+		#Enable Giant Snowball spell.
+		#Default: true
+		enabled = true
+		#Mana cost.
+		#Default: 80
+		# Default: 80
+		# Range: 10 ~ 200
+		mana_cost = 80
+		#Cooldown in seconds.
+		#Default: 30
+		# Default: 30
+		# Range: 0 ~ 120
+		cooldown = 30
+		#Base damage.
+		#Default: 15.0
+		# Default: 15.0
+		# Range: 1.0 ~ 100.0
+		base_damage = 15.0
+		#Damage per level.
+		#Default: 5.0
+		# Default: 5.0
+		# Range: 0.0 ~ 20.0
+		damage_per_level = 5.0
+		#Growth time in ticks.
+		#Default: 40
+		# Default: 40
+		# Range: 10 ~ 200
+		growth_time_ticks = 40
+		#Maximum size multiplier.
+		#Default: 3.0
+		# Default: 3.0
+		# Range: 1.0 ~ 10.0
+		max_size_multiplier = 3.0
+		#Blizzard duration in seconds.
+		#Default: 5
+		# Default: 5
+		# Range: 1 ~ 30
+		blizzard_duration = 5
+		#Blizzard radius.
+		#Default: 4.0
+		# Default: 4.0
+		# Range: 1.0 ~ 10.0
+		blizzard_radius = 4.0
+
+	[spells.elementMarkIcon]
+		#Enable element mark icons displayed above entities' heads.
+		#When enabled, icons representing active element marks will be rendered above entities.
+		#Default: true
+		enabled = true
+		#Height offset for element mark icons above entity heads.
+		#Higher values move the icons further above the entity.
+		#Default: 0.5 blocks above entity height
+		#Range: 0.1 - 3.0
+		# Default: 0.5
+		# Range: 0.1 ~ 3.0
+		height_offset = 0.5
+		#Scale of element mark icons.
+		#Higher values make the icons larger.
+		#Default: 1.0 (normal size)
+		#Range: 0.5 - 3.0
+		# Default: 1.0
+		# Range: 0.5 ~ 3.0
+		scale = 1.0
+
+	[buffs.lightningRodBuff]
+		#Ice magic resist reduction per level (as decimal).
+		#Default: -0.05 (-5%)
+		#Range: -0.5 to 0.0
+		# Default: -0.05
+		# Range: -0.5 ~ 0.0
+		iceResistReduction = -0.05
+		#Lightning magic resist reduction per level (as decimal).
+		#Default: -0.10 (-10%)
+		#Range: -0.5 to 0.0
+		# Default: -0.1
+		# Range: -0.5 ~ 0.0
+		lightningResistReduction = -0.1
+		#Duration of Lightning Rod buff in seconds.
+		#Default: 10 seconds
+		#Range: 1 - 60
+		# Default: 10
+		# Range: 1 ~ 60
+		durationSeconds = 10
+		#Maximum stack count for Lightning Rod buff.
+		#Default: 5 stacks
+		#Range: 1 - 10
+		# Default: 5
+		# Range: 1 ~ 10
+		maxStacks = 5
+
+	[buffs.darknessBuff]
+		#Blood magic resist reduction (as decimal).
+		#Default: -0.05 (-5%)
+		#Range: -0.5 to 0.0
+		# Default: -0.05
+		# Range: -0.5 ~ 0.0
+		bloodResistReduction = -0.05
+
+	[buffs.chaosBuff]
+		#Spell power bonus per level (as decimal).
+		#Default: 0.05 (+5% per level)
+		#Range: 0.0 - 0.5
+		# Default: 0.05
+		# Range: 0.0 ~ 0.5
+		spellPowerBonusPerLevel = 0.05
+
+	[buffs.plagueBuff]
+		#Max health reduction per level (as decimal).
+		#Default: 0.02 (-2% per level)
+		#Range: 0.0 - 0.1
+		# Default: 0.02
+		# Range: 0.0 ~ 0.1
+		maxHealthReductionPerLevel = 0.02
+		#Chance to convert to zombie on death (as decimal).
+		#Default: 0.25 (25%)
+		#Range: 0.0 - 1.0
+		# Default: 0.25
+		# Range: 0.0 ~ 1.0
+		zombieConversionChance = 0.25
+		#Chance for poison explosion on death (as decimal).
+		#Default: 0.75 (75%)
+		#Range: 0.0 - 1.0
+		# Default: 0.75
+		# Range: 0.0 ~ 1.0
+		explosionChance = 0.75
+		#Duration of Plague buff in seconds.
+		#Default: 10 seconds
+		#Range: 1 - 60
+		# Default: 10
+		# Range: 1 ~ 60
+		durationSeconds = 10
+		#Maximum stack count for Plague buff.
+		#Default: 10 stacks
+		#Range: 1 - 20
+		# Default: 10
+		# Range: 1 ~ 20
+		maxStacks = 10
+
+	[buffs.electrocutedBuff]
+		#Base damage of chain lightning per level.
+		#Default: 5.0
+		#Range: 1.0 - 50.0
+		# Default: 5.0
+		# Range: 1.0 ~ 50.0
+		baseDamage = 5.0
+		#Trigger interval in ticks (20 ticks = 1 second).
+		#Default: 40 ticks (2 seconds)
+		#Range: 20 - 200
+		# Default: 40
+		# Range: 20 ~ 200
+		triggerInterval = 40
+		#Chain lightning range in blocks.
+		#Default: 8.0 blocks
+		#Range: 1.0 - 32.0
+		# Default: 8.0
+		# Range: 1.0 ~ 32.0
+		chainRange = 8.0
+		#Maximum number of chain lightning targets.
+		#Default: 3 targets
+		#Range: 1 - 10
+		# Default: 3
+		# Range: 1 ~ 10
+		maxChainTargets = 3
+
+	[buffs.enderEchoBuff]
+		#Spell power bonus ratio based on ender power (as decimal).
+		#Default: 0.333 (33.3% of ender power bonus)
+		#Range: 0.0 - 1.0
+		# Default: 0.333
+		# Range: 0.0 ~ 1.0
+		spellPowerRatio = 0.333
+		#Spell resist bonus ratio based on ender power (as decimal).
+		#Default: 0.5 (50% of ender power bonus)
+		#Range: 0.0 - 1.0
+		# Default: 0.5
+		# Range: 0.0 ~ 1.0
+		spellResistRatio = 0.5
+
+	[buffs.magicShotgunBuff]
+		#Spell power reduction per level (as decimal, negative value).
+		#Default: -0.10 (-10% per level)
+		#Range: -0.5 to 0.0
+		# Default: -0.1
+		# Range: -0.5 ~ 0.0
+		spellPowerReductionPerLevel = -0.1
+		#Cast time reduction per level (as decimal).
+		#Default: 0.10 (+10% per level)
+		#Range: 0.0 - 0.5
+		# Default: 0.1
+		# Range: 0.0 ~ 0.5
+		castTimeReductionPerLevel = 0.1
+		#Melee damage bonus per level.
+		#Default: 5.0 damage per level
+		#Range: 0.0 - 20.0
+		# Default: 5.0
+		# Range: 0.0 ~ 20.0
+		meleeDamagePerLevel = 5.0
+		#Maximum buff level for Magic Shotgun.
+		#Default: 5 levels
+		#Range: 1 - 10
+		# Default: 5
+		# Range: 1 ~ 10
+		maxBuffLevel = 5
+
+	[buffs.armorReductionBuff]
+		#Armor reduction per level (as decimal).
+		#Default: 0.02 (-2% per level)
+		#Range: 0.0 - 0.1
+		# Default: 0.02
+		# Range: 0.0 ~ 0.1
+		armorReductionPerLevel = 0.02
+
+	[buffs.pyroFlameBuff]
+		#Base damage per second from Pyro Flame effect.
+		#Default: 1.0 damage per second
+		#Range: 0.5 - 10.0
+		# Default: 1.0
+		# Range: 0.5 ~ 10.0
+		damagePerSecond = 1.0
+		#Max health reduction per level (as decimal).
+		#Default: 0.02 (-2% per level)
+		#Range: 0.0 - 0.1
+		# Default: 0.02
+		# Range: 0.0 ~ 0.1
+		maxHealthReductionPerLevel = 0.02
+		#Damage interval in ticks (20 ticks = 1 second).
+		#Default: 20 ticks (1 second)
+		#Range: 10 - 100
+		# Default: 20
+		# Range: 10 ~ 100
+		damageInterval = 20
+		#Base explosion power when entity with Pyro Flame dies.
+		#Default: 1.0
+		#Range: 0.5 - 3.0
+		# Default: 1.0
+		# Range: 0.5 ~ 3.0
+		explosionBasePower = 1.0
+		#Additional explosion power per buff level.
+		#Default: 0.3
+		#Range: 0.1 - 1.0
+		# Default: 0.3
+		# Range: 0.1 ~ 1.0
+		explosionPowerPerLevel = 0.3
+		#Whether Pyro Flame explosion can destroy blocks.
+		#Default: false (safe explosion)
+		explosionDestroyBlocks = false
+		#Whether Pyro Flame explosion can cause fire.
+		#Default: false
+		explosionCauseFire = false
+		#List of entity types that cannot receive Pyro Flame buff.
+		#Format: ["minecraft:creeper", "minecraft:skeleton"]
+		#Default: empty list (no blacklist)
+		entityBlacklist = []
+
+[debug]
+	#Enable global debug mode for all mod systems.
+	#When enabled, detailed debug logs will be output to console.
+	#This affects all debug output from spells, entities, trails, and element reactions.
+	#Default: false (debug mode disabled)
+	globalDebugMode = false
+	#Enable debug output for Trail System to console.
+	#Includes tick updates, render counts, and trail statistics.
+	#Default: false (debug output disabled)
+	trailSystemDebugOutput = false
+	#Enable debug output for Echo Strike system to console.
+	#Includes trigger attempts, success/failure reasons, and damage info.
+	#Default: false (debug output disabled)
+	echoStrikeDebugOutput = false
+	#Enable debug output for Elemental Burst spell to console.
+	#Default: false (debug output disabled)
+	elementalBurstDebugOutput = false
+	#Enable debug output for Element Reaction system to console.
+	#This includes mark application, upgrades, and reaction triggers.
+	#Default: false (debug output disabled)
+	elementReactionDebugOutput = false
+	#Enable debug output for Elemental Barrage spell to console.
+	#Default: false (debug output disabled)
+	elementalBarrageDebugOutput = false
+	#Enable debug output for Tri Directional Arrow spell to console.
+	#Default: false (debug output disabled)
+	triDirectionalArrowDebugOutput = false
+	#Enable debug output for Elemental Prism spell to console.
+	#Default: false (debug output disabled)
+	elementalPrismDebugOutput = false

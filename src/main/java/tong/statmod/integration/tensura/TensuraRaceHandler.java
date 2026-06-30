@@ -258,7 +258,7 @@ public final class TensuraRaceHandler {
 
         MagicBranch currentStart = data.getChosenStartBranch();
         if (currentStart == null || !derived.canChooseStartBranch(currentStart)) {
-            MagicBranch defaultStart = TensuraToMagicRaceMapper.defaultStartBranch(derived);
+            MagicBranch defaultStart = derived.defaultStartBranch();
             data.setChosenStartBranch(defaultStart);
             changed = changed || currentStart != defaultStart;
         }

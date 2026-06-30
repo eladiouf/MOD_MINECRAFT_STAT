@@ -7,8 +7,12 @@ public final class TensuraToMagicRaceMapper {
     private TensuraToMagicRaceMapper() {}
 
     public static MagicRace fromTensuraRaceId(String raceId) {
-        if (raceId == null) return MagicRace.HUMAN;
-        String normalized = raceId.toLowerCase();
+        if (raceId == null || raceId.isBlank()) return MagicRace.HUMAN;
+        String normalized = raceId.trim().toLowerCase();
+        MagicRace exactStartingRace = MagicRace.fromStartingRaceId(normalized);
+        if (exactStartingRace != null) {
+            return exactStartingRace;
+        }
         int colon = normalized.indexOf(':');
         String family = colon >= 0 ? normalized.substring(colon + 1) : normalized;
         family = stripEvolutionPrefix(family);
@@ -37,11 +41,33 @@ public final class TensuraToMagicRaceMapper {
 
     public static MagicBranch defaultStartBranch(MagicRace race) {
         if (race == null) return MagicBranch.FIRE;
-        if (race.flexible) return MagicBranch.FIRE;
-        for (MagicBranch b : MagicBranch.values()) {
-            if (race.canChooseStartBranch(b)) return b;
+        return race.defaultStartBranch();
+    }
+
+    public static String displayRaceName(String raceId) {
+        if (raceId == null || raceId.isBlank()) {
+            return "Unknown";
         }
-        return MagicBranch.FIRE;
+        String normalized = raceId.trim().toLowerCase();
+        MagicRace startingRace = MagicRace.fromStartingRaceId(normalized);
+        if (startingRace != null) {
+            return startingRace.displayName();
+        }
+
+        int colon = normalized.indexOf(':');
+        String path = colon >= 0 ? normalized.substring(colon + 1) : normalized;
+        String[] tokens = path.split("_");
+        StringBuilder out = new StringBuilder();
+        for (String token : tokens) {
+            if (token.isBlank()) {
+                continue;
+            }
+            if (!out.isEmpty()) {
+                out.append(' ');
+            }
+            out.append(Character.toUpperCase(token.charAt(0))).append(token.substring(1));
+        }
+        return out.isEmpty() ? "Unknown" : out.toString();
     }
 
     private static String stripEvolutionPrefix(String family) {

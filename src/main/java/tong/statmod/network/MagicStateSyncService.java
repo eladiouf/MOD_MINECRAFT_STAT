@@ -9,11 +9,16 @@ public final class MagicStateSyncService {
         if (data == null) {
             return new SyncMagicPayload(new String[0], new String[0], 0, new int[0], -1, -1);
         }
+        // Mastery progress par école — utilisé par Mage Codex pour afficher la progression.
+        int[] mastery = new int[tong.statmod.magic.MagicBranch.values().length];
+        for (tong.statmod.magic.MagicBranch b : tong.statmod.magic.MagicBranch.values()) {
+            mastery[b.ordinal()] = data.getSchoolMasteryProgress(b);
+        }
         return new SyncMagicPayload(
                 data.getMagicNodes(),
                 data.getLearnedSpells(),
-                data.getArcanePoints(),
-                data.getSchoolPointsArray(),
+                data.getMagicPoints(),
+                mastery,
                 data.getMagicRace() != null ? data.getMagicRace().ordinal() : -1,
                 data.getChosenStartBranch() != null ? data.getChosenStartBranch().ordinal() : -1
         );

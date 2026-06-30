@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.integration.tensura.TensuraToMagicRaceMapper;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.PlayerStatData;
 
@@ -35,7 +36,10 @@ public class StatTabScreen extends Screen {
         int maxStat = soulLevel > 0 ? Math.min(soulLevel, 100) : 100;
 
         String race = "Unknown";
-        try { String r = PlayerDataBridge.getRaceId(player); if (r != null) race = r.replace("tensura:", ""); } catch (Exception ignored) {}
+        try {
+            String r = PlayerDataBridge.getRaceId(player);
+            race = TensuraToMagicRaceMapper.displayRaceName(r);
+        } catch (Exception ignored) {}
 
         int cx = width / 2;
         String head = "\u00a7e\u2726 STAT MOD \u2726\u00a7r  \u00a77Race: \u00a7f" + race + "  \u00a77Soul Lv.\u00a7f" + soulLevel + "  \u00a77Cap \u00a7f" + maxStat;

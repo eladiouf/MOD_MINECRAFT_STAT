@@ -1,0 +1,134 @@
+{
+	"byzantineAxe": {
+		"enabled": true,
+		"baseAttackDamage": 4.300000190734863,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"falkopingAxe": {
+		"enabled": true,
+		"baseAttackDamage": 4.300000190734863,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"migrationEraAxe": {
+		"enabled": true,
+		"baseAttackDamage": 4.300000190734863,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"smallBroadaxe": {
+		"enabled": true,
+		"baseAttackDamage": 4.300000190734863,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"suttonHooAxe": {
+		"enabled": true,
+		"baseAttackDamage": 4.300000190734863,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"craykeAxe": {
+		"enabled": true,
+		"baseAttackDamage": 7.199999809265137,
+		"baseAttackSpeed": 0.9399999976158142,
+		"bonusAttackReach": 0.8999999761581421
+	},
+	"decoratedSpear": {
+		"enabled": true,
+		"baseAttackDamage": 3.0,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 1.4500000476837158
+	},
+	"harnhamSpear": {
+		"enabled": true,
+		"baseAttackDamage": 3.0,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 1.4500000476837158
+	},
+	"javelin": {
+		"enabled": true,
+		"baseAttackDamage": 3.0,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 1.4500000476837158
+	},
+	"kingstonSpear": {
+		"enabled": true,
+		"baseAttackDamage": 3.0,
+		"baseAttackSpeed": 1.2000000476837158,
+		"bonusAttackReach": 1.4500000476837158
+	},
+	"goldenMigrationEraSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"jarlsSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"langseax": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"magyarSabre": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"richNordicSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"richSaxonSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"runicSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"scramasax": {
+		"enabled": true,
+		"baseAttackDamage": 3.0999999046325684,
+		"baseAttackSpeed": 1.649999976158142,
+		"bonusAttackReach": 0.0
+	},
+	"sittingbourneSeax": {
+		"enabled": true,
+		"baseAttackDamage": 2.799999952316284,
+		"baseAttackSpeed": 1.7000000476837158,
+		"bonusAttackReach": 0.0
+	},
+	"smallSeax": {
+		"enabled": true,
+		"baseAttackDamage": 3.0999999046325684,
+		"baseAttackSpeed": 1.649999976158142,
+		"bonusAttackReach": 0.0
+	},
+	"suttonHooSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	},
+	"vikingSword": {
+		"enabled": true,
+		"baseAttackDamage": 3.5,
+		"baseAttackSpeed": 1.5499999523162842,
+		"bonusAttackReach": 0.0
+	}
+}

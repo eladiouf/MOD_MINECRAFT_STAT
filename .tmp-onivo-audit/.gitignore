@@ -1,0 +1,17 @@
+# Onivo Studio runtime
+.onivo-runtime/
+
+# Obsidian local state
+.obsidian/workspace*.json
+.obsidian/cache/
+.obsidian/plugins/
+.obsidian/graph.json
+.trash/
+vault/08 Decisions/Untitled.base
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.log

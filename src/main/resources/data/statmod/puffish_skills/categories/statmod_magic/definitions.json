@@ -178,7 +178,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Intimidation ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -194,7 +194,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Fire Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -210,7 +210,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Willpower ≥ 5",
+• Fire Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -226,7 +226,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Fire Affinity ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -258,7 +258,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Willpower ≥ 1",
+• Fire Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -274,7 +274,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Fire Affinity ≥ 3",
+• Physical Endurance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -290,7 +290,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Fire Affinity ≥ 3",
+• Physical Endurance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -338,7 +338,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Intimidation ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -353,8 +353,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Fire Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -369,8 +368,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -385,8 +383,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Physical Endurance ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -401,8 +398,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Willpower ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -417,8 +413,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -434,7 +429,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Fire Affinity ≥ 5",
+• Physical Endurance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -513,8 +508,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Water Affinity ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -530,7 +524,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Precision ≥ 1",
+• Water Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -545,8 +539,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Water Affinity ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -578,7 +571,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Precision ≥ 3",
+• Precision ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -593,8 +586,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Water Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -610,7 +602,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Precision ≥ 3",
+• Precision ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -626,7 +618,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Magic Resistance ≥ 3",
+• Magic Resistance ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -642,7 +634,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Intimidation ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -657,8 +649,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Casting Speed ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -674,7 +665,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Casting Speed ≥ 5",
+• Casting Speed ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -689,8 +680,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Tracking ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -705,8 +695,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Casting Speed ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -721,8 +710,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -737,8 +725,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Water Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -753,8 +740,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Water Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -769,8 +755,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Water Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -785,8 +770,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Water Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -881,8 +865,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Air Affinity ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -929,8 +912,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Air Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -945,8 +927,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -962,7 +943,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Precision ≥ 3",
+• Precision ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -978,7 +959,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Intimidation ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -993,8 +974,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Air Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1010,7 +990,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Agility ≥ 5",
+• Agility ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1025,8 +1005,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Agility ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1073,8 +1052,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Precision ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1105,8 +1083,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Air Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1121,8 +1098,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1138,7 +1114,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Agility ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1233,8 +1209,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Willpower ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1266,7 +1241,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Magic Resistance ≥ 1",
+• Physical Endurance ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1281,8 +1256,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Earth Affinity ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1298,7 +1272,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Willpower ≥ 3",
+• Willpower ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1314,7 +1288,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Casting Speed ≥ 3",
+• Casting Speed ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1329,8 +1303,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Tracking ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1345,8 +1318,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Tracking ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1361,8 +1333,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Willpower ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1393,8 +1364,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Earth Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1409,8 +1379,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Earth Affinity ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1425,8 +1394,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Casting Speed ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1457,8 +1425,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1553,8 +1520,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Tracking ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1585,8 +1551,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Willpower ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1601,8 +1566,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Willpower ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1617,8 +1581,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Physical Endurance ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1634,7 +1597,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Physical Endurance ≥ 3",
+• Precision ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1650,7 +1613,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Magic Resistance ≥ 3",
+• Physical Endurance ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1666,7 +1629,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Physical Endurance ≥ 3",
+• Willpower ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1681,8 +1644,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Willpower ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1713,8 +1675,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1730,7 +1691,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Magic Resistance ≥ 5",
+• Physical Endurance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1746,7 +1707,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Physical Endurance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1761,8 +1722,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Casting Speed ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1777,8 +1737,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1793,8 +1752,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 1
-• Physical Endurance ≥ 2",
+• Erudition ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1825,8 +1783,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1841,8 +1798,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Willpower ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1857,8 +1813,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 2
-• Erudition ≥ 2
-• Precision ≥ 1",
+• Erudition ≥ 2",
         "icon": {
             "type": "texture",
             "data": {
@@ -1890,7 +1845,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Precision ≥ 3",
+• Physical Endurance ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -1905,8 +1860,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Agility ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1937,8 +1891,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1954,7 +1907,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Tracking ≥ 5",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -1969,8 +1922,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Precision ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -1985,8 +1937,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2001,8 +1952,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2017,8 +1967,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 4
-• Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2033,8 +1982,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2049,8 +1997,7 @@ Requirements:
 
 Requirements:
 • Arcane Power ≥ 6
-• Erudition ≥ 5
-• Intimidation ≥ 5",
+• Erudition ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2178,7 +2125,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Tracking ≥ 1",
+• Keen Senses ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2242,7 +2189,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Keen Senses ≥ 3",
+• Agility ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2258,7 +2205,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Keen Senses ≥ 3",
+• Precision ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2338,7 +2285,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Keen Senses ≥ 5",
+• Casting Speed ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2498,7 +2445,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Intimidation ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2530,7 +2477,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Intimidation ≥ 1",
+• Casting Speed ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2546,7 +2493,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Intimidation ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2562,7 +2509,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Intimidation ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2578,7 +2525,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2594,7 +2541,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2610,7 +2557,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2626,7 +2573,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Magic Resistance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2642,7 +2589,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2674,7 +2621,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2690,7 +2637,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2722,7 +2669,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Casting Speed ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2738,7 +2685,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2754,7 +2701,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2770,7 +2717,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Erudition ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2786,7 +2733,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2850,7 +2797,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -2946,7 +2893,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Willpower ≥ 1",
+• Keen Senses ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -2962,7 +2909,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Willpower ≥ 3",
+• Magic Resistance ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -2978,7 +2925,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Willpower ≥ 3",
+• Intimidation ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3074,7 +3021,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Willpower ≥ 3",
+• Agility ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3090,7 +3037,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Willpower ≥ 5",
+• Keen Senses ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3106,7 +3053,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Keen Senses ≥ 5",
+• Willpower ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3170,7 +3117,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Precision ≥ 3",
+• Fire Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3202,7 +3149,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Willpower ≥ 1",
+• Water Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3266,7 +3213,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Willpower ≥ 3",
+• Water Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3330,7 +3277,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Precision ≥ 1",
+• Air Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3346,7 +3293,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Air Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3378,7 +3325,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Precision ≥ 5",
+• Air Affinity ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3426,7 +3373,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Casting Speed ≥ 1",
+• Earth Affinity ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3458,7 +3405,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Casting Speed ≥ 3",
+• Earth Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3474,7 +3421,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Earth Affinity ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3506,7 +3453,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Magic Resistance ≥ 1",
+• Willpower ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3522,7 +3469,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Magic Resistance ≥ 1",
+• Willpower ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3538,7 +3485,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Magic Resistance ≥ 3",
+• Willpower ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3554,7 +3501,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Magic Resistance ≥ 3",
+• Willpower ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3570,7 +3517,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Magic Resistance ≥ 3",
+• Willpower ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3602,7 +3549,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Magic Resistance ≥ 5",
+• Willpower ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3618,7 +3565,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Magic Resistance ≥ 5",
+• Willpower ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3730,7 +3677,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Keen Senses ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3746,7 +3693,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Keen Senses ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3778,7 +3725,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Physical Endurance ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3794,7 +3741,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Precision ≥ 1",
+• Tracking ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3810,7 +3757,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Keen Senses ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3826,7 +3773,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Keen Senses ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3842,7 +3789,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Tracking ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3858,7 +3805,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3874,7 +3821,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Precision ≥ 5",
+• Tracking ≥ 5",
         "icon": {
             "type": "texture",
             "data": {
@@ -3906,7 +3853,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 2
 • Erudition ≥ 2
-• Casting Speed ≥ 1",
+• Willpower ≥ 1",
         "icon": {
             "type": "texture",
             "data": {
@@ -3938,7 +3885,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Casting Speed ≥ 3",
+• Willpower ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3954,7 +3901,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 4
 • Erudition ≥ 3
-• Intimidation ≥ 3",
+• Willpower ≥ 3",
         "icon": {
             "type": "texture",
             "data": {
@@ -3970,7 +3917,7 @@ Requirements:
 Requirements:
 • Arcane Power ≥ 6
 • Erudition ≥ 5
-• Intimidation ≥ 5",
+• Willpower ≥ 5",
         "icon": {
             "type": "texture",
             "data": {

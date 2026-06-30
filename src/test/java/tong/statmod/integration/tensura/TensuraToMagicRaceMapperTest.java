@@ -60,13 +60,13 @@ class TensuraToMagicRaceMapperTest {
     @Test
     void default_start_branch_picks_first_affinity_for_non_flexible() {
         MagicBranch elfStart = TensuraToMagicRaceMapper.defaultStartBranch(MagicRace.ELF);
-        assertEquals(true, MagicRace.ELF.canChooseStartBranch(elfStart));
+        assertEquals(MagicBranch.AIR, elfStart);
 
         MagicBranch dwarfStart = TensuraToMagicRaceMapper.defaultStartBranch(MagicRace.DWARF);
-        assertEquals(true, MagicRace.DWARF.canChooseStartBranch(dwarfStart));
+        assertEquals(MagicBranch.EARTH, dwarfStart);
 
         MagicBranch beastStart = TensuraToMagicRaceMapper.defaultStartBranch(MagicRace.BEAST);
-        assertEquals(true, MagicRace.BEAST.canChooseStartBranch(beastStart));
+        assertEquals(MagicBranch.WATER, beastStart);
     }
 
     @Test
@@ -77,5 +77,14 @@ class TensuraToMagicRaceMapperTest {
     @Test
     void default_start_branch_null_safe() {
         assertEquals(MagicBranch.FIRE, TensuraToMagicRaceMapper.defaultStartBranch(null));
+    }
+
+    @Test
+    void ui_display_names_are_humanized_from_tensura_ids() {
+        assertEquals("Human", TensuraToMagicRaceMapper.displayRaceName("tensura:human"));
+        assertEquals("Divine Elf", TensuraToMagicRaceMapper.displayRaceName("tensura:divine_elf"));
+        assertEquals("Beastfolk", TensuraToMagicRaceMapper.displayRaceName("tensura:beastfolk"));
+        assertEquals("Arch Daemon", TensuraToMagicRaceMapper.displayRaceName("tensura:arch_daemon"));
+        assertEquals("Unknown", TensuraToMagicRaceMapper.displayRaceName(null));
     }
 }

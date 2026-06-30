@@ -72,4 +72,32 @@ public final class ServerPayloadHandler {
             IronInscriptionOpenerService.openVirtual(player);
         });
     }
+
+    /**
+     * Demande de changement de branche de départ depuis le Codex du Mage. Validation
+     * server-side : la branche doit faire partie des affinités naturelles de la race.
+     * Sinon no-op silencieux (le serveur est l'autorité, le client n'a pas accès à la table
+     * pour faire la validation).
+     */
+    public static void handleChangeStartBranch(ChangeStartBranchPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            PlayerStatData data = player.getData(ModAttachments.STATS);
+            tong.statmod.magic.MagicRace race = data.getMagicRace();
+            if (race == null) return; // pas de race choisie → rien à valider contre
+
+            int ord = payload.branchOrdinal();
+            tong.statmod.magic.MagicBranch[] all = tong.statmod.magic.MagicBranch.values();
+            if (ord < 0 || ord >= all.length) return;
+            tong.statmod.magic.MagicBranch target = all[ord];
+            if (!race.canChooseStartBranch(target)) {
+                STATMod.LOGGER.debug("{} rejected start branch {} (race {} not compatible)",
+                        player.getName().getString(), target.id, race.name());
+                return;
+            }
+            data.setChosenStartBranch(target);
+            SyncHelper.syncMagic(player);
+            STATMod.LOGGER.info("{} switched start branch to {}", player.getName().getString(), target.id);
+        });
+    }
 }

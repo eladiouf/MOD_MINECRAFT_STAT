@@ -7,5 +7,13 @@
             "item": "minecraft:enchanted_book"
         }
     },
-    "background": "textures/gui/advancements/backgrounds/end.png"
+    "background": "textures/block/deepslate_tiles.png",
+    "colors": {
+        "connections": {
+            "locked":     { "stroke": "#3A3F46FF", "fill": "#0E1014FF" },
+            "affordable": { "stroke": "#D4FF0099", "fill": "#0E1014FF" },
+            "unlocked":   { "stroke": "#D4FF00FF", "fill": "#0E1014FF" },
+            "excluded":   { "stroke": "#5A1E1EFF", "fill": "#0E1014FF" }
+        }
+    }
 }

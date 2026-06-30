@@ -8,21 +8,25 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EpicFightPlayerScaleMixinConfigTest {
     @Test
-    void epicFightScaleMixinIsNotRegistered() throws IOException {
+    void epicFightScaleMixinTracksRaceScaleInCombatRenderer() throws IOException {
         try (InputStream stream = EpicFightPlayerScaleMixinConfigTest.class
                 .getClassLoader()
                 .getResourceAsStream("statmod.mixins.json")) {
             assertNotNull(stream);
             String mixinConfig = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-            assertFalse(mixinConfig.contains("EpicFightPlayerScaleMixin"));
+            assertTrue(mixinConfig.contains("EpicFightPlayerScaleMixin"));
         }
 
         Path mixinSource = Path.of("src", "main", "java", "tong", "statmod", "mixin", "EpicFightPlayerScaleMixin.java");
-        assertFalse(Files.exists(mixinSource));
+        assertTrue(Files.exists(mixinSource));
+        String source = Files.readString(mixinSource);
+        assertTrue(source.contains("method = \"getModelMatrix\""));
+        assertTrue(source.contains("@ModifyConstant"));
+        assertTrue(source.contains("RacePhysicalEffects.getScaleFactor"));
     }
 }

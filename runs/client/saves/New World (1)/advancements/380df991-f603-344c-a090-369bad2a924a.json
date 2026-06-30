@@ -1,0 +1,51 @@
+{
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-06-30 20:02:13 +0000"
+    },
+    "done": true
+  },
+  "xbbsroaringknightmod:root_roaring_knight": {
+    "criteria": {
+      "root_roaring_knight": "2026-06-30 20:02:13 +0000"
+    },
+    "done": true
+  },
+  "tensura:fast_learner": {
+    "criteria": {
+      "skill": "2026-06-30 20:02:23 +0000"
+    },
+    "done": true
+  },
+  "tensura:real_adventure": {
+    "criteria": {
+      "ability": "2026-06-30 20:02:23 +0000"
+    },
+    "done": true
+  },
+  "overgeared:root": {
+    "criteria": {
+      "Trigger": "2026-06-30 20:02:13 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:dark_forest": "2026-06-30 20:02:14 +0000"
+    },
+    "done": false
+  },
+  "parcool:grant_parcool_guide": {
+    "criteria": {
+      "tick": "2026-06-30 20:02:13 +0000"
+    },
+    "done": true
+  },
+  "tensura:reincarnated": {
+    "criteria": {
+      "reincarnation": "2026-06-30 20:02:23 +0000"
+    },
+    "done": true
+  },
+  "DataVersion": 3955
+}

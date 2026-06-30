@@ -13,7 +13,7 @@ public final class MagicTreeProgressionService {
     public record UnlockResult(boolean success,
                                 MagicEligibilityResolver.Failure failure,
                                 int spent,
-                                java.util.List<MagicNodeStatRequirements.StatGate> missingStats) {
+                                java.util.List<String> missingStats) {
         public static UnlockResult ok(int spent) {
             return new UnlockResult(true, MagicEligibilityResolver.Failure.NONE, spent, java.util.List.of());
         }

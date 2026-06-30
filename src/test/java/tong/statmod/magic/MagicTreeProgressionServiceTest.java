@@ -84,7 +84,7 @@ class MagicTreeProgressionServiceTest {
                 1,
                 java.util.List.of("fire/tier/ember_path"),
                 java.util.Set.of("tensura:fire_bolt"),
-                SpellRole.ELEMENTAL_DAMAGE_FIRE);
+                null);
 
         MagicTreeProgressionService.UnlockResult r = MagicTreeProgressionService.tryUnlock(d, node, granted::add);
         assertTrue(r.success(), "expected unlock to succeed, got failure: " + r.failure());
@@ -110,7 +110,7 @@ class MagicTreeProgressionServiceTest {
                 1,
                 java.util.List.of("fire/tier/ember_path"),
                 java.util.Set.of("tensura:fire_bolt"),
-                SpellRole.ELEMENTAL_DAMAGE_FIRE);
+                null);
 
         MagicTreeProgressionService.UnlockResult result = MagicTreeProgressionService.tryUnlock(d, node, skillId -> false);
 

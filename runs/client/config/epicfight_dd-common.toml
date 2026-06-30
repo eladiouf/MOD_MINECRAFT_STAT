@@ -1,0 +1,4 @@
+#Enable Death Sound Effect (Default: true)
+deathsound = true
+#Set Gamemode to Spectator when a player respawns (Default: false)
+death_spectator = false

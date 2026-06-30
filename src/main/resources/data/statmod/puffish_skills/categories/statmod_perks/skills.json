@@ -1,715 +1,715 @@
 {
     "brute_force__brute_core": {
-        "x": 780,
-        "y": 430,
+        "x": -25,
+        "y": -192,
         "definition": "brute_force__brute_core",
         "root": true
     },
     "brute_force__brute_active": {
-        "x": 685,
-        "y": 370,
+        "x": -120,
+        "y": -252,
         "definition": "brute_force__brute_active"
     },
     "brute_force__brute_synergy": {
-        "x": 590,
-        "y": 310,
+        "x": -215,
+        "y": -312,
         "definition": "brute_force__brute_synergy"
     },
     "brute_force__brute_situational": {
-        "x": 495,
-        "y": 250,
+        "x": -310,
+        "y": -372,
         "definition": "brute_force__brute_situational"
     },
     "brute_force__brute_mastery": {
-        "x": 400,
-        "y": 190,
+        "x": -405,
+        "y": -432,
         "definition": "brute_force__brute_mastery"
     },
     "brute_force__brute_transcendence": {
-        "x": 305,
-        "y": 130,
+        "x": -500,
+        "y": -492,
         "definition": "brute_force__brute_transcendence"
     },
     "blade_technique__blade_core": {
-        "x": 725,
-        "y": 482,
+        "x": -80,
+        "y": -140,
         "definition": "blade_technique__blade_core",
         "root": true
     },
     "blade_technique__blade_active": {
-        "x": 630,
-        "y": 422,
+        "x": -175,
+        "y": -200,
         "definition": "blade_technique__blade_active"
     },
     "blade_technique__blade_synergy": {
-        "x": 535,
-        "y": 362,
+        "x": -270,
+        "y": -260,
         "definition": "blade_technique__blade_synergy"
     },
     "blade_technique__blade_situational": {
-        "x": 440,
-        "y": 302,
+        "x": -365,
+        "y": -320,
         "definition": "blade_technique__blade_situational"
     },
     "blade_technique__blade_mastery": {
-        "x": 345,
-        "y": 242,
+        "x": -460,
+        "y": -380,
         "definition": "blade_technique__blade_mastery"
     },
     "blade_technique__blade_transcendence": {
-        "x": 250,
-        "y": 182,
+        "x": -555,
+        "y": -440,
         "definition": "blade_technique__blade_transcendence"
     },
     "rapidite__rapid_core": {
-        "x": 670,
-        "y": 534,
+        "x": -135,
+        "y": -88,
         "definition": "rapidite__rapid_core",
         "root": true
     },
     "rapidite__rapid_active": {
-        "x": 575,
-        "y": 474,
+        "x": -230,
+        "y": -148,
         "definition": "rapidite__rapid_active"
     },
     "rapidite__rapid_synergy": {
-        "x": 480,
-        "y": 414,
+        "x": -325,
+        "y": -208,
         "definition": "rapidite__rapid_synergy"
     },
     "rapidite__rapid_situational": {
-        "x": 385,
-        "y": 354,
+        "x": -420,
+        "y": -268,
         "definition": "rapidite__rapid_situational"
     },
     "rapidite__rapid_mastery": {
-        "x": 290,
-        "y": 294,
+        "x": -515,
+        "y": -328,
         "definition": "rapidite__rapid_mastery"
     },
     "rapidite__rapid_transcendence": {
-        "x": 195,
-        "y": 234,
+        "x": -610,
+        "y": -388,
         "definition": "rapidite__rapid_transcendence"
     },
     "agility__agil_core": {
-        "x": 615,
-        "y": 586,
+        "x": -190,
+        "y": -36,
         "definition": "agility__agil_core",
         "root": true
     },
     "agility__agil_active": {
-        "x": 520,
-        "y": 526,
+        "x": -285,
+        "y": -96,
         "definition": "agility__agil_active"
     },
     "agility__agil_synergy": {
-        "x": 425,
-        "y": 466,
+        "x": -380,
+        "y": -156,
         "definition": "agility__agil_synergy"
     },
     "agility__agil_situational": {
-        "x": 330,
-        "y": 406,
+        "x": -475,
+        "y": -216,
         "definition": "agility__agil_situational"
     },
     "agility__agil_mastery": {
-        "x": 235,
-        "y": 346,
+        "x": -570,
+        "y": -276,
         "definition": "agility__agil_mastery"
     },
     "agility__agil_transcendence": {
-        "x": 140,
-        "y": 286,
+        "x": -665,
+        "y": -336,
         "definition": "agility__agil_transcendence"
     },
     "physical_resistance__resist_core": {
-        "x": 560,
-        "y": 638,
+        "x": -245,
+        "y": 16,
         "definition": "physical_resistance__resist_core",
         "root": true
     },
     "physical_resistance__resist_active": {
-        "x": 465,
-        "y": 578,
+        "x": -340,
+        "y": -44,
         "definition": "physical_resistance__resist_active"
     },
     "physical_resistance__resist_synergy": {
-        "x": 370,
-        "y": 518,
+        "x": -435,
+        "y": -104,
         "definition": "physical_resistance__resist_synergy"
     },
     "physical_resistance__resist_situational": {
-        "x": 275,
-        "y": 458,
+        "x": -530,
+        "y": -164,
         "definition": "physical_resistance__resist_situational"
     },
     "physical_resistance__resist_mastery": {
-        "x": 180,
-        "y": 398,
+        "x": -625,
+        "y": -224,
         "definition": "physical_resistance__resist_mastery"
     },
     "physical_resistance__resist_transcendence": {
-        "x": 85,
-        "y": 338,
+        "x": -720,
+        "y": -284,
         "definition": "physical_resistance__resist_transcendence"
     },
     "physical_endurance__endur_core": {
-        "x": 505,
-        "y": 690,
+        "x": -300,
+        "y": 68,
         "definition": "physical_endurance__endur_core",
         "root": true
     },
     "physical_endurance__endur_active": {
-        "x": 410,
-        "y": 630,
+        "x": -395,
+        "y": 8,
         "definition": "physical_endurance__endur_active"
     },
     "physical_endurance__endur_synergy": {
-        "x": 315,
-        "y": 570,
+        "x": -490,
+        "y": -52,
         "definition": "physical_endurance__endur_synergy"
     },
     "physical_endurance__endur_situational": {
-        "x": 220,
-        "y": 510,
+        "x": -585,
+        "y": -112,
         "definition": "physical_endurance__endur_situational"
     },
     "physical_endurance__endur_mastery": {
-        "x": 125,
-        "y": 450,
+        "x": -680,
+        "y": -172,
         "definition": "physical_endurance__endur_mastery"
     },
     "physical_endurance__endur_transcendence": {
-        "x": 30,
-        "y": 390,
+        "x": -775,
+        "y": -232,
         "definition": "physical_endurance__endur_transcendence"
     },
     "precision__preci_core": {
-        "x": 930,
-        "y": 430,
+        "x": 125,
+        "y": -192,
         "definition": "precision__preci_core",
         "root": true
     },
     "precision__preci_active": {
-        "x": 1025,
-        "y": 372,
+        "x": 220,
+        "y": -250,
         "definition": "precision__preci_active"
     },
     "precision__preci_synergy": {
-        "x": 1120,
-        "y": 314,
+        "x": 315,
+        "y": -308,
         "definition": "precision__preci_synergy"
     },
     "precision__preci_situational": {
-        "x": 1215,
-        "y": 256,
+        "x": 410,
+        "y": -366,
         "definition": "precision__preci_situational"
     },
     "precision__preci_mastery": {
-        "x": 1310,
-        "y": 198,
+        "x": 505,
+        "y": -424,
         "definition": "precision__preci_mastery"
     },
     "precision__preci_transcendence": {
-        "x": 1405,
-        "y": 140,
+        "x": 600,
+        "y": -482,
         "definition": "precision__preci_transcendence"
     },
     "tracking__track_core": {
-        "x": 990,
-        "y": 504,
+        "x": 185,
+        "y": -118,
         "definition": "tracking__track_core",
         "root": true
     },
     "tracking__track_active": {
-        "x": 1085,
-        "y": 446,
+        "x": 280,
+        "y": -176,
         "definition": "tracking__track_active"
     },
     "tracking__track_synergy": {
-        "x": 1180,
-        "y": 388,
+        "x": 375,
+        "y": -234,
         "definition": "tracking__track_synergy"
     },
     "tracking__track_situational": {
-        "x": 1275,
-        "y": 330,
+        "x": 470,
+        "y": -292,
         "definition": "tracking__track_situational"
     },
     "tracking__track_mastery": {
-        "x": 1370,
-        "y": 272,
+        "x": 565,
+        "y": -350,
         "definition": "tracking__track_mastery"
     },
     "tracking__track_transcendence": {
-        "x": 1465,
-        "y": 214,
+        "x": 660,
+        "y": -408,
         "definition": "tracking__track_transcendence"
     },
     "keen_senses__sense_core": {
-        "x": 1050,
-        "y": 578,
+        "x": 245,
+        "y": -44,
         "definition": "keen_senses__sense_core",
         "root": true
     },
     "keen_senses__sense_active": {
-        "x": 1145,
-        "y": 520,
+        "x": 340,
+        "y": -102,
         "definition": "keen_senses__sense_active"
     },
     "keen_senses__sense_synergy": {
-        "x": 1240,
-        "y": 462,
+        "x": 435,
+        "y": -160,
         "definition": "keen_senses__sense_synergy"
     },
     "keen_senses__sense_situational": {
-        "x": 1335,
-        "y": 404,
+        "x": 530,
+        "y": -218,
         "definition": "keen_senses__sense_situational"
     },
     "keen_senses__sense_mastery": {
-        "x": 1430,
-        "y": 346,
+        "x": 625,
+        "y": -276,
         "definition": "keen_senses__sense_mastery"
     },
     "keen_senses__sense_transcendence": {
-        "x": 1525,
-        "y": 288,
+        "x": 720,
+        "y": -334,
         "definition": "keen_senses__sense_transcendence"
     },
     "arcane_power__arcane_core": {
-        "x": 560,
-        "y": 480,
+        "x": -245,
+        "y": -142,
         "definition": "arcane_power__arcane_core",
         "root": true
     },
     "arcane_power__arcane_active": {
-        "x": 560,
-        "y": 398,
+        "x": -245,
+        "y": -224,
         "definition": "arcane_power__arcane_active"
     },
     "arcane_power__arcane_synergy": {
-        "x": 560,
-        "y": 316,
+        "x": -245,
+        "y": -306,
         "definition": "arcane_power__arcane_synergy"
     },
     "arcane_power__arcane_situational": {
-        "x": 560,
-        "y": 234,
+        "x": -245,
+        "y": -388,
         "definition": "arcane_power__arcane_situational"
     },
     "arcane_power__arcane_mastery": {
-        "x": 560,
-        "y": 152,
+        "x": -245,
+        "y": -470,
         "definition": "arcane_power__arcane_mastery"
     },
     "arcane_power__arcane_transcendence": {
-        "x": 560,
-        "y": 70,
+        "x": -245,
+        "y": -552,
         "definition": "arcane_power__arcane_transcendence"
     },
     "magic_resistance__magic_resist_core": {
-        "x": 655,
-        "y": 480,
+        "x": -150,
+        "y": -142,
         "definition": "magic_resistance__magic_resist_core",
         "root": true
     },
     "magic_resistance__magic_resist_active": {
-        "x": 655,
-        "y": 398,
+        "x": -150,
+        "y": -224,
         "definition": "magic_resistance__magic_resist_active"
     },
     "magic_resistance__magic_resist_synergy": {
-        "x": 655,
-        "y": 316,
+        "x": -150,
+        "y": -306,
         "definition": "magic_resistance__magic_resist_synergy"
     },
     "magic_resistance__magic_resist_situational": {
-        "x": 655,
-        "y": 234,
+        "x": -150,
+        "y": -388,
         "definition": "magic_resistance__magic_resist_situational"
     },
     "magic_resistance__magic_resist_mastery": {
-        "x": 655,
-        "y": 152,
+        "x": -150,
+        "y": -470,
         "definition": "magic_resistance__magic_resist_mastery"
     },
     "magic_resistance__magic_resist_transcendence": {
-        "x": 655,
-        "y": 70,
+        "x": -150,
+        "y": -552,
         "definition": "magic_resistance__magic_resist_transcendence"
     },
     "casting_speed__casting_speed_core": {
-        "x": 750,
-        "y": 480,
+        "x": -55,
+        "y": -142,
         "definition": "casting_speed__casting_speed_core",
         "root": true
     },
     "casting_speed__casting_speed_active": {
-        "x": 750,
-        "y": 398,
+        "x": -55,
+        "y": -224,
         "definition": "casting_speed__casting_speed_active"
     },
     "casting_speed__casting_speed_synergy": {
-        "x": 750,
-        "y": 316,
+        "x": -55,
+        "y": -306,
         "definition": "casting_speed__casting_speed_synergy"
     },
     "casting_speed__casting_speed_situational": {
-        "x": 750,
-        "y": 234,
+        "x": -55,
+        "y": -388,
         "definition": "casting_speed__casting_speed_situational"
     },
     "casting_speed__casting_speed_mastery": {
-        "x": 750,
-        "y": 152,
+        "x": -55,
+        "y": -470,
         "definition": "casting_speed__casting_speed_mastery"
     },
     "casting_speed__casting_speed_transcendence": {
-        "x": 750,
-        "y": 70,
+        "x": -55,
+        "y": -552,
         "definition": "casting_speed__casting_speed_transcendence"
     },
     "mana_pool__mana_pool_core": {
-        "x": 845,
-        "y": 480,
+        "x": 40,
+        "y": -142,
         "definition": "mana_pool__mana_pool_core",
         "root": true
     },
     "mana_pool__mana_pool_active": {
-        "x": 845,
-        "y": 398,
+        "x": 40,
+        "y": -224,
         "definition": "mana_pool__mana_pool_active"
     },
     "mana_pool__mana_pool_synergy": {
-        "x": 845,
-        "y": 316,
+        "x": 40,
+        "y": -306,
         "definition": "mana_pool__mana_pool_synergy"
     },
     "mana_pool__mana_pool_situational": {
-        "x": 845,
-        "y": 234,
+        "x": 40,
+        "y": -388,
         "definition": "mana_pool__mana_pool_situational"
     },
     "mana_pool__mana_pool_mastery": {
-        "x": 845,
-        "y": 152,
+        "x": 40,
+        "y": -470,
         "definition": "mana_pool__mana_pool_mastery"
     },
     "mana_pool__mana_pool_transcendence": {
-        "x": 845,
-        "y": 70,
+        "x": 40,
+        "y": -552,
         "definition": "mana_pool__mana_pool_transcendence"
     },
     "erudition__erudition_core": {
-        "x": 940,
-        "y": 480,
+        "x": 135,
+        "y": -142,
         "definition": "erudition__erudition_core",
         "root": true
     },
     "erudition__erudition_active": {
-        "x": 940,
-        "y": 398,
+        "x": 135,
+        "y": -224,
         "definition": "erudition__erudition_active"
     },
     "erudition__erudition_synergy": {
-        "x": 940,
-        "y": 316,
+        "x": 135,
+        "y": -306,
         "definition": "erudition__erudition_synergy"
     },
     "erudition__erudition_situational": {
-        "x": 940,
-        "y": 234,
+        "x": 135,
+        "y": -388,
         "definition": "erudition__erudition_situational"
     },
     "erudition__erudition_mastery": {
-        "x": 940,
-        "y": 152,
+        "x": 135,
+        "y": -470,
         "definition": "erudition__erudition_mastery"
     },
     "erudition__erudition_transcendence": {
-        "x": 940,
-        "y": 70,
+        "x": 135,
+        "y": -552,
         "definition": "erudition__erudition_transcendence"
     },
     "water_affinity__water_core": {
-        "x": 610,
-        "y": 720,
+        "x": -195,
+        "y": 98,
         "definition": "water_affinity__water_core",
         "root": true
     },
     "water_affinity__water_active": {
-        "x": 610,
-        "y": 802,
+        "x": -195,
+        "y": 180,
         "definition": "water_affinity__water_active"
     },
     "water_affinity__water_synergy": {
-        "x": 610,
-        "y": 884,
+        "x": -195,
+        "y": 262,
         "definition": "water_affinity__water_synergy"
     },
     "water_affinity__water_situational": {
-        "x": 610,
-        "y": 966,
+        "x": -195,
+        "y": 344,
         "definition": "water_affinity__water_situational"
     },
     "water_affinity__water_mastery": {
-        "x": 610,
-        "y": 1048,
+        "x": -195,
+        "y": 426,
         "definition": "water_affinity__water_mastery"
     },
     "water_affinity__water_transcendence": {
-        "x": 610,
-        "y": 1130,
+        "x": -195,
+        "y": 508,
         "definition": "water_affinity__water_transcendence"
     },
     "earth_affinity__earth_core": {
-        "x": 710,
-        "y": 720,
+        "x": -95,
+        "y": 98,
         "definition": "earth_affinity__earth_core",
         "root": true
     },
     "earth_affinity__earth_active": {
-        "x": 710,
-        "y": 802,
+        "x": -95,
+        "y": 180,
         "definition": "earth_affinity__earth_active"
     },
     "earth_affinity__earth_synergy": {
-        "x": 710,
-        "y": 884,
+        "x": -95,
+        "y": 262,
         "definition": "earth_affinity__earth_synergy"
     },
     "earth_affinity__earth_situational": {
-        "x": 710,
-        "y": 966,
+        "x": -95,
+        "y": 344,
         "definition": "earth_affinity__earth_situational"
     },
     "earth_affinity__earth_mastery": {
-        "x": 710,
-        "y": 1048,
+        "x": -95,
+        "y": 426,
         "definition": "earth_affinity__earth_mastery"
     },
     "earth_affinity__earth_transcendence": {
-        "x": 710,
-        "y": 1130,
+        "x": -95,
+        "y": 508,
         "definition": "earth_affinity__earth_transcendence"
     },
     "fire_affinity__fire_core": {
-        "x": 810,
-        "y": 720,
+        "x": 5,
+        "y": 98,
         "definition": "fire_affinity__fire_core",
         "root": true
     },
     "fire_affinity__fire_active": {
-        "x": 810,
-        "y": 802,
+        "x": 5,
+        "y": 180,
         "definition": "fire_affinity__fire_active"
     },
     "fire_affinity__fire_synergy": {
-        "x": 810,
-        "y": 884,
+        "x": 5,
+        "y": 262,
         "definition": "fire_affinity__fire_synergy"
     },
     "fire_affinity__fire_situational": {
-        "x": 810,
-        "y": 966,
+        "x": 5,
+        "y": 344,
         "definition": "fire_affinity__fire_situational"
     },
     "fire_affinity__fire_mastery": {
-        "x": 810,
-        "y": 1048,
+        "x": 5,
+        "y": 426,
         "definition": "fire_affinity__fire_mastery"
     },
     "fire_affinity__fire_transcendence": {
-        "x": 810,
-        "y": 1130,
+        "x": 5,
+        "y": 508,
         "definition": "fire_affinity__fire_transcendence"
     },
     "air_affinity__air_core": {
-        "x": 910,
-        "y": 720,
+        "x": 105,
+        "y": 98,
         "definition": "air_affinity__air_core",
         "root": true
     },
     "air_affinity__air_active": {
-        "x": 910,
-        "y": 802,
+        "x": 105,
+        "y": 180,
         "definition": "air_affinity__air_active"
     },
     "air_affinity__air_synergy": {
-        "x": 910,
-        "y": 884,
+        "x": 105,
+        "y": 262,
         "definition": "air_affinity__air_synergy"
     },
     "air_affinity__air_situational": {
-        "x": 910,
-        "y": 966,
+        "x": 105,
+        "y": 344,
         "definition": "air_affinity__air_situational"
     },
     "air_affinity__air_mastery": {
-        "x": 910,
-        "y": 1048,
+        "x": 105,
+        "y": 426,
         "definition": "air_affinity__air_mastery"
     },
     "air_affinity__air_transcendence": {
-        "x": 910,
-        "y": 1130,
+        "x": 105,
+        "y": 508,
         "definition": "air_affinity__air_transcendence"
     },
     "intimidation__intim_core": {
-        "x": 620,
-        "y": 720,
+        "x": -185,
+        "y": 98,
         "definition": "intimidation__intim_core",
         "root": true
     },
     "intimidation__intim_active": {
-        "x": 530,
-        "y": 775,
+        "x": -275,
+        "y": 153,
         "definition": "intimidation__intim_active"
     },
     "intimidation__intim_synergy": {
-        "x": 440,
-        "y": 830,
+        "x": -365,
+        "y": 208,
         "definition": "intimidation__intim_synergy"
     },
     "intimidation__intim_situational": {
-        "x": 350,
-        "y": 885,
+        "x": -455,
+        "y": 263,
         "definition": "intimidation__intim_situational"
     },
     "intimidation__intim_mastery": {
-        "x": 260,
-        "y": 940,
+        "x": -545,
+        "y": 318,
         "definition": "intimidation__intim_mastery"
     },
     "intimidation__intim_transcendence": {
-        "x": 170,
-        "y": 995,
+        "x": -635,
+        "y": 373,
         "definition": "intimidation__intim_transcendence"
     },
     "willpower__will_core": {
-        "x": 550,
-        "y": 810,
+        "x": -255,
+        "y": 188,
         "definition": "willpower__will_core",
         "root": true
     },
     "willpower__will_active": {
-        "x": 460,
-        "y": 865,
+        "x": -345,
+        "y": 243,
         "definition": "willpower__will_active"
     },
     "willpower__will_synergy": {
-        "x": 370,
-        "y": 920,
+        "x": -435,
+        "y": 298,
         "definition": "willpower__will_synergy"
     },
     "willpower__will_situational": {
-        "x": 280,
-        "y": 975,
+        "x": -525,
+        "y": 353,
         "definition": "willpower__will_situational"
     },
     "willpower__will_mastery": {
-        "x": 190,
-        "y": 1030,
+        "x": -615,
+        "y": 408,
         "definition": "willpower__will_mastery"
     },
     "willpower__will_transcendence": {
-        "x": 100,
-        "y": 1085,
+        "x": -705,
+        "y": 463,
         "definition": "willpower__will_transcendence"
     },
     "forging__forge_core": {
-        "x": 980,
-        "y": 720,
+        "x": 175,
+        "y": 98,
         "definition": "forging__forge_core",
         "root": true
     },
     "forging__forge_active": {
-        "x": 1070,
-        "y": 775,
+        "x": 265,
+        "y": 153,
         "definition": "forging__forge_active"
     },
     "forging__forge_synergy": {
-        "x": 1160,
-        "y": 830,
+        "x": 355,
+        "y": 208,
         "definition": "forging__forge_synergy"
     },
     "forging__forge_situational": {
-        "x": 1250,
-        "y": 885,
+        "x": 445,
+        "y": 263,
         "definition": "forging__forge_situational"
     },
     "forging__forge_mastery": {
-        "x": 1340,
-        "y": 940,
+        "x": 535,
+        "y": 318,
         "definition": "forging__forge_mastery"
     },
     "forging__forge_transcendence": {
-        "x": 1430,
-        "y": 995,
+        "x": 625,
+        "y": 373,
         "definition": "forging__forge_transcendence"
     },
     "cooking__cook_core": {
-        "x": 1055,
-        "y": 810,
+        "x": 250,
+        "y": 188,
         "definition": "cooking__cook_core",
         "root": true
     },
     "cooking__cook_active": {
-        "x": 1145,
-        "y": 865,
+        "x": 340,
+        "y": 243,
         "definition": "cooking__cook_active"
     },
     "cooking__cook_synergy": {
-        "x": 1235,
-        "y": 920,
+        "x": 430,
+        "y": 298,
         "definition": "cooking__cook_synergy"
     },
     "cooking__cook_situational": {
-        "x": 1325,
-        "y": 975,
+        "x": 520,
+        "y": 353,
         "definition": "cooking__cook_situational"
     },
     "cooking__cook_mastery": {
-        "x": 1415,
-        "y": 1030,
+        "x": 610,
+        "y": 408,
         "definition": "cooking__cook_mastery"
     },
     "cooking__cook_transcendence": {
-        "x": 1505,
-        "y": 1085,
+        "x": 700,
+        "y": 463,
         "definition": "cooking__cook_transcendence"
     },
     "alchemy__alchem_core": {
-        "x": 1130,
-        "y": 900,
+        "x": 325,
+        "y": 278,
         "definition": "alchemy__alchem_core",
         "root": true
     },
     "alchemy__alchem_active": {
-        "x": 1220,
-        "y": 955,
+        "x": 415,
+        "y": 333,
         "definition": "alchemy__alchem_active"
     },
     "alchemy__alchem_synergy": {
-        "x": 1310,
-        "y": 1010,
+        "x": 505,
+        "y": 388,
         "definition": "alchemy__alchem_synergy"
     },
     "alchemy__alchem_situational": {
-        "x": 1400,
-        "y": 1065,
+        "x": 595,
+        "y": 443,
         "definition": "alchemy__alchem_situational"
     },
     "alchemy__alchem_mastery": {
-        "x": 1490,
-        "y": 1120,
+        "x": 685,
+        "y": 498,
         "definition": "alchemy__alchem_mastery"
     },
     "alchemy__alchem_transcendence": {
-        "x": 1580,
-        "y": 1175,
+        "x": 775,
+        "y": 553,
         "definition": "alchemy__alchem_transcendence"
     }
 }

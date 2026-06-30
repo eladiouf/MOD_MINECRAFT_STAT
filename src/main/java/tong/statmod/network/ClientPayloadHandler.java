@@ -49,8 +49,14 @@ public final class ClientPayloadHandler {
     public static void handleSyncMagic(SyncMagicPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> ClientMagicCache.update(
                 payload.magicNodes(), payload.learnedSpells(),
-                payload.arcanePoints(), payload.schoolPoints(),
+                payload.magicPoints(), payload.masteryProgress(),
                 payload.raceOrdinal(), payload.startBranchOrdinal()));
+    }
+
+    /** Ouvre le Codex du Mage sur le client (Mission J). */
+    public static void handleOpenMageCodex(OpenMageCodexPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> net.minecraft.client.Minecraft.getInstance()
+                .setScreen(new tong.statmod.client.codex.MageCodexScreen()));
     }
 
     /**

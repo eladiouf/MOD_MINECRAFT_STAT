@@ -1,0 +1,11 @@
+{
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "vault/06 Visual/Attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "vault/08 Decisions",
+  "promptDelete": true,
+  "readableLineLength": false,
+  "showFrontmatter": true,
+  "spellcheck": true,
+  "trashOption": "local"
+}

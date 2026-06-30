@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EpicFightRaceCameraHelperTest {
     @Test
     void dwarf_scale_gets_positive_camera_offset() {
-        assertEquals(0.24f, EpicFightRaceCameraHelper.verticalOffset("tensura:dwarf", 0.85f), 0.0001f);
-        assertEquals(0.24f, EpicFightRaceCameraHelper.verticalOffset("tensura:divine_dwarf", 0.85f), 0.0001f);
+        assertEquals(0.30f, EpicFightRaceCameraHelper.verticalOffset("tensura:dwarf", 0.85f), 0.0001f);
+        assertEquals(0.30f, EpicFightRaceCameraHelper.verticalOffset("tensura:divine_dwarf", 0.85f), 0.0001f);
     }
 
     @Test

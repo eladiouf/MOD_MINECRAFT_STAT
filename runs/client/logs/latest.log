@@ -1,0 +1,903 @@
+[30Jun2026 22:03:50.909] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientdev, --version, 21.1.228, --assetIndex, asset-index, --assetsDir, C:\Users\El Hadji\.gradle\caches\minecraft\assets, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.228, --fml.neoFormVersion, 20240808.144430]
+[30Jun2026 22:03:50.911] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.11+10-LTS
+[30Jun2026 22:03:50.912] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.11 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[30Jun2026 22:03:51.033] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[30Jun2026 22:03:51.146] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[30Jun2026 22:03:51.289] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+[30Jun2026 22:03:51.411] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/El%20Hadji/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23142!/ Service=ModLauncher Env=CLIENT
+[30Jun2026 22:03:51.503] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-21.1.228.jar" [locator: neoforge devenv provider ([C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\.gradle\repositories\ng_dummy_ng\net\neoforged\neoforge\21.1.228\neoforge-21.1.228.jar])]
+[30Jun2026 22:03:51.517] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce GTX 1080/PCIe/SSE2 GL version 4.6.0 NVIDIA 581.80, NVIDIA Corporation
+[30Jun2026 22:03:51.530] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-21.1.228.jar" [locator: neoforge devenv provider ([C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\.gradle\repositories\ng_dummy_ng\net\neoforged\neoforge\21.1.228\neoforge-21.1.228.jar])]
+[30Jun2026 22:03:51.545] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "main" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.558] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "aces_spell_utils-1.2.6.1-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.561] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "architectury-13.0.8-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.567] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "block_factorys_bosses-2.1.2-neo-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.571] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "caelus-neoforge-7.0.1+1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.576] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "cdmoveset-2.0-neoforge1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.580] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "cloth-config-15.0.140-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.607] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "common-network.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.611] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "curios-neoforge-9.5.1+1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.614] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "darkdoppelganger-3.3.0-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.616] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "default_skill_trees-1.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.621] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "dualaxes-21.1.3.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.623] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "efiscompat-3.0.0 (1).jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.626] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "Epic Fight x Curios Compat 2.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.628] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epic x parcool-neoforge-21.0.0-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.632] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epic-fight-21.17.3.1-mc1.21.1-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.636] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epic-fight-dawn-day-21.17.1.0-mc1.21.1-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.640] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epic-knights-1.21.1-neoforge-10.12.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.645] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epic-knights-addon-2.5-1.21.1-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.650] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epicfight.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.657] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "epicfightcompat-1.1.0-mc1.21.1-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.664] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "fzzy_config-0.7.6+1.21+neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.673] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "gametechbcs_spellbooks-3.0.0-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.677] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.21.1-4.7.5.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.681] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.21.1-4.8.4.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.685] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "gtbcs_spell_lib-1.5.0-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.689] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "hazentouvelib-1.0.8.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.693] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "impactful-21.16.2+-neoforge1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.698] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "indestructible-21.16.3-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.704] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "invincible-21.15.8.1-mc1.21.1-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.709] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "irons_lib-1.21.1-1.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.714] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "irons_spellbooks-1.21.1-3.16.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.721] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "irons_spellbooks.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.725] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "jinxedlib-neoforge-1.21.1-1.0.3.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.731] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "legendarymage-1.0.9.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.735] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.739] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "overgeared-1.21.1-1.6.14.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.744] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "p1nero_bow-neoforge1.21.1-21.16.1.0-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.749] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "ParCool-1.21.1-3.4.3.3-NF.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.752] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "parcool.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.755] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "player-animation-lib-forge-2.0.4+1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.758] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "puffish_skills-0.18.0-1.21-neoforge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.763] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "simplyswords-neoforge-1.63.0-1.21.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.766] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "SimplyTooltips-neoforge-0.1.3.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.768] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "SmartBrainLib-neoforge-1.21.1-1.16.11.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.770] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "spells_gone_wrong-1.21.1-2.0.0.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.778] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "tensura-neoforge-2.0.1.0.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.785] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "tensura.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.787] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "tensuramoreskills-0.0.4.3.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.791] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "tensura_iron_spells-neoforge-2.0.0.0.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.793] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "TerraBlender-neoforge-1.21.1-4.1.0.8.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.796] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "wind_spellbooks-1.0.4.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.798] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "xbbsroaringknightmod-2.0.1-1.21.1-NeoForge.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.800] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "[1.21.1-neoforge]-Epic-Knights-Dark-Ages-1.1.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.802] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-architectury-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.805] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-attribute-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.808] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-command-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.810] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-config-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.812] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-inventory-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.815] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-keybind-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.816] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-network-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.819] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-race-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.822] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-skill-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.824] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "manascore-storage-neoforge-4.0.0.2.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.831] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-21.1.228.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.852] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlinforforge-5.11.0-all.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:51.900] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found gamelibrary file "mixinextras-neoforge-0.5.3.jar" [locator: userdev mods and services, reader: mod manifest]
+[30Jun2026 22:03:52.382] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: library:mixinextras.neoforge. Using Mod File: C:\Users\El Hadji\.gradle\caches\modules-2\files-2.1\io.github.llamalad7\mixinextras-neoforge\0.5.3\a0919957808de97707c5fb4ce073e66aeef3e187\mixinextras-neoforge-0.5.3.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_config. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-config-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_attribute. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-attribute-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_keybind. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-keybind-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_network. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-network-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_race. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-race-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_skill. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-skill-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_architectury. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-architectury-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_inventory. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-inventory-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_storage. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-storage-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/WARN] [net.neoforged.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: manascore_command. Using Mod File: C:\Users\El Hadji\Downloads\STAT_MOD\test\MOD_MINECRAFT_STAT\libs\META-INF\jars\manascore-command-neoforge-4.0.0.2.jar
+[30Jun2026 22:03:52.383] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 15 dependencies adding them to mods collection
+[30Jun2026 22:03:52.383] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "net.neoforged.neoforge-coremods-21.1.228.jar" [parent: neoforge-21.1.228.jar, locator: jarinjar, reader: mod manifest]
+[30Jun2026 22:03:52.383] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "thedarkcolour.kfflang-5.11.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar, reader: mod manifest]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found gamelibrary file "thedarkcolour.kfflib-5.11.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar, reader: mod manifest]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "thedarkcolour.kffmod-5.11.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar, reader: mod manifest]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlin-stdlib-2.3.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlin-reflect-2.3.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "sable-companion-common-1.21.1-1.6.0.jar" [parent: overgeared-1.21.1-1.6.14.jar, locator: jarinjar, reader: mod manifest]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlinx-coroutines-core-jvm-1.10.2.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "tomlkt-jvm-0.3.7.jar" [parent: fzzy_config-0.7.6+1.21+neoforge.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlinx-coroutines-jdk8-1.10.2.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlin-stdlib-jdk7-2.3.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlin-stdlib-jdk8-2.3.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlinx-serialization-core-jvm-1.9.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "kotlinx-serialization-json-jvm-1.9.0.jar" [parent: kotlinforforge-5.11.0-all.jar, locator: jarinjar]
+[30Jun2026 22:03:52.384] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found library file "jankson-1.2.3.jar" [parent: fzzy_config-0.7.6+1.21+neoforge.jar, locator: jarinjar]
+[30Jun2026 22:03:52.386] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Ace's Spell Utils 1.2.6.1-1.21.1 (aces_spell_utils)
+		Architectury 13.0.8 (architectury)
+		Bosses'Rise 2.1.2 (block_factorys_bosses)
+		Caelus API 7.0.1+1.21.1 (caelus)
+		Cloth Config v15 API 15.0.140 (cloth_config)
+		Common Networking 1.0.21-1.21.1 (commonnetworking)
+		Curios API 9.5.1+1.21.1 (curios)
+		DarkDoppelganger 3.3.0-1.21.1 (darkdoppelganger)
+		Default Skill Trees 1.1 (default_skill_trees)
+		DualAxes 21.1.3 (dualaxes)
+		Epic Fight 21.17.3.1 (epicfight)
+		Epic Fight & Iron's Spellbook animation compat 3.0.0 (efiscompat)
+		Epic Fight - Invincible 21.15.8.1 (invincible)
+		Epic Fight Compat 1.1.0 (epicfightcompat)
+		Epic Knights: Addon 2.5 (magistuarmoryaddon)
+		Epic Knights: Shields, Armor and Weapons 10.12 (magistuarmory)
+		Epic Knights: Slavic Armory 1.1 (darkagesarmory)
+		Epic Parcool 21.0.0 (epicparcool)
+		EpicFight x Curios Compat 1.4 (epicfight_curios_compat)
+		EpicFight-Resurrection 2.0-neoforge1.21.1 (cdmoveset)
+		EpicFight:Dawnday 21.17.1.1.0 (epicfight_dd)
+		Fzzy Config 0.7.6+1.21+neoforge (fzzy_config)
+		GameTechBC's Spellbooks 3.0.0-1.21.1 (gametechbcs_spellbooks)
+		GeckoLib 4 4.8.4 (geckolib)
+		GTBC's SpellLib 1.5.0-1.21.1 (gtbcs_spell_lib)
+		HazentouveLib 1.0.8 (hazentouvelib)
+		Impactful 20.14.2-neoforge1.21.1 (impactful)
+		Indestructible 21.16.3-1.21.1 (indestructible)
+		Iron's Lib 1.21.1-1.0.2 (irons_lib)
+		Iron's Spells 'n Spellbooks 1.21.1-3.16.1 (irons_spellbooks)
+		JinxedLib 1.0.3 (jinxedlib)
+		Kotlin For Forge 5.11.0 (kotlinforforge)
+		Legendary Mage 1.0.9 (legendarymage)
+		ManasCore 4.0.0.2 (manascore)
+		ManasCore - Architectury 4.0.0.2 (manascore_architectury)
+		ManasCore - Attribute 4.0.0.2 (manascore_attribute)
+		ManasCore - Command 4.0.0.2 (manascore_command)
+		ManasCore - Config 4.0.0.2 (manascore_config)
+		ManasCore - Inventory 4.0.0.2 (manascore_inventory)
+		ManasCore - Keybind 4.0.0.2 (manascore_keybind)
+		ManasCore - Network 4.0.0.2 (manascore_network)
+		ManasCore - Race 4.0.0.2 (manascore_race)
+		ManasCore - Skill 4.0.0.2 (manascore_skill)
+		ManasCore - Storage 4.0.0.2 (manascore_storage)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.228 (neoforge)
+		Overgeared: A Blacksmith Mod 1.21.1-1.6.14 (overgeared)
+		P1nero's Epic Fight Bow 21.16.1.0-neoforge (p1nero_bow)
+		ParCool! 3.4.3.3 (parcool)
+		Player Animator 2.0.4+1.21.1 (playeranimator)
+		Pufferfish's Skills 0.18.0 (puffish_skills)
+		Sable Companion 1.6.0 (sablecompanion)
+		Simply Swords 1.63.0-1.21.1 (simplyswords)
+		Simply Tooltips 0.1.3 (simplytooltips)
+		SmartBrainLib 1.16.11 (smartbrainlib)
+		Spells Gone Wrong 1.21.1-2.0.0 (spells_gone_wrong)
+		STAT Mod 1.2.0 (statmod)
+		TenSura Compat: Iron's Spells 'n Spellbooks 2.0.0.0 (tensura_iron_spells)
+		Tensura: Reincarnated 2.0.1.0 (tensura)
+		TensuraMoreSkills 0.0.4.3 (tensuramoreskills)
+		TerraBlender 4.1.0.8 (terrablender)
+		Wind's Spellbooks : Iron's Spells 'n Spellbooks Addon 1.0.4 (wind_spellbooks)
+		XBB's Roaring Knight Mod 2.0.1 (xbbsroaringknightmod)
+[30Jun2026 22:03:53.315] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[30Jun2026 22:03:53.319] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[30Jun2026 22:03:53.394] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientdev' with arguments [--version, 21.1.228, --gameDir, ., --assetsDir, C:\Users\El Hadji\.gradle\caches\minecraft\assets, --assetIndex, asset-index]
+[30Jun2026 22:03:53.446] [main/WARN] [mixin/]: Reference map 'geckolib.refmap.json' for geckolib.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.453] [main/WARN] [mixin/]: Reference map 'irons_lib.refmap.json' for irons_lib.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.453] [main/WARN] [mixin/]: Reference map 'epicfight.mixins.refmap.json' for epicfight.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.459] [main/WARN] [mixin/]: Reference map 'invincible.mixin-refmap.json' for invincible.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.472] [main/WARN] [mixin/]: Reference map 'mixins.epicfight_dd.refmap.json' for mixins.epicfight_dd.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.480] [main/WARN] [mixin/]: Reference map 'ef_bow.refmap.json' for p1nero_bow.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.480] [main/WARN] [mixin/]: Reference map 'statmod.refmap.json' for statmod.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.481] [main/WARN] [mixin/]: Reference map 'aces_spell_utils.refmap.json' for aces_spell_utils.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.481] [main/WARN] [mixin/]: Reference map 'terrablender.refmap.json' for terrablender.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.482] [main/WARN] [mixin/]: Reference map 'terrablender.refmap.json' for terrablender_neoforge.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.483] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.neoforge.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.483] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.484] [main/WARN] [mixin/]: Reference map 'spells_gone_wrong.refmap.json' for spells_gone_wrong.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.486] [main/WARN] [mixin/]: Reference map 'irons_spellbooks.refmap.json' for irons_spellbooks.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.486] [main/WARN] [mixin/]: Reference map 'mixins.epicironcompat.refmap.json' for mixins.epicironcompat.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.488] [main/WARN] [mixin/]: Reference map 'indestructible.refmap.json' for mixins.indestructible.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.497] [main/WARN] [mixin/]: Reference map 'mixins.epicparcool.refmap.json' for epicparcool.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.500] [main/WARN] [mixin/]: Reference map 'hazentouvelib.refmap.json' for hazentouvelib.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.500] [main/WARN] [mixin/]: Reference map 'cdmoveset.mixin-refmap.json' for cdmoveset.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:53.501] [main/WARN] [mixin/]: Reference map 'jinxedlib.refmap.json' for jinxedlib.mixins.json could not be read. If this is a development environment you can ignore this message
+[30Jun2026 22:03:54.060] [main/WARN] [mixin/]: Error loading class: reascer/wom/skill/guard/DreadFullBusterSkill (java.lang.ClassNotFoundException: reascer.wom.skill.guard.DreadFullBusterSkill)
+[30Jun2026 22:03:54.061] [main/WARN] [mixin/]: @Mixin target reascer.wom.skill.guard.DreadFullBusterSkill was not found mixins.epicfight_dd.json:BusterMixin from mod epicfight_dd
+[30Jun2026 22:03:54.731] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
+[30Jun2026 22:03:56.860] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 229 Datafixer optimizations took 269 milliseconds
+[30Jun2026 22:04:02.103] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[30Jun2026 22:04:02.104] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[30Jun2026 22:04:02.107] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[30Jun2026 22:04:02.107] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[30Jun2026 22:04:02.108] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[30Jun2026 22:04:02.268] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/El%20Hadji/Downloads/STAT_MOD/test/MOD_MINECRAFT_STAT/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/21.1.228/neoforge-21.1.228.jar%23195!/assets/.mcassetsroot' uses unexpected schema
+[30Jun2026 22:04:02.268] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/El%20Hadji/Downloads/STAT_MOD/test/MOD_MINECRAFT_STAT/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/21.1.228/neoforge-21.1.228.jar%23195!/data/.mcassetsroot' uses unexpected schema
+[30Jun2026 22:04:02.299] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[30Jun2026 22:04:02.309] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[30Jun2026 22:04:02.420] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
+[30Jun2026 22:04:02.775] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.228, for MC 1.21.1
+[30Jun2026 22:04:03.286] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Registered 56 Tensura→Iron's spell wrappers
+[30Jun2026 22:04:03.449] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Tensura EP integration loaded
+[30Jun2026 22:04:03.510] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Tensura race integration loaded
+[30Jun2026 22:04:03.560] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Epic Fight integration loaded
+[30Jun2026 22:04:03.596] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: ParCool integration loaded
+[30Jun2026 22:04:03.604] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Overgeared integration loaded
+[30Jun2026 22:04:03.630] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Puffish Skills integration loaded
+[30Jun2026 22:04:03.644] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: Iron's Spellbooks integration loaded
+[30Jun2026 22:04:03.644] [modloading-worker-0/INFO] [tong.statmod.STATMod/]: STAT Mod initialized on NeoForge 1.21.1
+[30Jun2026 22:04:03.830] [modloading-worker-0/INFO] [epicfight/]: Loaded mod compatibility module: CuriosCompat
+[30Jun2026 22:04:03.867] [modloading-worker-0/INFO] [epicfight/]: Loaded mod compatibility module: GeckolibCompat
+[30Jun2026 22:04:03.870] [modloading-worker-0/INFO] [epicfight/]: Loaded mod compatibility module: PlayerAnimatorCompat
+[30Jun2026 22:04:03.879] [modloading-worker-0/INFO] [epicfight/]: Loaded mod compatibility module: SimplyTooltipsModule
+[30Jun2026 22:04:03.903] [modloading-worker-0/INFO] [thedarkcolour.kotlinforforge.neoforge.test.KotlinForForge/]: Kotlin For Forge Enabled!
+[30Jun2026 22:04:04.228] [modloading-worker-0/INFO] [legendarymage/]: [法术] 物品已注册
+[30Jun2026 22:04:04.230] [modloading-worker-0/INFO] [legendarymage/]: [法术] 元素流派属性已注册
+[30Jun2026 22:04:04.234] [modloading-worker-0/INFO] [legendarymage/]: [法术] 元素流派已注册
+[30Jun2026 22:04:04.286] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config fzzy_config:keybinds in 1153ms
+[30Jun2026 22:04:04.350] [modloading-worker-0/INFO] [legendarymage/]: [系统] 传奇法师模组已加载
+[30Jun2026 22:04:04.635] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplyswords:general in 229ms
+[30Jun2026 22:04:04.646] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplytooltips:config in 258ms
+[30Jun2026 22:04:04.647] [modloading-worker-0/INFO] [simplytooltips/]: SimplyTooltips config loaded: simplytooltips:config
+[30Jun2026 22:04:05.062] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplyswords:gem_powers in 350ms
+[30Jun2026 22:04:05.070] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplyswords:status_effects in 6ms
+[30Jun2026 22:04:05.155] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplyswords:weapon_attributes in 78ms
+[30Jun2026 22:04:05.446] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config simplyswords:unique_effects in 202ms
+[30Jun2026 22:04:05.501] [modloading-worker-0/INFO] [com.payangar.epicfightcompat.EpicFightCompat/]: Epic Fight Compat initializing
+[30Jun2026 22:04:06.851] [modloading-worker-0/INFO] [com.github.wal_bos.moreskills.TensuraMoreSkills/]: TensuraMoreSkills loaded!
+[30Jun2026 22:04:08.555] [modloading-sync-worker/INFO] [legendarymage/]: [法术] 元素流派属性已添加到实体
+[30Jun2026 22:04:08.779] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:combo_counter] for epicfight:combo_attacks
+[30Jun2026 22:04:08.779] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:penalty_restore_counter, epicfight:penalty] for epicfight:guard
+[30Jun2026 22:04:08.779] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:penalty_restore_counter, epicfight:penalty] for epicfight:impact_guard
+[30Jun2026 22:04:08.779] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:last_active, epicfight:parry_motion_counter, epicfight:penalty_restore_counter, epicfight:penalty] for epicfight:parrying
+[30Jun2026 22:04:08.779] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:stacks, epicfight:tick_record, epicfight:resisting_damage_type] for epicfight:adaptive_skin
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:tick_record] for epicfight:adrenaline_fiend
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:entity_id, epicfight:stacks] for epicfight:bonebreaker
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:entity_id, epicfight:tick_record] for epicfight:vengeance
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:fall_distance, epicfight:slam_protect_next_fall] for epicfight:meteor_slam
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:stacks] for epicfight:revelation
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:slam_protect_next_fall] for epicfight:demolition_leap
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:jump_key_pressed_last_tick, epicfight:jump_count, epicfight:slam_protect_next_fall] for epicfight:phantom_ascent
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:last_hit_count, cdmoveset:rush_end] for epicfight:grasping_spire
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:sheath] for epicfight:battojutsu
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:combo_counter] for epicfight:blade_rush
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:thrown_trident_entity_id] for epicfight:everlasting_allegiance
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight:sheath] for epicfight:battojutsu_passive
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [invincible:any_key_down, invincible:dodge_success_timer, invincible:parry_timer, invincible:cooldown, invincible:down, invincible:right, invincible:up, invincible:left] for invincible:combo_attacks
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [epicfight_dd:special_stance_active] for epicfight_dd:wingstance
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:target_id] for cdmoveset:ex_yamato_step
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:parry_motion_counter] for cdmoveset:guardparry
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:wolf_passive, cdmoveset:timer, cdmoveset:damage] for cdmoveset:bloodwolf
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:yamato_power3_active, cdmoveset:counter_success, cdmoveset:damages, cdmoveset:yamato_attack_active, cdmoveset:yamato_attack, cdmoveset:combo_counter] for cdmoveset:yamatoskill
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:rush_combo] for cdmoveset:blade_rush
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:yamato_power3_active] for cdmoveset:yamato_passive
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:direction, cdmoveset:count, cdmoveset:reset_timer, cdmoveset:dodge_played] for cdmoveset:sstep
+[30Jun2026 22:04:08.780] [modloading-sync-worker/INFO] [epicfight/]: Data keys [cdmoveset:direction, cdmoveset:count, cdmoveset:reset_timer, cdmoveset:dodge_played] for cdmoveset:wolf_dodge
+[30Jun2026 22:04:08.806] [modloading-sync-worker/INFO] [epicfight/]: Epic Fight web server connection helper: Initialize
+[30Jun2026 22:04:08.851] [modloading-sync-worker/INFO] [epicfight/]: Epic Fight web server connection helper: supported
+[30Jun2026 22:04:08.886] [modloading-sync-worker/INFO] [com.yukami.efiscompat.config.CommonConfig/]: Config loaded! [irons_spellbooks:blood_staff, irons_spellbooks:ice_staff, irons_spellbooks:graybeard_staff, irons_spellbooks:artificer_cane, irons_spellbooks:lightning_rod, irons_spellbooks:magehunter, irons_spellbooks:keeper_flamberge, irons_spellbooks:spellbreaker, irons_spellbooks:amethyst_rapier, irons_spellbooks:hither_thither_wand]
+[30Jun2026 22:04:09.245] [Render thread/WARN] [mixin/]: @Inject(@At("INVOKE")) Shift.BY=2 on block_factorys_bosses.mixins.json:client.ParticleEngineMixin from mod block_factorys_bosses::handler$zin000$block_factorys_bosses$render exceeds the maximum allowed value: 0. Increase the value of maxShiftBy to suppress this warning.
+[30Jun2026 22:04:09.601] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
+[30Jun2026 22:04:09.767] [Render thread/INFO] [legendarymage/]: [法术] 冰爆锥模型层已注册
+[30Jun2026 22:04:09.768] [Render thread/INFO] [legendarymage/]: [法术] 聚能冰锥模型层已注册
+[30Jun2026 22:04:09.768] [Render thread/INFO] [legendarymage/]: [法术] 巨雪球模型层已注册
+[30Jun2026 22:04:09.768] [Render thread/INFO] [legendarymage/]: [法术] 元素球模型层已注册
+[30Jun2026 22:04:10.295] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/smartbrainlib, mod/puffish_skills, mod/geckolib, mod/playeranimator, mod/irons_lib, mod/commonnetworking, mod/caelus, mod/epicfight, mod/invincible, mod/epicfight_dd, mod/neoforge, mod/default_skill_trees, mod/darkdoppelganger, mod/impactful, mod/cloth_config, mod/fzzy_config, mod/overgeared, mod/p1nero_bow, mod/statmod, mod/aces_spell_utils, mod/terrablender, mod/block_factorys_bosses, mod/wind_spellbooks, mod/gtbcs_spell_lib, mod/kotlinforforge, mod/curios, mod/sablecompanion, mod/parcool, mod/spells_gone_wrong, mod/irons_spellbooks, mod/gametechbcs_spellbooks, mod/efiscompat, mod/epicfight_curios_compat, mod/indestructible, mod/architectury, mod/manascore_config, mod/manascore_attribute, mod/manascore_architectury, mod/magistuarmory, mod/manascore_inventory, mod/magistuarmoryaddon, mod/manascore_command, mod/simplyswords, mod/epicfightcompat, mod/simplytooltips, mod/manascore, mod/tensura_iron_spells, mod/manascore_keybind, mod/manascore_network, mod/manascore_storage, mod/manascore_race, mod/manascore_skill, mod/tensura, mod/epicparcool, mod/legendarymage, mod/dualaxes, mod/tensuramoreskills, mod/hazentouvelib, mod/cdmoveset, mod/darkagesarmory, mod/xbbsroaringknightmod, mod/jinxedlib
+[30Jun2026 22:04:10.334] [Worker-Main-2/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:animations/entity/No Infringement Allowed.txt, ignoring
+[30Jun2026 22:04:10.334] [Worker-Main-7/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:animations/entity/No Infringement Allowed.txt, ignoring
+[30Jun2026 22:04:10.335] [Worker-Main-2/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:animations/entity/All Rights Reserved.txt, ignoring
+[30Jun2026 22:04:10.335] [Worker-Main-7/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:animations/entity/All Rights Reserved.txt, ignoring
+[30Jun2026 22:04:10.335] [Worker-Main-6/INFO] [net.bandit.darkdoppelganger.DarkDoppelgangerMod/]: Common setup for Dark Doppelganger Mod
+[30Jun2026 22:04:10.338] [Worker-Main-1/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:geo/entity/No Infringement Allowed.txt, ignoring
+[30Jun2026 22:04:10.339] [Worker-Main-1/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:geo/entity/All Rights Reserved.txt, ignoring
+[30Jun2026 22:04:10.339] [Worker-Main-4/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:geo/entity/No Infringement Allowed.txt, ignoring
+[30Jun2026 22:04:10.339] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/casting_animations.json'
+[30Jun2026 22:04:10.339] [Worker-Main-7/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'gametechbcs_spellbooks:animations/casting_animations.json'
+[30Jun2026 22:04:10.339] [Worker-Main-4/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:geo/entity/All Rights Reserved.txt, ignoring
+[30Jun2026 22:04:10.341] [Worker-Main-2/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'gametechbcs_spellbooks:animations/casting_animations.json'
+[30Jun2026 22:04:10.355] [NeoForge Version Check/INFO] [net.neoforged.fml.VersionChecker/]: [spells_gone_wrong] Starting version check at https://raw.githubusercontent.com/KekeCreations/Spells-Gone-Wrong/refs/heads/1.21/neoforge_updates.json
+[30Jun2026 22:04:10.362] [Worker-Main-8/INFO] [net.stirdrem.overgeared.OvergearedMod/]: Tool types initialized: 5
+[30Jun2026 22:04:10.472] [Worker-Main-4/WARN] [GeckoLib/]: Unsupported geometry json version for model tensura:geo/block/orc_disaster_head.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:10.472] [Worker-Main-8/WARN] [GeckoLib/]: Unsupported geometry json version for model tensura:geo/block/orc_disaster_head.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:10.484] [Worker-Main-7/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/casting_animations.json'
+[30Jun2026 22:04:10.485] [Worker-Main-2/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'wind_spellbooks:animations/charge_slash.json'
+[30Jun2026 22:04:10.486] [Worker-Main-2/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'darkdoppelganger:animations/doppel_casting_animations.json'
+[30Jun2026 22:04:10.525] [Worker-Main-11/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/dragon_peacock.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.548] [Worker-Main-7/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'wind_spellbooks:animations/charge_slash.json'
+[30Jun2026 22:04:10.549] [Worker-Main-7/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'darkdoppelganger:animations/doppel_casting_animations.json'
+[30Jun2026 22:04:10.552] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/dragon_peacock.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.585] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_z' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.590] [Worker-Main-4/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/chaos_eater.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.637] [Render thread/INFO] [terrablender/]: Registered region minecraft:overworld to index 0 for type OVERWORLD
+[30Jun2026 22:04:10.638] [Render thread/INFO] [terrablender/]: Registered region minecraft:nether to index 0 for type NETHER
+[30Jun2026 22:04:10.638] [Render thread/INFO] [terrablender/]: Registered region tensura:overworld to index 1 for type OVERWORLD
+[30Jun2026 22:04:10.638] [Render thread/INFO] [terrablender/]: Registered region tensura:overworld_desert to index 2 for type OVERWORLD
+[30Jun2026 22:04:10.667] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.670] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_z' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.669] [Worker-Main-4/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/jail_sphere.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.673] [Worker-Main-4/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/magic_ball.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.674] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.698] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.699] [Worker-Main-11/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/magic_slash.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.703] [Worker-Main-11/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/marionette_lines.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.737] [Worker-Main-6/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:sounds/Sounds made by Toby Fox.txt, ignoring
+[30Jun2026 22:04:10.737] [Worker-Main-6/ERROR] [net.minecraft.Util/]: Invalid path in pack: xbbsroaringknightmod:sounds/roaring_knight/Sounds made by Toby Fox.txt, ignoring
+[30Jun2026 22:04:10.736] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.747] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_direction' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.750] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_y' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.752] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_y' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.754] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/chaos_eater.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.754] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.757] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.758] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'emitter_transform_xz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.763] [Worker-Main-11/WARN] [GeckoLib/]: Unsupported geometry json version for model tensura:geo/item/armorsaurus_shield.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:10.765] [Worker-Main-4/WARN] [GeckoLib/]: Unsupported geometry json version for model block_factorys_bosses:geo/item/undying_tentacle.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:10.784] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'emitter_transform_xz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.785] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'emitter_transform_xz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.787] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_z' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.787] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.788] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'emitter_transform_xz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.790] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/jail_sphere.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.795] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/magic_ball.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.799] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_y' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.799] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.801] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/magic_slash.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.805] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'direction_z' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.810] [Worker-Main-1/WARN] [GeckoLib/]: Unsupported geometry json version: 1.21.0 for model tensura:geo/entity/misc/marionette_lines.geo.json. Supported versions: 1.12.0. Remove any rotated face UVs and re-export the model to fix
+[30Jun2026 22:04:10.812] [Worker-Main-3/WARN] [net.unusual.block_factorys_bosses.client.particle.bedrock.appearance.FacingCameraMode/]: Bedrock particle facing_camera_mode 'lookat_xyz' is not yet implemented, falling back to rotate_xyz
+[30Jun2026 22:04:10.975] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime1.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.975] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime2.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime3.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime4.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime5.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime6.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime7.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime8.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime9.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime10.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime11.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:10.977] [Worker-Main-6/WARN] [net.minecraft.client.sounds.SoundManager/]: File minecraft:sounds/block/amethyst_block/chime12.ogg does not exist, cannot add it to event legendarymage:element_cast
+[30Jun2026 22:04:11.019] [Worker-Main-8/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.1.05.hex, loading
+[30Jun2026 22:04:11.024] [Worker-Main-2/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'wind_spellbooks:animations/finish_slash.json'
+[30Jun2026 22:04:11.025] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/ice_block_animations.json'
+[30Jun2026 22:04:11.040] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/root_animations.json'
+[30Jun2026 22:04:11.041] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/spectral_hammer.json'
+[30Jun2026 22:04:11.043] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/summoned_weapon_animations.json'
+[30Jun2026 22:04:11.044] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/void_tentacle_animations.json'
+[30Jun2026 22:04:11.045] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_lib:animations/wizard_armor_animation.json'
+[30Jun2026 22:04:11.046] [Worker-Main-10/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/wizard_armor_animation.json'
+[30Jun2026 22:04:11.096] [Worker-Main-10/WARN] [GeckoLib/]: Unsupported geometry json version for model tensura:geo/item/armorsaurus_shield.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:11.098] [Worker-Main-10/WARN] [GeckoLib/]: Unsupported geometry json version for model block_factorys_bosses:geo/item/undying_tentacle.geo.json. Supported versions: 1.12.0
+[30Jun2026 22:04:11.212] [Worker-Main-10/INFO] [net.bandit.darkdoppelganger.DarkDoppelgangerMod/]: Client setup for Dark Doppelganger Mod
+[30Jun2026 22:04:11.235] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'wind_spellbooks:animations/finish_slash.json'
+[30Jun2026 22:04:11.235] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/ice_block_animations.json'
+[30Jun2026 22:04:11.274] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/root_animations.json'
+[30Jun2026 22:04:11.277] [Worker-Main-10/INFO] [legendarymage/]: [法术] HELLO FROM CLIENT SETUP
+[30Jun2026 22:04:11.277] [Worker-Main-10/INFO] [com.legendarymage.legendarymagemod.LegendaryMage/]: MINECRAFT NAME >> Dev
+[30Jun2026 22:04:11.278] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/spectral_hammer.json'
+[30Jun2026 22:04:11.286] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/summoned_weapon_animations.json'
+[30Jun2026 22:04:11.287] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/void_tentacle_animations.json'
+[30Jun2026 22:04:11.289] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_lib:animations/wizard_armor_animation.json'
+[30Jun2026 22:04:11.292] [Worker-Main-11/WARN] [GeckoLib/]: Found animation file with improper file name format; animation files should end in .animation.json: 'irons_spellbooks:animations/wizard_armor_animation.json'
+[30Jun2026 22:04:11.363] [Worker-Main-4/ERROR] [net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader/]: Using missing texture, unable to load legendarymage:item/mod_icon
+java.io.IOException: Bad PNG Signature
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.PngInfo.validateHeader(PngInfo.java:38) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/com.mojang.blaze3d.platform.NativeImage.read(NativeImage.java:142) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/com.mojang.blaze3d.platform.NativeImage.read(NativeImage.java:111) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/com.mojang.blaze3d.platform.NativeImage.read(NativeImage.java:101) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader.lambda$create$0(SpriteResourceLoader.java:38) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader.loadSprite(SpriteResourceLoader.java:66) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.texture.atlas.SpriteSource$Output.lambda$add$0(SpriteSource.java:24) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.renderer.texture.SpriteLoader.lambda$runSpriteSuppliers$3(SpriteLoader.java:118) ~[neoforge-21.1.228.jar%23195!/:?]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) [?:?]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) [?:?]
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) [?:?]
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) [?:?]
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) [?:?]
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) [?:?]
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) [?:?]
+[30Jun2026 22:04:11.375] [Worker-Main-6/WARN] [net.minecraft.client.renderer.texture.atlas.sources.SingleFile/]: Missing sprite: antiquelegacy:textures/entity/bronze_republic_scutum_pattern.png
+[30Jun2026 22:04:11.375] [Worker-Main-6/WARN] [net.minecraft.client.renderer.texture.atlas.sources.SingleFile/]: Missing sprite: antiquelegacy:textures/entity/bronze_republic_scutum_nopattern.png
+[30Jun2026 22:04:11.377] [Worker-Main-10/INFO] [legendarymage/]: [法术] 冰雕生物渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 冰爆锥渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 聚能冰锥渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 巨雪球渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 元素球渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 元素箭渲染器已注册
+[30Jun2026 22:04:11.378] [Worker-Main-10/INFO] [legendarymage/]: [法术] 拖尾测试投射物渲染器已注册
+[30Jun2026 22:04:11.520] [Worker-Main-10/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-15.1.05.hex, loading
+[30Jun2026 22:04:11.533] [Render thread/WARN] [epicfight/]: [Computer Shader Acceleration] OpenGL Version: 4.6.0 NVIDIA 581.80
+[30Jun2026 22:04:11.534] [Render thread/WARN] [epicfight/]: [Computer Shader Acceleration] Compute Shader: Supported
+[30Jun2026 22:04:11.784] [NeoForge Version Check/INFO] [net.neoforged.fml.VersionChecker/]: [spells_gone_wrong] Found status: BETA Current: 1.21.1-2.0.0 Target: null
+[30Jun2026 22:04:11.985] [Worker-Main-2/WARN] [net.minecraft.client.renderer.texture.SpriteContents/]: Unused frames in sprite irons_spellbooks:item/upgrade_orb_ender: [1, 5, 6, 7]
+[30Jun2026 22:04:11.992] [Worker-Main-4/WARN] [net.minecraft.client.renderer.texture.SpriteContents/]: Unused frames in sprite irons_spellbooks:item/energized_core_energy: [11]
+[30Jun2026 22:04:12.103] [Worker-Main-2/WARN] [net.minecraft.client.renderer.texture.SpriteLoader/]: Texture tensura:item/spatial_blade_hilt with size 20x20 limits mip level from 4 to 2
+[30Jun2026 22:04:12.106] [Worker-Main-2/WARN] [net.minecraft.client.renderer.texture.SpriteLoader/]: Texture tensura:item/long_bow with size 17x17 limits mip level from 2 to 0
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=1'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=2'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=0'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=5'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=6'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=3'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=4'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=9'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=7'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=8'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=10'
+[30Jun2026 22:04:12.613] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=11'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=14'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=15'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=12'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/wood_pavise.json' missing model for variant: 'magistuarmory:wood_pavise#rotation=13'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=12'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=11'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=10'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=15'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=14'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=13'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=8'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=9'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=4'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=5'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=6'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=7'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=0'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=1'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=2'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/gold_pavise.json' missing model for variant: 'magistuarmory:gold_pavise#rotation=3'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=10'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=11'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=7'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=8'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=9'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=12'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=13'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=14'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=15'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=3'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=4'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=5'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=6'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=0'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=1'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/stone_pavise.json' missing model for variant: 'magistuarmory:stone_pavise#rotation=2'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=8'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=9'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=6'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=7'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=4'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=5'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=14'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=13'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=15'
+[30Jun2026 22:04:12.614] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=10'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=12'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=11'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=2'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=3'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=0'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/iron_pavise.json' missing model for variant: 'magistuarmory:iron_pavise#rotation=1'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=15'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=14'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=13'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=9'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=8'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=12'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=11'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=10'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=3'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=2'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=1'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=0'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=7'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=6'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=5'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/diamond_pavise.json' missing model for variant: 'magistuarmory:diamond_pavise#rotation=4'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=10'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=14'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=13'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=12'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=11'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=15'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=1'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=0'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=5'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=4'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=3'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=2'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=9'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=8'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=7'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/netherite_pavise.json' missing model for variant: 'magistuarmory:netherite_pavise#rotation=6'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=11'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=10'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=13'
+[30Jun2026 22:04:12.615] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=12'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=15'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=14'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=5'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=6'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=3'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=4'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=9'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=7'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=8'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=1'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=2'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/tin_pavise.json' missing model for variant: 'magistuarmory:tin_pavise#rotation=0'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=15'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=14'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=13'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=12'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=11'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=10'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=0'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=1'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=2'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=3'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=4'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=5'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=6'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=7'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=8'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/copper_pavise.json' missing model for variant: 'magistuarmory:copper_pavise#rotation=9'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=0'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=1'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=2'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=3'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=4'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=5'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=6'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=7'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=8'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=9'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=15'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=14'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=13'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=12'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=11'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/silver_pavise.json' missing model for variant: 'magistuarmory:silver_pavise#rotation=10'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=11'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=12'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=13'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=14'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=10'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=7'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=6'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=9'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=8'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=3'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=2'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=5'
+[30Jun2026 22:04:12.616] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=4'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=1'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=0'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/bronze_pavise.json' missing model for variant: 'magistuarmory:bronze_pavise#rotation=15'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=0'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=15'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=14'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=13'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=12'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=11'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=10'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=9'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=8'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=7'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=6'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=5'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=4'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=3'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=2'
+[30Jun2026 22:04:12.617] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'magistuarmory:blockstates/steel_pavise.json' missing model for variant: 'magistuarmory:steel_pavise#rotation=1'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp.json' missing model for variant: 'tensura:labyrinth_lamp#facing=down'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp.json' missing model for variant: 'tensura:labyrinth_lamp#facing=up'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_tl.json' missing model for variant: 'tensura:labyrinth_lamp_tl#facing=up'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_tl.json' missing model for variant: 'tensura:labyrinth_lamp_tl#facing=down'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_tr.json' missing model for variant: 'tensura:labyrinth_lamp_tr#facing=up'
+[30Jun2026 22:04:12.624] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_tr.json' missing model for variant: 'tensura:labyrinth_lamp_tr#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_bl.json' missing model for variant: 'tensura:labyrinth_lamp_bl#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_bl.json' missing model for variant: 'tensura:labyrinth_lamp_bl#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_br.json' missing model for variant: 'tensura:labyrinth_lamp_br#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lamp_br.json' missing model for variant: 'tensura:labyrinth_lamp_br#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp.json' missing model for variant: 'tensura:labyrinth_lit_lamp#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp.json' missing model for variant: 'tensura:labyrinth_lit_lamp#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_tl.json' missing model for variant: 'tensura:labyrinth_lit_lamp_tl#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_tl.json' missing model for variant: 'tensura:labyrinth_lit_lamp_tl#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_tr.json' missing model for variant: 'tensura:labyrinth_lit_lamp_tr#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_tr.json' missing model for variant: 'tensura:labyrinth_lit_lamp_tr#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_bl.json' missing model for variant: 'tensura:labyrinth_lit_lamp_bl#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_bl.json' missing model for variant: 'tensura:labyrinth_lit_lamp_bl#facing=down'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_br.json' missing model for variant: 'tensura:labyrinth_lit_lamp_br#facing=up'
+[30Jun2026 22:04:12.625] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.BlockStateModelLoader/]: Exception loading blockstate definition: 'tensura:blockstates/labyrinth_lit_lamp_br.json' missing model for variant: 'tensura:labyrinth_lit_lamp_br#facing=down'
+[30Jun2026 22:04:12.665] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'minecraft:mining_station' referenced from: tensura:block/mining_station: java.io.FileNotFoundException: minecraft:models/mining_station.json
+[30Jun2026 22:04:12.670] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'minecraft:warp_pad_corner' referenced from: tensura:block/stone_warp_pad_corner: java.io.FileNotFoundException: minecraft:models/warp_pad_corner.json
+[30Jun2026 22:04:12.670] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'minecraft:warp_pad_side' referenced from: tensura:block/stone_warp_pad_side: java.io.FileNotFoundException: minecraft:models/warp_pad_side.json
+[30Jun2026 22:04:12.670] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'minecraft:warp_part_center' referenced from: tensura:block/stone_warp_pad_center: java.io.FileNotFoundException: minecraft:models/warp_part_center.json
+[30Jun2026 22:04:12.675] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'minecraft:warp_pad_full' referenced from: tensura:item/dark_labyrinth_brick_warp_pad: java.io.FileNotFoundException: minecraft:models/warp_pad_full.json
+[30Jun2026 22:04:12.676] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'gtbcs_spell_lib:item/gsl_example_lore_item' referenced from: gtbcs_spell_lib:item/gsl_example_lore_item: java.io.FileNotFoundException: gtbcs_spell_lib:models/item/gsl_example_lore_item.json
+[30Jun2026 22:04:12.676] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'p1nero_bow:item/oblivionis' referenced from: p1nero_bow:item/oblivionis: java.io.FileNotFoundException: p1nero_bow:models/item/oblivionis.json
+[30Jun2026 22:04:12.678] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'magistuarmory:item/cat_ears_decoration' referenced from: magistuarmory:item/cat_ears_decoration: java.io.FileNotFoundException: magistuarmory:models/item/cat_ears_decoration.json
+[30Jun2026 22:04:12.680] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'tensuramoreskills:item/asmoday_prison_cube' referenced from: tensuramoreskills:item/asmoday_prison_cube: java.io.FileNotFoundException: tensuramoreskills:models/item/asmoday_prison_cube.json
+[30Jun2026 22:04:12.681] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'gtbcs_spell_lib:item/gsl_example_item' referenced from: gtbcs_spell_lib:item/gsl_example_item: java.io.FileNotFoundException: gtbcs_spell_lib:models/item/gsl_example_item.json
+[30Jun2026 22:04:12.683] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'gtbcs_spell_lib:item/gsl_example_crit_staff' referenced from: gtbcs_spell_lib:item/gsl_example_crit_staff: java.io.FileNotFoundException: gtbcs_spell_lib:models/item/gsl_example_crit_staff.json
+[30Jun2026 22:04:12.685] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'aces_spell_utils:item/example_armor_leggings' referenced from: aces_spell_utils:item/example_armor_leggings: java.io.FileNotFoundException: aces_spell_utils:models/item/example_armor_leggings.json
+[30Jun2026 22:04:12.686] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'aces_spell_utils:item/example_armor_helmet' referenced from: aces_spell_utils:item/example_armor_helmet: java.io.FileNotFoundException: aces_spell_utils:models/item/example_armor_helmet.json
+[30Jun2026 22:04:12.691] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'gtbcs_spell_lib:item/gsl_test_echo' referenced from: gtbcs_spell_lib:item/gsl_test_echo: java.io.FileNotFoundException: gtbcs_spell_lib:models/item/gsl_test_echo.json
+[30Jun2026 22:04:12.696] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'epicfight_dd:item/bat_gui' referenced from: epicfight_dd:item/bat: java.io.FileNotFoundException: epicfight_dd:models/item/bat_gui.json
+[30Jun2026 22:04:12.699] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'aces_spell_utils:item/example_armor_boots' referenced from: aces_spell_utils:item/example_armor_boots: java.io.FileNotFoundException: aces_spell_utils:models/item/example_armor_boots.json
+[30Jun2026 22:04:12.700] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'aces_spell_utils:item/example_armor_chestplate' referenced from: aces_spell_utils:item/example_armor_chestplate: java.io.FileNotFoundException: aces_spell_utils:models/item/example_armor_chestplate.json
+[30Jun2026 22:04:12.708] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'irons_spellbooks:item/template_open_spell_book_model' referenced from: irons_spellbooks:item/template_open_spell_book_model: java.io.FileNotFoundException: irons_spellbooks:models/item/template_open_spell_book_model.json
+[30Jun2026 22:04:12.710] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'legendarymage:item/affinity_ring_element' referenced from: legendarymage:item/affinity_ring_element: java.io.FileNotFoundException: legendarymage:models/item/affinity_ring_element.json
+[30Jun2026 22:04:12.785] [Worker-Main-5/WARN] [net.minecraft.client.renderer.block.model.BlockModel/]: Found 'parent' loop while loading model 'aces_spell_utils:item/example_gun' in chain: aces_spell_utils:item/example_gun -> aces_spell_utils:item/example_gun
+[30Jun2026 22:04:13.785] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelManager/]: Missing textures in model block_factorys_bosses:crate#inventory:
+    minecraft:textures/atlas/blocks.png:block_factorys_bosses:entity/crate
+[30Jun2026 22:04:13.786] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelManager/]: Missing textures in model aces_spell_utils:item/scroll_ritual#standalone:
+    minecraft:textures/atlas/blocks.png:aces_spell_utils:item/scroll_ritual
+[30Jun2026 22:04:13.786] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelManager/]: Missing textures in model aces_spell_utils:item/affinity_ring_ritual#standalone:
+    minecraft:textures/atlas/blocks.png:discerning_the_eldritch:item/affinity_ring_ritual
+[30Jun2026 22:04:13.786] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelManager/]: Missing textures in model aces_spell_utils:item/affinity_ring_hydro#standalone:
+    minecraft:textures/atlas/blocks.png:discerning_the_eldritch:item/affinity_ring_hydro
+[30Jun2026 22:04:13.896] [Worker-Main-1/INFO] [io.redspace.ironsspellbooks.IronsSpellbooks/]: Got IMC []
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.spectral_blink_success', args=[]} for sound event: gametechbcs_spellbooks:spectral_blink_success
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.slam_light', args=[]} for sound event: epicfight:sfx.slam_light
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.hurt', args=[]} for sound event: cdmoveset:sfx.hurt
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.reversal', args=[]} for sound event: gametechbcs_spellbooks:reversal
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.adrenaline', args=[]} for sound event: epicfight:skill.adrenaline
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.soft_wipe', args=[]} for sound event: epicfight_dd:sfx.soft_wipe
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.endurance', args=[]} for sound event: epicfight:skill.endurance
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sounds.overgeared.forging_failed', args=[]} for sound event: overgeared:forging_failed
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.piercing_fang', args=[]} for sound event: epicfight_dd:sfx.piercing_fang
+[30Jun2026 22:04:14.231] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.adaptive_skin_increase', args=[]} for sound event: epicfight:skill.adaptive_skin_increase
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.poise_break', args=[]} for sound event: epicfight_dd:sfx.poise_break
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.stamina_pillager_death', args=[]} for sound event: epicfight:skill.stamina_pillager_death
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.nullflare', args=[]} for sound event: gametechbcs_spellbooks:nullflare
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.dual_slash', args=[]} for sound event: epicfight_dd:sfx.milady_dual_slash
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.acid_rain_active', args=[]} for sound event: gametechbcs_spellbooks:acid_rain_active
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.dodge', args=[]} for sound event: cdmoveset:sfx.dodge
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Something Died', args=[]} for sound event: epicfight_dd:sfx.killed2
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Something Died', args=[]} for sound event: epicfight_dd:sfx.killed3
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Something Died', args=[]} for sound event: epicfight_dd:sfx.killed1
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='RAAHHHHHH', args=[]} for sound event: epicfight_dd:sfx.skeleton_banging
+[30Jun2026 22:04:14.232] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.impact', args=[]} for sound event: cdmoveset:sfx.impact
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.banish_cast', args=[]} for sound event: gametechbcs_spellbooks:banish_cast
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.execute', args=[]} for sound event: cdmoveset:sfx.execute
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.orbital_void_pulse', args=[]} for sound event: gametechbcs_spellbooks:orbital_void_pulse
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.ensnare_trigger', args=[]} for sound event: gametechbcs_spellbooks:ensnare_trigger
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='ui.hover', args=[]} for sound event: epicfight:ui.hover
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Weapon Pulled Out', args=[]} for sound event: epicfight_dd:sfx.pull_out
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.aerial_collapse', args=[]} for sound event: gametechbcs_spellbooks:aerial_collapse
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.light_sweep', args=[]} for sound event: epicfight_dd:sfx.milady_extra_light
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.fatalflash', args=[]} for sound event: cdmoveset:sfx.fatalflash
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.guard_break', args=[]} for sound event: epicfight_dd:sfx.guard_break
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='A curse lies upon you', args=[]} for sound event: epicfight_dd:sfx.cursed_2
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.swordmaster', args=[]} for sound event: epicfight:skill.swordmaster
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='A curse lies upon you', args=[]} for sound event: epicfight_dd:sfx.cursed_1
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.reversal_trigger', args=[]} for sound event: gametechbcs_spellbooks:reversal_trigger
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.spectral_blink_charge', args=[]} for sound event: gametechbcs_spellbooks:spectral_blink_charge
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Sepukku has worn off', args=[]} for sound event: epicfight_dd:sfx.drained
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='yamato.cut1', args=[]} for sound event: cdmoveset:yamato.cut1
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='yamato.cut2', args=[]} for sound event: cdmoveset:yamato.cut2
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.spectral_blink', args=[]} for sound event: gametechbcs_spellbooks:spectral_blink
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.heavy_slash', args=[]} for sound event: epicfight_dd:sfx.milady_heavy_slash
+[30Jun2026 22:04:14.233] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.nullflare', args=[]} for sound event: gametechbcs_spellbooks:nullflare_two
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.vengeance', args=[]} for sound event: epicfight:skill.vengeance
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.ensnare_prepare', args=[]} for sound event: gametechbcs_spellbooks:ensnare_prepare
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.flames_reborn_reappear', args=[]} for sound event: gametechbcs_spellbooks:flames_reborn_reappear
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='yamato.yamato_in', args=[]} for sound event: cdmoveset:yamato.yamato_in
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.skills', args=[]} for sound event: cdmoveset:sfx.skills
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.banish_charge', args=[]} for sound event: gametechbcs_spellbooks:banish_charge
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.emergency_escape', args=[]} for sound event: epicfight:skill.emergency_escape
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.technician', args=[]} for sound event: epicfight:skill.technician
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.catharsis', args=[]} for sound event: epicfight:skill.catharsis
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.damage', args=[]} for sound event: cdmoveset:sfx.damage
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='entity.hit.old_fall', args=[]} for sound event: epicfight:entity.hit.old_fall
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='Critical Hit', args=[]} for sound event: epicfight_dd:sfx.critical_hit
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.slam_heavy', args=[]} for sound event: epicfight:sfx.slam_heavy
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.battlestaff_swing', args=[]} for sound event: epicfight_dd:sfx.battlestaff_swing
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.power', args=[]} for sound event: cdmoveset:sfx.power
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.adaptive_skin_decrease', args=[]} for sound event: epicfight:skill.adaptive_skin_decrease
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.guard', args=[]} for sound event: cdmoveset:sfx.guard
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='entity.wither.wither_spell_armor', args=[]} for sound event: epicfight:entity.wither.wither_spell_armor
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.slash', args=[]} for sound event: epicfight_dd:sfx.milady_slash
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.yamato_step', args=[]} for sound event: cdmoveset:sfx.yamato_step
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.seethrough', args=[]} for sound event: cdmoveset:sfx.seethrough
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.flames_reborn_revive', args=[]} for sound event: gametechbcs_spellbooks:flames_reborn_revive
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='skill.hypervitality', args=[]} for sound event: epicfight:skill.hypervitality
+[30Jun2026 22:04:14.235] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.refined_revenant_breath', args=[]} for sound event: gametechbcs_spellbooks:refined_revenant_breath
+[30Jun2026 22:04:14.236] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='sfx.step', args=[]} for sound event: cdmoveset:sfx.step
+[30Jun2026 22:04:14.236] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.displacement', args=[]} for sound event: gametechbcs_spellbooks:displacement
+[30Jun2026 22:04:14.236] [Render thread/ERROR] [net.minecraft.client.sounds.SoundManager/]: Missing subtitle translation{key='subtitles.shatterpoint_cast', args=[]} for sound event: gametechbcs_spellbooks:shatterpoint_cast
+[30Jun2026 22:04:14.236] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[30Jun2026 22:04:14.236] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[30Jun2026 22:04:14.237] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: epicfight:sfx.no_sound
+[30Jun2026 22:04:14.237] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: irons_spellbooks:entity.generic.swing_weird
+[30Jun2026 22:04:14.237] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: irons_spellbooks:entity.dead_king.music.drum_loop
+[30Jun2026 22:04:14.237] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: gametechbcs_spellbooks:manifestation
+[30Jun2026 22:04:14.237] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: gametechbcs_spellbooks:abyssal_strike_trigger
+[30Jun2026 22:04:14.299] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on PL2288H (NVIDIA High Definition Audio)
+[30Jun2026 22:04:14.300] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[30Jun2026 22:04:14.489] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 4096x4096x4 minecraft:textures/atlas/blocks.png-atlas
+[30Jun2026 22:04:14.557] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[30Jun2026 22:04:14.558] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x2048x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[30Jun2026 22:04:14.581] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[30Jun2026 22:04:14.584] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[30Jun2026 22:04:14.589] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[30Jun2026 22:04:14.590] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[30Jun2026 22:04:14.591] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[30Jun2026 22:04:14.591] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[30Jun2026 22:04:14.989] [Render thread/ERROR] [epicfight/]: Can't load layer file minecraft:animated_layers/player/waveycapes.json for entity.minecraft.player: dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer (This is develop-only message and neglectable if the resource is not belong to you)
+[30Jun2026 22:04:14.991] [Render thread/ERROR] [epicfight/]: Can't load layer file minecraft:animated_layers/player/waveycapes.json for entity.minecraft.player: dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer (This is develop-only message and neglectable if the resource is not belong to you)
+[30Jun2026 22:04:15.001] [Render thread/ERROR] [epicfight/]: Can't load layer file minecraft:animated_layers/player/waveycapes.json for entity.minecraft.player: dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer (This is develop-only message and neglectable if the resource is not belong to you)
+[30Jun2026 22:04:15.146] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 4096x4096x0 minecraft:textures/atlas/particles.png-atlas
+[30Jun2026 22:04:15.194] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[30Jun2026 22:04:15.195] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x0 minecraft:textures/atlas/mob_effects.png-atlas
+[30Jun2026 22:04:15.197] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[30Jun2026 22:04:15.197] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[30Jun2026 22:04:15.218] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[30Jun2026 22:04:15.355] [Render thread/WARN] [dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry/]: [WARNING FOR MOD DEVS] Animation player_animation/casting_animations.json is in wrong directory: "player_animation", please place it in "player_animations".
+[30Jun2026 22:04:15.364] [Render thread/WARN] [dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry/]: [WARNING FOR MOD DEVS] Animation player_animation/casting_animations.json is in wrong directory: "player_animation", please place it in "player_animations".
+[30Jun2026 22:04:15.366] [Render thread/ERROR] [dev.kosmx.playerAnim.minecraftApi.codec.AnimationCodecs/]: Unknown error when trying to apply emotecraft
+java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100) ~[?:?]
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106) ~[?:?]
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302) ~[?:?]
+	at java.base/java.util.Objects.checkIndex(Objects.java:385) ~[?:?]
+	at java.base/java.util.ArrayList.get(ArrayList.java:427) ~[?:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.JsonArray.get(JsonArray.java:228) ~[gson-2.10.1.jar%23114!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readDataAtTick(GeckoLibSerializer.java:216) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.lambda$readBone$3(GeckoLibSerializer.java:179) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readBone(GeckoLibSerializer.java:170) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.keyframeSerializer(GeckoLibSerializer.java:102) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.lambda$readAnimations$0(GeckoLibSerializer.java:84) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readAnimations(GeckoLibSerializer.java:65) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.deserialize(GeckoLibSerializer.java:58) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.AnimationJson.deserialize(AnimationJson.java:53) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.AnimationJson.deserialize(AnimationJson.java:16) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.internal.bind.TreeTypeAdapter.read(TreeTypeAdapter.java:76) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1227) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1137) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1107) ~[gson-2.10.1.jar%23114!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.codec.AbstractGsonCodec.decode(AbstractGsonCodec.java:25) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.codec.AnimationCodecs.deserialize(AnimationCodecs.java:77) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry.resourceLoaderCallback(PlayerAnimationRegistry.java:127) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.packs.resources.ResourceManagerReloadListener.lambda$reload$0(ResourceManagerReloadListener.java:21) ~[neoforge-21.1.228.jar%23195!/:?]
+	at java.base/java.util.concurrent.CompletableFuture$UniRun.tryFire(CompletableFuture.java:787) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:86) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:148) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:24) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:122) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:111) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.runTick(Minecraft.java:1155) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.run(Minecraft.java:807) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.main.Main.main(Main.java:230) ~[neoforge-21.1.228.jar%23195!/:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:124) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%23132!/:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?]
+[30Jun2026 22:04:15.368] [Render thread/ERROR] [dev.kosmx.playerAnim.minecraftApi.codec.AnimationCodecs/]: Unknown error when trying to apply gecko_legacy
+java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100) ~[?:?]
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106) ~[?:?]
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302) ~[?:?]
+	at java.base/java.util.Objects.checkIndex(Objects.java:385) ~[?:?]
+	at java.base/java.util.ArrayList.get(ArrayList.java:427) ~[?:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.JsonArray.get(JsonArray.java:228) ~[gson-2.10.1.jar%23114!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readDataAtTick(GeckoLibSerializer.java:216) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.lambda$readBone$3(GeckoLibSerializer.java:179) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readBone(GeckoLibSerializer.java:170) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.keyframeSerializer(GeckoLibSerializer.java:102) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.lambda$readAnimations$0(GeckoLibSerializer.java:84) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.readAnimations(GeckoLibSerializer.java:65) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.deserialize(GeckoLibSerializer.java:58) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.deserialize(GeckoLibSerializer.java:53) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer.deserialize(GeckoLibSerializer.java:24) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.internal.bind.TreeTypeAdapter.read(TreeTypeAdapter.java:76) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1227) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1137) ~[gson-2.10.1.jar%23114!/:?]
+	at MC-BOOTSTRAP/com.google.gson@2.10.1/com.google.gson.Gson.fromJson(Gson.java:1107) ~[gson-2.10.1.jar%23114!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.codec.AbstractGsonCodec.decode(AbstractGsonCodec.java:25) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.codec.AnimationCodecs.deserialize(AnimationCodecs.java:77) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/playeranimator@2.0.4+1.21.1/dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry.resourceLoaderCallback(PlayerAnimationRegistry.java:127) ~[player-animation-lib-forge-2.0.4+1.21.1.jar%23237!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.packs.resources.ResourceManagerReloadListener.lambda$reload$0(ResourceManagerReloadListener.java:21) ~[neoforge-21.1.228.jar%23195!/:?]
+	at java.base/java.util.concurrent.CompletableFuture$UniRun.tryFire(CompletableFuture.java:787) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:86) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:148) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:24) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:122) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:111) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.runTick(Minecraft.java:1155) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.Minecraft.run(Minecraft.java:807) ~[neoforge-21.1.228.jar%23195!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.main.Main.main(Main.java:230) ~[neoforge-21.1.228.jar%23195!/:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:124) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23150!/:4.0]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%23132!/:?]
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%23132!/:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?]
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?]
+[30Jun2026 22:04:15.369] [Render thread/WARN] [dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry/]: [WARNING FOR MOD DEVS] Animation player_animation/model_player_join.animation.json is in wrong directory: "player_animation", please place it in "player_animations".
+[30Jun2026 22:04:15.371] [Render thread/WARN] [dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry/]: [WARNING FOR MOD DEVS] Animation player_animation/model_player_leave.animation.json is in wrong directory: "player_animation", please place it in "player_animations".
+[30Jun2026 22:04:19.871] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_break1
+[30Jun2026 22:04:19.872] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_break2
+[30Jun2026 22:04:19.874] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_dualsword_hit
+[30Jun2026 22:04:19.874] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_greatsword_hit
+[30Jun2026 22:04:19.875] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_longsword_hit
+[30Jun2026 22:04:19.875] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_longsword_hit_active1
+[30Jun2026 22:04:19.876] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_longsword_hit_active2
+[30Jun2026 22:04:19.876] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_spear_hit
+[30Jun2026 22:04:19.877] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_sword_hit
+[30Jun2026 22:04:19.877] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_sword_hit_active1
+[30Jun2026 22:04:19.878] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_sword_hit_active2
+[30Jun2026 22:04:19.878] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_sword_hit_active3
+[30Jun2026 22:04:19.879] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight:biped/skill/visual_effect/guard_uchigatana_hit
+[30Jun2026 22:04:19.884] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/eclipse_att1
+[30Jun2026 22:04:19.891] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/eclipse_att2
+[30Jun2026 22:04:19.895] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/eclipse_att3
+[30Jun2026 22:04:19.899] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_airslash
+[30Jun2026 22:04:19.906] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_auto1
+[30Jun2026 22:04:19.910] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_auto2
+[30Jun2026 22:04:19.914] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_auto3
+[30Jun2026 22:04:19.921] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_auto4
+[30Jun2026 22:04:19.927] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_auto5
+[30Jun2026 22:04:19.933] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/evil_odachi_dash
+[30Jun2026 22:04:19.935] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/war_sickle_dash
+[30Jun2026 22:04:19.940] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/warsickle_att1
+[30Jun2026 22:04:19.945] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/warsickle_att2
+[30Jun2026 22:04:19.949] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/combat/warsickle_att3
+[30Jun2026 22:04:19.953] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/deathanims/death_arrow_mob
+[30Jun2026 22:04:19.954] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/deathanims/death_fall_mob
+[30Jun2026 22:04:19.962] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/deathanims/death_sel
+[30Jun2026 22:04:19.962] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execproxy/ems
+[30Jun2026 22:04:19.962] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execproxy/ems_h
+[30Jun2026 22:04:19.966] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/battlestaff_execute
+[30Jun2026 22:04:19.972] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/battlestaff_executed
+[30Jun2026 22:04:19.984] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/evil_odachi_execute
+[30Jun2026 22:04:19.998] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/evil_odachi_executed
+[30Jun2026 22:04:20.006] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/milady/milady_execution
+[30Jun2026 22:04:20.016] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/milady/milady_execution_hit
+[30Jun2026 22:04:20.021] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/milady/milady_special_execution
+[30Jun2026 22:04:20.025] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/milady/milady_special_execution_hit
+[30Jun2026 22:04:20.028] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/unarmed/stomped
+[30Jun2026 22:04:20.031] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/execution/unarmed/stompee
+[30Jun2026 22:04:20.036] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/eclipse_idle
+[30Jun2026 22:04:20.038] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_guard
+[30Jun2026 22:04:20.039] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_guard_hit
+[30Jun2026 22:04:20.044] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_idle
+[30Jun2026 22:04:20.045] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_jump
+[30Jun2026 22:04:20.047] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_kneel
+[30Jun2026 22:04:20.050] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_neutralize
+[30Jun2026 22:04:20.051] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_parry1
+[30Jun2026 22:04:20.053] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_parry2
+[30Jun2026 22:04:20.054] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_run
+[30Jun2026 22:04:20.055] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_sneak
+[30Jun2026 22:04:20.056] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/evil_odachi_walk
+[30Jun2026 22:04:20.060] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/living/warsickle_idle
+[30Jun2026 22:04:20.070] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/evil_beam
+[30Jun2026 22:04:20.073] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/evil_odachi_battojutso
+[30Jun2026 22:04:20.080] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/evil_odachi_counter
+[30Jun2026 22:04:20.085] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/evil_odachi_overheadslash_charge
+[30Jun2026 22:04:20.089] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/evil_odachi_overheadslash_release
+[30Jun2026 22:04:20.095] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: epicfight_dd:biped/skill/wildstrikes_dual
+[30Jun2026 22:04:20.097] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: indestructible:guard/guard_agony
+[30Jun2026 22:04:20.098] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: indestructible:guard/guard_herrscher
+[30Jun2026 22:04:20.099] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: indestructible:guard/guard_ruine
+[30Jun2026 22:04:20.099] [Render thread/ERROR] [epicfight/]: Datapack animation reading failed: No constructor information has provided: indestructible:guard/guard_yamato
+[30Jun2026 22:04:20.280] [Render thread/WARN] [epicfight/]: Failed to load item skin: no item named epicfight_dd:eclipse
+[30Jun2026 22:04:20.288] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
+[30Jun2026 22:04:20.294] [Render thread/INFO] [simplytooltips/]: [SimplyTooltips] Loaded 32 theme(s)
+[30Jun2026 22:04:20.297] [Render thread/INFO] [simplytooltips/]: [SimplyTooltips] Loaded 147 item theme(s), 146 item badge override(s), 27 tag entries

@@ -92,7 +92,7 @@ class MagicEligibilityResolverTest {
         assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
         assertFalse(result.missingStats().isEmpty(), "missing stats should list ARCANE_POWER");
         assertTrue(result.missingStats().stream()
-                .anyMatch(g -> g.stat() == StatType.ARCANE_POWER));
+                .anyMatch(g -> g.contains("Arcane Power")));
     }
 
     @Test
@@ -108,7 +108,7 @@ class MagicEligibilityResolverTest {
         MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, frostStep);
         assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
         assertTrue(result.missingStats().stream()
-                .anyMatch(g -> g.stat() == StatType.AGILITY));
+                .anyMatch(g -> g.contains("Agility")));
     }
 
     @Test
@@ -129,8 +129,8 @@ class MagicEligibilityResolverTest {
         PlayerStatData d = new PlayerStatData();
         d.setMagicRace(MagicRace.HUMAN);
         d.addArcanePoints(5);
-        d.setLevel(StatType.ARCANE_POWER.index, 0); // base 1 - 1 (human) = 0 → OK
-        d.setLevel(StatType.ERUDITION.index, 0);    // idem
+        d.setLevel(StatType.ARCANE_POWER.index, 1); // condition.minLevel = 1
+        d.setLevel(StatType.ERUDITION.index, 1);    // condition.minLevel = 1
         MagicNode trunk = MagicTreeCatalog.byId("common/foundation/arcane_focus");
         assertEquals(MagicEligibilityResolver.Failure.NONE,
                 MagicEligibilityResolver.evaluate(d, trunk).failure());

@@ -3,7 +3,7 @@ package tong.statmod.integration.epicfight;
 import tong.statmod.client.cosmetic.RaceCosmeticProfile;
 
 public final class EpicFightRaceCameraHelper {
-    private static final float DWARF_CAMERA_HEIGHT = 1.6f;
+    private static final float DWARF_CAMERA_HEIGHT = 2.0f;
 
     private EpicFightRaceCameraHelper() {}
 

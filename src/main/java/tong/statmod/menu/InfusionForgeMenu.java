@@ -11,6 +11,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import tong.statmod.block.ForgingBlocks;
 import tong.statmod.block.entity.InfusionForgeBlockEntity;
+import tong.statmod.forge.ForgeStationItemRules;
+import tong.statmod.forge.InfusionForgeRecipeCatalog;
 
 public class InfusionForgeMenu extends AbstractContainerMenu {
 
@@ -37,13 +39,53 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
         this.inputSlots = inputSlots;
         this.access = access;
 
-        this.addSlot(new Slot(inputSlots, 0, 26, 38));
-        this.addSlot(new Slot(inputSlots, 1, 62, 38));
-        this.addSlot(new Slot(inputSlots, 2, 98, 38));
+        this.addSlot(new Slot(inputSlots, 0, 26, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isRoughIntermediate(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                InfusionForgeMenu.this.slotsChanged(InfusionForgeMenu.this.inputSlots);
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 1, 62, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isRuneEssence(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                InfusionForgeMenu.this.slotsChanged(InfusionForgeMenu.this.inputSlots);
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 2, 98, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isGrip(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                InfusionForgeMenu.this.slotsChanged(InfusionForgeMenu.this.inputSlots);
+            }
+        });
         this.addSlot(new Slot(resultSlots, 0, 134, 38) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
+            }
+
+            @Override
+            public void onTake(Player player, ItemStack stack) {
+                consumeInputs();
+                super.onTake(player, stack);
+                InfusionForgeMenu.this.slotsChanged(InfusionForgeMenu.this.inputSlots);
             }
         });
 
@@ -90,7 +132,28 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public void slotsChanged(Container container) {
+        super.slotsChanged(container);
+        if (container != this.inputSlots) {
+            return;
+        }
+
+        ItemStack result = InfusionForgeRecipeCatalog.resultForIds(
+                ForgeStationItemRules.itemId(inputSlots.getItem(0)),
+                ForgeStationItemRules.itemId(inputSlots.getItem(1)),
+                ForgeStationItemRules.itemId(inputSlots.getItem(2)));
+        resultSlots.setItem(0, result);
+        broadcastChanges();
+    }
+
+    @Override
     public boolean stillValid(Player player) {
         return stillValid(access, player, ForgingBlocks.INFUSION_FORGE.get());
+    }
+
+    private void consumeInputs() {
+        for (int i = 0; i < INPUT_SLOT_COUNT; i++) {
+            inputSlots.removeItem(i, 1);
+        }
     }
 }

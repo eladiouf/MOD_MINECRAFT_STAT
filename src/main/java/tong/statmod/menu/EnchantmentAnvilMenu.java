@@ -11,6 +11,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import tong.statmod.block.ForgingBlocks;
 import tong.statmod.block.entity.EnchantmentAnvilBlockEntity;
+import tong.statmod.forge.EnchantmentAnvilRecipeCatalog;
+import tong.statmod.forge.ForgeStationItemRules;
 
 public class EnchantmentAnvilMenu extends AbstractContainerMenu {
 
@@ -22,6 +24,7 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
     private final Container inputSlots;
     private final ResultContainer resultSlots = new ResultContainer();
     private final ContainerLevelAccess access;
+    private EnchantmentAnvilRecipeCatalog.RecipeSpec currentRecipe;
 
     public EnchantmentAnvilMenu(int containerId, Inventory playerInventory, EnchantmentAnvilBlockEntity blockEntity) {
         this(containerId, playerInventory, blockEntity.getContainer(),
@@ -37,14 +40,65 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
         this.inputSlots = inputSlots;
         this.access = access;
 
-        this.addSlot(new Slot(inputSlots, 0, 17, 38));
-        this.addSlot(new Slot(inputSlots, 1, 44, 38));
-        this.addSlot(new Slot(inputSlots, 2, 71, 38));
-        this.addSlot(new Slot(inputSlots, 3, 98, 38));
+        this.addSlot(new Slot(inputSlots, 0, 17, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isRoughIntermediate(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                EnchantmentAnvilMenu.this.slotsChanged(EnchantmentAnvilMenu.this.inputSlots);
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 1, 44, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isShardLikeCatalyst(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                EnchantmentAnvilMenu.this.slotsChanged(EnchantmentAnvilMenu.this.inputSlots);
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 2, 71, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isShardLikeCatalyst(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                EnchantmentAnvilMenu.this.slotsChanged(EnchantmentAnvilMenu.this.inputSlots);
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 3, 98, 38) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ForgeStationItemRules.isAnvilSupport(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                EnchantmentAnvilMenu.this.slotsChanged(EnchantmentAnvilMenu.this.inputSlots);
+            }
+        });
         this.addSlot(new Slot(resultSlots, 0, 134, 38) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
+            }
+
+            @Override
+            public void onTake(Player player, ItemStack stack) {
+                consumeInputs();
+                super.onTake(player, stack);
+                EnchantmentAnvilMenu.this.slotsChanged(EnchantmentAnvilMenu.this.inputSlots);
             }
         });
 
@@ -91,7 +145,40 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public void slotsChanged(Container container) {
+        super.slotsChanged(container);
+        if (container != this.inputSlots) {
+            return;
+        }
+
+        currentRecipe = EnchantmentAnvilRecipeCatalog.match(
+                ForgeStationItemRules.itemId(inputSlots.getItem(0)),
+                inputSlots.getItem(0).getCount(),
+                ForgeStationItemRules.itemId(inputSlots.getItem(1)),
+                inputSlots.getItem(1).getCount(),
+                ForgeStationItemRules.itemId(inputSlots.getItem(2)),
+                inputSlots.getItem(2).getCount(),
+                ForgeStationItemRules.itemId(inputSlots.getItem(3)),
+                inputSlots.getItem(3).getCount());
+        resultSlots.setItem(0, EnchantmentAnvilRecipeCatalog.createResult(currentRecipe));
+        broadcastChanges();
+    }
+
+    @Override
     public boolean stillValid(Player player) {
         return stillValid(access, player, ForgingBlocks.ENCHANTMENT_ANVIL.get());
+    }
+
+    private void consumeInputs() {
+        if (currentRecipe == null) {
+            return;
+        }
+
+        inputSlots.removeItem(0, 1);
+        inputSlots.removeItem(1, currentRecipe.primaryCount());
+        if (currentRecipe.secondaryCount() > 0) {
+            inputSlots.removeItem(2, currentRecipe.secondaryCount());
+        }
+        inputSlots.removeItem(3, currentRecipe.supportCount());
     }
 }

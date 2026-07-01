@@ -34,6 +34,14 @@ public final class ForgeStationItemRules {
         return isGripId(itemId(stack));
     }
 
+    public static boolean isShardLikeCatalyst(ItemStack stack) {
+        return isShardLikeCatalystId(itemId(stack));
+    }
+
+    public static boolean isAnvilSupport(ItemStack stack) {
+        return isAnvilSupportId(itemId(stack));
+    }
+
     public static boolean isRoughIntermediateId(String id) {
         return id != null && id.startsWith("statmod:rough_");
     }
@@ -44,5 +52,19 @@ public final class ForgeStationItemRules {
 
     public static boolean isGripId(String id) {
         return GRIP_IDS.contains(id);
+    }
+
+    public static boolean isShardLikeCatalystId(String id) {
+        return id != null
+                && (id.endsWith("_shard")
+                || id.endsWith("_gem")
+                || isRuneEssenceId(id));
+    }
+
+    public static boolean isAnvilSupportId(String id) {
+        return isGripId(id)
+                || (id != null && (id.endsWith("_tongs")
+                || id.endsWith("_hammer")
+                || id.endsWith("_smithing_hammer")));
     }
 }

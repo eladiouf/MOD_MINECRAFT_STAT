@@ -15,11 +15,13 @@ class ForgeStationItemRulesTest {
         assertTrue(ForgeStationItemRules.isGripId("statmod:runic_grip"));
         assertTrue(ForgeStationItemRules.isShardLikeCatalystId("slu:flame_shard"));
         assertTrue(ForgeStationItemRules.isShardLikeCatalystId("simplyswords:runefused_gem"));
-        assertTrue(ForgeStationItemRules.isAnvilSupportId("statmod:wire_wrap"));
+        assertTrue(ForgeStationItemRules.isAnvilSupportId("statmod:basic_forge_tongs"));
+        assertTrue(ForgeStationItemRules.isAnvilSupportId("statmod:basic_smithing_hammer"));
 
         assertFalse(ForgeStationItemRules.isRoughIntermediateId("minecraft:diamond_sword"));
         assertFalse(ForgeStationItemRules.isRuneEssenceId("slu:flame_shard"));
         assertFalse(ForgeStationItemRules.isGripId("minecraft:stick"));
         assertFalse(ForgeStationItemRules.isShardLikeCatalystId("minecraft:stick"));
+        assertFalse(ForgeStationItemRules.isAnvilSupportId("statmod:runic_grip"));
     }
 }

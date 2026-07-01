@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_arcane"
+    },
+    {
+      "item": "slu:flame_shard"
+    },
+    {
+      "item": "slu:flame_shard"
+    },
+    {
+      "item": "statmod:basic_forge_tongs"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_katana",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:fire_aspect": 2,
+          "minecraft:sharpness": 3
+        }
+      }
+    }
+  }
+}

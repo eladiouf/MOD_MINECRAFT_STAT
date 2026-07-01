@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_high_magisteel"
+    },
+    {
+      "item": "slu:wither_shard"
+    },
+    {
+      "item": "slu:wither_shard"
+    },
+    {
+      "item": "slu:wither_shard"
+    },
+    {
+      "item": "statmod:basic_smithing_hammer"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_claymore",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:smite": 4,
+          "minecraft:unbreaking": 2
+        }
+      }
+    }
+  }
+}

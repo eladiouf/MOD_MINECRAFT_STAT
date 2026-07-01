@@ -14,7 +14,7 @@ class EnchantmentAnvilRecipeCatalogTest {
                         "statmod:rough_blade_arcane", 1,
                         "slu:flame_shard", 2,
                         "", 0,
-                        "statmod:runic_grip", 1);
+                        "statmod:basic_forge_tongs", 1);
 
         assertNotNull(recipe);
         assertEquals("simplyswords:runic_katana", recipe.resultId());
@@ -29,11 +29,23 @@ class EnchantmentAnvilRecipeCatalogTest {
                         "statmod:rough_blade_high_magisteel", 1,
                         "slu:wither_shard", 3,
                         "", 0,
-                        "statmod:runic_grip", 1);
+                        "statmod:basic_smithing_hammer", 1);
 
         assertNotNull(recipe);
         assertEquals("simplyswords:runic_claymore", recipe.resultId());
         assertEquals(3, recipe.primaryCount());
         assertEquals(4, recipe.enchantments().get("minecraft:smite"));
+    }
+
+    @Test
+    void catalog_rejectsLegacyGripSupportForAdvancedRecipes() {
+        EnchantmentAnvilRecipeCatalog.RecipeSpec recipe =
+                EnchantmentAnvilRecipeCatalog.match(
+                        "statmod:rough_blade_arcane", 1,
+                        "slu:flame_shard", 2,
+                        "", 0,
+                        "statmod:runic_grip", 1);
+
+        assertEquals(null, recipe);
     }
 }

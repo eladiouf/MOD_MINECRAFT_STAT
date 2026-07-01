@@ -12,6 +12,9 @@ public final class ForgeStationItemRules {
             "statmod:leather_wrap",
             "statmod:wire_wrap",
             "statmod:runic_grip");
+    private static final Set<String> ANVIL_SUPPORT_TOOL_IDS = Set.of(
+            "statmod:basic_forge_tongs",
+            "statmod:basic_smithing_hammer");
 
     private ForgeStationItemRules() {}
 
@@ -62,7 +65,7 @@ public final class ForgeStationItemRules {
     }
 
     public static boolean isAnvilSupportId(String id) {
-        return isGripId(id)
+        return ANVIL_SUPPORT_TOOL_IDS.contains(id)
                 || (id != null && (id.endsWith("_tongs")
                 || id.endsWith("_hammer")
                 || id.endsWith("_smithing_hammer")));

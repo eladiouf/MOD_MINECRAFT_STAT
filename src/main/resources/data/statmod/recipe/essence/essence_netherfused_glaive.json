@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_spear_tip_pure_magisteel"
+    },
+    {
+      "item": "simplyswords:netherfused_gem"
+    },
+    {
+      "item": "statmod:basic_forge_tongs"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_glaive",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:fire_aspect": 2,
+          "minecraft:sharpness": 4,
+          "minecraft:unbreaking": 2
+        }
+      }
+    }
+  }
+}

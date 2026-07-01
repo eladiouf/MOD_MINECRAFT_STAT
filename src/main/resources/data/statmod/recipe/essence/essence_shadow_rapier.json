@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_adamantite"
+    },
+    {
+      "item": "slu:shadow_shard"
+    },
+    {
+      "item": "slu:shadow_shard"
+    },
+    {
+      "item": "statmod:basic_forge_tongs"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_rapier",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:knockback": 2,
+          "minecraft:sharpness": 4
+        }
+      }
+    }
+  }
+}

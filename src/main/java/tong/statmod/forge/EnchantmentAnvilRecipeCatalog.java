@@ -17,6 +17,17 @@ import java.util.Map;
 
 public final class EnchantmentAnvilRecipeCatalog {
 
+    public enum InputState {
+        NONE,
+        MISSING_SUPPORT,
+        WRONG_SUPPORT,
+        SUPPORT_OK,
+        INVALID_RECIPE
+    }
+
+    public record InputFeedback(InputState state, String expectedSupportId) {
+    }
+
     private static final List<RecipeSpec> RECIPES = List.of(
             new RecipeSpec("statmod:rough_blade_arcane", "slu:flame_shard", 2, "", 0,
                     "statmod:basic_forge_tongs", 1, "simplyswords:runic_katana",
@@ -75,6 +86,44 @@ public final class EnchantmentAnvilRecipeCatalog {
             return recipe;
         }
         return null;
+    }
+
+    public static InputFeedback describeInputFeedback(
+            String baseId,
+            String primaryId,
+            String secondaryId,
+            String supportId) {
+        if (baseId.isEmpty() && primaryId.isEmpty() && secondaryId.isEmpty() && supportId.isEmpty()) {
+            return new InputFeedback(InputState.NONE, "");
+        }
+
+        String expectedSupportId = expectedSupportIdForIds(baseId, primaryId, secondaryId);
+        if (expectedSupportId.isEmpty()) {
+            return new InputFeedback(InputState.INVALID_RECIPE, "");
+        }
+        if (supportId.isEmpty()) {
+            return new InputFeedback(InputState.MISSING_SUPPORT, expectedSupportId);
+        }
+        if (!expectedSupportId.equals(supportId)) {
+            return new InputFeedback(InputState.WRONG_SUPPORT, expectedSupportId);
+        }
+        return new InputFeedback(InputState.SUPPORT_OK, expectedSupportId);
+    }
+
+    public static String expectedSupportIdForIds(String baseId, String primaryId, String secondaryId) {
+        for (RecipeSpec recipe : RECIPES) {
+            if (!recipe.baseId.equals(baseId)) {
+                continue;
+            }
+            if (!recipe.primaryId.equals(primaryId)) {
+                continue;
+            }
+            if (!recipe.secondaryId.equals(secondaryId)) {
+                continue;
+            }
+            return recipe.supportId;
+        }
+        return "";
     }
 
     public static ItemStack createResult(RecipeSpec recipe) {

@@ -230,5 +230,10 @@
   "item.statmod.rune_essence_mithril": "Mithril Rune Essence",
   "itemGroup.statmod.delta_subtitle": "Magic Forge",
   "block.statmod.enchantment_anvil": "Enchantment Anvil",
-  "item.statmod.enchantment_anvil": "Enchantment Anvil"
+  "item.statmod.enchantment_anvil": "Enchantment Anvil",
+  "statmod.enchantment_anvil.feedback.ready": "Forge support aligned",
+  "statmod.enchantment_anvil.feedback.need_support": "Support slot needs %s",
+  "statmod.enchantment_anvil.feedback.wrong_support": "This recipe needs %s",
+  "statmod.enchantment_anvil.feedback.invalid_recipe": "No valid enchantment recipe",
+  "statmod.enchantment_anvil.tooltip.support_slot": "Forge support slot"
 }

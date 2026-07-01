@@ -166,5 +166,10 @@
   "item.statmod.rune_essence_mithril": "Essence Runique de Mithril",
   "itemGroup.statmod.delta_subtitle": "Forge Magique",
   "block.statmod.enchantment_anvil": "Enclume d'Enchantement",
-  "item.statmod.enchantment_anvil": "Enclume d'Enchantement"
+  "item.statmod.enchantment_anvil": "Enclume d'Enchantement",
+  "statmod.enchantment_anvil.feedback.ready": "Support de forge aligné",
+  "statmod.enchantment_anvil.feedback.need_support": "Le slot support demande %s",
+  "statmod.enchantment_anvil.feedback.wrong_support": "Cette recette demande %s",
+  "statmod.enchantment_anvil.feedback.invalid_recipe": "Aucune recette d'enchantement valide",
+  "statmod.enchantment_anvil.tooltip.support_slot": "Slot de support de forge"
 }

@@ -25,6 +25,8 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
     private final ResultContainer resultSlots = new ResultContainer();
     private final ContainerLevelAccess access;
     private EnchantmentAnvilRecipeCatalog.RecipeSpec currentRecipe;
+    private EnchantmentAnvilRecipeCatalog.InputFeedback inputFeedback =
+            new EnchantmentAnvilRecipeCatalog.InputFeedback(EnchantmentAnvilRecipeCatalog.InputState.NONE, "");
 
     public EnchantmentAnvilMenu(int containerId, Inventory playerInventory, EnchantmentAnvilBlockEntity blockEntity) {
         this(containerId, playerInventory, blockEntity.getContainer(),
@@ -160,6 +162,11 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
                 inputSlots.getItem(2).getCount(),
                 ForgeStationItemRules.itemId(inputSlots.getItem(3)),
                 inputSlots.getItem(3).getCount());
+        inputFeedback = EnchantmentAnvilRecipeCatalog.describeInputFeedback(
+                ForgeStationItemRules.itemId(inputSlots.getItem(0)),
+                ForgeStationItemRules.itemId(inputSlots.getItem(1)),
+                ForgeStationItemRules.itemId(inputSlots.getItem(2)),
+                ForgeStationItemRules.itemId(inputSlots.getItem(3)));
         resultSlots.setItem(0, EnchantmentAnvilRecipeCatalog.createResult(currentRecipe));
         broadcastChanges();
     }
@@ -180,5 +187,22 @@ public class EnchantmentAnvilMenu extends AbstractContainerMenu {
             inputSlots.removeItem(2, currentRecipe.secondaryCount());
         }
         inputSlots.removeItem(3, currentRecipe.supportCount());
+    }
+
+    public boolean hasCraftableResult() {
+        return currentRecipe != null;
+    }
+
+    public EnchantmentAnvilRecipeCatalog.InputFeedback getInputFeedback() {
+        return inputFeedback;
+    }
+
+    public ItemStack getExpectedSupportStack() {
+        String supportId = inputFeedback.expectedSupportId();
+        if (supportId.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(
+                net.minecraft.resources.ResourceLocation.parse(supportId)));
     }
 }

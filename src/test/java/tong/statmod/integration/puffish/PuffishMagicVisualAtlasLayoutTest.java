@@ -41,4 +41,49 @@ class PuffishMagicVisualAtlasLayoutTest {
                 "root should keep a stronger breathing halo than ordinary signature nodes"
                         + " (root=" + rootNearest + ", fire=" + fireNearest + ")");
     }
+
+    @Test
+    void root_stays_tightly_centered_in_the_visual_atlas() {
+        PuffishMagicTreeBuilder.LayoutSnapshot snapshot = PuffishMagicTreeBuilder.debugLayoutSnapshot();
+        int dx = Math.abs(snapshot.root().x() - snapshot.boundsCenter().x());
+        int dy = Math.abs(snapshot.root().y() - snapshot.boundsCenter().y());
+        assertTrue(dx <= 20, "root should be tightly centered on X, actual delta=" + dx);
+        assertTrue(dy <= 40, "root should be tightly centered on Y, actual delta=" + dy);
+    }
+
+    @Test
+    void air_and_earth_openers_balance_their_diagonal_quadrants() {
+        PuffishMagicTreeBuilder.LayoutSnapshot snapshot = PuffishMagicTreeBuilder.debugLayoutSnapshot();
+        PuffishMagicTreeBuilder.NodePlacement root = snapshot.root();
+        PuffishMagicTreeBuilder.NodePlacement air = snapshot.placements().get("air/opener/spark_awakening");
+        PuffishMagicTreeBuilder.NodePlacement earth = snapshot.placements().get("earth/opener/nature_awakening");
+        assertNotNull(air);
+        assertNotNull(earth);
+        int horizontalDelta = Math.abs(Math.abs(root.x() - air.x()) - Math.abs(earth.x() - root.x()));
+        int verticalDelta = Math.abs(Math.abs(root.y() - air.y()) - Math.abs(earth.y() - root.y()));
+        assertTrue(horizontalDelta <= 60,
+                "air and earth should keep comparable horizontal reach, delta=" + horizontalDelta);
+        assertTrue(verticalDelta <= 60,
+                "air and earth should keep comparable vertical reach, delta=" + verticalDelta);
+    }
+
+    @Test
+    void air_and_eldritch_openers_keep_clear_breathing_room() {
+        PuffishMagicTreeBuilder.LayoutSnapshot snapshot = PuffishMagicTreeBuilder.debugLayoutSnapshot();
+        double distance = distanceBetween(snapshot,
+                "air/opener/spark_awakening",
+                "eldritch/opener/dark_awakening");
+        assertTrue(distance >= 96.0,
+                "air and eldritch should not visually collapse into the same lane, actual distance=" + distance);
+    }
+
+    private static double distanceBetween(PuffishMagicTreeBuilder.LayoutSnapshot snapshot, String aId, String bId) {
+        PuffishMagicTreeBuilder.NodePlacement a = snapshot.placements().get(aId);
+        PuffishMagicTreeBuilder.NodePlacement b = snapshot.placements().get(bId);
+        assertNotNull(a, "missing node " + aId);
+        assertNotNull(b, "missing node " + bId);
+        int dx = a.x() - b.x();
+        int dy = a.y() - b.y();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }

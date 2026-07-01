@@ -961,22 +961,22 @@ public final class PuffishMagicTreeBuilder {
 
     private static Map<MagicBranch, BranchLayout> buildBranchLayouts() {
         Map<MagicBranch, BranchLayout> layouts = new EnumMap<>(MagicBranch.class);
-        layouts.put(MagicBranch.AIR,   new BranchLayout(200.0, 300, 145,
+        layouts.put(MagicBranch.AIR,   new BranchLayout(305.0, 300, 145,
                 72.0, 18.0, 145.0, 90.0, -1, 20.0, 70.0));
         layouts.put(MagicBranch.FIRE,  new BranchLayout(235.0, 310, 150,
                 64.0, 10.0, 150.0, 86.0, -1, 18.0, 64.0));
         layouts.put(MagicBranch.WATER, new BranchLayout(125.0, 300, 145,
-                68.0, 18.0, 145.0, 92.0, 1, 18.0, 64.0));
+                68.0, 18.0, 125.0, 84.0, 1, 18.0, 64.0));
         layouts.put(MagicBranch.EARTH, new BranchLayout(55.0, 285, 135,
-                52.0, 8.0, 130.0, 80.0, 1, 14.0, 42.0));
+                52.0, 8.0, 115.0, 72.0, 1, 14.0, 42.0));
         layouts.put(MagicBranch.HOLY,      new BranchLayout(330.0, 330, 155,
                 62.0, 24.0, 140.0, 86.0, -1, 18.0, 60.0));
         layouts.put(MagicBranch.BLOOD,     new BranchLayout(18.0, 320, 150,
                 70.0, 28.0, 140.0, 90.0, 1, 20.0, 66.0));
         layouts.put(MagicBranch.ENDER,     new BranchLayout(90.0, 320, 150,
-                66.0, 22.0, 138.0, 92.0, 1, 20.0, 58.0));
+                66.0, 22.0, 110.0, 80.0, 1, 20.0, 58.0));
         layouts.put(MagicBranch.EVOCATION, new BranchLayout(162.0, 320, 150,
-                72.0, 24.0, -20.0, 92.0, -1, 20.0, 74.0));
+                72.0, 24.0, -60.0, 92.0, -1, 20.0, 74.0));
         layouts.put(MagicBranch.ELDRITCH,  new BranchLayout(210.0, 330, 155,
                 60.0, 24.0, 142.0, 90.0, -1, 18.0, 62.0));
         return layouts;

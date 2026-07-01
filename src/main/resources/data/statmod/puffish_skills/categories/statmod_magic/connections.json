@@ -3,18 +3,6 @@
         "bidirectional": [
             [
                 "common.foundation.arcane_focus",
-                "common.foundation.mana_well"
-            ],
-            [
-                "common.foundation.mana_well",
-                "common.foundation.cast_discipline"
-            ],
-            [
-                "common.foundation.cast_discipline",
-                "common.foundation.multi_school_gate"
-            ],
-            [
-                "common.foundation.cast_discipline",
                 "fire.opener.ignition"
             ],
             [
@@ -110,7 +98,7 @@
                 "fire.signature.pyromaniac"
             ],
             [
-                "common.foundation.cast_discipline",
+                "common.foundation.arcane_focus",
                 "water.opener.ice_awakening"
             ],
             [
@@ -198,7 +186,7 @@
                 "water.signature.living_ice_sculpture"
             ],
             [
-                "common.foundation.cast_discipline",
+                "common.foundation.arcane_focus",
                 "air.opener.spark_awakening"
             ],
             [
@@ -286,7 +274,7 @@
                 "air.signature.tornado"
             ],
             [
-                "common.foundation.cast_discipline",
+                "common.foundation.arcane_focus",
                 "earth.opener.nature_awakening"
             ],
             [
@@ -366,7 +354,7 @@
                 "earth.signature.aerial_collapse"
             ],
             [
-                "common.foundation.multi_school_gate",
+                "common.foundation.arcane_focus",
                 "holy.opener.light_awakening"
             ],
             [
@@ -446,7 +434,7 @@
                 "holy.signature.nullflare"
             ],
             [
-                "common.foundation.multi_school_gate",
+                "common.foundation.arcane_focus",
                 "blood.opener.sanguine_awakening"
             ],
             [
@@ -514,7 +502,7 @@
                 "blood.signature.resurrection_rune"
             ],
             [
-                "common.foundation.multi_school_gate",
+                "common.foundation.arcane_focus",
                 "ender.opener.void_awakening"
             ],
             [
@@ -606,7 +594,7 @@
                 "ender.signature.implosion"
             ],
             [
-                "common.foundation.multi_school_gate",
+                "common.foundation.arcane_focus",
                 "evocation.opener.trick_awakening"
             ],
             [
@@ -714,7 +702,7 @@
                 "evocation.signature.magic_shotgun"
             ],
             [
-                "common.foundation.multi_school_gate",
+                "common.foundation.arcane_focus",
                 "eldritch.opener.dark_awakening"
             ],
             [

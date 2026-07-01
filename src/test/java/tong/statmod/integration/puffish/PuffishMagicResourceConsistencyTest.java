@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PuffishMagicResourceConsistencyTest {
+
+    private static final Set<String> TREE_HIDDEN_NODES = Set.of(
+            "common/foundation/mana_well",
+            "common/foundation/cast_discipline",
+            "common/foundation/multi_school_gate"
+    );
+
+    private static boolean isTreeVisible(MagicNode node) {
+        return !TREE_HIDDEN_NODES.contains(node.id());
+    }
+
     @Test
     void unified_magic_category_is_declared_and_backed_by_resources() throws Exception {
         ClassLoader loader = PuffishMagicResourceConsistencyTest.class.getClassLoader();
@@ -49,6 +61,9 @@ class PuffishMagicResourceConsistencyTest {
             assertNotNull(stream, "missing unified magic definitions");
             String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             for (MagicNode node : MagicTreeCatalog.all()) {
+                if (!isTreeVisible(node)) {
+                    continue;
+                }
                 String skillId = PuffishMagicCategoryIds.toSkillId(node.id());
                 assertTrue(json.contains("\"" + skillId + "\""),
                         "missing magic definition for node " + node.id());
@@ -71,6 +86,9 @@ class PuffishMagicResourceConsistencyTest {
             assertNotNull(stream, "missing unified magic skills");
             String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             for (MagicNode node : MagicTreeCatalog.all()) {
+                if (!isTreeVisible(node)) {
+                    continue;
+                }
                 String skillId = PuffishMagicCategoryIds.toSkillId(node.id());
                 assertTrue(json.contains("\"" + skillId + "\": {"),
                         "missing generated magic skill placement for node " + node.id());
@@ -114,10 +132,28 @@ class PuffishMagicResourceConsistencyTest {
         PuffishMagicTreeBuilder.GeneratedCategoryFiles files = PuffishMagicTreeBuilder.unifiedCategoryFiles();
         String json = files.skillsJson();
         int centerX = coordinateFor(json, "common.foundation.arcane_focus", "x");
-        assertMirrored(json, centerX, "fire.opener.ignition", "water.opener.ice_awakening");
-        assertMirrored(json, centerX, "air.opener.spark_awakening", "earth.opener.nature_awakening");
         assertMirrored(json, centerX, "holy.opener.light_awakening", "eldritch.opener.dark_awakening");
         assertMirrored(json, centerX, "blood.opener.sanguine_awakening", "evocation.opener.trick_awakening");
+    }
+
+    @Test
+    void fire_and_water_gain_distinct_silhouettes_in_opposite_vertical_flows() {
+        PuffishMagicTreeBuilder.GeneratedCategoryFiles files = PuffishMagicTreeBuilder.unifiedCategoryFiles();
+        String json = files.skillsJson();
+        int rootY = coordinateFor(json, "common.foundation.arcane_focus", "y");
+        int fireOpenerY = coordinateFor(json, "fire.opener.ignition", "y");
+        int waterOpenerY = coordinateFor(json, "water.opener.ice_awakening", "y");
+        assertTrue(fireOpenerY < rootY, "fire should live above the nucleus");
+        assertTrue(waterOpenerY > rootY, "water should descend below the nucleus");
+    }
+
+    @Test
+    void earth_branch_stays_compact_while_air_branch_stays_wider() {
+        PuffishMagicTreeBuilder.GeneratedCategoryFiles files = PuffishMagicTreeBuilder.unifiedCategoryFiles();
+        String json = files.skillsJson();
+        Bounds earth = boundsForBranch(json, "earth");
+        Bounds air = boundsForBranch(json, "air");
+        assertTrue(earth.width() < air.width(), "earth should read denser than air");
     }
 
     @Test
@@ -129,8 +165,8 @@ class PuffishMagicResourceConsistencyTest {
                 continue;
             }
             Bounds bounds = boundsForBranch(json, branch.id);
-            assertTrue(bounds.width() <= 620, "branch " + branch + " should stay horizontally localized");
-            assertTrue(bounds.height() <= 760, "branch " + branch + " should stay vertically localized");
+            assertTrue(bounds.width() <= 750, "branch " + branch + " should stay horizontally localized");
+            assertTrue(bounds.height() <= 800, "branch " + branch + " should stay vertically localized");
         }
     }
 
@@ -138,8 +174,8 @@ class PuffishMagicResourceConsistencyTest {
     void generated_unified_magic_tree_uses_one_visual_parent_per_non_root_node() {
         PuffishMagicTreeBuilder.GeneratedCategoryFiles files = PuffishMagicTreeBuilder.unifiedCategoryFiles();
         String json = files.connectionsJson();
-        assertEquals(MagicTreeCatalog.all().size() - 1, countConnectionPairs(json),
-                "the Puffish mirror should show one clean visual parent per non-root node");
+        assertEquals(MagicTreeCatalog.all().size() - 4, countConnectionPairs(json),
+                "the Puffish mirror should show one clean visual parent per visible non-root node");
     }
 
     @Test
@@ -160,8 +196,6 @@ class PuffishMagicResourceConsistencyTest {
 
         assertTrue(sizeForDefinition(json, "common.foundation.arcane_focus") > 2.0f,
                 "the central root should render larger than standard nodes");
-        assertTrue(sizeForDefinition(json, "common.foundation.multi_school_gate") > 1.7f,
-                "the late common gate should remain visually prominent");
 
         assertDefinitionUsesTexture(json, "fire.signature.fireball",
                 "irons_spellbooks:textures/gui/spell_icons/fireball.png");
@@ -177,6 +211,18 @@ class PuffishMagicResourceConsistencyTest {
                 "legendarymage:textures/gui/spell_icons/blizzard.png");
         assertDefinitionUsesTexture(json, "fire.signature.tensura_fire_ball",
                 "tensura:textures/magic/aspectual/fire_ball.png");
+    }
+
+    @Test
+    void generated_unified_magic_definitions_use_a_clear_four_level_size_hierarchy() {
+        String json = PuffishMagicTreeBuilder.unifiedCategoryFiles().definitionsJson();
+        float root = sizeForDefinition(json, "common.foundation.arcane_focus");
+        float opener = sizeForDefinition(json, "fire.opener.ignition");
+        float tier = sizeForDefinition(json, "fire.tier.inferno_path");
+        float signature = sizeForDefinition(json, "fire.signature.fireball");
+        assertTrue(root > opener, "root must dominate opener nodes");
+        assertTrue(opener > tier, "openers must dominate tier nodes");
+        assertTrue(tier > signature, "tier nodes must dominate spell nodes");
     }
 
     private static void assertHasResource(ClassLoader loader, String category, String fileName) {

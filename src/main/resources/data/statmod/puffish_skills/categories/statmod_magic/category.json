@@ -7,7 +7,7 @@
             "item": "minecraft:enchanted_book"
         }
     },
-    "background": "textures/block/deepslate_tiles.png",
+    "background": "minecraft:textures/block/deepslate_bricks.png",
     "colors": {
         "connections": {
             "locked":     { "stroke": "#3A3F46FF", "fill": "#0E1014FF" },

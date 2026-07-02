@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,6 +29,16 @@ class PuffishUnifiedPerkCategoryResourceTest {
             assertTrue(json.contains("\"precision__preci_core\""));
             assertTrue(json.contains("\"arcane_power__arcane_core\""));
             assertTrue(json.contains("\"forging__forge_core\""));
+        }
+    }
+
+    @Test
+    void perkSkillsResourceStaysInSyncWithBuilder() throws Exception {
+        try (InputStream stream = PuffishUnifiedPerkCategoryResourceTest.class.getClassLoader()
+                .getResourceAsStream("data/statmod/puffish_skills/categories/statmod_perks/skills.json")) {
+            assertNotNull(stream);
+            String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+            assertEquals(PuffishFamilyTreeBuilder.unifiedCategoryFiles().skillsJson(), json);
         }
     }
 

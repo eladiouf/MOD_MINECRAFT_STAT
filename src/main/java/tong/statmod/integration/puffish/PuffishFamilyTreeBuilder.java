@@ -28,6 +28,10 @@ public final class PuffishFamilyTreeBuilder {
             PerkTier.MASTERY,
             PerkTier.TRANSCENDENCE
     );
+    private static final int VIEWPORT_CENTER_X = 980;
+    private static final int VIEWPORT_CENTER_Y = 760;
+    private static final int VIEWPORT_MARGIN_X = 40;
+    private static final int VIEWPORT_MARGIN_Y = 40;
     private PuffishFamilyTreeBuilder() {}
 
     public static String configJson() {
@@ -80,32 +84,24 @@ public final class PuffishFamilyTreeBuilder {
     }
 
     private static String buildUnifiedSkillsJson() {
+        Map<String, NodePlacement> placements = placementsBySkillId();
         List<String> entries = new ArrayList<>();
-        for (Map.Entry<StatFamily, List<StatType>> familyEntry : familyStats().entrySet()) {
-            FamilyLayout layout = layoutForFamily(familyEntry.getKey());
-            List<StatType> stats = familyEntry.getValue();
-            for (int statIndex = 0; statIndex < stats.size(); statIndex++) {
-                StatType stat = stats.get(statIndex);
-                for (int row = 0; row < TIER_ORDER.size(); row++) {
-                    int x = layout.rootX() + statIndex * layout.laneDx() + row * layout.tierDx();
-                    int y = layout.rootY() + statIndex * layout.laneDy() + row * layout.tierDy();
-                    Perk perk = Perk.byStatAndTier(stat, TIER_ORDER.get(row));
-                    if (perk == null) {
-                        continue;
-                    }
-                    String id = skillId(perk);
-                    StringBuilder entry = new StringBuilder();
-                    entry.append("    \"").append(id).append("\": {\n");
-                    entry.append("        \"x\": ").append(x).append(",\n");
-                    entry.append("        \"y\": ").append(y).append(",\n");
-                    entry.append("        \"definition\": \"").append(id).append("\"");
-                    if (perk.tier == PerkTier.CORE) {
-                        entry.append(",\n        \"root\": true");
-                    }
-                    entry.append("\n    }");
-                    entries.add(entry.toString());
-                }
+        for (Perk perk : Perk.values()) {
+            String id = skillId(perk);
+            NodePlacement placement = placements.get(id);
+            if (placement == null) {
+                continue;
             }
+            StringBuilder entry = new StringBuilder();
+            entry.append("    \"").append(id).append("\": {\n");
+            entry.append("        \"x\": ").append(placement.x()).append(",\n");
+            entry.append("        \"y\": ").append(placement.y()).append(",\n");
+            entry.append("        \"definition\": \"").append(id).append("\"");
+            if (perk.tier == PerkTier.CORE) {
+                entry.append(",\n        \"root\": true");
+            }
+            entry.append("\n    }");
+            entries.add(entry.toString());
         }
         return "{\n" + String.join(",\n", entries) + "\n}\n";
     }
@@ -165,24 +161,91 @@ public final class PuffishFamilyTreeBuilder {
         return byFamily;
     }
 
+    private static Map<String, NodePlacement> placementsBySkillId() {
+        Map<String, NodePlacement> placements = new LinkedHashMap<>();
+        for (Map.Entry<StatFamily, List<StatType>> familyEntry : familyStats().entrySet()) {
+            FamilyLayout layout = layoutForFamily(familyEntry.getKey());
+            placeFamily(placements, layout, familyEntry.getValue());
+        }
+        recenterOnViewport(placements);
+        return placements;
+    }
+
+    private static void placeFamily(Map<String, NodePlacement> placements, FamilyLayout layout, List<StatType> stats) {
+        for (int statIndex = 0; statIndex < stats.size(); statIndex++) {
+            StatType stat = stats.get(statIndex);
+            double statAngle = angleForStat(layout, statIndex, stats.size());
+
+            for (int tierIndex = 0; tierIndex < TIER_ORDER.size(); tierIndex++) {
+                Perk perk = Perk.byStatAndTier(stat, TIER_ORDER.get(tierIndex));
+                if (perk == null) {
+                    continue;
+                }
+                placements.put(skillId(perk), polarPlacement(
+                        statAngle,
+                        layout.rootRadius() + tierIndex * layout.tierStep()
+                ));
+            }
+        }
+    }
+
+    private static double angleForStat(FamilyLayout layout, int statIndex, int statCount) {
+        if (statCount <= 1) {
+            return layout.centerAngleDegrees();
+        }
+        double angleStep = layout.spreadDegrees() / (statCount - 1.0);
+        return layout.centerAngleDegrees() - layout.spreadDegrees() / 2.0 + statIndex * angleStep;
+    }
+
+    private static NodePlacement polarPlacement(double angleDegrees, int radius) {
+        double angleRadians = Math.toRadians(angleDegrees);
+        int x = (int) Math.round(Math.cos(angleRadians) * radius);
+        int y = (int) Math.round(Math.sin(angleRadians) * radius);
+        return new NodePlacement(x, y);
+    }
+
+    private static void recenterOnViewport(Map<String, NodePlacement> placements) {
+        Bounds bounds = boundsOf(placements);
+        int currentCenterX = (bounds.minX() + bounds.maxX()) / 2;
+        int currentCenterY = (bounds.minY() + bounds.maxY()) / 2;
+        int shiftX = VIEWPORT_CENTER_X - currentCenterX;
+        int shiftY = VIEWPORT_CENTER_Y - currentCenterY;
+
+        if (bounds.minX() + shiftX < VIEWPORT_MARGIN_X) {
+            shiftX += VIEWPORT_MARGIN_X - (bounds.minX() + shiftX);
+        }
+        if (bounds.minY() + shiftY < VIEWPORT_MARGIN_Y) {
+            shiftY += VIEWPORT_MARGIN_Y - (bounds.minY() + shiftY);
+        }
+
+        for (Map.Entry<String, NodePlacement> entry : placements.entrySet()) {
+            NodePlacement placement = entry.getValue();
+            entry.setValue(new NodePlacement(placement.x() + shiftX, placement.y() + shiftY));
+        }
+    }
+
+    private static Bounds boundsOf(Map<String, NodePlacement> placements) {
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        for (NodePlacement placement : placements.values()) {
+            minX = Math.min(minX, placement.x());
+            maxX = Math.max(maxX, placement.x());
+            minY = Math.min(minY, placement.y());
+            maxY = Math.max(maxY, placement.y());
+        }
+        return new Bounds(minX, maxX, minY, maxY);
+    }
+
     private static FamilyLayout layoutForFamily(StatFamily family) {
-        // Origin (0,0) = visual center. Each family is a spoke radiating outward from the
-        // center. Core (root) sits near the center, tiers move outward, lanes fan out
-        // perpendicular to the spoke direction. Compact spacing pour tenir dans une vue
-        // par défaut Puffish (scale 1.0, fenêtre ~480×260 visible).
         return switch (family) {
-            // North-west spoke — 6 stats fanning vertically, tiers going up-left
-            case FRONTLINE_PHYSICAL_COMBAT -> new FamilyLayout(-90, -40, -40, 38, -68, -42);
-            // North-east spoke — 3 stats fanning vertically, tiers going up-right
-            case RANGED_HUNT_CONTROL      -> new FamilyLayout( 90, -40,  40, 52,  68, -42);
-            // North spoke — 5 stats fanning horizontally, tiers going up
-            case MAGICAL_CORE             -> new FamilyLayout(-110, -80, 55,  0,   0, -58);
-            // South spoke — 4 stats fanning horizontally, tiers going down
-            case ELEMENTAL_SPECIALIZATION -> new FamilyLayout( -80, 130, 55,  0,   0,  58);
-            // South-west spoke — 2 stats fanning vertically, tiers going down-left
-            case MENTAL_PRESSURE_RESILIENCE -> new FamilyLayout(-100, 110, -50, 64, -64, 40);
-            // South-east spoke — 3 stats fanning vertically, tiers going down-right
-            case CRAFTING_SUPPORT         -> new FamilyLayout( 100, 110,  50, 64,  64, 40);
+            case FRONTLINE_PHYSICAL_COMBAT -> new FamilyLayout(208.0, 66.0, 350, 108);
+            case RANGED_HUNT_CONTROL -> new FamilyLayout(335.0, 30.0, 335, 108);
+            case MAGICAL_CORE -> new FamilyLayout(280.0, 52.0, 330, 108);
+            case ELEMENTAL_SPECIALIZATION -> new FamilyLayout(90.0, 48.0, 340, 108);
+            case MENTAL_PRESSURE_RESILIENCE -> new FamilyLayout(150.0, 24.0, 300, 108);
+            case CRAFTING_SUPPORT -> new FamilyLayout(30.0, 36.0, 335, 108);
         };
     }
 
@@ -221,11 +284,13 @@ public final class PuffishFamilyTreeBuilder {
     }
 
     private record FamilyLayout(
-            int rootX,
-            int rootY,
-            int laneDx,
-            int laneDy,
-            int tierDx,
-            int tierDy
+            double centerAngleDegrees,
+            double spreadDegrees,
+            int rootRadius,
+            int tierStep
     ) {}
+
+    private record NodePlacement(int x, int y) {}
+
+    private record Bounds(int minX, int maxX, int minY, int maxY) {}
 }

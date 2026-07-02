@@ -4,11 +4,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
@@ -51,11 +51,10 @@ public class NonCombatXPHandler {
     }
 
     @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+    public static void onPlayerBrewedPotion(PlayerBrewedPotionEvent event) {
         Player player = event.getEntity();
         if (player.level().isClientSide) return;
-        if (!event.getLevel().getBlockState(event.getPos()).is(Blocks.BREWING_STAND)) return;
-        if (event.getItemStack().isEmpty()) return;
+        if (!isAlchemyOutput(event.getStack())) return;
 
         award(player, StatType.ALCHEMY, 2);
     }
@@ -67,6 +66,12 @@ public class NonCombatXPHandler {
 
     static boolean isOrePath(String path) {
         return path != null && ORE_PATHS.contains(path);
+    }
+
+    static boolean isAlchemyOutput(ItemStack stack) {
+        return stack != null
+                && !stack.isEmpty()
+                && (stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION));
     }
 
     private static final Set<String> ORE_PATHS = Set.of(

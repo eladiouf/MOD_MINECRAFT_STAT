@@ -1,5 +1,7 @@
 package tong.statmod.progression;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.Test;
 import tong.statmod.stats.StatType;
 
@@ -9,12 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for NonCombatXPHandler.
- *
- * <p><b>KNOWN BUG:</b><br>
- * {@code onRightClickBlock} awards 2 ALCHEMY XP on <em>any</em> right-click
- * with a non-empty item on a brewing stand, regardless of whether a brewing
- * operation actually starts. No ingredient check, no blaze-powder check, no
- * fuel check — this is an XP-farm vector.</p>
  */
 class NonCombatXPHandlerTest {
 
@@ -172,5 +168,20 @@ class NonCombatXPHandlerTest {
     @Test
     void brewingInteractionAwardsTwoAlchemyXp() {
         assertEquals(2, 2);
+    }
+
+    @Test
+    void brewedPotionOutputsQualifyForAlchemyXp() {
+        assertTrue(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.POTION)));
+        assertTrue(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.SPLASH_POTION)));
+        assertTrue(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.LINGERING_POTION)));
+    }
+
+    @Test
+    void nonPotionOutputsDoNotQualifyForAlchemyXp() {
+        assertFalse(NonCombatXPHandler.isAlchemyOutput(ItemStack.EMPTY));
+        assertFalse(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.GLASS_BOTTLE)));
+        assertFalse(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.NETHER_WART)));
+        assertFalse(NonCombatXPHandler.isAlchemyOutput(new ItemStack(Items.BLAZE_POWDER)));
     }
 }

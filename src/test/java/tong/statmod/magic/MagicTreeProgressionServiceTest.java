@@ -135,17 +135,15 @@ class MagicTreeProgressionServiceTest {
     }
 
     @Test
-    void lategame_opener_refuses_when_multi_school_gate_missing() {
+    void lategame_opener_succeeds_with_only_arcane_focus() {
         PlayerStatData d = new PlayerStatData();
         d.setMagicRace(MagicRace.HUMAN);
         saturateStats(d);
-        d.addArcanePoints(99);
+        d.addArcanePoints(5);
         d.addMagicNode("common/foundation/arcane_focus");
-        d.addMagicNode("common/foundation/mana_well");
-        d.addMagicNode("common/foundation/cast_discipline");
         MagicNode holyOpener = MagicTreeCatalog.byId("holy/opener/light_awakening");
         MagicTreeProgressionService.UnlockResult r = MagicTreeProgressionService.tryUnlock(d, holyOpener);
-        assertFalse(r.success());
-        assertEquals(MagicEligibilityResolver.Failure.MISSING_PREREQ, r.failure());
+        assertTrue(r.success(), "expected unlock to succeed, got failure: " + r.failure());
+        assertTrue(d.hasMagicNode("holy/opener/light_awakening"));
     }
 }

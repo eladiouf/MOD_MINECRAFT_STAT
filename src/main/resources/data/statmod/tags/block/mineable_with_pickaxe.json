@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "statmod:dungeon_portal",
+    "statmod:enchantment_anvil",
+    "statmod:infusion_forge",
+    "statmod:next_floor_teleporter",
+    "statmod:return_beacon"
+  ]
+}

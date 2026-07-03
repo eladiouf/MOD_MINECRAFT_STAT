@@ -23,14 +23,30 @@ import tong.statmod.storage.PlayerStatData;
 public class StatCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         registerMagic(dispatcher);
+        tong.statmod.dungeon.DungeonCommands.register(dispatcher);
         dispatcher.register(Commands.literal("statlevel")
                 .requires(s -> s.hasPermission(2))
+                .then(Commands.literal("all")
+                        .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
+                                .executes(ctx -> {
+                                    int amount = IntegerArgumentType.getInteger(ctx, "amount");
+                                    if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                        PlayerStatData data = player.getData(ModAttachments.STATS);
+                                        for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
+                                            data.addLevels(i, amount);
+                                        }
+                                        ctx.getSource().sendSuccess(() ->
+                                                Component.literal("All stats → +" + amount + " levels"), true);
+                                        SyncHelper.syncStats(player);
+                                    }
+                                    return 1;
+                                })))
                 .then(Commands.argument("index", IntegerArgumentType.integer(0, 22))
                         .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
                                 .executes(ctx -> {
                                     int index = IntegerArgumentType.getInteger(ctx, "index");
                                     int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                    if (ctx.getSource().getEntity() instanceof Player player) {
+                                    if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
                                         PlayerStatData data = player.getData(ModAttachments.STATS);
                                         data.addLevels(index, amount);
                                         StatType stat = StatType.byIndex(index);
@@ -38,6 +54,7 @@ public class StatCommands {
                                         int effective = RaceEffectApplier.getEffectiveLevel(player, index);
                                         ctx.getSource().sendSuccess(() ->
                                                 Component.literal(name + " → Lv." + effective), true);
+                                        SyncHelper.syncStats(player);
                                     }
                                     return 1;
                                 }))));
@@ -76,6 +93,21 @@ public class StatCommands {
                                             Component.literal("§6" + id + "§r → §b" + stat.displayName + "§r [" + action + "]"), true);
                                     return 1;
                                 }))));
+        dispatcher.register(Commands.literal("statperk")
+                .requires(s -> s.hasPermission(2))
+                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 9999))
+                        .executes(ctx -> {
+                            int amount = IntegerArgumentType.getInteger(ctx, "amount");
+                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                for (int i = 0; i < PlayerStatData.PERK_FAMILY_COUNT; i++) {
+                                    data.addPerkPointsForFamily(StatFamily.values()[i], amount);
+                                }
+                                ctx.getSource().sendSuccess(() ->
+                                        Component.literal("+ " + amount + " perk points to all families"), true);
+                            }
+                            return 1;
+                        })));
     }
 
     private static void registerMagic(CommandDispatcher<CommandSourceStack> dispatcher) {

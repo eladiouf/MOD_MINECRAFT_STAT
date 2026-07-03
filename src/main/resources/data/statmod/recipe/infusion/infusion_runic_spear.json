@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_spear_tip_arcane"
+    },
+    {
+      "item": "statmod:rune_essence_arcane"
+    },
+    {
+      "item": "statmod:runic_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_spear"
+  }
+}

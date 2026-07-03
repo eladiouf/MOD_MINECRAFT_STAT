@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "magistuarmory:iron_flamebladedsword"
+  }
+}

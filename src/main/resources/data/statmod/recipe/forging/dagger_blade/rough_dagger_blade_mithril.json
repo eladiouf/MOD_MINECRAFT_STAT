@@ -1,0 +1,22 @@
+{
+  "type": "overgeared:forging",
+  "blueprint": [
+    "dagger"
+  ],
+  "category": "TOOL_HEADS",
+  "hammering": 7,
+  "key": {
+    "#": {
+      "item": "statmod:heated_mithril_ingot"
+    }
+  },
+  "pattern": [
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:rough_dagger_blade_mithril"
+  },
+  "show_notification": false,
+  "tier": "steel"
+}

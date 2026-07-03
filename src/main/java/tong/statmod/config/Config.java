@@ -13,6 +13,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue NON_COMBAT_XP_MULTIPLIER;
     public static final ModConfigSpec.IntValue MAX_STAT_LEVEL;
     public static final ModConfigSpec.IntValue BASE_PERK_POINTS_PER_LEVEL;
+    public static final ModConfigSpec.DoubleValue DUNGEON_XP_BASE_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue DUNGEON_XP_PER_FLOOR;
+    public static final ModConfigSpec.IntValue DUNGEON_BOSS_STAT_GAIN;
 
     static {
         BUILDER.push("general");
@@ -29,6 +32,19 @@ public class Config {
                 .comment("Base perk points granted per stat level")
                 .defineInRange("basePerkPointsPerLevel", 1, 0, 10);
         BUILDER.pop();
+
+        BUILDER.push("trial_dungeon");
+        DUNGEON_XP_BASE_MULTIPLIER = BUILDER
+                .comment("Multiplier de base pour l'XP gagné dans le Trial Dungeon (ajouté à floor*perFloor).")
+                .defineInRange("xpBaseMultiplier", 1.0, 0.0, 10.0);
+        DUNGEON_XP_PER_FLOOR = BUILDER
+                .comment("Multiplier XP additionnel par étage — étage 20 donne XP*(base + 20*perFloor).")
+                .defineInRange("xpPerFloor", 0.05, 0.0, 1.0);
+        DUNGEON_BOSS_STAT_GAIN = BUILDER
+                .comment("Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.")
+                .defineInRange("bossStatGain", 2, 0, 10);
+        BUILDER.pop();
+
         SPEC = BUILDER.build();
     }
 
@@ -65,6 +81,30 @@ public class Config {
             return BASE_PERK_POINTS_PER_LEVEL.get();
         } catch (IllegalStateException e) {
             return 1;
+        }
+    }
+
+    public static double getDungeonXpBaseMultiplier() {
+        try {
+            return DUNGEON_XP_BASE_MULTIPLIER.get();
+        } catch (IllegalStateException e) {
+            return 1.0;
+        }
+    }
+
+    public static double getDungeonXpPerFloor() {
+        try {
+            return DUNGEON_XP_PER_FLOOR.get();
+        } catch (IllegalStateException e) {
+            return 0.05;
+        }
+    }
+
+    public static int getDungeonBossStatGain() {
+        try {
+            return DUNGEON_BOSS_STAT_GAIN.get();
+        } catch (IllegalStateException e) {
+            return 2;
         }
     }
 }

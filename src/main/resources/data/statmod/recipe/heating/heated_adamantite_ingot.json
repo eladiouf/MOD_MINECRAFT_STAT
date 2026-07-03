@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 400,
+  "experience": 0.5,
+  "ingredient": {
+    "item": "tensura:adamantite_ingot"
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:heated_adamantite_ingot"
+  }
+}

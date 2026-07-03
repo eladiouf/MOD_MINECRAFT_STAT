@@ -68,6 +68,7 @@ public class ModAttachments {
             if (tag.contains("LastPerkGrantTier")) data.setLastPerkGrantTier(tag.getInt("LastPerkGrantTier"));
 
             MagicStateSerializer.deserialize(tag, data);
+            DungeonStateSerializer.deserialize(tag, data);
 
             return data;
         }
@@ -86,6 +87,11 @@ public class ModAttachments {
             CompoundTag magicTag = MagicStateSerializer.serialize(data);
             for (String key : magicTag.getAllKeys()) {
                 tag.put(key, magicTag.get(key));
+            }
+
+            CompoundTag dungeonTag = DungeonStateSerializer.serialize(data);
+            for (String key : dungeonTag.getAllKeys()) {
+                tag.put(key, dungeonTag.get(key));
             }
 
             return tag;

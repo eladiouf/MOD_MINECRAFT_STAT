@@ -27,6 +27,9 @@ import tong.statmod.integration.tensura.TensuraRaceHandler;
 import tong.statmod.integration.overgeared.OvergearedCompat;
 import tong.statmod.block.ForgingBlocks;
 import tong.statmod.block.entity.ModBlockEntities;
+import tong.statmod.dungeon.DungeonBlocks;
+import tong.statmod.dungeon.DungeonBossHandler;
+import tong.statmod.dungeon.DungeonSpawnGuard;
 import tong.statmod.item.ForgingBlueprints;
 import tong.statmod.item.ForgingGrips;
 import tong.statmod.item.ForgingIntermediates;
@@ -34,6 +37,7 @@ import tong.statmod.item.ForgingMaterials;
 import tong.statmod.item.ForgingTools;
 import tong.statmod.item.ModItems;
 import tong.statmod.item.RuneEssence;
+import tong.statmod.item.RuneShards;
 import tong.statmod.menu.ModMenuTypes;
 import tong.statmod.loot.ModLootModifiers;
 import tong.statmod.progression.CombatXPHandler;
@@ -62,9 +66,11 @@ public class STATMod {
         ForgingTools.register(modBus);
         ForgingBlueprints.register(modBus);
         ForgingBlocks.register(modBus);
+        DungeonBlocks.register(modBus);
         ModBlockEntities.register(modBus);
         ModMenuTypes.register(modBus);
         RuneEssence.register(modBus);
+        RuneShards.register(modBus);
         ModSounds.register(modBus);
         ModLootModifiers.register(modBus);
         TensuraSpellWrapperRegistry.register(modBus);
@@ -77,6 +83,8 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(SoulLevelSyncHandler.class);
         NeoForge.EVENT_BUS.register(OverworldTimeController.class);
         NeoForge.EVENT_BUS.register(SleepRecoveryHandler.class);
+        NeoForge.EVENT_BUS.register(DungeonBossHandler.class);
+        NeoForge.EVENT_BUS.register(DungeonSpawnGuard.class);
         if (ModList.get().isLoaded("tensura")) {
             TensuraEventSubscriber.register();
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "statmod:item/blueprint_universal_pole"
+  }
+}

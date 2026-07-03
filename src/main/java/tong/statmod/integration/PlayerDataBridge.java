@@ -41,9 +41,14 @@ public final class PlayerDataBridge {
         return rs != null ? rs.getRace() : Optional.empty();
     }
 
-    public static String getRaceId(Player player) {
+    public static Optional<String> getOptionalRaceId(Player player) {
         return getRaceInstance(player)
                 .map(r -> r.getRaceId().toString())
+                .filter(raceId -> raceId != null && !raceId.isBlank());
+    }
+
+    public static String getRaceId(Player player) {
+        return getOptionalRaceId(player)
                 .orElse("tensura:human");
     }
 

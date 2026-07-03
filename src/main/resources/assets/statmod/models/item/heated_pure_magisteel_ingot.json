@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "statmod:item/heated_pure_magisteel_ingot"
+  }
+}

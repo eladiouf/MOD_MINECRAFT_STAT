@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "statmod:item/rough_axe_head_mithril"
+  }
+}

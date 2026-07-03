@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_staff_core_diamond"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "epicfight_dd:diamond_battlestaff"
+  }
+}

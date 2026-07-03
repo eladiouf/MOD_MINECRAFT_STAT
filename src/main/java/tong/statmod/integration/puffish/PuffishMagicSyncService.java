@@ -32,13 +32,9 @@ public final class PuffishMagicSyncService {
     }
 
     static int totalAvailableMagicPoints(PlayerStatData data) {
-        int total = data == null ? 0 : data.getArcanePoints();
         if (data == null) {
-            return total;
+            return 0;
         }
-        for (MagicBranch branch : MagicBranch.values()) {
-            total += data.getSchoolPoints(branch);
-        }
-        return total;
+        return data.getMagicPoints();
     }
 }

@@ -46,7 +46,15 @@ public final class ForgeStationItemRules {
     }
 
     public static boolean isRoughIntermediateId(String id) {
-        return id != null && id.startsWith("statmod:rough_");
+        return id != null && (
+                id.startsWith("statmod:rough_")
+                        || id.startsWith("overgeared:") && (
+                        id.endsWith("_sword_blade")
+                                || id.endsWith("_axe_head")
+                                || id.endsWith("_spear_head")
+                                || id.endsWith("_bow_limb")
+                                || id.endsWith("_staff_head")
+                                || id.endsWith("_dagger_blade")));
     }
 
     public static boolean isRuneEssenceId(String id) {

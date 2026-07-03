@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:steel_axe_head"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "darkagesarmory:steel_migration_era_axe"
+  }
+}

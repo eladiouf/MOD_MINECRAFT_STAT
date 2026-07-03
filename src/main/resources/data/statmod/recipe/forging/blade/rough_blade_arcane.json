@@ -1,0 +1,23 @@
+{
+  "type": "overgeared:forging",
+  "blueprint": [
+    "blade"
+  ],
+  "category": "TOOL_HEADS",
+  "hammering": 7,
+  "key": {
+    "#": {
+      "item": "statmod:heated_arcane_ingot"
+    }
+  },
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:rough_blade_arcane"
+  },
+  "show_notification": false,
+  "tier": "steel"
+}

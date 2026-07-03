@@ -35,7 +35,7 @@ public final class OvergearedCompat {
             return;
         }
         NeoForge.EVENT_BUS.register(OvergearedCompat.class);
-        STATMod.LOGGER.info("Overgeared integration loaded");
+        STATMod.LOGGER.info("Overgeared integration loaded (assembly gate via crafting result mixin)");
     }
 
     @SubscribeEvent

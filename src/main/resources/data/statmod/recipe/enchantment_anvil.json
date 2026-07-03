@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "AEA",
+    "AIA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_block"
+    },
+    "E": {
+      "item": "minecraft:enchanting_table"
+    },
+    "I": {
+      "item": "statmod:infusion_forge"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:enchantment_anvil"
+  }
+}

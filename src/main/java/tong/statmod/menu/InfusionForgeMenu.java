@@ -13,6 +13,18 @@ import tong.statmod.block.ForgingBlocks;
 import tong.statmod.block.entity.InfusionForgeBlockEntity;
 import tong.statmod.forge.ForgeStationItemRules;
 import tong.statmod.forge.InfusionForgeRecipeCatalog;
+import tong.statmod.integration.overgeared.AssemblyForgingPolicy;
+import tong.statmod.storage.ModAttachments;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+
+import java.util.List;
+import java.util.Optional;
 
 public class InfusionForgeMenu extends AbstractContainerMenu {
 
@@ -24,6 +36,8 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
     private final Container inputSlots;
     private final ResultContainer resultSlots = new ResultContainer();
     private final ContainerLevelAccess access;
+    private final Player owner;
+    private CraftMode currentCraftMode = CraftMode.NONE;
 
     public InfusionForgeMenu(int containerId, Inventory playerInventory, InfusionForgeBlockEntity blockEntity) {
         this(containerId, playerInventory, blockEntity.getContainer(),
@@ -38,6 +52,7 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
         super(ModMenuTypes.INFUSION_FORGE_MENU.get(), containerId);
         this.inputSlots = inputSlots;
         this.access = access;
+        this.owner = playerInventory.player;
 
         this.addSlot(new Slot(inputSlots, 0, 26, 38) {
             @Override
@@ -142,6 +157,15 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
                 ForgeStationItemRules.itemId(inputSlots.getItem(0)),
                 ForgeStationItemRules.itemId(inputSlots.getItem(1)),
                 ForgeStationItemRules.itemId(inputSlots.getItem(2)));
+        currentCraftMode = CraftMode.NONE;
+        if (!result.isEmpty()) {
+            currentCraftMode = CraftMode.INFUSION;
+        } else {
+            result = findAssemblyResult();
+            if (!result.isEmpty()) {
+                currentCraftMode = CraftMode.ASSEMBLY;
+            }
+        }
         resultSlots.setItem(0, result);
         broadcastChanges();
     }
@@ -152,8 +176,63 @@ public class InfusionForgeMenu extends AbstractContainerMenu {
     }
 
     private void consumeInputs() {
-        for (int i = 0; i < INPUT_SLOT_COUNT; i++) {
-            inputSlots.removeItem(i, 1);
+        switch (currentCraftMode) {
+            case INFUSION -> {
+                for (int i = 0; i < INPUT_SLOT_COUNT; i++) {
+                    inputSlots.removeItem(i, 1);
+                }
+            }
+            case ASSEMBLY -> {
+                inputSlots.removeItem(0, 1);
+                inputSlots.removeItem(2, 1);
+            }
+            default -> {
+            }
         }
+    }
+
+    private ItemStack findAssemblyResult() {
+        if (!inputSlots.getItem(1).isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack base = inputSlots.getItem(0);
+        ItemStack grip = inputSlots.getItem(2);
+        if (base.isEmpty() || grip.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        return access.evaluate((level, pos) -> {
+            CraftingInput input = CraftingInput.of(2, 1, List.of(
+                    base.copyWithCount(1),
+                    grip.copyWithCount(1)));
+            Optional<RecipeHolder<CraftingRecipe>> optional =
+                    level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
+            if (optional.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+
+            RecipeHolder<CraftingRecipe> holder = optional.get();
+            if (!"statmod".equals(holder.id().getNamespace()) || !holder.id().getPath().startsWith("assembly/")) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack assembled = holder.value().assemble(input, level.registryAccess());
+            if (assembled.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+
+            ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(assembled.getItem());
+            if (!AssemblyForgingPolicy.canAssemble(resultId, owner.getData(ModAttachments.STATS))) {
+                return ItemStack.EMPTY;
+            }
+            return assembled;
+        }, ItemStack.EMPTY);
+    }
+
+    private enum CraftMode {
+        NONE,
+        INFUSION,
+        ASSEMBLY
     }
 }

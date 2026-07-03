@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 350,
+  "experience": 0.5,
+  "ingredient": {
+    "item": "tensura:orichalcum_ingot"
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:heated_orichalcum_ingot"
+  }
+}

@@ -202,9 +202,10 @@ public final class TensuraRaceHandler {
         applyRaceBonuses(player);
         if (player instanceof ServerPlayer serverPlayer) {
             PlayerStatData data = player.getData(ModAttachments.STATS);
-            // Sous Mission N : re-sync inconditionnel au login. La race Tensura est
-            // autoritative ; si le joueur a reincarne, le STAT MOD's magic race doit suivre.
-            if (syncMagicRaceFromTensura(data, getRaceName(player))) {
+            String rawRaceId = PlayerDataBridge.getOptionalRaceId(player).orElse(null);
+            // Ne pas remplacer une race magique persistée par le fallback "human" tant que
+            // Tensura n'a pas encore résolu de vraie race pour ce joueur.
+            if (syncMagicRaceFromTensura(data, rawRaceId)) {
                 SyncHelper.syncMagic(serverPlayer);
             }
         }
@@ -214,10 +215,10 @@ public final class TensuraRaceHandler {
     public static void onClone(PlayerEvent.Clone event) {
         Player player = event.getEntity();
         applyRaceBonuses(player);
-        // Au respawn (mort/dimension change), re-sync la magic race aussi.
         if (player instanceof ServerPlayer serverPlayer) {
             PlayerStatData data = player.getData(ModAttachments.STATS);
-            if (syncMagicRaceFromTensura(data, getRaceName(player))) {
+            String rawRaceId = PlayerDataBridge.getOptionalRaceId(player).orElse(null);
+            if (syncMagicRaceFromTensura(data, rawRaceId)) {
                 SyncHelper.syncMagic(serverPlayer);
             }
         }
@@ -234,12 +235,14 @@ public final class TensuraRaceHandler {
         if (player.level().isClientSide) return;
         if (player.tickCount % 100 != 0) return;
         if (!(player instanceof ServerPlayer serverPlayer)) return;
+        String rawRaceId = PlayerDataBridge.getOptionalRaceId(player).orElse(null);
+        if (rawRaceId == null || rawRaceId.isBlank()) return;
 
         PlayerStatData data = player.getData(ModAttachments.STATS);
         MagicRace currentMagicRace = data.getMagicRace();
-        MagicRace expectedMagicRace = TensuraToMagicRaceMapper.fromTensuraRaceId(getRaceName(player));
+        MagicRace expectedMagicRace = TensuraToMagicRaceMapper.fromTensuraRaceId(rawRaceId);
         if (currentMagicRace != expectedMagicRace) {
-            if (syncMagicRaceFromTensura(data, getRaceName(player))) {
+            if (syncMagicRaceFromTensura(data, rawRaceId)) {
                 applyRaceBonuses(player);
                 SyncHelper.syncMagic(serverPlayer);
                 SyncHelper.syncStats(serverPlayer);
@@ -249,6 +252,9 @@ public final class TensuraRaceHandler {
 
     static boolean syncMagicRaceFromTensura(PlayerStatData data, String tensuraRaceId) {
         if (data == null) {
+            return false;
+        }
+        if (tensuraRaceId == null || tensuraRaceId.isBlank()) {
             return false;
         }
         MagicRace previous = data.getMagicRace();

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_staff_core_hihiirokane"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "slu:legendary_magic_staff"
+  }
+}

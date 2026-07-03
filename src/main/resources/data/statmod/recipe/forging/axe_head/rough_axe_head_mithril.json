@@ -1,0 +1,23 @@
+{
+  "type": "overgeared:forging",
+  "blueprint": [
+    "axe"
+  ],
+  "category": "TOOL_HEADS",
+  "hammering": 7,
+  "key": {
+    "#": {
+      "item": "statmod:heated_mithril_ingot"
+    }
+  },
+  "pattern": [
+    "##",
+    "# "
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:rough_axe_head_mithril"
+  },
+  "show_notification": false,
+  "tier": "steel"
+}

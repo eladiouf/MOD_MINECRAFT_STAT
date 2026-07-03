@@ -12,7 +12,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.AbstractClientPlayerPatch;
 
@@ -25,6 +27,7 @@ public final class EpicFightRaceCosmeticLayer extends PatchedLayer<
         AbstractClientPlayerPatch<AbstractClientPlayer>,
         PlayerModel<AbstractClientPlayer>,
         RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>> {
+    private static final double PLAYER_LAYER_HEIGHT_CORRECTION = 0.75D;
     private final Map<PlayerSkin.Model, RaceCosmeticLayer> layersByModel = new EnumMap<>(PlayerSkin.Model.class);
 
     @Override
@@ -77,6 +80,15 @@ public final class EpicFightRaceCosmeticLayer extends PatchedLayer<
         playerModel.prepareMobModel(player, limbSwing, limbSwingAmount, partialTicks);
         playerModel.setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
 
+        Joint rootJoint = playerPatch.getArmature().searchJointByName("Root");
+        if (rootJoint == null || rootJoint.getId() >= poses.length) {
+            return;
+        }
+
+        poseStack.pushPose();
+        MathUtils.mulStack(poseStack, poses[rootJoint.getId()]);
+        poseStack.translate(0.0D, PLAYER_LAYER_HEIGHT_CORRECTION, 0.0D);
+        poseStack.scale(-1.0F, -1.0F, 1.0F);
         cosmeticLayer.render(
                 poseStack,
                 buffer,
@@ -89,6 +101,7 @@ public final class EpicFightRaceCosmeticLayer extends PatchedLayer<
                 headYaw,
                 headPitch
         );
+        poseStack.popPose();
     }
 
     private static PlayerRenderer resolveRenderer(AbstractClientPlayer player) {

@@ -102,6 +102,32 @@ class TensuraRaceHandlerTest {
         assertFalse(data.isPerkFreeGranted(Perk.BRUTE_CORE.id));
     }
 
+    @Test
+    void syncMagicRaceFromTensura_preservesSavedChoiceWhenRaceIsUnresolved() {
+        PlayerStatData data = new PlayerStatData();
+        data.setMagicRace(tong.statmod.magic.MagicRace.DWARF);
+        data.setChosenStartBranch(tong.statmod.magic.MagicBranch.EARTH);
+
+        boolean changed = TensuraRaceHandler.syncMagicRaceFromTensura(data, null);
+
+        assertFalse(changed);
+        assertEquals(tong.statmod.magic.MagicRace.DWARF, data.getMagicRace());
+        assertEquals(tong.statmod.magic.MagicBranch.EARTH, data.getChosenStartBranch());
+    }
+
+    @Test
+    void syncMagicRaceFromTensura_updatesRaceAndRepairsInvalidStartBranch() {
+        PlayerStatData data = new PlayerStatData();
+        data.setMagicRace(tong.statmod.magic.MagicRace.DWARF);
+        data.setChosenStartBranch(tong.statmod.magic.MagicBranch.EARTH);
+
+        boolean changed = TensuraRaceHandler.syncMagicRaceFromTensura(data, "tensura:elf");
+
+        assertTrue(changed);
+        assertEquals(tong.statmod.magic.MagicRace.ELF, data.getMagicRace());
+        assertEquals(tong.statmod.magic.MagicBranch.AIR, data.getChosenStartBranch());
+    }
+
     private static void assertHasMagicRaceBonuses(String raceId) {
         RaceData race = RaceModifierRegistry.get(raceId);
         assertTrue(race.modifiers().stream().anyMatch(mod -> mod.statIndex() == 13 && mod.flatBonus() >= 1),

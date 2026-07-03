@@ -1,0 +1,19 @@
+{
+  "by_mod": {
+    "darkagesarmory": 15,
+    "block_factorys_bosses": 1,
+    "cdmoveset": 23,
+    "epicfight": 20,
+    "epicfight_dd": 20,
+    "magistuarmory": 148,
+    "irons_spellbooks": 1,
+    "simplyswords": 57,
+    "slu": 52
+  },
+  "skipped_no_class": 1955,
+  "skipped_no_material": 679,
+  "skipped_no_rough": 90,
+  "skipped_whitelist": 1142,
+  "skipped_excluded_mod": 137,
+  "generated": 358
+}

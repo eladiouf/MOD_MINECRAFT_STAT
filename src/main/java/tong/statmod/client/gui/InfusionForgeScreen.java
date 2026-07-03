@@ -40,6 +40,11 @@ public class InfusionForgeScreen extends AbstractContainerScreen<InfusionForgeMe
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         graphics.blit(TEXTURE, leftPos, topPos, imageWidth, imageHeight,
                 0, 0, BG_TEX_W, BG_TEX_H, BG_TEX_W, BG_TEX_H);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 26, 38, ForgeStationScreenDecor.SlotPalette.SILVER);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 62, 38, ForgeStationScreenDecor.SlotPalette.SILVER);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 98, 38, ForgeStationScreenDecor.SlotPalette.BRONZE);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 134, 38, ForgeStationScreenDecor.SlotPalette.GOLD);
+        ForgeStationScreenDecor.renderPlayerInventorySlots(graphics, leftPos, topPos);
     }
 
     @Override

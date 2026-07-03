@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_mithril"
+    },
+    {
+      "item": "statmod:rune_essence_mithril"
+    },
+    {
+      "item": "statmod:runic_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:runic_claymore"
+  }
+}

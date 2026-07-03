@@ -52,6 +52,11 @@ public class ModItems {
                         for (Supplier<Item> essence : tong.statmod.item.RuneEssence.all()) {
                             output.accept(essence.get());
                         }
+                        // M6 — Dungeon blocks
+                        output.accept(tong.statmod.dungeon.DungeonBlocks.DUNGEON_PORTAL_ITEM.get());
+                        output.accept(tong.statmod.dungeon.DungeonBlocks.RETURN_BEACON_ITEM.get());
+                        output.accept(tong.statmod.dungeon.DungeonBlocks.NEXT_FLOOR_TELEPORTER_ITEM.get());
+                        output.accept(tong.statmod.dungeon.DungeonBlocks.BOSS_ALTAR_ITEM.get());
                     })
                     .build());
 

@@ -1,7 +1,7 @@
 # STAT MOD — CLAUDE.md
 
 > Ce fichier est lu automatiquement par Claude à chaque session dans la branche `neoforge-1.21.1`.
-> Dernière mise à jour gouvernée : 2026-06-21 par Onivo Studio (mission `M3`, décisions `STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
+> Dernière mise à jour gouvernée : 2026-07-03 par Onivo Studio — mission `M6` (`STAT-DEC-TRIAL-DUNGEON`). Précédentes : `M5` (`STAT-DEC-OVERGEARED-EXPANSION`), `M3` (`STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
 
 ---
 
@@ -14,8 +14,10 @@ STAT MOD est un **système de stats et de progression** sur NeoForge 1.21.1, con
 2. ✅ Intégration Tensura Reincarnated (race, soul level, skill gates)
 3. ✅ Économie magique unifiée : monnaie unique `magicPoints` + 3 gates de stats par nœud (`ARCANE_POWER` + `ERUDITION` + tertiaire selon `SpellRole`) — voir `STAT-DEC-MAGIC-UNIFIED-ECONOMY`
 4. 🟡 Phase 1 Magic : Iron's Spellbooks unified magic tree — **les 9 écoles sont structurellement actives** (catalog complet, 249 nœuds tagués `SpellRole`). Focus tuning Fire ; les autres écoles restent jouables sans aucun gate caché. Voir `STAT-DEC-PHASE-GATING` pour le rationale.
-5. ⚪ Phase 2 Magic : tuning fin par école + ParCool / Overgeared intégrations magiques
-6. ⚪ Release publique gouvernée
+5. 🟡 **Mission M5 — Overgeared Universal Forge** (en cours) : extension structurelle de l'intégration Overgeared pour forger toutes les armes du modpack (~770 cibles) depuis tous les métaux (14 nouveaux `heated_*` + 84 `rough_*` intermediaires + grips + blueprints), dual-gate `FORGING` + `ERUDITION` + `ARCANE_POWER` pour les métaux magiques. Voir `STAT-DEC-OVERGEARED-EXPANSION` et `docs/superpowers/specs/2026-06-30-overgeared-universal-forge-design.md`. **Bloqué** par compile cassé (refacto `MagicNode.role()` → `condition()` inachevée).
+6. 🟡 **Mission M6 — Trial Dungeon** (en cours, 2026-07-03) : dimension `statmod:trial_dungeon` — donjon procédural en grille XZ horizontale avec autels de boss, roster prédéfini SLU (38 boss), HUD scoreboard droite, loot rune shards. **BUILD OK** mais **bug critique** : le `DungeonBossHandler` ne détecte pas les kills de boss → l'étage suivant reste bloqué. Voir §Trial Dungeon.
+7. ⚪ Phase 2 Magic : tuning fin par école + ParCool intégrations magiques
+8. ⚪ Release publique gouvernée
 
 ---
 
@@ -65,13 +67,14 @@ Packages présents et actifs sous `src/main/java/tong/statmod/` :
 
 ```
 ├── STATMod.java                  ← @Mod entry point NeoForge
-├── storage/                      ← AttachmentType + PlayerStatData (arcane, school, race, learnedSpells)
+├── storage/                      ← AttachmentType + PlayerStatData (arcane, school, race, learnedSpells, dungeon state)
 ├── stats/                        ← 23 stats + StatFamily
 ├── progression/                  ← XP combat / non-combat / level-up
 ├── perks/                        ← 84 perks + tiers + effets
 ├── magic/                        ← Catalog, MagicNode, MagicBranch, MagicRace, services
+├── dungeon/                      ← M6 : Trial Dungeon (dimension, portal, islands, bosses, loot)
 ├── network/                      ← CustomPacketPayload (sync, unlock, magic)
-├── client/                       ← caches + GUI (PerkScreen, cosmetic, magic mirror)
+├── client/                       ← caches + GUI (PerkScreen, cosmetic, magic mirror, dungeon HUD)
 ├── integration/                  ← tensura, ironspells, puffish, epicfight, parcool, overgeared
 ├── item/, mixin/, sound/, config/, api/, command/
 ```
@@ -185,6 +188,111 @@ Dépendance hard. Présent sous `integration/tensura/` :
 6. **ResourceLocation** : `fromNamespaceAndPath()`
 7. **pack_format = 34** pour 1.21
 8. **Registries** : `DeferredRegister<AttachmentType<?>>` via `NeoForgeRegistries.Keys.ATTACHMENT_TYPES`
+
+---
+
+## 🏰 Trial Dungeon — Mission M6 (2026-07-03)
+
+### État global
+
+**BUILD OK, boucle MVP fermée.** Le bug `DungeonBossHandler` est **fixé** (2026-07-03) : heuristique robuste — sur un étage boss (multiple de 10), tout mob tué par le joueur unlock l'étage suivant (indépendant du tag et des mods installés, idempotent). Le `DungeonSpawnGuard` (double couche `FinalizeSpawnEvent` + `EntityJoinLevelEvent` avec marker NBT `statmod_dungeon_authorized`) bloque tous les spawns non-autorisés, y compris les spawns custom SLU.
+
+**Island Redesign shippé** (spec + plan `2026-07-03-trial-dungeon-island-redesign`) : silhouettes organiques déterministes par étage (`IslandShaper`, bruit harmonique seedé), underside conique rocheux, spawn pad 3×3 dégagé, dais boss surélevé décentré (altar plus jamais sur le point de spawn), vault treasure à piliers, décor par tier (mousse EARLY → améthyste ABYSS), exits calculés sur la silhouette réelle. `/statdungeon regen <floor>` efface et régénère une île (même seed → même île).
+
+### Fichiers clés
+
+| Fichier | Rôle |
+|---------|------|
+| `dungeon/DungeonDimensions.java` | ResourceKeys pour `statmod:trial_dungeon` |
+| `dungeon/DungeonBlocks.java` | DeferredRegister : `dungeon_portal`, `return_beacon`, `next_floor_teleporter`, `boss_altar` |
+| `dungeon/DungeonPortalBlock.java` | Bloc d'entrée : right-click → tp donjon + particules PORTAL |
+| `dungeon/DungeonTeleportHandler.java` | TP serveur : `enterFloor()`, `returnToOverworld()`, `floorAtPos()`, `floorSpawnPos()` |
+| `dungeon/IslandGenerator.java` | Génération procédurale des îles (combat/treasure/boss) : silhouette organique, underside, pad, dais, vault, décor |
+| `dungeon/IslandShaper.java` | Géométrie pure seedée (silhouette + profondeur underside) — testable sans Bootstrap |
+| `dungeon/FloorPalette.java` | Tier EARLY/MID/LATE/ABYSS → base/accent/light/underside/decorPrimary/decorSecondary |
+| `dungeon/DungeonSpawnGuard.java` | Anti-spawn double couche (FinalizeSpawnEvent + EntityJoinLevelEvent + marker NBT) |
+| `dungeon/DungeonBossAltarBlock.java` | Bloc autel activable par le joueur pour spawner les boss du roster |
+| `dungeon/DungeonBossRoster.java` | Roster prédéfini de 30 étages boss (floor → boss SLU/Vanilla) |
+| `dungeon/DungeonBossHandler.java` | Handler `LivingDeathEvent` : sur boss floor, tout kill joueur → +stats + unlock étage suivant (fixé 2026-07-03) |
+| `dungeon/DungeonXpMultiplier.java` | Multiplicateur d'XP par étage |
+| `dungeon/DungeonNextFloorTeleporterBlock.java` | Bloc téléporteur vers étage suivant (si débloqué) |
+| `dungeon/DungeonReturnBeaconBlock.java` | Bloc retour vers l'overworld |
+| `dungeon/DungeonCommands.java` | `/statdungeon tp\|unlock\|info\|reset\|regen` (floors 1-10000) |
+| `dungeon/DungeonRespawnHandler.java` | Mort dans le donjon → respawn étage 1 auto |
+| `client/DungeonHudOverlay.java` | HUD scoreboard droite (floor, type, tier, boss, max) |
+| `storage/PlayerStatData.java` | Champs `dungeonFloorReached`, `lastOverworldDimensionId`, `lastOverworldPosPacked` |
+| `storage/DungeonStateSerializer.java` | Sérialisation NBT des champs dungeon |
+| `loot/AddDungeonShardModifier.java` | Loot modifier injectant des RuneShards dans le donjon |
+| `config/Config.java` | Catégorie `trial_dungeon` : `xpBaseMultiplier`, `xpPerFloor`, `bossStatGain` |
+
+### Layout horizontal (étages illimités)
+
+Grille XZ : 10 colonnes × rangées infinies, espacement 80 blocs, Y=100 constant.
+```
+[F1] [F2] ... [F10]      Z=0
+[F11][F12]...[F20]        Z=80
+...
+```
+
+### Types d'étages
+
+| Type | Fréquence | Taille | Contenu |
+|------|-----------|--------|---------|
+| Combat | Sauf multiples de 5/10 | 25×25 + mur | 4→14 mobs selon tier (Zombie→Piglin Brute) |
+| Trésor | Multiples de 5 | 30×30 + mur | Coffre avec loot table `dungeon_treasure` |
+| Boss | Multiples de 10 | 40×40 + mur | Autel → clic-droit → spawn boss du roster |
+
+### Roster boss (extrait)
+
+| Floor | Boss | Mode |
+|-------|------|------|
+| 10 | Wither Skeleton | Simple |
+| 20 | Warden | Simple |
+| 30 | Artorias (SLU) | Simple |
+| 40 | Iron Golem, Ornstein, Smough | Vague |
+| 50 | Margit + Morgott (SLU) | Simultané |
+| 60 | Godskin Apostle + Noble (SLU) | Simultané |
+| 70 | Malenia (SLU) | Simple |
+| ... | ... (30 étages prédéfinis, jusqu'à floor 300) | ... |
+
+### Tag `statmod:dungeon_boss`
+
+44 entrées : 3 Vanilla (wither_skeleton, iron_golem, warden), 38 SLU (boss_aatrox, boss_malenia, boss_radahn...), 3 Iron's Spellbooks (dead_king, citadel_keeper, apocalypse_golem).
+
+### Assets créés
+
+- 4 blocs avec textures, modèles, blockstates, loot tables, lang (en_us + fr_fr)
+- Textures générées via `tools/` scripts Python
+- Sons : `dungeon_portal_enter`, `dungeon_boss_kill`, `dungeon_floor_complete`
+- Loot table : `chests/dungeon_treasure.json` (diamants, runes, livres enchantés...)
+- Loot modifier : `loot_modifiers/dungeon_shard.json`
+- Tag : `tags/block/mineable_with_pickaxe.json` mis à jour
+
+### Bug boss handler — RÉSOLU (2026-07-03, validé en jeu)
+
+**Fix** : heuristique robuste dans `DungeonBossHandler` — sur un étage boss (multiple de 10),
+n'importe quel mob tué par le joueur dans la dimension unlock l'étage suivant. Indépendant du
+tag `statmod:dungeon_boss` et des mods installés (fallback Pig si SLU absent → unlock quand
+même). Idempotent (`floorReached > floor` → skip). Le check de tag était le point de fragilité :
+les entités SLU spawnnées par l'altar ne matchaient pas toujours le tag au moment du death event.
+
+### Commandes
+
+```
+/statdungeon info         → progression
+/statdungeon tp <N>       → tp étage N (admin)
+/statdungeon unlock <N>   → débloque étage N
+/statdungeon reset         → reset progression
+```
+
+### Pour tester
+
+```bash
+./gradlew runClient
+/statdungeon unlock 300
+/statdungeon tp 10
+# Clic-droit autel → tuer le boss → vérifier déblocage
+```
 
 ---
 

@@ -133,3 +133,13 @@ tasks.register('runMagicCatalogAudit', JavaExec) {
     workingDir = project.projectDir
     dependsOn 'classes'
 }
+
+// Mission M5 Phase γ — régénère les recettes d'assemblage en scannant libs/*.jar.
+// Le script Python détecte chaque arme par regex + heuristique de path, déduit son
+// matériau et écrit data/statmod/recipe/assembly/<modid>/<weapon>.json.
+tasks.register('generateAssemblyRecipes', Exec) {
+    group = 'statmod'
+    description = 'Scan libs/*.jar and (re)generate Phase γ assembly recipes'
+    workingDir = project.projectDir
+    commandLine 'python', 'tools/generate_assembly_recipes.py'
+}

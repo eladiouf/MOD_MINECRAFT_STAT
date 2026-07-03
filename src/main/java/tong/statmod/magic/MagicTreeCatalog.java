@@ -32,7 +32,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("fire/opener/ignition",
                 MagicBranch.FIRE, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/arcane_focus", "common/foundation/mana_well"),
+                List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("fire/tier/ember_path",
                 MagicBranch.FIRE, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
@@ -43,7 +43,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("fire/tier/inferno_path",
                 MagicBranch.FIRE, MagicNodeKind.BRANCH_TIER, MagicTier.T3,
                 MagicCurrency.SCHOOL, 3,
-                List.of("fire/tier/flame_path", "common/foundation/cast_discipline"), Set.of()));
+                List.of("fire/tier/flame_path"), Set.of()));
 
         add(new MagicNode("fire/signature/firebolt",
                 MagicBranch.FIRE, MagicNodeKind.SIGNATURE_SPELL, MagicTier.T1,
@@ -91,7 +91,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("water/opener/ice_awakening",
                 MagicBranch.WATER, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/arcane_focus", "common/foundation/mana_well"),
+                List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("water/tier/frost_path",
                 MagicBranch.WATER, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
@@ -102,7 +102,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("water/tier/glacier_path",
                 MagicBranch.WATER, MagicNodeKind.BRANCH_TIER, MagicTier.T3,
                 MagicCurrency.SCHOOL, 3,
-                List.of("water/tier/chill_path", "common/foundation/cast_discipline"), Set.of()));
+                List.of("water/tier/chill_path"), Set.of()));
         add(sig("water/signature/snowball", MagicBranch.WATER, MagicTier.T1, 1, "water/tier/frost_path", "irons_spellbooks:snowball"));
         add(sig("water/signature/icicle", MagicBranch.WATER, MagicTier.T1, 1, "water/tier/frost_path", "irons_spellbooks:icicle"));
         add(sig("water/signature/cone_of_cold", MagicBranch.WATER, MagicTier.T1, 1, "water/tier/frost_path", "irons_spellbooks:cone_of_cold"));
@@ -126,7 +126,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("air/opener/spark_awakening",
                 MagicBranch.AIR, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/arcane_focus", "common/foundation/mana_well"),
+                List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("air/tier/spark_path",
                 MagicBranch.AIR, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
@@ -137,7 +137,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("air/tier/thunder_path",
                 MagicBranch.AIR, MagicNodeKind.BRANCH_TIER, MagicTier.T3,
                 MagicCurrency.SCHOOL, 3,
-                List.of("air/tier/storm_path", "common/foundation/cast_discipline"), Set.of()));
+                List.of("air/tier/storm_path"), Set.of()));
         add(sig("air/signature/charge", MagicBranch.AIR, MagicTier.T1, 1, "air/tier/spark_path", "irons_spellbooks:charge"));
         add(sig("air/signature/volt_strike", MagicBranch.AIR, MagicTier.T1, 1, "air/tier/spark_path", "irons_spellbooks:volt_strike"));
         add(sig("air/signature/lightning_bolt", MagicBranch.AIR, MagicTier.T1, 1, "air/tier/spark_path", "irons_spellbooks:lightning_bolt"));
@@ -161,7 +161,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("earth/opener/nature_awakening",
                 MagicBranch.EARTH, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/arcane_focus", "common/foundation/mana_well"),
+                List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("earth/tier/poison_path",
                 MagicBranch.EARTH, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
@@ -172,7 +172,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("earth/tier/grand_nature_path",
                 MagicBranch.EARTH, MagicNodeKind.BRANCH_TIER, MagicTier.T3,
                 MagicCurrency.SCHOOL, 3,
-                List.of("earth/tier/toxin_path", "common/foundation/cast_discipline"), Set.of()));
+                List.of("earth/tier/toxin_path"), Set.of()));
         add(sig("earth/signature/poison_arrow", MagicBranch.EARTH, MagicTier.T1, 1, "earth/tier/poison_path", "irons_spellbooks:poison_arrow"));
         add(sig("earth/signature/poison_splash", MagicBranch.EARTH, MagicTier.T1, 1, "earth/tier/poison_path", "irons_spellbooks:poison_splash"));
         add(sig("earth/signature/root", MagicBranch.EARTH, MagicTier.T1, 1, "earth/tier/poison_path", "irons_spellbooks:root"));
@@ -194,7 +194,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("holy/opener/light_awakening",
                 MagicBranch.HOLY, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/multi_school_gate"), Set.of()));
+                List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("holy/tier/bless_path",
                 MagicBranch.HOLY, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("holy/opener/light_awakening"), Set.of()));
@@ -226,7 +226,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("blood/opener/sanguine_awakening",
                 MagicBranch.BLOOD, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/multi_school_gate"), Set.of()));
+                List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("blood/tier/hemo_path",
                 MagicBranch.BLOOD, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("blood/opener/sanguine_awakening"), Set.of()));
@@ -255,7 +255,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("ender/opener/void_awakening",
                 MagicBranch.ENDER, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/multi_school_gate"), Set.of()));
+                List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("ender/tier/void_path",
                 MagicBranch.ENDER, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("ender/opener/void_awakening"), Set.of()));
@@ -290,7 +290,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("evocation/opener/trick_awakening",
                 MagicBranch.EVOCATION, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/multi_school_gate"), Set.of()));
+                List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("evocation/tier/trick_path",
                 MagicBranch.EVOCATION, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("evocation/opener/trick_awakening"), Set.of()));
@@ -329,7 +329,7 @@ public final class MagicTreeCatalog {
         add(new MagicNode("eldritch/opener/dark_awakening",
                 MagicBranch.ELDRITCH, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
                 MagicCurrency.ARCANE, 2,
-                List.of("common/foundation/multi_school_gate"), Set.of()));
+                List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("eldritch/tier/dark_path",
                 MagicBranch.ELDRITCH, MagicNodeKind.BRANCH_TIER, MagicTier.T1,
                 MagicCurrency.SCHOOL, 1, List.of("eldritch/opener/dark_awakening"), Set.of()));

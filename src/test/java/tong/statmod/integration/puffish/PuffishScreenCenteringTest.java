@@ -4,9 +4,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PuffishScreenCenteringTest {
+
+    /**
+     * L'offset est un int (contrainte de {@code applyChangesWithLimits}) : quand le centre du
+     * tree tombe sur une demi-fraction, le centrage pixel-exact est mathématiquement impossible.
+     * L'invariant atteignable — et suffisant visuellement — est un écart ≤ 0.5 px en float.
+     */
+    private static final double HALF_PIXEL = 0.5 + 1e-6;
+
     @Test
     void centersUnifiedPerkTreeInsideNormalContentViewport() {
         Bounds bounds = parseBounds(PuffishFamilyTreeBuilder.unifiedCategoryFiles().skillsJson());
@@ -18,11 +26,15 @@ class PuffishScreenCenteringTest {
                 bounds.minY, bounds.maxY
         );
 
-        int renderedCenterX = Math.round(1280 / 2.0f + offset.x() + (bounds.minX + bounds.maxX) / 2.0f);
-        int renderedCenterY = Math.round(720 / 2.0f + offset.y() + (bounds.minY + bounds.maxY) / 2.0f);
+        double renderedCenterX = 1280 / 2.0 + offset.x() + (bounds.minX + bounds.maxX) / 2.0;
+        double renderedCenterY = 720 / 2.0 + offset.y() + (bounds.minY + bounds.maxY) / 2.0;
+        double contentCenterX = (17 + (1280 - 17)) / 2.0;
+        double contentCenterY = (54 + (720 - 17)) / 2.0;
 
-        assertEquals(Math.round((17 + (1280 - 17)) / 2.0f), renderedCenterX);
-        assertEquals(Math.round((54 + (720 - 17)) / 2.0f), renderedCenterY);
+        assertTrue(Math.abs(renderedCenterX - contentCenterX) <= HALF_PIXEL,
+                "écart X " + (renderedCenterX - contentCenterX));
+        assertTrue(Math.abs(renderedCenterY - contentCenterY) <= HALF_PIXEL,
+                "écart Y " + (renderedCenterY - contentCenterY));
     }
 
     @Test
@@ -36,11 +48,15 @@ class PuffishScreenCenteringTest {
                 bounds.minY, bounds.maxY
         );
 
-        int renderedCenterX = Math.round(420 / 2.0f + offset.x() + ((bounds.minX + bounds.maxX) / 2.0f) * 0.75f);
-        int renderedCenterY = Math.round(320 / 2.0f + offset.y() + ((bounds.minY + bounds.maxY) / 2.0f) * 0.75f);
+        double renderedCenterX = 420 / 2.0 + offset.x() + ((bounds.minX + bounds.maxX) / 2.0) * 0.75;
+        double renderedCenterY = 320 / 2.0 + offset.y() + ((bounds.minY + bounds.maxY) / 2.0) * 0.75;
+        double contentCenterX = (17 + (420 - 17)) / 2.0;
+        double contentCenterY = (62 + (320 - 17)) / 2.0;
 
-        assertEquals(Math.round((17 + (420 - 17)) / 2.0f), renderedCenterX);
-        assertEquals(Math.round((62 + (320 - 17)) / 2.0f), renderedCenterY);
+        assertTrue(Math.abs(renderedCenterX - contentCenterX) <= HALF_PIXEL,
+                "écart X " + (renderedCenterX - contentCenterX));
+        assertTrue(Math.abs(renderedCenterY - contentCenterY) <= HALF_PIXEL,
+                "écart Y " + (renderedCenterY - contentCenterY));
     }
 
     private static Bounds parseBounds(String json) {

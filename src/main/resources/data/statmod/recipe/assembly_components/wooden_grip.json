@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "statmod:leather_wrap"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "L",
+    "S",
+    "S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:wooden_grip"
+  }
+}

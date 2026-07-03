@@ -14,5 +14,17 @@
   "stat_up": {
     "subtitle": "sound.statmod.stat_up",
     "sounds": ["random/anvil_land"]
+  },
+  "dungeon_portal_enter": {
+    "subtitle": "sound.statmod.dungeon_portal_enter",
+    "sounds": ["portal/portal"]
+  },
+  "dungeon_boss_kill": {
+    "subtitle": "sound.statmod.dungeon_boss_kill",
+    "sounds": ["random/levelup"]
+  },
+  "dungeon_floor_complete": {
+    "subtitle": "sound.statmod.dungeon_floor_complete",
+    "sounds": ["random/levelup"]
   }
 }

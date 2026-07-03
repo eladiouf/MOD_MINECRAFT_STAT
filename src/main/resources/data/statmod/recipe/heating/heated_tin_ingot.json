@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "ingredient": {
+    "item": "magistuarmory:tin_ingot"
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:heated_tin_ingot"
+  }
+}

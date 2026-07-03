@@ -1,5 +1,7 @@
 package tong.statmod.mixin;
 
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.puffish.skillsmod.client.data.ClientCategoryData;
 import net.puffish.skillsmod.client.data.ClientSkillScreenData;
 import net.puffish.skillsmod.client.gui.SkillsScreen;
@@ -18,14 +20,16 @@ import tong.statmod.integration.puffish.PuffishScreenCentering;
 
 @Pseudo
 @Mixin(value = SkillsScreen.class, remap = false)
-public abstract class PuffishSkillsScreenMixin {
+public abstract class PuffishSkillsScreenMixin extends Screen {
     @Shadow @Final private ClientSkillScreenData data;
     @Shadow private int contentPaddingTop;
     @Shadow private int contentPaddingLeft;
     @Shadow private int contentPaddingRight;
     @Shadow private int contentPaddingBottom;
-    @Shadow public int width;
-    @Shadow public int height;
+
+    protected PuffishSkillsScreenMixin(Component title) {
+        super(title);
+    }
 
     @Invoker("applyChangesWithLimits")
     protected abstract void statmod$applyChangesWithLimits(int x, int y, float scale, ClientCategoryData data);

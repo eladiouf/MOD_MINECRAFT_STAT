@@ -47,6 +47,28 @@ public class PlayerStatData {
     private tong.statmod.magic.MagicRace magicRace;
     private tong.statmod.magic.MagicBranch chosenStartBranch;
 
+    // Trial Dungeon state (Mission M6 — Phase β).
+    /**
+     * Plus haut étage du Trial Dungeon débloqué pour ce joueur. Défaut = 1 (l'étage 1 est
+     * accessible dès qu'un portail est posé). Incrémenté par {@code DungeonBossHandler}
+     * lorsqu'un boss d'étage tombe.
+     */
+    private int dungeonFloorReached = 1;
+    /**
+     * Identifiant de la dimension d'où le joueur est entré dans le donjon (typiquement
+     * {@code minecraft:overworld}). Utilisé par le return beacon pour renvoyer exactement là
+     * d'où le joueur vient — même s'il a entré via une dimension modée. Nullable tant que
+     * le joueur n'a jamais utilisé de portail.
+     */
+    private String lastOverworldDimensionId;
+    /**
+     * Position packée ({@link net.minecraft.core.BlockPos#asLong()}) du bloc portail dans la
+     * dimension d'origine. Return beacon tp exactement à cette position + 1Y (au-dessus du
+     * portail). {@link #hasLastOverworldPos} indique si le champ a déjà été renseigné.
+     */
+    private long lastOverworldPosPacked;
+    private boolean hasLastOverworldPos;
+
     public int[] getLevels() { return levels.clone(); }
     public int[] getXp() { return xp.clone(); }
     public int[] getPerkPoints() { return perkPoints.clone(); }
@@ -292,6 +314,28 @@ public class PlayerStatData {
 
     public tong.statmod.magic.MagicBranch getChosenStartBranch() { return chosenStartBranch; }
     public void setChosenStartBranch(tong.statmod.magic.MagicBranch b) { chosenStartBranch = b; }
+
+    // Trial Dungeon — accessors (Mission M6).
+    public int getDungeonFloorReached() { return dungeonFloorReached; }
+    public void setDungeonFloorReached(int floor) { dungeonFloorReached = Math.max(1, floor); }
+    /**
+     * Débloque l'étage {@code floor} pour ce joueur sans jamais régresser. Idempotent : appeler
+     * plusieurs fois avec la même valeur ne change rien ; appeler avec une valeur inférieure au
+     * plus haut atteint est ignoré.
+     */
+    public void unlockDungeonFloor(int floor) {
+        if (floor > dungeonFloorReached) dungeonFloorReached = floor;
+    }
+
+    public String getLastOverworldDimensionId() { return lastOverworldDimensionId; }
+    public void setLastOverworldDimensionId(String id) { this.lastOverworldDimensionId = id; }
+
+    public long getLastOverworldPosPacked() { return lastOverworldPosPacked; }
+    public boolean hasLastOverworldPos() { return hasLastOverworldPos; }
+    public void setLastOverworldPos(long packed) {
+        this.lastOverworldPosPacked = packed;
+        this.hasLastOverworldPos = true;
+    }
 
     public int maxStatLevel() {
         int configMax = Config.getMaxStatLevel();

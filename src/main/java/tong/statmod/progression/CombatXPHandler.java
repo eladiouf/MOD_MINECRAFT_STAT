@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import tong.statmod.STATMod;
+import tong.statmod.dungeon.DungeonXpMultiplier;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
@@ -26,6 +27,8 @@ public class CombatXPHandler {
 
         LivingEntity target = event.getEntity();
         int xp = Math.max(1, Math.round(target.getMaxHealth() * 1.5f));
+        // Mission M6 — bonus XP dans le Trial Dungeon proportionnel à l'étage.
+        xp = DungeonXpMultiplier.applyToXp(xp, player.level().dimension(), player.getBlockX(), player.getBlockZ());
         StatType stat = resolveWeaponStat(player.getMainHandItem());
 
         boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, player.getData(ModAttachments.STATS), true);
@@ -39,7 +42,7 @@ public class CombatXPHandler {
         }
     }
 
-    static Player resolveAttacker(Entity source, Entity direct) {
+    public static Player resolveAttacker(Entity source, Entity direct) {
         if (source instanceof Player player) {
             return player;
         }

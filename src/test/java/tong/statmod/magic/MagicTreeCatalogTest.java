@@ -40,10 +40,10 @@ class MagicTreeCatalogTest {
     }
 
     @Test
-    void fire_opener_requires_first_two_common_foundations() {
+    void fire_opener_requires_only_arcane_focus() {
         MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
+        assertEquals(1, opener.prerequisites().size());
         assertTrue(opener.prerequisites().contains("common/foundation/arcane_focus"));
-        assertTrue(opener.prerequisites().contains("common/foundation/mana_well"));
     }
 
     @Test

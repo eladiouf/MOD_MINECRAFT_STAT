@@ -19,6 +19,9 @@ public class ModLootModifiers {
     public static final Supplier<MapCodec<? extends IGlobalLootModifier>> ADD_OVERGEARED_LOOT =
             GLM.register("add_overgeared_loot", () -> AddOvergearedLootModifier.CODEC);
 
+    public static final Supplier<MapCodec<? extends IGlobalLootModifier>> ADD_DUNGEON_SHARD =
+            GLM.register("add_dungeon_shard", () -> AddDungeonShardModifier.CODEC);
+
     public static void register(IEventBus modBus) {
         GLM.register(modBus);
     }

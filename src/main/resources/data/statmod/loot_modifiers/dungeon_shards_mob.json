@@ -1,0 +1,8 @@
+{
+  "type": "statmod:add_dungeon_shard",
+  "conditions": [
+    {
+      "condition": "minecraft:killed_by_player"
+    }
+  ]
+}

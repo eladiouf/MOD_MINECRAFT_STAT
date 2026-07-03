@@ -1,7 +1,6 @@
 package tong.statmod.integration.puffish;
 
 import org.junit.jupiter.api.Test;
-import tong.statmod.magic.MagicBranch;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.ArrayList;
@@ -13,8 +12,7 @@ class PuffishMagicSyncServiceTest {
     @Test
     void mirrorsMagicNodesIntoTheUnifiedMagicCategory() {
         PlayerStatData data = new PlayerStatData();
-        data.setArcanePoints(4);
-        data.setSchoolPoints(MagicBranch.FIRE, 2);
+        data.setMagicPoints(6);
         data.addMagicNode("common/foundation/arcane_focus");
         data.addMagicNode("fire/opener/ignition");
 

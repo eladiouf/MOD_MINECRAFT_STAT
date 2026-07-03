@@ -57,6 +57,10 @@ public final class EnchantmentAnvilRecipeCatalog {
 
     private EnchantmentAnvilRecipeCatalog() {}
 
+    public static List<RecipeSpec> allRecipes() {
+        return RECIPES;
+    }
+
     public static RecipeSpec match(
             String baseId,
             int baseCount,

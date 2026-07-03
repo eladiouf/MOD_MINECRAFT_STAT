@@ -1,0 +1,24 @@
+{
+  "type": "overgeared:forging",
+  "blueprint": [
+    "staff"
+  ],
+  "category": "TOOL_HEADS",
+  "hammering": 10,
+  "key": {
+    "#": {
+      "item": "statmod:heated_orichalcum_ingot"
+    }
+  },
+  "pattern": [
+    "#",
+    "#",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:rough_staff_core_orichalcum"
+  },
+  "show_notification": false,
+  "tier": "diamond"
+}

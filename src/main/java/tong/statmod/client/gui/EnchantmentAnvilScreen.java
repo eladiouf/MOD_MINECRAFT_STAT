@@ -50,6 +50,12 @@ public class EnchantmentAnvilScreen extends AbstractContainerScreen<EnchantmentA
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         graphics.blit(TEXTURE, leftPos, topPos, imageWidth, imageHeight,
                 0, 0, BG_TEX_W, BG_TEX_H, BG_TEX_W, BG_TEX_H);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 17, 38, ForgeStationScreenDecor.SlotPalette.SILVER);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 44, 38, ForgeStationScreenDecor.SlotPalette.SILVER);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 71, 38, ForgeStationScreenDecor.SlotPalette.SILVER);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 98, 38, ForgeStationScreenDecor.SlotPalette.BRONZE);
+        ForgeStationScreenDecor.renderSlotFrame(graphics, leftPos, topPos, 134, 38, ForgeStationScreenDecor.SlotPalette.GOLD);
+        ForgeStationScreenDecor.renderPlayerInventorySlots(graphics, leftPos, topPos);
     }
 
     @Override
@@ -66,6 +72,7 @@ public class EnchantmentAnvilScreen extends AbstractContainerScreen<EnchantmentA
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
+        renderExpectedSupportGhost(graphics);
         renderSupportTooltip(graphics, mouseX, mouseY);
         renderTooltip(graphics, mouseX, mouseY);
     }
@@ -97,6 +104,26 @@ public class EnchantmentAnvilScreen extends AbstractContainerScreen<EnchantmentA
             case MISSING_SUPPORT, WRONG_SUPPORT -> EMBER;
             case INVALID_RECIPE -> ASH;
             default -> GRAY_500;
+        };
+    }
+
+    private void renderExpectedSupportGhost(GuiGraphics graphics) {
+        if (!shouldRenderExpectedSupportGhost()) {
+            return;
+        }
+
+        ItemStack expectedSupport = menu.getExpectedSupportStack();
+        if (expectedSupport.isEmpty()) {
+            return;
+        }
+
+        graphics.renderFakeItem(expectedSupport, leftPos + SUPPORT_SLOT_X, topPos + SUPPORT_SLOT_Y);
+    }
+
+    private boolean shouldRenderExpectedSupportGhost() {
+        return switch (menu.getInputFeedback().state()) {
+            case MISSING_SUPPORT, WRONG_SUPPORT -> true;
+            default -> false;
         };
     }
 

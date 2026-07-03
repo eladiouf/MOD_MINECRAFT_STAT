@@ -8,9 +8,13 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.lwjgl.glfw.GLFW;
 import tong.statmod.STATMod;
+import tong.statmod.client.gui.EnchantmentAnvilScreen;
+import tong.statmod.client.gui.InfusionForgeScreen;
 import tong.statmod.integration.epicfight.EpicFightClientCompat;
+import tong.statmod.menu.ModMenuTypes;
 
 @EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class ClientSetup {
@@ -44,6 +48,13 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         StatHudOverlay.register(event);
+        DungeonHudOverlay.register(event);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenuTypes.INFUSION_FORGE_MENU.get(), InfusionForgeScreen::new);
+        event.register(ModMenuTypes.ENCHANTMENT_ANVIL_MENU.get(), EnchantmentAnvilScreen::new);
     }
 
     @SubscribeEvent

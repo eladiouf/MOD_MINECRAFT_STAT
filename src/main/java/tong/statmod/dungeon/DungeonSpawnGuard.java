@@ -32,11 +32,31 @@ public final class DungeonSpawnGuard {
 
     public static final String AUTHORIZED_TAG = "statmod_dungeon_authorized";
 
+    /**
+     * Profondeur de « spawn autorisé en cours ». {@code EntityType.spawn()} fait naître l'entité
+     * <b>et</b> déclenche {@code EntityJoinLevelEvent} de façon synchrone <i>avant</i> de rendre la
+     * main — donc avant qu'on ait pu poser {@link #AUTHORIZED_TAG}. Ce compteur (incrémenté autour
+     * de l'appel de spawn) dit au garde « l'entité qui rejoint maintenant, c'est nous » → il la
+     * laisse passer et pose le tag lui-même. Sans ça, le garde annulait nos propres vagues (« aucun
+     * mob »). Serveur mono-thread → un simple compteur statique suffit (spawns imbriqués tolérés).
+     */
+    private static int authorizingDepth = 0;
+
     private DungeonSpawnGuard() {}
 
-    /** Spawn + marque l'entité comme autorisée (elle passera le garde). */
+    /**
+     * Spawn + marque l'entité comme autorisée. Le tag est posé <b>pendant</b> le spawn (via
+     * {@link #authorizingDepth}) pour que le garde laisse passer l'entité au moment de son join,
+     * puis re-posé ici par sécurité (invocations différées, etc.).
+     */
     public static <T extends Entity> T spawnAuthorized(Supplier<T> spawnAction) {
-        T entity = spawnAction.get();
+        authorizingDepth++;
+        T entity;
+        try {
+            entity = spawnAction.get();
+        } finally {
+            authorizingDepth--;
+        }
         if (entity != null) {
             entity.getPersistentData().putBoolean(AUTHORIZED_TAG, true);
         }
@@ -55,16 +75,21 @@ public final class DungeonSpawnGuard {
 
         // ══ Liste blanche stricte (2026-07-04, fix « invasion de mobs ») ══
         // Le donjon ne contient QUE ce que nous spawnons. Un mob est autorisé si :
-        //   (a) il porte notre marqueur AUTHORIZED_TAG (vague / boss posés par spawnAuthorized), OU
-        //   (b) un combat de boss est en cours sur l'étage → c'est une invocation/add du boss.
+        //   (a) il naît via spawnAuthorized (authorizingDepth > 0) → c'est notre spawn EN COURS
+        //       (le join arrive avant qu'on ait pu poser le tag) : on l'autorise et on tague ici, OU
+        //   (b) il porte déjà AUTHORIZED_TAG (invocation différée d'une entité à nous), OU
+        //   (c) un combat de boss est en cours sur l'étage → c'est une invocation/add du boss.
         // TOUT le reste est annulé — plus de fenêtre temporelle qui laissait passer un flux continu.
-        boolean authorized = entity.getPersistentData().getBoolean(AUTHORIZED_TAG);
-        boolean bossSummon = !authorized && DungeonBossTracker.isTracked(floor)
-                && isControlledMob(entity.getType());
-
-        if (!authorized && !bossSummon) {
-            event.setCanceled(true);
-            return;
+        if (authorizingDepth > 0) {
+            entity.getPersistentData().putBoolean(AUTHORIZED_TAG, true);
+        } else {
+            boolean authorized = entity.getPersistentData().getBoolean(AUTHORIZED_TAG);
+            boolean bossSummon = !authorized && DungeonBossTracker.isTracked(floor)
+                    && isControlledMob(entity.getType());
+            if (!authorized && !bossSummon) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         // Cale la difficulté L2 sur l'étage pour toute entité autorisée qui reste (vague, boss,

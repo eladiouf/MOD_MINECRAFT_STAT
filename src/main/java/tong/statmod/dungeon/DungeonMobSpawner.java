@@ -193,14 +193,29 @@ public final class DungeonMobSpawner {
         return true;
     }
 
-    /** Applique les niveaux L2 échus (après l'init de L2 → autoritaire). */
+    /**
+     * Applique les niveaux L2 échus (après l'init de L2 → autoritaire).
+     *
+     * <p><b>Anti-CME</b> : on extrait d'abord les entrées dues dans une liste locale, PUIS on
+     * applique. {@code applyFloorLevel} peut faire naître des entités (parties de boss, invocations)
+     * → {@code EntityJoinLevelEvent} → {@code DungeonSpawnGuard.scheduleL2} → {@code L2_QUEUE.add}.
+     * Si on appliquait pendant l'itération de {@code L2_QUEUE}, cet ajout ré-entrant provoquerait un
+     * {@link java.util.ConcurrentModificationException} (crash observé au spawn du boss étage 10).
+     */
     private static void flushL2Queue() {
         if (L2_QUEUE.isEmpty()) return;
+
+        List<L2Pending> due = new ArrayList<>();
         Iterator<L2Pending> it = L2_QUEUE.iterator();
         while (it.hasNext()) {
             L2Pending p = it.next();
             if (serverTick < p.dueTick) continue;
             it.remove();
+            due.add(p);
+        }
+
+        // Application HORS itération : un scheduleL2 ré-entrant s'ajoute sans risque à L2_QUEUE.
+        for (L2Pending p : due) {
             if (p.mob.isAlive()) {
                 L2HostilityBridge.applyFloorLevel(p.mob, p.floor);
             }

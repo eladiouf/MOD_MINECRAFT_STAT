@@ -1,7 +1,9 @@
 package tong.statmod.dungeon;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -53,8 +55,20 @@ public final class DungeonRespawnHandler {
         player.hurtTime = 0;
         player.hurtMarked = true;
 
+        // PURGE l'étage AVANT de réapparaître : sans ça, le joueur renaissait au centre, au milieu
+        // de la horde + mini-boss de sa tentative précédente → mort instantanée → boucle infinie
+        // (observée à l'étage 3 « thème ORC » avec l'Orc Lord). On repart sur une vague propre.
+        if (player.level() instanceof ServerLevel sl) {
+            DungeonMobSpawner.clearFloorMobs(sl, floor);
+        }
+
         // Réapparition au début du MÊME étage (régénéré, nouvelle vague) — on réessaie l'étage.
         DungeonTeleportHandler.enterFloor(player, floor);
+
+        // Grâce de réapparition : brève invulnérabilité + résistance/lenteur des mobs autour, le
+        // temps de reprendre pied (5 s d'invuln vanilla + résistance forte).
+        player.invulnerableTime = 100; // ~5 s
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 4, false, false));
 
         final int retryFloor = floor;
         player.displayClientMessage(net.minecraft.network.chat.Component.translatable(

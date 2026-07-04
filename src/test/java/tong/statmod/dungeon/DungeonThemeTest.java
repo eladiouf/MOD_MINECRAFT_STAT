@@ -14,10 +14,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DungeonThemeTest {
 
     @Test
-    void themedFloorsAreThoseEndingInThree() {
-        for (int f : new int[]{3, 13, 23, 33, 43, 53, 63, 73, 83, 93}) {
+    void themedFloorsAreThoseEndingInThreeFrom13() {
+        for (int f : new int[]{13, 23, 33, 43, 53, 63, 73, 83, 93}) {
             assertTrue(DungeonTheme.isThemed(f), "Étage " + f + " devrait être à thème");
             assertNotNull(DungeonTheme.forFloor(f));
+        }
+    }
+
+    @Test
+    void earlyFloorsAreNeverThemed() {
+        // Le palier 1 (1-10) reste normal — pas de mini-boss de thème trop tôt.
+        for (int f = 1; f <= 12; f++) {
+            assertNull(DungeonTheme.forFloor(f), "Étage " + f + " (avant 13) ne doit pas être à thème");
         }
     }
 
@@ -38,12 +46,12 @@ public class DungeonThemeTest {
 
     @Test
     void themeRotatesAcrossTiers() {
-        // Les étages ×3 successifs (3, 13, 23…) doivent parcourir des thèmes différents.
-        DungeonTheme f3 = DungeonTheme.forFloor(3);
+        // Les étages à thème successifs (13, 23, 33…) doivent parcourir des thèmes différents.
         DungeonTheme f13 = DungeonTheme.forFloor(13);
         DungeonTheme f23 = DungeonTheme.forFloor(23);
-        assertNotNull(f3);
-        assertTrue(f3 != f13 || f13 != f23, "Les thèmes devraient tourner entre paliers");
+        DungeonTheme f33 = DungeonTheme.forFloor(33);
+        assertNotNull(f13);
+        assertTrue(f13 != f23 || f23 != f33, "Les thèmes devraient tourner entre paliers");
     }
 
     @Test

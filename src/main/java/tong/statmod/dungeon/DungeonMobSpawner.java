@@ -99,6 +99,28 @@ public final class DungeonMobSpawner {
     }
 
     /**
+     * Supprime TOUS les mobs autorisés de l'étage (vague + boss/mini-boss + invocations) et purge
+     * la file d'attente de cet étage. À appeler avant de faire réessayer un étage au joueur (mort)
+     * pour éviter qu'il réapparaisse au milieu de la horde précédente → mort instantanée en boucle.
+     */
+    public static void clearFloorMobs(ServerLevel lv, int floor) {
+        BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
+        AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
+        int removed = 0;
+        for (Mob m : lv.getEntitiesOfClass(Mob.class, area,
+                m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG))) {
+            m.discard();
+            removed++;
+        }
+        QUEUE.removeIf(p -> p.floor() == floor);
+        PENDING_FLOORS.remove(floor);
+        DungeonBossTracker.clear(floor);
+        if (removed > 0) {
+            STATMod.LOGGER.info("[TrialDungeon] Étage {} purgé : {} mobs retirés (retry)", floor, removed);
+        }
+    }
+
+    /**
      * Met en file jusqu'à {@code want} mobs de la vague de l'étage, placés dans l'anneau de combat
      * sur des positions valides. Marque l'étage comme « en attente ». Retourne le nombre
      * effectivement mis en file.

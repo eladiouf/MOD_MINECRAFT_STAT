@@ -60,4 +60,9 @@ public final class DungeonBossTracker {
         }
         return false;
     }
+
+    /** Oublie tout le suivi de l'étage (retry / purge). */
+    public static void clear(int floor) {
+        ALIVE.remove(floor);
+    }
 }

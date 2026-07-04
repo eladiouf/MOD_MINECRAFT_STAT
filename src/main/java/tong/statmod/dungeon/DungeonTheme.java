@@ -99,15 +99,20 @@ public enum DungeonTheme {
     /** IDs candidats pour le mini-boss (le premier disponible est utilisé). */
     public List<String> miniBossIds() { return miniBoss; }
 
+    /** Premier étage pouvant être thématique. Le palier 1 (1-10) reste « normal » pour laisser le
+     * joueur se stuffer avant d'affronter un mini-boss de thème (l'Orc Lord à l'étage 3 était
+     * mortel pour un joueur qui débute). Premier étage à thème : 13. */
+    private static final int MIN_THEMED_FLOOR = 13;
+
     /**
      * Thème d'un étage, ou {@code null} si l'étage n'est pas thématique.
      *
-     * <p>Règle : les étages de combat (ni ×5 ni ×10) dont le numéro est ≡ 3 (mod 10) — soit 3, 13,
-     * 23, 33… — sont thématiques. Le thème tourne de façon déterministe selon l'étage, donc chaque
-     * palier de 10 a son étage à thème, et le thème varie d'un palier à l'autre.
+     * <p>Règle : à partir de {@value #MIN_THEMED_FLOOR}, les étages de combat dont le numéro est ≡ 3
+     * (mod 10) — soit 13, 23, 33… — sont thématiques. Le thème tourne de façon déterministe selon
+     * l'étage, donc chaque palier a son étage à thème, et le thème varie d'un palier à l'autre.
      */
     public static DungeonTheme forFloor(int floor) {
-        if (floor <= 0) return null;
+        if (floor < MIN_THEMED_FLOOR) return null;
         if (floor % 10 == 0 || floor % 5 == 0) return null; // boss / trésor : pas de thème
         if (floor % 10 != 3) return null;                   // seul l'étage ×3 du palier est thématique
         DungeonTheme[] all = values();

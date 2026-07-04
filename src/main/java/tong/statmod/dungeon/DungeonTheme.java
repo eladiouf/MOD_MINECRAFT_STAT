@@ -42,7 +42,19 @@ public enum DungeonTheme {
 
     MAGE("§dArcane Conclave", "☠ Archevoker",
             List.of("irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer", "irons_spellbooks:cultist", "irons_spellbooks:apothecarist"),
-            List.of("irons_spellbooks:archevoker", "irons_spellbooks:priest"));
+            List.of("irons_spellbooks:archevoker", "irons_spellbooks:priest")),
+
+    PIRATE("§3Kraken's Crew", "☠ Pirate Captain",
+            List.of("block_factorys_bosses:crossbow_pirate", "block_factorys_bosses:pirate_rook", "block_factorys_bosses:soul_skeleton"),
+            List.of("block_factorys_bosses:pirate_captain", "block_factorys_bosses:underworld_knight")),
+
+    FROST("§bFrozen Depths", "☠ Yeti",
+            List.of("block_factorys_bosses:frozen_skeleton", "block_factorys_bosses:soul_skeleton", "tensura:direwolf"),
+            List.of("block_factorys_bosses:yeti", "block_factorys_bosses:underworld_knight")),
+
+    DRAGON("§cDragon's Roost", "☠ Infernal Dragon",
+            List.of("block_factorys_bosses:dragon_guard_sword", "block_factorys_bosses:flaming_skeleton_guard_sword", "block_factorys_bosses:soul_knight_wither_skeleton"),
+            List.of("block_factorys_bosses:infernal_dragon", "xbbsroaringknightmod:roaring_knight"));
 
     private final String displayName;
     private final String bossName;

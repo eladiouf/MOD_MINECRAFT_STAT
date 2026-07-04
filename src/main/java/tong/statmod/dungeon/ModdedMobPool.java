@@ -44,6 +44,9 @@ public final class ModdedMobPool {
         // Tensura — immense bestiaire (gobelins, orcs, daemons, colosses, élémentaux)
         addTensuraMobs(modded, tier);
 
+        // Block Factory's Bosses — pirates, morts-vivants d'âme, gardiens de dragon
+        addBfbMobs(modded, tier);
+
         return modded;
     }
 
@@ -154,6 +157,29 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "tensura:evil_centipede");
                 addIfAvailable(pool, "tensura:elemental_colossus");
                 addIfAvailable(pool, "tensura:charybdis");
+            }
+        }
+    }
+
+    /** Mobs Block Factory's Bosses (pirates, soul skeletons, dragon guards) — tiers hauts. */
+    private static void addBfbMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("block_factorys_bosses")) return;
+
+        switch (tier) {
+            case EARLY, MID -> {
+                addIfAvailable(pool, "block_factorys_bosses:soul_skeleton");
+                addIfAvailable(pool, "block_factorys_bosses:crossbow_pirate");
+                addIfAvailable(pool, "block_factorys_bosses:frozen_skeleton");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "block_factorys_bosses:pirate_rook");
+                addIfAvailable(pool, "block_factorys_bosses:soul_knight_wither_skeleton");
+                addIfAvailable(pool, "block_factorys_bosses:flaming_skeleton_guard_sword");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "block_factorys_bosses:pirate_captain");
+                addIfAvailable(pool, "block_factorys_bosses:dragon_guard_sword");
+                addIfAvailable(pool, "block_factorys_bosses:underworld_knight");
             }
         }
     }

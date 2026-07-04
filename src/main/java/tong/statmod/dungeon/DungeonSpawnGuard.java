@@ -140,7 +140,9 @@ public final class DungeonSpawnGuard {
             // Autoriser les mods de notre liste blanche (modId réels, cf. ModdedMobPool)
             return "slu".equals(namespace) ||
                    "irons_spellbooks".equals(namespace) ||
-                   "tensura".equals(namespace);
+                   "tensura".equals(namespace) ||
+                   "block_factorys_bosses".equals(namespace) ||
+                   "xbbsroaringknightmod".equals(namespace);
 
         } catch (Exception e) {
             return false;

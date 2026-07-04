@@ -236,8 +236,8 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/IslandTerrainShaper.java` | Relief organique **montant uniquement** sur le pourtour (hors emprise forteresse) — `rimHeightAt` pure/testable |
 | `dungeon/IslandShaper.java` | Géométrie pure seedée (silhouette + profondeur underside) — testable sans Bootstrap |
 | `dungeon/DungeonMasterpiece.java` | Briques partagées : `buildUnderside` (cône) + table mobs (`mobPool`/`mobCount`) |
-| `dungeon/ModdedMobPool.java` | Mobs moddés (`slu` + `irons_spellbooks` + `tensura` + `block_factorys_bosses`) combinés au pool vanilla (50 %) ; pool 100 % thématique si étage à thème |
-| `dungeon/DungeonTheme.java` | 10 étages à thème « Solo Leveling » (ORC/UNDEAD/DEMON/ELEMENTAL/BEAST/INSECT/MAGE/PIRATE/FROST/DRAGON) : horde mono-famille + mini-boss ; étages ×3 du palier |
+| `dungeon/ModdedMobPool.java` | Mobs moddés (10 mods : slu, irons_spellbooks, tensura, block_factorys_bosses, cataclysm, born_in_chaos_v1, mutantmonsters, mowziesmobs, alexsmobs) + vanilla (50 %) ; pool 100 % thématique si étage à thème |
+| `dungeon/DungeonTheme.java` | 17 étages à thème « Solo Leveling » (ORC/UNDEAD/DEMON/ELEMENTAL/BEAST/INSECT/MAGE/PIRATE/FROST/DRAGON/DRAUGR/DEEP/NIGHTMARE/PUMPKIN/MUTANT/GUARDIAN) : horde mono-famille + mini-boss ; étages ×3 du palier |
 | `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
 | `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : retire tout drop non-`statmod:` dans le donjon (les mobs SLU MCreator droppent leur équipement hors loot table → le GLM ne les voyait pas) |
 | `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |

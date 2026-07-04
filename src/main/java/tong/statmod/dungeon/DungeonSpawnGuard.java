@@ -142,7 +142,12 @@ public final class DungeonSpawnGuard {
                    "irons_spellbooks".equals(namespace) ||
                    "tensura".equals(namespace) ||
                    "block_factorys_bosses".equals(namespace) ||
-                   "xbbsroaringknightmod".equals(namespace);
+                   "xbbsroaringknightmod".equals(namespace) ||
+                   "cataclysm".equals(namespace) ||
+                   "born_in_chaos_v1".equals(namespace) ||
+                   "mutantmonsters".equals(namespace) ||
+                   "mowziesmobs".equals(namespace) ||
+                   "alexsmobs".equals(namespace);
 
         } catch (Exception e) {
             return false;

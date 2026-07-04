@@ -47,6 +47,21 @@ public final class ModdedMobPool {
         // Block Factory's Bosses — pirates, morts-vivants d'âme, gardiens de dragon
         addBfbMobs(modded, tier);
 
+        // L_Ender's Cataclysm — draugr, deeplings, kobolds, berserkers
+        addCataclysmMobs(modded, tier);
+
+        // Born in Chaos — hordes de morts-vivants et citrouilles cauchemardesques
+        addBornInChaosMobs(modded, tier);
+
+        // Mutant Monsters — versions mutantes des mobs vanilla (élites)
+        addMutantMobs(modded, tier);
+
+        // Mowzie's Mobs — créatures uniques à IA avancée
+        addMowzieMobs(modded, tier);
+
+        // Alex's Mobs — quelques hostiles (le mod est surtout ambiant)
+        addAlexHostiles(modded, tier);
+
         return modded;
     }
 
@@ -181,6 +196,116 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "block_factorys_bosses:dragon_guard_sword");
                 addIfAvailable(pool, "block_factorys_bosses:underworld_knight");
             }
+        }
+    }
+
+    /** L_Ender's Cataclysm — draugr, deeplings, kobolds (les boss vont aux thèmes/roster). */
+    private static void addCataclysmMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("cataclysm")) return;
+        switch (tier) {
+            case EARLY, MID -> {
+                addIfAvailable(pool, "cataclysm:draugr");
+                addIfAvailable(pool, "cataclysm:koboleton");
+                addIfAvailable(pool, "cataclysm:deepling");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "cataclysm:elite_draugr");
+                addIfAvailable(pool, "cataclysm:deepling_brute");
+                addIfAvailable(pool, "cataclysm:deepling_warlock");
+                addIfAvailable(pool, "cataclysm:endermaptera");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "cataclysm:royal_draugr");
+                addIfAvailable(pool, "cataclysm:ignited_berserker");
+                addIfAvailable(pool, "cataclysm:deepling_priest");
+                addIfAvailable(pool, "cataclysm:aptrgangr");
+            }
+        }
+    }
+
+    /** Born in Chaos — hordes de morts-vivants et citrouilles. */
+    private static void addBornInChaosMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("born_in_chaos_v1")) return;
+        switch (tier) {
+            case EARLY -> {
+                addIfAvailable(pool, "born_in_chaos_v1:decaying_zombie");
+                addIfAvailable(pool, "born_in_chaos_v1:decrepit_skeleton");
+                addIfAvailable(pool, "born_in_chaos_v1:baby_skeleton");
+            }
+            case MID -> {
+                addIfAvailable(pool, "born_in_chaos_v1:zombie_bruiser");
+                addIfAvailable(pool, "born_in_chaos_v1:skeleton_thrasher");
+                addIfAvailable(pool, "born_in_chaos_v1:dread_hound");
+                addIfAvailable(pool, "born_in_chaos_v1:pumpkin_bruiser");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "born_in_chaos_v1:bonescaller");
+                addIfAvailable(pool, "born_in_chaos_v1:seared_spirit");
+                addIfAvailable(pool, "born_in_chaos_v1:skeleton_demoman");
+                addIfAvailable(pool, "born_in_chaos_v1:sir_pumpkinhead");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "born_in_chaos_v1:fallen_chaos_knight");
+                addIfAvailable(pool, "born_in_chaos_v1:door_knight");
+                addIfAvailable(pool, "born_in_chaos_v1:infernal_spirit");
+                addIfAvailable(pool, "born_in_chaos_v1:dire_hound_leader");
+            }
+        }
+    }
+
+    /** Mutant Monsters — élites mutants des mobs vanilla (surtout LATE/ABYSS). */
+    private static void addMutantMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("mutantmonsters")) return;
+        switch (tier) {
+            case MID -> addIfAvailable(pool, "mutantmonsters:mutant_zombie");
+            case LATE -> {
+                addIfAvailable(pool, "mutantmonsters:mutant_skeleton");
+                addIfAvailable(pool, "mutantmonsters:mutant_creeper");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "mutantmonsters:mutant_enderman");
+                addIfAvailable(pool, "mutantmonsters:mutant_zombie");
+            }
+            default -> { }
+        }
+    }
+
+    /** Mowzie's Mobs — créatures uniques (les boss vont aux thèmes). */
+    private static void addMowzieMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("mowziesmobs")) return;
+        switch (tier) {
+            case EARLY, MID -> {
+                addIfAvailable(pool, "mowziesmobs:foliaath");
+                addIfAvailable(pool, "mowziesmobs:umvuthana_raptor");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "mowziesmobs:umvuthana_crane");
+                addIfAvailable(pool, "mowziesmobs:grottol");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "mowziesmobs:naga");
+                addIfAvailable(pool, "mowziesmobs:umvuthi");
+            }
+        }
+    }
+
+    /** Alex's Mobs — uniquement les hostiles (le mod est majoritairement ambiant/passif). */
+    private static void addAlexHostiles(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("alexsmobs")) return;
+        switch (tier) {
+            case MID -> {
+                addIfAvailable(pool, "alexsmobs:komodo_dragon");
+                addIfAvailable(pool, "alexsmobs:crimson_mosquito");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "alexsmobs:bone_serpent");
+                addIfAvailable(pool, "alexsmobs:soul_vulture");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "alexsmobs:warped_mosco");
+                addIfAvailable(pool, "alexsmobs:bone_serpent");
+            }
+            default -> { }
         }
     }
 

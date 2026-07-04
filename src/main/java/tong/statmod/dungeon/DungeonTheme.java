@@ -54,7 +54,31 @@ public enum DungeonTheme {
 
     DRAGON("§cDragon's Roost", "☠ Infernal Dragon",
             List.of("block_factorys_bosses:dragon_guard_sword", "block_factorys_bosses:flaming_skeleton_guard_sword", "block_factorys_bosses:soul_knight_wither_skeleton"),
-            List.of("block_factorys_bosses:infernal_dragon", "xbbsroaringknightmod:roaring_knight"));
+            List.of("block_factorys_bosses:infernal_dragon", "xbbsroaringknightmod:roaring_knight")),
+
+    DRAUGR("§8Draugr Warband", "☠ The Harbinger",
+            List.of("cataclysm:draugr", "cataclysm:elite_draugr", "cataclysm:koboleton", "cataclysm:royal_draugr"),
+            List.of("cataclysm:the_harbinger", "cataclysm:royal_draugr")),
+
+    DEEP("§3The Deep", "☠ Leviathan Spawn",
+            List.of("cataclysm:deepling", "cataclysm:deepling_brute", "cataclysm:deepling_warlock", "cataclysm:deepling_priest"),
+            List.of("cataclysm:wadjet", "cataclysm:aptrgangr")),
+
+    NIGHTMARE("§5Nightmare Legion", "☠ Nightmare Stalker",
+            List.of("born_in_chaos_v1:decaying_zombie", "born_in_chaos_v1:bonescaller", "born_in_chaos_v1:dread_hound", "born_in_chaos_v1:fallen_chaos_knight"),
+            List.of("born_in_chaos_v1:nightmare_stalker", "born_in_chaos_v1:supreme_bonescaller")),
+
+    PUMPKIN("§6Hollow Harvest", "☠ Sir Pumpkinhead",
+            List.of("born_in_chaos_v1:pumpkin_bruiser", "born_in_chaos_v1:pumpkin_dunce", "born_in_chaos_v1:mr_pumpkin", "born_in_chaos_v1:zombie_clown"),
+            List.of("born_in_chaos_v1:sir_pumpkinhead", "born_in_chaos_v1:lord_pumpkinhead")),
+
+    MUTANT("§2Mutant Outbreak", "☠ Mutant Zombie",
+            List.of("mutantmonsters:mutant_zombie", "mutantmonsters:mutant_skeleton", "mutantmonsters:mutant_creeper"),
+            List.of("mutantmonsters:mutant_enderman", "mutantmonsters:mutant_zombie")),
+
+    GUARDIAN("§eForgotten Guardians", "☠ Ferrous Wroughtnaut",
+            List.of("mowziesmobs:umvuthana_raptor", "mowziesmobs:umvuthana_crane", "mowziesmobs:foliaath"),
+            List.of("mowziesmobs:ferrous_wroughtnaut", "mowziesmobs:umvuthi"));
 
     private final String displayName;
     private final String bossName;

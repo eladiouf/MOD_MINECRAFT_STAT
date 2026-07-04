@@ -265,6 +265,7 @@
   "dungeon.wave.remaining": "%s enemies remaining…",
   "dungeon.floor.conquered": "Floor %s conquered! The path to floor %s opens.",
   "dungeon.milestone": "Depth %s reached — the dungeon grows darker. Steel yourself.",
+  "dungeon.defeat.reset": "Defeated — but your gear is safe. Back to floor 1.",
   "block.statmod.boss_altar": "Boss Altar",
   "item.statmod.boss_altar": "Boss Altar",
   "sound.statmod.dungeon_portal_enter": "Portal activates",

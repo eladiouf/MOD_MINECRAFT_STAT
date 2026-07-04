@@ -248,7 +248,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonNextFloorTeleporterBlock.java` | Bloc téléporteur vers étage suivant (si débloqué) |
 | `dungeon/DungeonReturnBeaconBlock.java` | Bloc retour vers l'overworld |
 | `dungeon/DungeonCommands.java` | `/statdungeon tp\|unlock\|info\|reset\|regen` (floors 1-10000) |
-| `dungeon/DungeonRespawnHandler.java` | Mort dans le donjon → respawn étage 1 auto |
+| `dungeon/DungeonRespawnHandler.java` | Défaite dans le donjon → **mort annulée** (inventaire + XP préservés), soin + retour étage 1 |
 | `client/DungeonHudOverlay.java` | HUD scoreboard droite (floor, type, tier, boss, max) |
 | `storage/PlayerStatData.java` | Champs `dungeonFloorReached`, `lastOverworldDimensionId`, `lastOverworldPosPacked` |
 | `storage/DungeonStateSerializer.java` | Sérialisation NBT des champs dungeon |

@@ -65,6 +65,13 @@ public final class DungeonSpawnGuard {
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        // CÔTÉ SERVEUR UNIQUEMENT. EntityJoinLevelEvent est bilatéral : il est aussi émis côté
+        // client quand celui-ci reçoit le paquet d'apparition et crée sa copie locale. Nos signaux
+        // d'autorisation (authorizingDepth, AUTHORIZED_TAG) sont server-only — sur le client ils
+        // valent toujours « non autorisé » → on annulait le join côté client → l'entité, bien
+        // présente sur le serveur, était détruite chez le client → « mobs présents mais invisibles »
+        // (et ils tuaient le joueur sans être visibles). Le contrôle de spawn est purement serveur.
+        if (event.getLevel().isClientSide) return;
         if (!event.getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
             return;
         }

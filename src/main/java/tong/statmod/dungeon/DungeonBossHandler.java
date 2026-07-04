@@ -3,36 +3,34 @@ package tong.statmod.dungeon;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import tong.statmod.STATMod;
-import tong.statmod.config.Config;
-import tong.statmod.network.SyncHelper;
 import tong.statmod.progression.CombatXPHandler;
-import tong.statmod.sound.ModSounds;
-import tong.statmod.stats.StatType;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
 
 import java.util.List;
 
 /**
- * Mission M6 — Phase γ + patch "kill boss = sortie possible".
+ * Mission M6 — Conquête d'étage (« vraie aventure », refonte 2026-07-04).
  *
- * <p>Heuristique simple et robuste : sur un étage boss (multiple de 10), <b>n'importe quel</b>
- * mob tué par le joueur dans la dimension Trial Dungeon compte comme un boss kill et unlock
- * l'étage suivant. Cette approche est indépendante du tag {@code statmod:dungeon_boss} et des
- * mods installés — si l'altar spawn un fallback (Pig si SLU absent), tuer ce Pig unlock quand même.
+ * <p>Écoute les morts de mobs dans le Trial Dungeon et déclenche la conquête d'un étage quand son
+ * objectif ({@link DungeonObjective}) est accompli. Deux objectifs passent par ce handler :
+ * <ul>
+ *   <li><b>Boss (×10)</b> : tous les boss du roster morts → conquête (via {@link DungeonBossTracker},
+ *       avec heuristique de secours si le tracking est perdu au restart).</li>
+ *   <li><b>Combat (autres)</b> : la <b>dernière</b> vague de mobs autorisés éliminée → conquête.</li>
+ * </ul>
+ * Les étages trésor (×5) sont conquis en ouvrant le coffre (cf. loot / vault), pas ici.
  *
- * <p>Idempotent : après le premier kill qui unlock, les kills suivants sur la même île ne
- * ré-déclenchent rien (test {@code floorReached > floor}).
+ * <p>La récompense et la célébration sont centralisées dans {@link DungeonProgress}. Idempotent.
  */
 public final class DungeonBossHandler {
 
@@ -40,15 +38,10 @@ public final class DungeonBossHandler {
             Registries.ENTITY_TYPE,
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "dungeon_boss"));
 
-    /** Stats physiques éligibles au gain direct (les magiques sont gérées via le magic tree). */
-    private static final int[] PHYSICAL_STAT_INDICES = {
-            0, 1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21, 22
-    };
-
     private DungeonBossHandler() {}
 
     @SubscribeEvent
-    public static void onBossKill(LivingDeathEvent event) {
+    public static void onMobDeath(LivingDeathEvent event) {
         LivingEntity target = event.getEntity();
 
         // Ignorer les morts de joueur (gérées par DungeonRespawnHandler).
@@ -64,50 +57,63 @@ public final class DungeonBossHandler {
         }
 
         int floor = DungeonTeleportHandler.floorAtPos(sp.getBlockX(), sp.getBlockZ());
+        if (floor <= 0) return;
 
-        // Seulement les étages boss (multiples de 10) débloquent via kill.
-        if (floor <= 0 || floor % 10 != 0) return;
+        DungeonObjective objective = DungeonObjective.forFloor(floor);
+        switch (objective) {
+            case SLAY_BOSS -> handleBossFloor(sp, floor, target);
+            case CLEAR_WAVE -> handleCombatFloor(sp, floor, target);
+            case LOOT_VAULT -> { /* conquête via ouverture du coffre, pas via kill */ }
+        }
+    }
 
-        PlayerStatData data = sp.getData(ModAttachments.STATS);
-        // Idempotent : ne pas re-déclencher si déjà unlocked.
-        if (data.getDungeonFloorReached() > floor) return;
+    /** Étage boss : conquête quand tous les boss suivis sont morts (ou secours si non tracké). */
+    private static void handleBossFloor(ServerPlayer sp, int floor, LivingEntity target) {
+        if (sp.getData(tong.statmod.storage.ModAttachments.STATS).getDungeonFloorReached() > floor) return;
 
-        // Mode normal : l'autel a suivi les boss de l'étage → on ne débloque qu'au clear complet.
         if (DungeonBossTracker.isTracked(floor)) {
             java.util.UUID id = target.getUUID();
-            // Un mob qui n'est pas un boss suivi (sbire, compagnon) ne compte pas.
-            if (!DungeonBossTracker.isTrackedBoss(floor, id)) return;
+            if (!DungeonBossTracker.isTrackedBoss(floor, id)) return; // sbire/compagnon
             boolean allDead = DungeonBossTracker.onBossDeath(floor, id);
             if (!allDead) {
                 int left = DungeonBossTracker.remaining(floor);
                 sp.displayClientMessage(Component.translatable(
                         "block.statmod.dungeon_portal.boss_remaining", left), true);
-                return; // il reste des boss → pas de déblocage
+                return; // il reste des boss
             }
-            // Tous les boss sont morts → on tombe dans la récompense ci-dessous.
+            // Tous les boss morts → conquête.
         }
-        // Sinon (aucun tracking : restart serveur en plein combat, ou étage sans altar) →
-        // heuristique de secours : ce kill débloque directement.
+        // Sinon (restart serveur en plein combat, étage sans altar) → ce kill conquiert directement.
+        DungeonProgress.completeFloor(sp, floor, DungeonObjective.SLAY_BOSS, true);
+    }
 
-        int gain = Config.getDungeonBossStatGain();
-        int statIndex = PHYSICAL_STAT_INDICES[sp.getRandom().nextInt(PHYSICAL_STAT_INDICES.length)];
-        data.addLevels(statIndex, gain);
-        data.unlockDungeonFloor(floor + 1);
-        SyncHelper.syncStats(sp);
+    /** Étage de combat : conquête quand la dernière vague de mobs autorisés est éliminée. */
+    private static void handleCombatFloor(ServerPlayer sp, int floor, LivingEntity target) {
+        if (sp.getData(tong.statmod.storage.ModAttachments.STATS).getDungeonFloorReached() > floor) return;
 
-        try {
-            sp.playNotifySound(ModSounds.DUNGEON_BOSS_KILL.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
-        } catch (Exception ignored) {
-            // Sound miss ne doit pas bloquer l'unlock.
+        // Seuls nos mobs autorisés comptent (un passant vanilla égaré ne conquiert pas l'étage).
+        if (!target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) return;
+
+        // Reste-t-il des mobs autorisés vivants (autre que la cible qui va mourir) ?
+        int left = livingAuthorizedCount(sp.serverLevel(), floor, target);
+        if (left > 0) {
+            sp.displayClientMessage(Component.translatable(
+                    "dungeon.wave.remaining", left), true);
+            return;
         }
 
-        StatType stat = StatType.byIndex(statIndex);
-        String statName = stat != null ? stat.displayName : "?";
-        sp.displayClientMessage(
-                Component.translatable("block.statmod.dungeon_portal.boss_kill",
-                        gain, statName, floor + 1), false);
-        STATMod.LOGGER.info("[TrialDungeon] Boss cleared floor {} by {} → unlock étage {}",
-                floor, sp.getGameProfile().getName(), floor + 1);
+        // Vague nettoyée → étage conquis. Pas de gain de stat (réservé aux boss).
+        DungeonProgress.completeFloor(sp, floor, DungeonObjective.CLEAR_WAVE, false);
+    }
+
+    /** Nombre de mobs autorisés encore vivants sur l'étage, en excluant {@code dying}. */
+    private static int livingAuthorizedCount(ServerLevel lv, int floor, LivingEntity dying) {
+        var sp = DungeonTeleportHandler.floorSpawnPos(floor);
+        AABB area = new AABB(sp).inflate(55);
+        List<Mob> alive = lv.getEntitiesOfClass(Mob.class, area,
+                m -> m != dying && m.isAlive()
+                        && m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG));
+        return alive.size();
     }
 
     /**

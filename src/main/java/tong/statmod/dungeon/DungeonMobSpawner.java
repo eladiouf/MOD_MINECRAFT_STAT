@@ -148,30 +148,54 @@ public final class DungeonMobSpawner {
     }
 
     /**
-     * Passe périodique de maintien de population : pour chaque étage de combat où se trouve un
-     * joueur, si la population autorisée vivante tombe sous {@link #REFILL_THRESHOLD} de la vague
-     * pleine, on complète jusqu'au plein. Donne un donjon d'entraînement qui reste sous pression
-     * sans jamais surpeupler (le plafond reste {@code mobCount(tier)}).
+     * Passe périodique de maintien de population, pensée pour la « vraie aventure » :
+     * <ul>
+     *   <li><b>Étage non conquis</b> (objectif = éliminer la vague) : on ne réalimente <b>pas</b>
+     *       — sinon nettoyer la vague serait impossible et la sortie ne s'ouvrirait jamais. La
+     *       vague initiale (posée à l'entrée) est le défi ; on la complète seulement si elle n'a
+     *       jamais pu se poser entièrement (0 vivant + 0 en file = échec de placement).</li>
+     *   <li><b>Étage déjà conquis</b> (replay / farming) : on maintient la population sous pression
+     *       (réalimentation sous {@link #REFILL_THRESHOLD}) pour un donjon d'entraînement vivant.</li>
+     * </ul>
      */
     private static void maintainPopulations(net.minecraft.server.MinecraftServer server) {
         ServerLevel lv = server.getLevel(DungeonDimensions.TRIAL_DUNGEON);
         if (lv == null || lv.players().isEmpty()) return;
 
-        // Étages distincts où se tient au moins un joueur.
-        Set<Integer> occupied = new HashSet<>();
+        // Étage occupé → le plus haut floorReached parmi les joueurs présents sur cet étage,
+        // pour décider s'il est déjà conquis (au moins un joueur l'a franchi).
+        java.util.Map<Integer, Boolean> conqueredByFloor = new java.util.HashMap<>();
         for (var player : lv.players()) {
-            occupied.add(DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ()));
+            int f = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
+            boolean conquered = player.getData(tong.statmod.storage.ModAttachments.STATS)
+                    .getDungeonFloorReached() > f;
+            conqueredByFloor.merge(f, conquered, (a, b) -> a || b);
         }
 
-        for (int floor : occupied) {
+        for (var e : conqueredByFloor.entrySet()) {
+            int floor = e.getKey();
+            boolean conquered = e.getValue();
             if (!isCombatFloor(floor) || PENDING_FLOORS.contains(floor)) continue;
+
             int full = DungeonMasterpiece.mobCount(FloorPalette.forFloor(floor));
             int alive = countAlive(lv, floor);
-            if (alive >= (int) Math.ceil(full * REFILL_THRESHOLD)) continue;
-            int refilled = enqueueWave(lv, floor, full - alive);
-            if (refilled > 0) {
-                STATMod.LOGGER.debug("[TrialDungeon] Réalimentation étage {} : +{} (vivants {}/{})",
-                        floor, refilled, alive, full);
+
+            if (conquered) {
+                // Farming : maintien sous pression.
+                if (alive >= (int) Math.ceil(full * REFILL_THRESHOLD)) continue;
+                int refilled = enqueueWave(lv, floor, full - alive);
+                if (refilled > 0) {
+                    STATMod.LOGGER.debug("[TrialDungeon] Réalim (conquis) étage {} : +{} ({}/{})",
+                            floor, refilled, alive, full);
+                }
+            } else if (alive == 0) {
+                // Non conquis mais vide : la vague initiale n'a pas pu se poser → on la (re)pose une
+                // fois pour que l'objectif reste accomplissable (aucun refill au-delà).
+                int queued = enqueueWave(lv, floor, full);
+                if (queued > 0) {
+                    STATMod.LOGGER.debug("[TrialDungeon] Vague initiale (rattrapage) étage {} : {}",
+                            floor, queued);
+                }
             }
         }
     }

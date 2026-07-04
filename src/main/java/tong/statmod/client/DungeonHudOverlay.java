@@ -42,18 +42,23 @@ public final class DungeonHudOverlay {
         String tier = tierName(floor);
         int nextBoss = ((floor / 10) + 1) * 10;
 
-        String title = "\u00a76\u2620 \u00a7lTrial Dungeon";
-        String line1 = "\u00a7fFloor " + floor + " \u00a77\u00b7 " + type;
-        String line2 = tier + " \u00a77\u00b7 Boss \u00a7f#" + nextBoss + " \u00a77\u00b7 Max \u00a7f" + maxFloor;
+        // Étage conquis si la sortie est déjà débloquée (floorReached > floor courant).
+        boolean conquered = maxFloor > floor;
+
+        String title = "§6☠ §lTrial Dungeon";
+        String line1 = "§fFloor " + floor + " §7· " + type;
+        String line2 = tier + " §7· Boss §f#" + nextBoss + " §7· Max §f" + maxFloor;
+        String line3 = objectiveLine(floor, conquered);
+
+        String[] lines = { title, line1, line2, line3 };
 
         int screenW = mc.getWindow().getGuiScaledWidth();
         float scale = 0.75f;
         int lineH = (int)(font.lineHeight * scale) + 2;
-        int titleW = (int)(font.width(title) * scale);
-        int line1W = (int)(font.width(line1) * scale);
-        int line2W = (int)(font.width(line2) * scale);
-        int boxW = Math.max(Math.max(titleW, line1W), line2W) + 8;
-        int boxH = lineH * 3 + 4;
+        int boxW = 0;
+        for (String s : lines) boxW = Math.max(boxW, (int)(font.width(s) * scale));
+        boxW += 8;
+        int boxH = lineH * lines.length + 4;
         int x = screenW - boxW - 4;
         int y = 4;
 
@@ -68,23 +73,31 @@ public final class DungeonHudOverlay {
         pose.translate(x + 4, y + 4, 0);
         pose.scale(scale, scale, 1.0f);
 
-        graphics.drawString(font, title, 0, 0, 0xFFFFFF);
-        graphics.drawString(font, line1, 0, font.lineHeight + 1, 0xFFFFFF);
-        graphics.drawString(font, line2, 0, (font.lineHeight + 1) * 2, 0xFFFFFF);
+        for (int i = 0; i < lines.length; i++) {
+            graphics.drawString(font, lines[i], 0, (font.lineHeight + 1) * i, 0xFFFFFF);
+        }
 
         pose.popPose();
     }
 
+    /** Ligne d'objectif : ce qu'il reste à accomplir, ou « conquis » si la sortie est ouverte. */
+    private static String objectiveLine(int floor, boolean conquered) {
+        if (conquered) return "§a✔ Conquered §7· exit open";
+        if (floor % 10 == 0) return "§c☠ Slay the boss";
+        if (floor % 5 == 0) return "§e✦ Loot the vault";
+        return "§e⚔ Clear all enemies";
+    }
+
     private static String floorType(int floor) {
-        if (floor % 10 == 0) return "\u00a7cBoss";
-        if (floor % 5 == 0) return "\u00a7eTreasure";
-        return "\u00a7aCombat";
+        if (floor % 10 == 0) return "§cBoss";
+        if (floor % 5 == 0) return "§eTreasure";
+        return "§aCombat";
     }
 
     private static String tierName(int floor) {
-        if (floor <= 10) return "\u00a7aEARLY";
-        if (floor <= 25) return "\u00a7eMID";
-        if (floor <= 50) return "\u00a76LATE";
-        return "\u00a7cABYSS";
+        if (floor <= 10) return "§aEARLY";
+        if (floor <= 25) return "§eMID";
+        if (floor <= 50) return "§6LATE";
+        return "§cABYSS";
     }
 }

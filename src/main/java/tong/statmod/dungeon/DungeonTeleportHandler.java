@@ -91,9 +91,9 @@ public final class DungeonTeleportHandler {
         BlockPos spawn = floorSpawnPos(floor);
         IslandGenerator.generateFloor(dungeon, floor);
 
-        if (floor > 0 && floor % 10 != 0) {
-            data.unlockDungeonFloor(floor + 1);
-        }
+        // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
+        // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la
+        // sortie vers l'étage suivant. Le donjon n'est plus un couloir.
 
         player.teleportTo(dungeon, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
                 Set.of(), player.getYRot(), player.getXRot());

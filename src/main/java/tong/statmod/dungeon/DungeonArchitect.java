@@ -104,6 +104,15 @@ public final class DungeonArchitect {
         lighting(lv, sp, t, floor);
         narrativeDressing(lv, sp, t, rng);
         spawnThreshold(lv, sp, t);
+
+        // Checkpoint Waystones sur les étages boss : une pierre à côté de l'autel. Une fois activée
+        // par le joueur (après avoir vaincu le boss), elle sert de point de retour rapide. No-op si
+        // Waystones absent. Posée sur le dais (haut walkable y=2), décalée de l'autel (0,2,hz).
+        if (role == Role.BOSS) {
+            int hz = -HZ + 11;
+            tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
+                    lv, O(sp, 4, 2, hz), t, floor);
+        }
     }
 
     // ═══════════════ 1. PERIMETER WALL + BATTLEMENTS ═══════════════

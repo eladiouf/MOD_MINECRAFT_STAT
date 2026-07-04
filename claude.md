@@ -53,6 +53,9 @@ STAT MOD est l'**autorité d'identité** ; les autres mods sont des **surfaces r
 | Epic Fight | **experimental optional** | `integration/epicfight/` | `STAT-DEC-002` |
 | ParCool | **optional** | `integration/parcool/` | master plan §3 |
 | Overgeared | **optional** | `integration/overgeared/` | master plan §6 |
+| Lootr | **optional** | `integration/lootr/` | coffres individuels donjon |
+| L2 Hostility | **optional** | `integration/l2hostility/` | scaling difficulté donjon |
+| Waystones | **optional** | `integration/waystones/` | checkpoints donjon (M6, 2026-07-04) |
 | Elementals | **removed** | (supprimé) | `STAT-DEC-003`, `STAT-PM-001` |
 
 > Toute nouvelle intégration doit déclarer un bloc **Exit Conditions** dans son design spec (politique issue de `STAT-PM-001`).

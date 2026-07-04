@@ -80,9 +80,20 @@ public final class DungeonMobSpawner {
         if (PENDING_FLOORS.contains(floor)) return;
         if (countAlive(lv, floor) > 0) return;
 
-        int full = DungeonMasterpiece.mobCount(FloorPalette.forFloor(floor));
+        int full = waveSizeForFloor(floor);
         int queued = enqueueWave(lv, floor, full);
         STATMod.LOGGER.info("[TrialDungeon] Vague étage {} demandée : {} mobs en file", floor, queued);
+    }
+
+    /**
+     * Taille de la vague de combat selon l'étage — courbe d'équilibrage pour 100 étages.
+     * Croît doucement de 4 (étage 1) à ~16 (étage 100), plafonnée pour éviter le lag/surpopulation.
+     * (L'intensité vient surtout du niveau L2 par étage + des mobs de thème plus coriaces en
+     * profondeur ; le nombre reste raisonnable.)
+     */
+    private static int waveSizeForFloor(int floor) {
+        int n = 4 + floor / 8;          // +1 mob tous les 8 étages
+        return Math.min(16, Math.max(4, n));
     }
 
     /** {@code true} si l'étage a une vague de combat (ni boss ni trésor). */
@@ -134,14 +145,13 @@ public final class DungeonMobSpawner {
         PENDING_FLOORS.add(floor);
         // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
 
-        // Étage à thème : un mini-boss trône au centre, en plus de la horde.
-        DungeonTheme theme = DungeonTheme.forFloor(floor);
-        if (theme != null) {
-            EntityType<?> miniBoss = firstAvailable(theme.miniBossIds());
-            if (miniBoss != null) {
-                BlockPos bossPos = sp.offset(0, 0, -6); // léger décalage nord, au fond de l'arène
-                QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
-            }
+        // Mini-boss du thème au centre-nord de l'arène, en plus de la horde. (enqueueWave n'est
+        // appelé que pour les étages de COMBAT — les ×5/×10 ont leur propre rôle trésor/boss.)
+        DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
+        EntityType<?> miniBoss = firstAvailable(theme.miniBoss());
+        if (miniBoss != null) {
+            BlockPos bossPos = sp.offset(0, 0, -6); // léger décalage nord, au fond de l'arène
+            QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
         }
 
         int spawned = 0;

@@ -331,7 +331,7 @@ public final class ModdedMobPool {
 
     /**
      * Résout la liste d'IDs en EntityTypes présents (les absents sont ignorés). Utilisé par les
-     * étages à thème ({@link DungeonTheme}).
+     * étages à thème ({@link DungeonThemes}).
      */
     public static List<EntityType<?>> resolveAll(List<String> ids) {
         List<EntityType<?>> out = new ArrayList<>();
@@ -345,20 +345,16 @@ public final class ModdedMobPool {
     /**
      * Pool de mobs de la vague pour un étage.
      *
-     * <p>Étage à <b>thème</b> ({@link DungeonTheme#forFloor}) : renvoie UNIQUEMENT les mobs du thème
-     * (horde d'orcs pure, etc.) — le mini-boss est spawné séparément par {@link DungeonMobSpawner}.
-     * Si le thème n'a aucun mob disponible (mod absent), on retombe sur le pool mixte normal.
-     *
-     * <p>Étage normal : mélange vanilla + moddés (Tensura/SLU/Iron's Spellbooks), plafonné à 50 %
-     * de moddés.
+     * <p><b>Chaque</b> étage a un thème ({@link DungeonThemes#forFloor}) : on renvoie la horde du
+     * thème (mobs de la famille de l'étage). Si aucun mob du thème n'est disponible (mods absents),
+     * on retombe sur le pool vanilla+moddés mixte du tier.
      */
     public static List<EntityType<?>> getCombinedPool(int floor) {
-        DungeonTheme theme = DungeonTheme.forFloor(floor);
-        if (theme != null) {
-            List<EntityType<?>> themed = resolveAll(theme.addIds());
-            if (!themed.isEmpty()) return themed; // pool 100 % thématique
-        }
+        DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
+        List<EntityType<?>> themed = resolveAll(theme.adds());
+        if (!themed.isEmpty()) return themed; // pool 100 % thématique
 
+        // Fallback : mods du thème absents → mélange vanilla + moddés du tier.
         FloorPalette tier = FloorPalette.forFloor(floor);
         List<EntityType<?>> vanilla = DungeonMasterpiece.mobPool(tier);
         List<EntityType<?>> modded = getModdedMobs(tier);

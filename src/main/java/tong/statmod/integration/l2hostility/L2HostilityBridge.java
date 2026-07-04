@@ -34,16 +34,20 @@ public final class L2HostilityBridge {
      */
     public static int levelForFloor(int floor) {
         double perFloor = Config.getDungeonHostilityPerFloor();
-        if (perFloor <= 0.0) return 1; // Désactivé = niveau 1 (base vanilla)
         int cap = Config.getDungeonHostilityCap();
 
-        // Système conservateur : +1 tous les 5 étages
-        // Étage 1-5 : niveau 1
-        // Étage 6-10 : niveau 2
-        // Étage 11-15 : niveau 3
-        // ...
-        int baseLevel = 1 + Math.floorDiv(floor - 1, 5);
-        return Math.min(baseLevel, cap);
+        // Si l'admin a configuré un facteur explicite (> 0), on l'utilise (floor × perFloor).
+        if (perFloor > 0.0) {
+            return Math.max(1, Math.min(cap, (int) Math.round(floor * perFloor)));
+        }
+
+        // Sinon (défaut), courbe d'équilibrage intégrée pour 100 étages : douce au début,
+        // qui accélère en profondeur. +1 niveau tous les 3 étages, +bonus par palier de 10.
+        //   étage 1  → niv 1     étage 10 → niv ~7    étage 30 → niv ~22
+        //   étage 50 → niv ~38   étage 100 → niv ~78 (avant cap)
+        int base = 1 + Math.floorDiv(floor - 1, 3);   // +1 tous les 3 étages
+        int tierBonus = Math.floorDiv(floor, 10) * 3; // +3 par palier de 10 franchi
+        return Math.min(base + tierBonus, cap);
     }
 
     /**

@@ -46,14 +46,14 @@ public class Config {
                 .comment("Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.")
                 .defineInRange("bossStatGain", 2, 0, 10);
         DUNGEON_HOSTILITY_PER_FLOOR = BUILDER
-                .comment("Intégration L2 Hostility : niveau de hostilité appliqué aux mobs = floor * ce facteur.",
-                        "0.0 = désactivé (recommandé pour éviter surdifficulté avec config L2 par défaut).",
-                        "L2 Hostility a un niveau de base de 20, donc 0.1 = étage 10 = niveau 21 (déjà trop fort).")
+                .comment("Intégration L2 Hostility : facteur de niveau par étage.",
+                        "0.0 = utiliser la COURBE D'ÉQUILIBRAGE INTÉGRÉE (recommandé) : douce au début,",
+                        "  qui accélère en profondeur (étage 10≈niv 7, 50≈38, 100≈78, plafonnée par le cap).",
+                        "> 0.0 = mode manuel : niveau = floor × ce facteur (écrase la courbe intégrée).")
                 .defineInRange("l2HostilityPerFloor", 0.0, 0.0, 0.5);
         DUNGEON_HOSTILITY_CAP = BUILDER
-                .comment("Intégration L2 Hostility : plafond du niveau de hostilité appliqué par étage.",
-                        "Avec l2HostilityPerFloor = 0.0, ce paramètre n'a pas d'effet.")
-                .defineInRange("l2HostilityCap", 30, 0, 500);
+                .comment("Intégration L2 Hostility : plafond du niveau appliqué par étage (courbe et mode manuel).")
+                .defineInRange("l2HostilityCap", 100, 0, 500);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

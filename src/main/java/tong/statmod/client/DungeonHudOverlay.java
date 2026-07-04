@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
-import tong.statmod.dungeon.DungeonTheme;
+import tong.statmod.dungeon.DungeonThemes;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -51,11 +51,9 @@ public final class DungeonHudOverlay {
         String line2 = tier + " §7· Boss §f#" + nextBoss + " §7· Max §f" + maxFloor;
         String line3 = objectiveLine(floor, conquered);
 
-        // Étage à thème (Solo Leveling) : afficher son nom en plus.
-        DungeonTheme theme = DungeonTheme.forFloor(floor);
-        String[] lines = theme != null
-                ? new String[]{ title, line1, "§7» " + theme.displayName(), line2, line3 }
-                : new String[]{ title, line1, line2, line3 };
+        // Nom du thème de l'étage (chaque étage a le sien).
+        DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
+        String[] lines = { title, line1, "§7» " + theme.displayName(), line2, line3 };
 
         int screenW = mc.getWindow().getGuiScaledWidth();
         float scale = 0.75f;

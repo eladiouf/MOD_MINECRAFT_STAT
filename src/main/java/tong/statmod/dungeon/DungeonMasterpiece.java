@@ -17,7 +17,7 @@ import static net.minecraft.world.level.block.Blocks.*;
  * <ul>
  *   <li>{@link #buildUnderside} — cône rocheux flottant sous chaque île (appelé par
  *       {@link DungeonArchitect#buildFloor}).</li>
- *   <li>{@link #mobPool} / {@link #mobCount} — table des mobs de vague par tier (consommée par
+ *   <li>{@link #mobPool} — table des mobs de vague par tier (fallback si un thème n'a aucun mob ;
  *       {@link ModdedMobPool} et {@link DungeonMobSpawner}).</li>
  * </ul>
  * L'ancienne île plate circulaire ({@code buildIsland} & co.) a été retirée : la génération passe
@@ -85,10 +85,5 @@ public final class DungeonMasterpiece {
                 EntityType.EVOKER, EntityType.GUARDIAN, EntityType.MAGMA_CUBE
             );
         };
-    }
-
-    /** Nombre de mobs par vague (équilibré : action sans surpopulation). */
-    static int mobCount(FloorPalette t) {
-        return switch(t) { case EARLY->4; case MID->7; case LATE->10; case ABYSS->12; };
     }
 }

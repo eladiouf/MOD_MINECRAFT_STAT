@@ -58,10 +58,9 @@ public class DungeonBossAltarBlock extends Block {
         List<DungeonBossRoster.BossEntry> roster = DungeonBossRoster.forFloor(floor);
         ServerLevel sl = (ServerLevel) level;
 
-        // Ouvre la fenêtre de spawn de l'étage AVANT de spawner : les boss SLU assemblent leurs
-        // compagnons (parties, sbires, contrôleurs de rendu) sur plusieurs secondes. Sans fenêtre
-        // ouverte, le garde les annulerait → boss invisible.
-        DungeonSpawnGuard.openBossWindow(floor);
+        // Les boss sont marqués AUTHORIZED_TAG par spawnAuthorized (passent le garde). Leurs
+        // invocations/compagnons passent tant que le combat est suivi (DungeonBossTracker.isTracked),
+        // ce que register() ci-dessous rend vrai dès le premier boss posé.
 
         int spawned = 0;
         for (int i = 0; i < roster.size(); i++) {

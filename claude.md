@@ -1,7 +1,7 @@
 # STAT MOD — CLAUDE.md
 
 > Ce fichier est lu automatiquement par Claude à chaque session dans la branche `neoforge-1.21.1`.
-> Dernière mise à jour gouvernée : 2026-07-03 par Onivo Studio — mission `M6` (`STAT-DEC-TRIAL-DUNGEON`). Précédentes : `M5` (`STAT-DEC-OVERGEARED-EXPANSION`), `M3` (`STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
+> Dernière mise à jour gouvernée : 2026-07-04 par Onivo Studio — mission `M6` (refonte de fiabilité du Trial Dungeon). Précédentes : 2026-07-03 (`STAT-DEC-TRIAL-DUNGEON`), `M5` (`STAT-DEC-OVERGEARED-EXPANSION`), `M3` (`STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
 
 ---
 
@@ -199,6 +199,27 @@ Dépendance hard. Présent sous `integration/tensura/` :
 
 **Island Redesign shippé** (spec + plan `2026-07-03-trial-dungeon-island-redesign`) : silhouettes organiques déterministes par étage (`IslandShaper`, bruit harmonique seedé), underside conique rocheux, spawn pad 3×3 dégagé, dais boss surélevé décentré (altar plus jamais sur le point de spawn), vault treasure à piliers, décor par tier (mousse EARLY → améthyste ABYSS), exits calculés sur la silhouette réelle. `/statdungeon regen <floor>` efface et régénère une île (même seed → même île).
 
+**Refonte de fiabilité 2026-07-04 (mission « donjon parfait »)** — audit complet du package + corrections vérifiées contre les vrais jars :
+- **Mobs moddés enfin fonctionnels** : `ModdedMobPool` cherchait le modId inventé `souls_like` (le vrai est `slu`) et des noms d'entités inexistants → pool toujours vanilla. Corrigé avec les IDs réels extraits des jars (`slu:hollow`, `slu:knight`, `slu:elite_knight`… ; Iron's Spellbooks `cultist`, `pyromancer`, `necromancer`…). Overgeared **retiré** du pool (aucune entité de combat : juste 2 flèches de forge). `DungeonSpawnGuard` whitelist alignée (`slu` + `irons_spellbooks`).
+- **L2 leveling unifié** : `L2HostilityDisabler` (ciblait `LHDifficulty` — classe inexistante, échouait en silence à chaque spawn) **supprimé**. Le calage du niveau L2 par étage passe désormais par un chokepoint unique `DungeonSpawnGuard.onEntityJoinLevel` → `DungeonMobSpawner.scheduleL2` (couvre vagues, boss ET invocations/phase-2). C'est ce qui empêche réellement « niveau 60 à l'étage 1 ». Le hook réel (`LHMiscs.MOB` + `MobTraitCap.setLevel`) est vérifié présent dans le jar.
+- **Génération simplifiée** : pipeline `IslandGenerator` = `DungeonArchitect` (forteresse « The Descent », le keeper) **puis** `IslandTerrainShaper` refondu (relief organique **montant uniquement** sur le seul pourtour, jamais dans l'emprise forteresse → plus de trous, plus de terrain gaspillé). Supprimés : `ModStructurePlacer` (placeholder qui ne posait rien + spam INFO), `DungeonArchetypes` (458 lignes, zéro usage). `DungeonMasterpiece` réduit à ses 3 méthodes vivantes (`buildUnderside`, `mobPool`, `mobCount`).
+- **HUD corrigé** : le fond du scoreboard était dessiné dans le `PoseStack` scalé/translaté → hors écran. Redessiné en coordonnées écran absolues.
+- **Roster boss validé** : les 40 IDs `slu:boss_*` + `irons_spellbooks:*` vérifiés existants dans les jars.
+- Tests : 5 nouveaux (`IslandTerrainShaperTest`) verrouillent les invariants (jamais dans l'emprise forteresse, hauteur ≥ 0, borné, déterministe). Suite dungeon 100 % verte.
+
+**« Vraie aventure » 2026-07-04 (mission : le donjon devient une aventure, pas un couloir)** :
+- **Plus d'auto-unlock à l'entrée** : entrer sur un étage ne débloquait avant que le suivant → couloir. Désormais chaque étage doit être **conquis** (`enterFloor` ne touche plus `floorReached`). `DungeonProgress.completeFloor` est l'unique autorité de déblocage (hors commandes admin).
+- **Objectif par étage** (`DungeonObjective`, dérivé du rôle) : combat → `CLEAR_WAVE` (éliminer toute la vague), trésor ×5 → `LOOT_VAULT` (ouvrir le coffre, `DungeonVaultHandler` sur `RightClickBlock`), boss ×10 → `SLAY_BOSS` (roster via `DungeonBossTracker`). La sortie (`next_floor_teleporter`) reste **scellée** tant que l'objectif n'est pas rempli.
+- **`DungeonBossHandler` refondu** en handler de conquête unifié : route combat ET boss vers `DungeonProgress` ; combat conquis = dernière vague de mobs `AUTHORIZED_TAG` éliminée.
+- **Célébration** : `DungeonProgress` joue son (`DUNGEON_FLOOR_COMPLETE`) + particules (totem + end rod) + message ; jalon narratif tous les 10 étages (`dungeon.milestone`).
+- **Une seule vague par étage** : la vague de combat est posée une fois à l'entrée (`requestWave`) et n'est **jamais réalimentée**. La nettoyer = conquérir l'étage. (La réalimentation périodique, source d'une « invasion de mobs » continue, a été retirée le 2026-07-04.)
+- **HUD objectif** : 4ᵉ ligne « ⚔ Clear all enemies / ✦ Loot the vault / ☠ Slay the boss / ✔ Conquered · exit open ».
+
+**Fix « invasion de mobs » 2026-07-04** : deux sources de spawn continu supprimées.
+- `DungeonSpawnGuard` refondu en **liste blanche stricte** : n'autorise QUE les entités qu'on marque (`AUTHORIZED_TAG` via `spawnAuthorized`) + les invocations d'un boss dont le combat est suivi (`DungeonBossTracker.isTracked`). L'ancien système de **fenêtre temporelle** (10–45 s ouverte à chaque entrée, illimitée pendant un boss) laissait passer un flux continu → supprimé.
+- La passe de **réalimentation** de `DungeonMobSpawner` (respawn toutes les 3 s sur étage occupé) est **retirée**. La dimension est `the_void` (aucun spawn naturel), donc plus aucune source continue.
+- Tests : `DungeonObjectiveTest` (6) verrouille le mapping rôle→objectif. Suite dungeon 100 % verte.
+
 ### Fichiers clés
 
 | Fichier | Rôle |
@@ -207,10 +228,19 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonBlocks.java` | DeferredRegister : `dungeon_portal`, `return_beacon`, `next_floor_teleporter`, `boss_altar` |
 | `dungeon/DungeonPortalBlock.java` | Bloc d'entrée : right-click → tp donjon + particules PORTAL |
 | `dungeon/DungeonTeleportHandler.java` | TP serveur : `enterFloor()`, `returnToOverworld()`, `floorAtPos()`, `floorSpawnPos()` |
-| `dungeon/IslandGenerator.java` | Génération procédurale des îles (combat/treasure/boss) : silhouette organique, underside, pad, dais, vault, décor |
+| `dungeon/IslandGenerator.java` | Pipeline : `DungeonArchitect.buildFloor` (forteresse) + `IslandTerrainShaper.buildIslandGround` (relief pourtour) |
+| `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle |
+| `dungeon/IslandTerrainShaper.java` | Relief organique **montant uniquement** sur le pourtour (hors emprise forteresse) — `rimHeightAt` pure/testable |
 | `dungeon/IslandShaper.java` | Géométrie pure seedée (silhouette + profondeur underside) — testable sans Bootstrap |
+| `dungeon/DungeonMasterpiece.java` | Briques partagées : `buildUnderside` (cône) + table mobs (`mobPool`/`mobCount`) |
+| `dungeon/ModdedMobPool.java` | Mobs moddés contrôlés (`slu` + `irons_spellbooks`) combinés au pool vanilla, plafonné 50 % |
+| `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
+| `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |
+| `dungeon/DungeonProgress.java` | Autorité unique de conquête : unlock étage suivant + célébration (son/particules/message) + jalons |
+| `dungeon/DungeonBossHandler.java` | Handler de conquête unifié (combat = vague nettoyée, boss = roster mort) → `DungeonProgress` |
+| `dungeon/DungeonVaultHandler.java` | Conquête des étages trésor : ouvrir le coffre (`RightClickBlock`) → `DungeonProgress` |
 | `dungeon/FloorPalette.java` | Tier EARLY/MID/LATE/ABYSS → base/accent/light/underside/decorPrimary/decorSecondary |
-| `dungeon/DungeonSpawnGuard.java` | Anti-spawn double couche (FinalizeSpawnEvent + EntityJoinLevelEvent + marker NBT) |
+| `dungeon/DungeonSpawnGuard.java` | Liste blanche stricte : autorise seulement `AUTHORIZED_TAG` + invocations de boss suivi ; annule tout le reste |
 | `dungeon/DungeonBossAltarBlock.java` | Bloc autel activable par le joueur pour spawner les boss du roster |
 | `dungeon/DungeonBossRoster.java` | Roster prédéfini de 30 étages boss (floor → boss SLU/Vanilla) |
 | `dungeon/DungeonBossHandler.java` | Handler `LivingDeathEvent` : sur boss floor, tout kill joueur → +stats + unlock étage suivant (fixé 2026-07-03) |

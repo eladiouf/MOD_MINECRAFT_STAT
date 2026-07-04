@@ -98,13 +98,9 @@ public final class DungeonTeleportHandler {
         player.teleportTo(dungeon, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
                 Set.of(), player.getYRot(), player.getXRot());
 
-        // Ouvre la fenêtre d'autorisation de spawn de l'étage (durée ∝ difficulté) AVANT de
-        // demander la vague, pour que les mobs (et compagnons) puissent apparaître.
-        DungeonSpawnGuard.openWindowForFloor(floor);
-
         // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
-        // chunks → les mobs sont trackés dès leur apparition → visibles. Garde anti-doublon
-        // intégrée (mobs vivants / vague déjà en file).
+        // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
+        // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
         DungeonMobSpawner.requestWave(dungeon, floor);
 
         STATMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",

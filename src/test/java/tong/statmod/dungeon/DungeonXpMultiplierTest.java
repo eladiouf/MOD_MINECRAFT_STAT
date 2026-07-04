@@ -39,8 +39,9 @@ public class DungeonXpMultiplierTest {
 
     @Test
     void multiplierAtFloor50IsBigger() {
-        int x50 = 80 * ((50 - 1) % DungeonTeleportHandler.GRID_COLS);
-        int z50 = 80 * ((50 - 1) / DungeonTeleportHandler.GRID_COLS);
+        int s = DungeonTeleportHandler.FLOOR_SPACING;
+        int x50 = s * ((50 - 1) % DungeonTeleportHandler.GRID_COLS);
+        int z50 = s * ((50 - 1) / DungeonTeleportHandler.GRID_COLS);
         double m = DungeonXpMultiplier.multiplierFor(DungeonDimensions.TRIAL_DUNGEON, x50, z50);
         assertEquals(3.5, m, 0.001);
     }

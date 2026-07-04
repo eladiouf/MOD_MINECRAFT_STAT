@@ -58,16 +58,29 @@ public class DungeonBossAltarBlock extends Block {
         List<DungeonBossRoster.BossEntry> roster = DungeonBossRoster.forFloor(floor);
         ServerLevel sl = (ServerLevel) level;
 
+        // Ouvre la fenêtre de spawn de l'étage AVANT de spawner : les boss SLU assemblent leurs
+        // compagnons (parties, sbires, contrôleurs de rendu) sur plusieurs secondes. Sans fenêtre
+        // ouverte, le garde les annulerait → boss invisible.
+        DungeonSpawnGuard.openBossWindow(floor);
+
         int spawned = 0;
         for (int i = 0; i < roster.size(); i++) {
             DungeonBossRoster.BossEntry entry = roster.get(i);
             EntityType<?> type = resolveType(entry.entityId());
             if (type == null) continue;
-            BlockPos spawnPos = pos.offset(0, 1, 2 + i * 3);
-            var spawnedEntity = type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE);
+            BlockPos spawnPos = pos.offset(0, 2, 2 + i * 3);
+            // Dégage un espace d'air 1×3 au point de spawn pour que le boss ne naisse pas encastré.
+            for (int dy = 0; dy < 3; dy++) {
+                sl.setBlock(spawnPos.above(dy), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+            }
+            var spawnedEntity = DungeonSpawnGuard.spawnAuthorized(
+                    () -> type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE));
             if (spawnedEntity != null) {
-                DungeonSpawnGuard.markAuthorized(spawnedEntity);
                 spawned++;
+                // Enregistre ce boss pour l'étage : l'étage suivant ne se débloque qu'au clear
+                // complet (tous les boss du roster morts) — cf. DungeonBossHandler.
+                DungeonBossTracker.register(floor, spawnedEntity.getUUID());
+                // La difficulté L2 par étage est calée par DungeonSpawnGuard.onEntityJoinLevel.
             }
         }
 

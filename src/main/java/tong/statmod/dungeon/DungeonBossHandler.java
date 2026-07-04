@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import tong.statmod.STATMod;
 import tong.statmod.config.Config;
@@ -35,7 +34,6 @@ import java.util.List;
  * <p>Idempotent : après le premier kill qui unlock, les kills suivants sur la même île ne
  * ré-déclenchent rien (test {@code floorReached > floor}).
  */
-@EventBusSubscriber(modid = STATMod.MODID)
 public final class DungeonBossHandler {
 
     public static final TagKey<EntityType<?>> DUNGEON_BOSS_TAG = TagKey.create(
@@ -67,12 +65,29 @@ public final class DungeonBossHandler {
 
         int floor = DungeonTeleportHandler.floorAtPos(sp.getBlockX(), sp.getBlockZ());
 
-        // Heuristique : seulement les étages boss (multiples de 10) unlock via kill.
+        // Seulement les étages boss (multiples de 10) débloquent via kill.
         if (floor <= 0 || floor % 10 != 0) return;
 
         PlayerStatData data = sp.getData(ModAttachments.STATS);
-        // Idempotent : ne pas re-déclencher si déjà unlocked (autres mobs du roster).
+        // Idempotent : ne pas re-déclencher si déjà unlocked.
         if (data.getDungeonFloorReached() > floor) return;
+
+        // Mode normal : l'autel a suivi les boss de l'étage → on ne débloque qu'au clear complet.
+        if (DungeonBossTracker.isTracked(floor)) {
+            java.util.UUID id = target.getUUID();
+            // Un mob qui n'est pas un boss suivi (sbire, compagnon) ne compte pas.
+            if (!DungeonBossTracker.isTrackedBoss(floor, id)) return;
+            boolean allDead = DungeonBossTracker.onBossDeath(floor, id);
+            if (!allDead) {
+                int left = DungeonBossTracker.remaining(floor);
+                sp.displayClientMessage(Component.translatable(
+                        "block.statmod.dungeon_portal.boss_remaining", left), true);
+                return; // il reste des boss → pas de déblocage
+            }
+            // Tous les boss sont morts → on tombe dans la récompense ci-dessous.
+        }
+        // Sinon (aucun tracking : restart serveur en plein combat, ou étage sans altar) →
+        // heuristique de secours : ce kill débloque directement.
 
         int gain = Config.getDungeonBossStatGain();
         int statIndex = PHYSICAL_STAT_INDICES[sp.getRandom().nextInt(PHYSICAL_STAT_INDICES.length)];

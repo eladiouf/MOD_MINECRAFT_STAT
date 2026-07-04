@@ -57,14 +57,16 @@ public final class DungeonHudOverlay {
         int x = screenW - boxW - 4;
         int y = 4;
 
+        // Fond semi-transparent en coordonnées écran absolues (avant tout scale/translate).
+        RenderSystem.enableBlend();
+        graphics.fill(x, y, x + boxW, y + boxH, 0x80000000);
+        RenderSystem.disableBlend();
+
+        // Texte : origine au coin haut-gauche du contenu puis mise à l'échelle.
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(x + 4, y + 4, 0);
         pose.scale(scale, scale, 1.0f);
-
-        RenderSystem.enableBlend();
-        graphics.fill(x, y, x + boxW, y + boxH, 0x80000000);
-        RenderSystem.disableBlend();
 
         graphics.drawString(font, title, 0, 0, 0xFFFFFF);
         graphics.drawString(font, line1, 0, font.lineHeight + 1, 0xFFFFFF);

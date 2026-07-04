@@ -201,7 +201,7 @@
   "dungeon.wave.remaining": "%s ennemis restants…",
   "dungeon.floor.conquered": "Étage %s conquis ! La voie vers l'étage %s s'ouvre.",
   "dungeon.milestone": "Profondeur %s atteinte — le donjon s'assombrit. Prépare-toi.",
-  "dungeon.defeat.reset": "Vaincu — mais ton équipement est intact. Retour à l'étage 1.",
+  "dungeon.defeat.reset": "Vaincu — mais ton équipement est intact. Étage %s à recommencer.",
   "block.statmod.boss_altar": "Autel de Boss",
   "item.statmod.boss_altar": "Autel de Boss",
   "sound.statmod.dungeon_portal_enter": "Portail activé",

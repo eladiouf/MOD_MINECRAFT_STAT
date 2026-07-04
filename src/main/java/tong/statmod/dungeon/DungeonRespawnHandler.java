@@ -16,7 +16,8 @@ import java.util.List;
  * <p>Dans un donjon d'entraînement, mourir ne doit <b>pas</b> coûter l'inventaire ni l'XP. Plutôt
  * que de laisser le joueur mourir puis le renvoyer (ce qui, avec les gamerules par défaut, drope
  * déjà son stuff et son XP), on <b>annule la mort</b> : le joueur est soigné, purgé de ses malus,
- * et renvoyé à l'étage 1. Aucun écran de mort, aucun drop, aucune perte d'XP.
+ * et <b>réapparaît au début de l'étage où il est tombé</b> (l'étage se régénère, une nouvelle vague
+ * l'attend). Aucun écran de mort, aucun drop, aucune perte d'XP.
  *
  * <p>Priorité {@code LOWEST} : on laisse les autres mods réagir à la mort d'abord (compat), et on
  * annule en dernier si personne ne l'a déjà fait.
@@ -31,6 +32,10 @@ public final class DungeonRespawnHandler {
         if (event.isCanceled()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!player.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
+
+        // Étage sur lequel le joueur est tombé — DÉDUIT AVANT le tp (il change après).
+        int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
+        if (floor < 1) floor = 1;
 
         // Annule la mort → pas d'écran de mort, pas de drop d'inventaire/XP.
         event.setCanceled(true);
@@ -48,12 +53,13 @@ public final class DungeonRespawnHandler {
         player.hurtTime = 0;
         player.hurtMarked = true;
 
-        // Retour à l'étage 1 (recommence le run, mais avec tout son stuff).
-        DungeonTeleportHandler.enterFloor(player, 1);
+        // Réapparition au début du MÊME étage (régénéré, nouvelle vague) — on réessaie l'étage.
+        DungeonTeleportHandler.enterFloor(player, floor);
 
+        final int retryFloor = floor;
         player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
-                "dungeon.defeat.reset"), false);
-        STATMod.LOGGER.info("[TrialDungeon] {} vaincu — renvoyé étage 1 (inventaire préservé)",
-                player.getGameProfile().getName());
+                "dungeon.defeat.reset", retryFloor), false);
+        STATMod.LOGGER.info("[TrialDungeon] {} vaincu — réapparaît étage {} (inventaire préservé)",
+                player.getGameProfile().getName(), retryFloor);
     }
 }

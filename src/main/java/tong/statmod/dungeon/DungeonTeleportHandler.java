@@ -103,6 +103,13 @@ public final class DungeonTeleportHandler {
         // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
         DungeonMobSpawner.requestWave(dungeon, floor);
 
+        // Annonce dramatique pour les étages à thème (Solo Leveling).
+        DungeonTheme theme = DungeonTheme.forFloor(floor);
+        if (theme != null) {
+            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                    theme.displayName()), false);
+        }
+
         STATMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
                 player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());
         return true;

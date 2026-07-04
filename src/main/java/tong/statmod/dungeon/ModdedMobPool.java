@@ -41,6 +41,9 @@ public final class ModdedMobPool {
         // Iron's Spellbooks — casters et hostiles (hors boss)
         addIronsSpellbooksMobs(modded, tier);
 
+        // Tensura — immense bestiaire (gobelins, orcs, daemons, colosses, élémentaux)
+        addTensuraMobs(modded, tier);
+
         return modded;
     }
 
@@ -120,55 +123,104 @@ public final class ModdedMobPool {
         }
     }
 
+    /** Mobs Tensura par tier (immense bestiaire : gobelins → daemons → colosses). */
+    private static void addTensuraMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("tensura")) return;
+
+        switch (tier) {
+            case EARLY -> {
+                addIfAvailable(pool, "tensura:goblin");
+                addIfAvailable(pool, "tensura:direwolf");
+                addIfAvailable(pool, "tensura:giant_bat");
+                addIfAvailable(pool, "tensura:horned_rabbit");
+            }
+            case MID -> {
+                addIfAvailable(pool, "tensura:orc");
+                addIfAvailable(pool, "tensura:lizardman");
+                addIfAvailable(pool, "tensura:black_spider");
+                addIfAvailable(pool, "tensura:army_wasp");
+                addIfAvailable(pool, "tensura:giant_bear");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "tensura:lesser_daemon");
+                addIfAvailable(pool, "tensura:knight_spider");
+                addIfAvailable(pool, "tensura:basilisk");
+                addIfAvailable(pool, "tensura:barghest");
+                addIfAvailable(pool, "tensura:bone_golem");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "tensura:greater_daemon");
+                addIfAvailable(pool, "tensura:arch_daemon");
+                addIfAvailable(pool, "tensura:evil_centipede");
+                addIfAvailable(pool, "tensura:elemental_colossus");
+                addIfAvailable(pool, "tensura:charybdis");
+            }
+        }
+    }
+
     /** Ajoute un EntityType si le mod est chargé et le mob existe dans le registre. */
     private static void addIfAvailable(List<EntityType<?>> pool, String entityId) {
+        EntityType<?> type = resolve(entityId);
+        if (type != null) {
+            pool.add(type);
+            STATMod.LOGGER.debug("[TrialDungeon] Added modded mob: {}", entityId);
+        }
+    }
+
+    /** Résout un EntityType par son ID, ou {@code null} si absent (mod non installé, ID inconnu). */
+    public static EntityType<?> resolve(String entityId) {
         try {
             ResourceLocation id = ResourceLocation.tryParse(entityId);
-            if (id == null) return;
-
-            // Vérifier que l'EntityType existe
-            if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
-                STATMod.LOGGER.debug("[TrialDungeon] Modded mob not found in registry: {}", entityId);
-                return;
-            }
-
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(id);
-            if (type != null) {
-                pool.add(type);
-                STATMod.LOGGER.debug("[TrialDungeon] Added modded mob: {}", entityId);
-            }
+            if (id == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(id)) return null;
+            return BuiltInRegistries.ENTITY_TYPE.get(id);
         } catch (Exception e) {
-            // Ignorer les erreurs de chargement de mobs moddés
-            STATMod.LOGGER.debug("[TrialDungeon] Failed to load modded mob {}: {}", entityId, e.getMessage());
+            return null;
         }
     }
 
     /**
-     * Combine les pools vanilla et moddés pour le tier donné.
-     * Garantit que les mobs moddés ne représentent pas plus de 50% du pool total.
+     * Résout la liste d'IDs en EntityTypes présents (les absents sont ignorés). Utilisé par les
+     * étages à thème ({@link DungeonTheme}).
      */
-    public static List<EntityType<?>> getCombinedPool(FloorPalette tier) {
+    public static List<EntityType<?>> resolveAll(List<String> ids) {
+        List<EntityType<?>> out = new ArrayList<>();
+        for (String id : ids) {
+            EntityType<?> t = resolve(id);
+            if (t != null) out.add(t);
+        }
+        return out;
+    }
+
+    /**
+     * Pool de mobs de la vague pour un étage.
+     *
+     * <p>Étage à <b>thème</b> ({@link DungeonTheme#forFloor}) : renvoie UNIQUEMENT les mobs du thème
+     * (horde d'orcs pure, etc.) — le mini-boss est spawné séparément par {@link DungeonMobSpawner}.
+     * Si le thème n'a aucun mob disponible (mod absent), on retombe sur le pool mixte normal.
+     *
+     * <p>Étage normal : mélange vanilla + moddés (Tensura/SLU/Iron's Spellbooks), plafonné à 50 %
+     * de moddés.
+     */
+    public static List<EntityType<?>> getCombinedPool(int floor) {
+        DungeonTheme theme = DungeonTheme.forFloor(floor);
+        if (theme != null) {
+            List<EntityType<?>> themed = resolveAll(theme.addIds());
+            if (!themed.isEmpty()) return themed; // pool 100 % thématique
+        }
+
+        FloorPalette tier = FloorPalette.forFloor(floor);
         List<EntityType<?>> vanilla = DungeonMasterpiece.mobPool(tier);
         List<EntityType<?>> modded = getModdedMobs(tier);
-
-        // Si pas de mobs moddés, retourner vanilla pur
         if (modded.isEmpty()) return vanilla;
 
-        // Combiner en garantissant max 50% de mobs moddés
-        int vanillaCount = vanilla.size();
-        int moddedAllowed = vanillaCount; // 50% max
-
+        int moddedAllowed = vanilla.size(); // 50 % max
+        List<EntityType<?>> combined = new ArrayList<>(vanilla);
         if (modded.size() <= moddedAllowed) {
-            // Tous les mods rentrent
-            List<EntityType<?>> combined = new ArrayList<>(vanilla);
             combined.addAll(modded);
-            return combined;
         } else {
-            // Sélection aléatoire de mobs moddés
-            List<EntityType<?>> combined = new ArrayList<>(vanilla);
             java.util.Collections.shuffle(modded);
             combined.addAll(modded.subList(0, moddedAllowed));
-            return combined;
         }
+        return combined;
     }
 }

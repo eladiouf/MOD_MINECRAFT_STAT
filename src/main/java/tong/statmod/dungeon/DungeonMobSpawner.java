@@ -105,13 +105,22 @@ public final class DungeonMobSpawner {
      */
     private static int enqueueWave(ServerLevel lv, int floor, int want) {
         if (want <= 0) return 0;
-        FloorPalette tier = FloorPalette.forFloor(floor);
-        List<EntityType<?>> pool = ModdedMobPool.getCombinedPool(tier); // Vanilla + mods contrôlés
+        List<EntityType<?>> pool = ModdedMobPool.getCombinedPool(floor); // vanilla+mods, ou pool thématique
         if (pool.isEmpty()) return 0;
 
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         PENDING_FLOORS.add(floor);
         // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
+
+        // Étage à thème : un mini-boss trône au centre, en plus de la horde.
+        DungeonTheme theme = DungeonTheme.forFloor(floor);
+        if (theme != null) {
+            EntityType<?> miniBoss = firstAvailable(theme.miniBossIds());
+            if (miniBoss != null) {
+                BlockPos bossPos = sp.offset(0, 0, -6); // léger décalage nord, au fond de l'arène
+                QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
+            }
+        }
 
         int spawned = 0;
         int attempts = 0;
@@ -136,6 +145,15 @@ public final class DungeonMobSpawner {
             spawned++;
         }
         return spawned;
+    }
+
+    /** Premier EntityType présent parmi une liste d'IDs candidats, ou {@code null}. */
+    private static EntityType<?> firstAvailable(List<String> ids) {
+        for (String id : ids) {
+            EntityType<?> t = ModdedMobPool.resolve(id);
+            if (t != null) return t;
+        }
+        return null;
     }
 
     @SubscribeEvent

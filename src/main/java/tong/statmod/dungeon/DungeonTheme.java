@@ -1,0 +1,86 @@
+package tong.statmod.dungeon;
+
+import java.util.List;
+
+/**
+ * Mission M6 — Étages à thème « Solo Leveling » (2026-07-04).
+ *
+ * <p>Certains étages de combat sont <b>mono-thème</b> : au lieu d'un mélange, on n'affronte qu'une
+ * seule famille de monstres (une horde d'orcs, une nuée d'insectes, une légion de démons…) menée
+ * par un <b>mini-boss</b> assorti. C'est le donjon-portail de Solo Leveling : « un étage d'orcs
+ * avec un énorme orc au fond ».
+ *
+ * <p>Chaque thème liste des IDs d'entités (mods détectés au runtime via {@link ModdedMobPool} ; les
+ * IDs absents sont simplement ignorés). {@code adds} = les mobs de base, {@code miniBoss} = le chef.
+ * Tout est vérifié contre les jars réels (Tensura surtout, qui a un immense bestiaire).
+ */
+public enum DungeonTheme {
+
+    ORC("§2Orc Warband", "☠ Orc Disaster",
+            List.of("tensura:orc", "tensura:orc", "tensura:goblin", "tensura:lizardman"),
+            List.of("tensura:orc_lord", "tensura:orc_disaster")),
+
+    UNDEAD("§8Legion of the Dead", "☠ Bone Colossus",
+            List.of("tensura:skeleton", "tensura:zombie", "slu:hollow", "slu:armed_hollow", "irons_spellbooks:catacombs_zombie"),
+            List.of("tensura:bone_golem", "irons_spellbooks:necromancer")),
+
+    DEMON("§4Demonic Incursion", "☠ Arch Daemon",
+            List.of("tensura:lesser_daemon", "tensura:lesser_daemon", "tensura:greater_daemon", "irons_spellbooks:cultist"),
+            List.of("tensura:arch_daemon")),
+
+    ELEMENTAL("§bElemental Rift", "☠ Elemental Colossus",
+            List.of("tensura:ifrit", "tensura:undine", "tensura:salamander", "tensura:sylphide"),
+            List.of("tensura:elemental_colossus")),
+
+    BEAST("§6Beast Den", "☠ Alpha Direwolf",
+            List.of("tensura:direwolf", "tensura:giant_bear", "tensura:horned_bear", "tensura:barghest", "tensura:basilisk"),
+            List.of("tensura:charybdis", "tensura:giant_bear")),
+
+    INSECT("§aHive Swarm", "☠ Broodmother",
+            List.of("tensura:army_wasp", "tensura:giant_ant", "tensura:black_spider", "tensura:hell_moth", "tensura:hell_caterpillar"),
+            List.of("tensura:evil_centipede", "tensura:knight_spider")),
+
+    MAGE("§dArcane Conclave", "☠ Archevoker",
+            List.of("irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer", "irons_spellbooks:cultist", "irons_spellbooks:apothecarist"),
+            List.of("irons_spellbooks:archevoker", "irons_spellbooks:priest"));
+
+    private final String displayName;
+    private final String bossName;
+    private final List<String> adds;
+    private final List<String> miniBoss;
+
+    DungeonTheme(String displayName, String bossName, List<String> adds, List<String> miniBoss) {
+        this.displayName = displayName;
+        this.bossName = bossName;
+        this.adds = adds;
+        this.miniBoss = miniBoss;
+    }
+
+    public String displayName() { return displayName; }
+    public String bossName() { return bossName; }
+    /** IDs des mobs de base du thème (certains peuvent être absents selon les mods installés). */
+    public List<String> addIds() { return adds; }
+    /** IDs candidats pour le mini-boss (le premier disponible est utilisé). */
+    public List<String> miniBossIds() { return miniBoss; }
+
+    /**
+     * Thème d'un étage, ou {@code null} si l'étage n'est pas thématique.
+     *
+     * <p>Règle : les étages de combat (ni ×5 ni ×10) dont le numéro est ≡ 3 (mod 10) — soit 3, 13,
+     * 23, 33… — sont thématiques. Le thème tourne de façon déterministe selon l'étage, donc chaque
+     * palier de 10 a son étage à thème, et le thème varie d'un palier à l'autre.
+     */
+    public static DungeonTheme forFloor(int floor) {
+        if (floor <= 0) return null;
+        if (floor % 10 == 0 || floor % 5 == 0) return null; // boss / trésor : pas de thème
+        if (floor % 10 != 3) return null;                   // seul l'étage ×3 du palier est thématique
+        DungeonTheme[] all = values();
+        int idx = ((floor / 10) % all.length + all.length) % all.length;
+        return all[idx];
+    }
+
+    /** {@code true} si l'étage est thématique. */
+    public static boolean isThemed(int floor) {
+        return forFloor(floor) != null;
+    }
+}

@@ -236,7 +236,8 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/IslandTerrainShaper.java` | Relief organique **montant uniquement** sur le pourtour (hors emprise forteresse) — `rimHeightAt` pure/testable |
 | `dungeon/IslandShaper.java` | Géométrie pure seedée (silhouette + profondeur underside) — testable sans Bootstrap |
 | `dungeon/DungeonMasterpiece.java` | Briques partagées : `buildUnderside` (cône) + table mobs (`mobPool`/`mobCount`) |
-| `dungeon/ModdedMobPool.java` | Mobs moddés contrôlés (`slu` + `irons_spellbooks`) combinés au pool vanilla, plafonné 50 % |
+| `dungeon/ModdedMobPool.java` | Mobs moddés (`slu` + `irons_spellbooks` + `tensura`) combinés au pool vanilla (50 %) ; pool 100 % thématique si étage à thème |
+| `dungeon/DungeonTheme.java` | Étages à thème « Solo Leveling » (ORC/UNDEAD/DEMON/ELEMENTAL/BEAST/INSECT/MAGE) : horde mono-famille + mini-boss ; étages ×3 du palier |
 | `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
 | `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : retire tout drop non-`statmod:` dans le donjon (les mobs SLU MCreator droppent leur équipement hors loot table → le GLM ne les voyait pas) |
 | `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |

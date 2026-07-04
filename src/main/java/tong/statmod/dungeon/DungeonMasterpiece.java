@@ -60,25 +60,29 @@ public final class DungeonMasterpiece {
             case EARLY -> List.of(
                 EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER,
                 EntityType.HUSK, EntityType.CAVE_SPIDER, EntityType.SILVERFISH,
-                EntityType.PILLAGER, EntityType.CREEPER, EntityType.WITCH
+                EntityType.PILLAGER, EntityType.CREEPER, EntityType.WITCH,
+                EntityType.BOGGED, EntityType.SLIME, EntityType.ZOMBIE_VILLAGER
             );
             case MID -> List.of(
                 EntityType.STRAY, EntityType.DROWNED, EntityType.CAVE_SPIDER,
                 EntityType.VINDICATOR, EntityType.EVOKER, EntityType.RAVAGER,
                 EntityType.PIGLIN, EntityType.HOGLIN, EntityType.ZOMBIFIED_PIGLIN, EntityType.BLAZE,
-                EntityType.WITCH, EntityType.CREEPER, EntityType.ENDERMAN
+                EntityType.WITCH, EntityType.CREEPER, EntityType.ENDERMAN,
+                EntityType.BREEZE, EntityType.BOGGED, EntityType.SLIME
             );
             case LATE -> List.of(
                 EntityType.VEX, EntityType.RAVAGER, EntityType.VINDICATOR, EntityType.EVOKER,
                 EntityType.WITHER_SKELETON, EntityType.BLAZE, EntityType.HOGLIN, EntityType.PIGLIN_BRUTE,
                 EntityType.ENDERMAN, EntityType.SHULKER, EntityType.PHANTOM,
-                EntityType.WITCH, EntityType.CAVE_SPIDER, EntityType.DROWNED
+                EntityType.WITCH, EntityType.CAVE_SPIDER, EntityType.DROWNED,
+                EntityType.BREEZE, EntityType.GUARDIAN, EntityType.MAGMA_CUBE
             );
             case ABYSS -> List.of(
                 EntityType.ELDER_GUARDIAN, EntityType.WARDEN, EntityType.PIGLIN_BRUTE,
                 EntityType.WITHER_SKELETON, EntityType.BLAZE, EntityType.HOGLIN,
                 EntityType.ENDERMAN, EntityType.SHULKER, EntityType.PHANTOM,
-                EntityType.RAVAGER, EntityType.VEX, EntityType.VINDICATOR
+                EntityType.RAVAGER, EntityType.VEX, EntityType.VINDICATOR,
+                EntityType.EVOKER, EntityType.GUARDIAN, EntityType.MAGMA_CUBE
             );
         };
     }

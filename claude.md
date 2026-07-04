@@ -238,6 +238,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonMasterpiece.java` | Briques partagées : `buildUnderside` (cône) + table mobs (`mobPool`/`mobCount`) |
 | `dungeon/ModdedMobPool.java` | Mobs moddés contrôlés (`slu` + `irons_spellbooks`) combinés au pool vanilla, plafonné 50 % |
 | `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
+| `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : retire tout drop non-`statmod:` dans le donjon (les mobs SLU MCreator droppent leur équipement hors loot table → le GLM ne les voyait pas) |
 | `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |
 | `dungeon/DungeonProgress.java` | Autorité unique de conquête : unlock étage suivant + célébration (son/particules/message) + jalons |
 | `dungeon/DungeonBossHandler.java` | Handler de conquête unifié (combat = vague nettoyée, boss = roster mort) → `DungeonProgress` |

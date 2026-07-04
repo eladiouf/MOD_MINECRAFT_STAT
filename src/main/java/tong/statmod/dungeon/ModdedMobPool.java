@@ -50,6 +50,7 @@ public final class ModdedMobPool {
         switch(tier) {
             case EARLY -> {
                 addIfAvailable(pool, "slu:hollow");
+                addIfAvailable(pool, "slu:armed_hollow");
                 addIfAvailable(pool, "slu:thief");
                 addIfAvailable(pool, "slu:hollow_soldier_sword");
                 addIfAvailable(pool, "slu:hollow_soldier_spear");
@@ -61,6 +62,8 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "slu:dark_spirit");
                 addIfAvailable(pool, "slu:castle_guard");
                 addIfAvailable(pool, "slu:dungeon_knight");
+                addIfAvailable(pool, "slu:nightmare_knight");
+                addIfAvailable(pool, "slu:ghost_samurai");
             }
             case LATE -> {
                 addIfAvailable(pool, "slu:elite_knight");
@@ -71,6 +74,8 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "slu:shadow_assassin");
                 addIfAvailable(pool, "slu:mad_knight");
                 addIfAvailable(pool, "slu:wither_skeleton_knight");
+                addIfAvailable(pool, "slu:monster_successor");
+                addIfAvailable(pool, "slu:clone_abyss_watcher");
             }
             case ABYSS -> {
                 addIfAvailable(pool, "slu:monster_crucible_knight");
@@ -84,7 +89,6 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "slu:bad_omen_giant");
                 addIfAvailable(pool, "slu:executor");
                 addIfAvailable(pool, "slu:white_phantom");
-                addIfAvailable(pool, "slu:ghost_samurai");
                 addIfAvailable(pool, "slu:havel");
             }
         }

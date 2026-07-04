@@ -97,7 +97,7 @@ public final class DungeonArchitect {
         combatWings(lv, sp, t, wingStyle);
         midSection(lv, sp, t, midType);
 
-        theHeart(lv, sp, t, role);
+        theHeart(lv, sp, t, role, floor);
         // Pas de toiture pour les étages boss : le sanctuaire reste ouvert (combat épique à ciel
         // ouvert). Les autres étages gardent leur toit d'ailes à puits de lumière.
         if (role != Role.BOSS) roofing(lv, sp, t);
@@ -393,7 +393,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 7. THE HEART (nord, -Z) selon le rôle ═══════════════
 
-    static void theHeart(ServerLevel lv, BlockPos sp, FloorPalette t, Role role) {
+    static void theHeart(ServerLevel lv, BlockPos sp, FloorPalette t, Role role, int floor) {
         BlockState brick = B(t.accent());
         BlockState pillar = B(t.decorPrimary());
         BlockState light = B(t.light());
@@ -439,13 +439,19 @@ public final class DungeonArchitect {
         }
 
         switch (role) {
-            case BOSS -> S(lv, O(sp, 0, 2, hz), B(DungeonBlocks.BOSS_ALTAR.get()));
+            case BOSS -> {
+                S(lv, O(sp, 0, 2, hz), B(DungeonBlocks.BOSS_ALTAR.get()));
+                // Salle de boss enrichie : fontaine de soin + armor stands trophées.
+                DungeonRoomDressing.dressBossRoom(lv, sp, t, floor);
+            }
             case TREASURE -> {
                 int[][] chests = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}};
                 for (int[] c : chests) {
                     S(lv, O(sp, c[0], 2, hz + c[1]), pillar);
                     placeChest(lv, O(sp, c[0], 3, hz + c[1]));
                 }
+                // Salle trésor enrichie : fontaine de soin, waypoint, armor stands, piédestaux.
+                DungeonRoomDressing.dressTreasureRoom(lv, sp, t, floor);
             }
             case COMBAT -> {
                 S(lv, O(sp, 0, 2, hz), stair(t.stair(), Direction.SOUTH)); // trône

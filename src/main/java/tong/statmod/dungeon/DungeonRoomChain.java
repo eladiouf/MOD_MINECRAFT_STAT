@@ -67,6 +67,10 @@ public final class DungeonRoomChain {
                 // BOSS ne passe PAS par la chaîne (arène dédiée géante) ; sécurité → exitRoom.
                 if (role == DungeonArchitect.Role.TREASURE) treasureRoom(lv, sp, t, floor, r);
                 else exitRoom(lv, sp, t, r);
+            } else if (role == DungeonArchitect.Role.TREASURE) {
+                // Étage trésor : les pièces libres deviennent un MARCHÉ (stands de marchands bloqués).
+                DungeonMerchant.placeStall(lv, sp, r.centerX(), r.centerZ(), t,
+                        r.index() % DungeonMerchant.STALL_KINDS, floor);
             } else {
                 combatDressing(lv, sp, t, r, floor, rng);
             }

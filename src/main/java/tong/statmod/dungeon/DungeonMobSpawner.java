@@ -106,7 +106,8 @@ public final class DungeonMobSpawner {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
         return lv.getEntitiesOfClass(Mob.class, area,
-                m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)).size();
+                m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)).size();
     }
 
     /**
@@ -119,7 +120,8 @@ public final class DungeonMobSpawner {
         AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
         int removed = 0;
         for (Mob m : lv.getEntitiesOfClass(Mob.class, area,
-                m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG))) {
+                m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG))) {
             m.discard();
             removed++;
         }

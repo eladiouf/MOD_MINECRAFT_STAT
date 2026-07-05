@@ -86,14 +86,15 @@ public final class DungeonMobSpawner {
     }
 
     /**
-     * Taille de la vague de combat selon l'étage. Rehaussée (2026-07-05) : le donjon a maintenant
-     * ~11 pièces par étage à peupler — il faut nettement plus de mobs pour que chaque salle ait ses
-     * ennemis. Croît de ~14 (étage 1) à ~34 (étage 100), plafonnée pour éviter le lag.
-     * (L'intensité vient aussi du niveau L2 par étage + des mobs de thème plus coriaces en profondeur.)
+     * Taille de la vague de combat selon l'étage — courbe modérée (2026-07-05, réajustée après un
+     * pic à 34 jugé excessif). Croît EN FONCTION DE L'ÉTAGE : ~8 (étage 1) → 20 (étage ~84+), soit
+     * environ 2 mobs par pièce répartis sur les ~11 pièces. Plafonnée pour rester fluide.
+     * (L'intensité vient surtout du niveau L2 par étage + des mobs de thème plus coriaces en profondeur —
+     * pas du nombre.)
      */
     private static int waveSizeForFloor(int floor) {
-        int n = 14 + floor / 5;         // +1 mob tous les 5 étages
-        return Math.min(34, Math.max(14, n));
+        int n = 8 + floor / 7;          // +1 mob tous les 7 étages
+        return Math.min(20, Math.max(8, n));
     }
 
     /** {@code true} si l'étage a une vague de combat (ni boss ni trésor). */

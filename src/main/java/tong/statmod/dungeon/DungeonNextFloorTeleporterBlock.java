@@ -38,8 +38,11 @@ public class DungeonNextFloorTeleporterBlock extends Block {
 
         PlayerStatData data = sp.getData(ModAttachments.STATS);
         if (nextFloor > data.getDungeonFloorReached()) {
+            // Message spécifique à l'objectif : le joueur sait EXACTEMENT quoi faire pour ouvrir la voie.
+            DungeonObjective objective = DungeonObjective.forFloor(currentFloor);
             sp.displayClientMessage(Component.translatable(
-                    "block.statmod.next_floor_teleporter.locked", nextFloor), true);
+                    "block.statmod.next_floor_teleporter.locked_objective",
+                    Component.translatable(objective.translationKey())), true);
             return InteractionResult.CONSUME;
         }
 

@@ -199,6 +199,8 @@
   "block.statmod.next_floor_teleporter": "Téléporteur d'Étage",
   "item.statmod.next_floor_teleporter": "Téléporteur d'Étage",
   "block.statmod.next_floor_teleporter.locked": "La voie est scellée — conquiers d'abord cet étage",
+  "block.statmod.next_floor_teleporter.locked_objective": "La voie est scellée — %s d'abord",
+  "dungeon.enter.objective": "Objectif : %s — suis les lumières",
   "dungeon.objective.clear_wave": "Élimine tous les ennemis",
   "dungeon.objective.loot_vault": "Pille la chambre forte",
   "dungeon.objective.slay_boss": "Vaincs le boss",

@@ -154,6 +154,11 @@ public final class DungeonTeleportHandler {
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(
                 theme.displayName()), false);
+        // Objectif de l'étage en barre d'action (le joueur sait quoi faire dès l'entrée).
+        player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                "dungeon.enter.objective",
+                net.minecraft.network.chat.Component.translatable(
+                        DungeonObjective.forFloor(floor).translationKey())), true);
 
         STATMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
                 player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());

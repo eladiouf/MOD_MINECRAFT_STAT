@@ -263,6 +263,8 @@
   "block.statmod.next_floor_teleporter": "Next Floor Teleporter",
   "item.statmod.next_floor_teleporter": "Next Floor Teleporter",
   "block.statmod.next_floor_teleporter.locked": "The way forward is sealed — conquer this floor first",
+  "block.statmod.next_floor_teleporter.locked_objective": "The way forward is sealed — %s first",
+  "dungeon.enter.objective": "Objective: %s — follow the lights",
   "dungeon.objective.clear_wave": "Clear all enemies",
   "dungeon.objective.loot_vault": "Loot the vault",
   "dungeon.objective.slay_boss": "Slay the boss",

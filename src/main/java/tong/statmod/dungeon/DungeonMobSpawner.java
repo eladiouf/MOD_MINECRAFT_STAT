@@ -40,7 +40,7 @@ public final class DungeonMobSpawner {
     /** Délai avant spawn effectif : le joueur est déjà présent, un court délai suffit. */
     private static final int SPAWN_DELAY_TICKS = 10;
     /** Rayon (blocs) où l'on cherche des mobs déjà vivants sur l'étage. */
-    private static final int FLOOR_SCAN_RADIUS = 55;
+    private static final int FLOOR_SCAN_RADIUS = 85;
 
     /**
      * Délai avant d'appliquer le niveau L2 Hostility. Doit passer APRÈS l'init de L2 (qui calcule
@@ -159,9 +159,9 @@ public final class DungeonMobSpawner {
         while (spawned < want && attempts < want * 5) { // Max 5 essais par mob
             attempts++;
 
-            // Position aléatoire dans l'anneau de combat (10-18 blocs du centre)
+            // Position aléatoire dans l'anneau de combat (12-42 blocs — étage agrandi)
             double angle = lv.random.nextDouble() * Math.PI * 2;
-            double distance = 10.0 + lv.random.nextDouble() * 8.0; // 10-18 blocs
+            double distance = 12.0 + lv.random.nextDouble() * 30.0;
             int dx = (int) Math.round(Math.cos(angle) * distance);
             int dz = (int) Math.round(Math.sin(angle) * distance);
             BlockPos pos = sp.offset(dx, 0, dz);

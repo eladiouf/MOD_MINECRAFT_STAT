@@ -21,7 +21,7 @@ import tong.statmod.STATMod;
  */
 public final class IslandGenerator {
 
-    static final int R = 50;
+    static final int R = 80;
 
     private IslandGenerator() {}
 
@@ -49,9 +49,9 @@ public final class IslandGenerator {
 
     public static BoundingBox floorBoundingBox(int floor) {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        // Y : de l'underside conique (~ -22) jusqu'au sommet des tours (~ +18). Couvre tout pour
-        // que /statdungeon regen efface la structure entière avant reconstruction.
-        return new BoundingBox(sp.getX()-R, sp.getY()-22, sp.getZ()-R, sp.getX()+R, sp.getY()+18, sp.getZ()+R);
+        // Y : de l'underside conique (~ -30 avec R=80) jusqu'au sommet des tours (~ +22). Couvre
+        // tout pour que /statdungeon regen efface la structure entière avant reconstruction.
+        return new BoundingBox(sp.getX()-R, sp.getY()-34, sp.getZ()-R, sp.getX()+R, sp.getY()+24, sp.getZ()+R);
     }
 
     static int radiusFor(int floor) { return R; }

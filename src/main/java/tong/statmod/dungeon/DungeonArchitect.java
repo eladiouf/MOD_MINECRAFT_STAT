@@ -33,10 +33,10 @@ import static net.minecraft.world.level.block.Blocks.*;
  */
 public final class DungeonArchitect {
 
-    /** Demi-emprise de la forteresse (rectangle 76×60, tient sur l'île R=50). */
-    static final int HX = 38, HZ = 30;
-    /** Hauteur intérieure (plafond à {@code y=WALL_H}). */
-    static final int WALL_H = 9;
+    /** Demi-emprise de la forteresse (rectangle ~128×104, tient sur l'île R=80). Agrandie 2026-07-05. */
+    static final int HX = 64, HZ = 52;
+    /** Hauteur intérieure (plafond à {@code y=WALL_H}). Relevée pour des étages plus imposants. */
+    static final int WALL_H = 12;
 
     /** Rôle de l'étage — détermine le "cœur". */
     public enum Role { COMBAT, TREASURE, BOSS }
@@ -104,6 +104,9 @@ public final class DungeonArchitect {
         // ouvert). Les autres étages gardent leur toit d'ailes à puits de lumière.
         if (role != Role.BOSS) roofing(lv, sp, t);
         lighting(lv, sp, t, floor);
+        // Bâtiments dans les ailes (étages agrandis) — tours, huttes, ruines, sanctuaires, puits.
+        // Étages de combat uniquement : les ×5/×10 ont leur cœur trésor/boss dégagé.
+        if (role == Role.COMBAT) DungeonBuildings.place(lv, sp, t, rng);
         narrativeDressing(lv, sp, t, rng);
         // Passe de détaillage « builder pro » : une multitude de petits détails thématisés, placés
         // intelligemment contre la structure (murs, angles, plafond). Rend l'étage vivant.

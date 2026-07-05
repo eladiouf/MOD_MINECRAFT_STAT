@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandGeneratorTest {
 
-    static final int R = 50;
+    // Référence la constante de production pour ne jamais dériver si l'île est redimensionnée.
+    static final int R = IslandGenerator.R;
 
     @Test void floor1BoundingBoxIsUniform() { BoundingBox b = IslandGenerator.floorBoundingBox(1); assertNotNull(b); assertEquals(2*R+1, b.getXSpan()); }
     @Test void floor5SameSize() { assertEquals(2*R+1, IslandGenerator.floorBoundingBox(5).getXSpan()); }

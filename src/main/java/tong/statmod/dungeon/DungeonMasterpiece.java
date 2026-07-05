@@ -25,14 +25,22 @@ import static net.minecraft.world.level.block.Blocks.*;
  */
 public final class DungeonMasterpiece {
 
-    static final int R = 50;
+    static final int R = 80;
 
     private DungeonMasterpiece() {}
 
     static BlockState B(Block b) { return b.defaultBlockState(); }
     static void S(ServerLevel lv, BlockPos p, BlockState s) { lv.setBlock(p, s, 3); }
     static BlockPos O(BlockPos p, int x, int y, int z) { return p.offset(x, y, z); }
-    static boolean in(int dx, int dz) { return dx*dx + dz*dz <= R*R; }
+    /**
+     * Sol de l'île : union du disque de rayon {@code R} ET du rectangle de la forteresse (+marge).
+     * Garantit que la forteresse (dont les coins dépassent le disque après agrandissement) a
+     * toujours du sol dessous — sinon les tours d'angle flotteraient au-dessus du vide.
+     */
+    static boolean in(int dx, int dz) {
+        if (dx * dx + dz * dz <= R * R) return true;
+        return Math.abs(dx) <= DungeonArchitect.HX + 2 && Math.abs(dz) <= DungeonArchitect.HZ + 2;
+    }
 
     // ═══════════════ UNDERSIDE CONE ═══════════════
 
@@ -43,7 +51,7 @@ public final class DungeonMasterpiece {
         for (int dx = -R; dx <= R; dx++) for (int dz = -R; dz <= R; dz++) {
             if (!in(dx, dz)) continue;
             double dist = Math.sqrt(dx*dx + dz*dz);
-            int depth = (int)((1.0 - dist/R) * (R/3.0)) + 2;
+            int depth = Math.max(2, (int)((1.0 - dist/R) * (R/3.0)) + 2); // ≥2 même hors du disque
             for (int dy = 1; dy <= depth; dy++)
                 S(lv, O(sp, dx, -dy, dz), (dy%3==0) ? u2 : u1);
         }

@@ -11,15 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class DungeonPointsTest {
 
-    @Test
-    void mobRewardGrowsWithDepth() {
-        int f1 = DungeonPoints.mobReward(1);
-        int f50 = DungeonPoints.mobReward(50);
-        int f100 = DungeonPoints.mobReward(100);
-        assertTrue(f1 >= 1, "un mob rapporte au moins 1 point");
-        assertTrue(f50 > f1, "plus profond = plus de points");
-        assertTrue(f100 > f50, "monotone croissant");
-    }
+    // Le barème de kill dépend désormais des stats réelles du mob (PV/attaque/armure) via
+    // difficultyRating(LivingEntity), qui nécessite le Bootstrap Minecraft — couvert en jeu, pas
+    // en test unit pur. On teste ici la logique pure : accumulateur, bornes, copie.
 
     @Test
     void pointsNeverGoNegative() {

@@ -60,9 +60,9 @@ public final class DungeonBossHandler {
         if (floor <= 0) return;
 
         // Système de points : tout mob de donjon (nos mobs autorisés) tué par le joueur rapporte
-        // des points ∝ étage. Remplace le drop de cristaux (les mobs ne dropent plus rien).
+        // des points ∝ SA DIFFICULTÉ (PV/attaque/armure) × profondeur. Remplace le drop de cristaux.
         if (target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) {
-            DungeonPoints.awardMobKill(sp, floor);
+            DungeonPoints.awardMobKill(sp, target, floor);
         }
 
         DungeonObjective objective = DungeonObjective.forFloor(floor);

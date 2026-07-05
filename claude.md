@@ -243,7 +243,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonThemes.java` | **100 thèmes** (1 par étage, généré par `tools/gen_dungeon_themes.py`) : 10 arcs de 10 étages, difficulté croissante, horde + mini-boss par étage, boucle au-delà de 100. Thème superposé au rôle (×5 trésor / ×10 boss conservés) |
 | `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
 | `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : **zéro drop** de mob dans le donjon (système de points remplace le loot en cristaux) |
-| `dungeon/DungeonPoints.java` | Système de points : mob tué / boss / conquête → points ∝ étage ; mort → perte punitive (25 %, min 20). Stockés dans `PlayerStatData.dungeonPoints` (persistés + sync HUD) |
+| `dungeon/DungeonPoints.java` | Système de points : mob tué → points ∝ **sa difficulté** (PV/attaque/armure via `difficultyRating`) × profondeur ; conquête +25 ; boss +150 ; mort → perte punitive (25 %, min 20). Stockés dans `PlayerStatData.dungeonPoints` (persistés + sync HUD) |
 | `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |
 | `dungeon/DungeonProgress.java` | Autorité unique de conquête : unlock étage suivant + célébration (son/particules/message) + jalons |
 | `dungeon/DungeonBossHandler.java` | Handler de conquête unifié (combat = vague nettoyée, boss = roster mort) → `DungeonProgress` |

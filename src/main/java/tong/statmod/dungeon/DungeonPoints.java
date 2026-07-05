@@ -2,6 +2,7 @@ package tong.statmod.dungeon;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import tong.statmod.STATMod;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.storage.ModAttachments;
@@ -18,10 +19,14 @@ import tong.statmod.storage.PlayerStatData;
  */
 public final class DungeonPoints {
 
-    /** Points de base par mob tué, avant bonus d'étage. */
-    private static final int BASE_MOB_POINTS = 5;
-    /** Points par mob supplémentaires par tranche de 10 étages (profondeur = plus de valeur). */
-    private static final int MOB_POINTS_PER_TIER = 2;
+    /** Points minimum garantis pour n'importe quel kill. */
+    private static final int MOB_POINTS_MIN = 3;
+    /** Points par point de « difficulté » du mob (voir {@link #difficultyRating}). */
+    private static final double POINTS_PER_DIFFICULTY = 0.6;
+    /** Bonus multiplicatif de profondeur : +5 % de points par étage franchi. */
+    private static final double DEPTH_BONUS_PER_FLOOR = 0.05;
+    /** Plafond de points par mob (anti-abus si un mob a des PV délirants). */
+    private static final int MOB_POINTS_CAP = 400;
 
     /** Bonus de conquête d'un étage de combat/trésor. */
     private static final int FLOOR_CLEAR_POINTS = 25;
@@ -35,9 +40,34 @@ public final class DungeonPoints {
 
     private DungeonPoints() {}
 
-    /** Points gagnés pour un mob tué à l'étage {@code floor} (croît avec la profondeur). */
-    public static int mobReward(int floor) {
-        return BASE_MOB_POINTS + Math.max(0, floor / 10) * MOB_POINTS_PER_TIER;
+    /**
+     * « Note de difficulté » d'un mob, dérivée de ses stats réelles au moment du kill : surtout
+     * ses PV max (signal universel qui capte les élites, les boss ET le scaling L2 Hostility),
+     * plus un peu de dégâts d'attaque. Un gobelin ≈ 5, un chevalier ≈ 30, un colosse ≈ 200+.
+     */
+    public static double difficultyRating(LivingEntity mob) {
+        double hp = mob.getMaxHealth();                 // PV max (10 vanilla → centaines pour un boss)
+        double atk = attackDamage(mob);                 // dégâts d'attaque (0 si non armé)
+        double armor = mob.getArmorValue();             // armure (tanky = plus dur)
+        // Pondération : les PV dominent, l'attaque et l'armure ajustent.
+        return hp + atk * 3.0 + armor * 1.5;
+    }
+
+    /** Dégâts d'attaque du mob (attribut ATTACK_DAMAGE), ou 0 si absent. */
+    private static double attackDamage(LivingEntity mob) {
+        var attr = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+        return attr != null ? attr.getValue() : 0.0;
+    }
+
+    /**
+     * Points gagnés pour un mob tué : proportionnels à sa difficulté réelle, amplifiés par la
+     * profondeur de l'étage. Toujours ≥ {@link #MOB_POINTS_MIN}, plafonnés à {@link #MOB_POINTS_CAP}.
+     */
+    public static int mobReward(LivingEntity mob, int floor) {
+        double base = difficultyRating(mob) * POINTS_PER_DIFFICULTY;
+        double depthMult = 1.0 + Math.max(0, floor - 1) * DEPTH_BONUS_PER_FLOOR;
+        int pts = (int) Math.round(base * depthMult);
+        return Math.max(MOB_POINTS_MIN, Math.min(MOB_POINTS_CAP, pts));
     }
 
     /** Accorde des points au joueur, avec message action-bar et resync. */
@@ -49,9 +79,9 @@ public final class DungeonPoints {
         player.displayClientMessage(Component.translatable(reasonKey, amount, total), true);
     }
 
-    /** Récompense de kill de mob (points ∝ étage). */
-    public static void awardMobKill(ServerPlayer player, int floor) {
-        award(player, mobReward(floor), "dungeon.points.mob");
+    /** Récompense de kill de mob (points ∝ difficulté du mob × profondeur). */
+    public static void awardMobKill(ServerPlayer player, LivingEntity mob, int floor) {
+        award(player, mobReward(mob, floor), "dungeon.points.mob");
     }
 
     /** Récompense de conquête d'un étage (combat/trésor). */

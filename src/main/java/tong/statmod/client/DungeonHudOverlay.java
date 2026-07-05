@@ -54,7 +54,17 @@ public final class DungeonHudOverlay {
 
         // Nom du thème de l'étage (chaque étage a le sien).
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
-        String[] lines = { title, line1, "§7» " + theme.displayName(), line2, points, line3 };
+
+        // Compteur d'ennemis restants (étages de combat non conquis) — lisibilité de l'objectif.
+        // Compté côté client : le donjon n'a aucun spawn naturel, tous les hostiles sont les nôtres.
+        java.util.List<String> lineList = new java.util.ArrayList<>(java.util.List.of(
+                title, line1, "§7» " + theme.displayName(), line2, points, line3));
+        boolean combatFloor = floor > 0 && floor % 10 != 0 && floor % 5 != 0;
+        if (combatFloor && !conquered) {
+            int enemies = countEnemies(mc, player);
+            if (enemies > 0) lineList.add("§c⚔ §fEnemies: §c" + enemies);
+        }
+        String[] lines = lineList.toArray(new String[0]);
 
         int screenW = mc.getWindow().getGuiScaledWidth();
         float scale = 0.75f;
@@ -84,6 +94,16 @@ public final class DungeonHudOverlay {
         pose.popPose();
     }
 
+    /** Compte les ennemis (hostiles) proches du joueur — le donjon n'ayant aucun spawn naturel,
+     *  tous les {@link net.minecraft.world.entity.monster.Enemy} chargés sont ceux de la vague. */
+    private static int countEnemies(net.minecraft.client.Minecraft mc,
+                                    net.minecraft.world.entity.player.Player player) {
+        if (mc.level == null) return 0;
+        net.minecraft.world.phys.AABB area = player.getBoundingBox().inflate(90.0);
+        return mc.level.getEntities(player, area,
+                e -> e instanceof net.minecraft.world.entity.monster.Enemy && e.isAlive()).size();
+    }
+
     /** Ligne d'objectif : ce qu'il reste à accomplir, ou « conquis » si la sortie est ouverte. */
     private static String objectiveLine(int floor, boolean conquered) {
         if (conquered) return "§a✔ Conquered §7· exit open";
@@ -104,4 +124,5 @@ public final class DungeonHudOverlay {
         if (floor <= 50) return "§6LATE";
         return "§cABYSS";
     }
+
 }

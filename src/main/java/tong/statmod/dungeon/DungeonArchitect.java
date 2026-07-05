@@ -87,16 +87,20 @@ public final class DungeonArchitect {
         // Dégage tout l'intérieur (headroom pour la structure + le combat).
         air(lv, sp, -HX + 1, 0, -HZ + 1, HX - 1, WALL_H + 2, HZ - 1);
 
-        // ── ÉTAGES DE COMBAT : chaîne de pièces (serpentin) ──
-        // Chaque étage de combat est désormais une suite de pièces reliées (spawn → … → pièce de
-        // sortie avec le téléporteur), et non plus une forteresse monolithique. Les étages boss (×10)
-        // et trésor (×5) gardent la forteresse « The Descent » (grande salle unique de showcase).
-        if (role == Role.COMBAT) {
-            DungeonRoomChain.build(lv, sp, t, floor, rng);
+        // ── NOUVELLE GÉNÉRATION (2026-07-05) ──
+        // COMBAT & TRÉSOR : chaîne de pièces reliées (spawn → … → pièce finale avec téléporteur /
+        //   coffres). BOSS : arène géante à ciel ouvert ceinturée de grands piliers.
+        // (La forteresse « The Descent » ci-dessous n'est plus appelée — conservée pour référence.)
+        if (role == Role.COMBAT || role == Role.TREASURE) {
+            DungeonRoomChain.build(lv, sp, t, floor, role, rng);
+            return;
+        }
+        if (role == Role.BOSS) {
+            DungeonBossArenaFloor.build(lv, sp, t, floor);
             return;
         }
 
-        // ── Coque constante (identité + flow) ──
+        // ── Coque constante (identité + flow) ── [DEAD CODE — forteresse historique] ──
         perimeterWall(lv, sp, t);
         cornerTowers(lv, sp, t);
         gatehouse(lv, sp, t);
@@ -459,10 +463,11 @@ public final class DungeonArchitect {
             case BOSS -> {
                 // Arène façonnée selon le TYPE du boss (bassin aquatique, arène haute pour un
                 // volant, fosse pour un colosse, magma pour un infernal, os pour un mort-vivant…).
-                DungeonBossArena.shape(lv, sp, t, floor);
+                // Anchor = centre de l'estrade nord (hz = -HZ+11) pour la forteresse.
+                DungeonBossArena.shape(lv, O(sp, 0, 0, -HZ + 11), t, floor);
                 S(lv, O(sp, 0, 2, hz), B(DungeonBlocks.BOSS_ALTAR.get()));
                 // Salle de boss enrichie : fontaine de soin + armor stands trophées.
-                DungeonRoomDressing.dressBossRoom(lv, sp, t, floor);
+                DungeonRoomDressing.dressBossRoom(lv, O(sp, 0, 2, hz), t, floor);
             }
             case TREASURE -> {
                 int[][] chests = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}};
@@ -471,7 +476,7 @@ public final class DungeonArchitect {
                     placeChest(lv, O(sp, c[0], 3, hz + c[1]));
                 }
                 // Salle trésor enrichie : fontaine de soin, waypoint, armor stands, piédestaux.
-                DungeonRoomDressing.dressTreasureRoom(lv, sp, t, floor);
+                DungeonRoomDressing.dressTreasureRoom(lv, O(sp, 0, 2, hz), t, floor);
             }
             case COMBAT -> {
                 S(lv, O(sp, 0, 2, hz), stair(t.stair(), Direction.SOUTH)); // trône

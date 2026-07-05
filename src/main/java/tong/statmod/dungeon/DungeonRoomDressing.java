@@ -29,46 +29,47 @@ public final class DungeonRoomDressing {
     static void S(ServerLevel lv, BlockPos p, BlockState s) { lv.setBlock(p, s, 3); }
     static BlockPos O(BlockPos sp, int x, int y, int z) { return sp.offset(x, y, z); }
 
+    /** Ancre forteresse : centre de l'estrade nord (hz = -HZ+11), y au niveau du dais (+2). */
+    public static BlockPos fortressAnchor(BlockPos sp) { return O(sp, 0, 2, -HZ() + 11); }
+
     /**
-     * Aménage une salle trésor : fontaine de soin au centre, waystone (waypoint), 2 armor stands
-     * équipés d'armures de tier, et 2 piédestaux présentoirs (blocs de valeur du tier).
+     * Aménage une salle trésor autour d'un <b>point d'ancrage monde</b> {@code a} (centre de la
+     * pièce, au niveau walkable) : fontaine de soin, waystone (waypoint), 2 armor stands équipés,
+     * 2 piédestaux présentoirs. Réutilisable en forteresse (anchor = {@link #fortressAnchor}) comme
+     * en chaîne de pièces (anchor = centre de la dernière pièce).
      */
-    public static void dressTreasureRoom(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
-        int hz = -HZ() + 11;
+    public static void dressTreasureRoom(ServerLevel lv, BlockPos a, BlockPalette t, int floor) {
         FloorPalette tier = FloorPalette.forFloor(floor); // armures/présentoirs selon la difficulté
 
         // Fontaine de soin — bassin 3×3 d'eau bordé, avec une source lumineuse centrale.
-        healFountain(lv, sp, O(sp, 0, 0, hz + 4), t);
-        DungeonHealHandler.registerHealSpot(lv.dimension(), O(sp, 0, 1, hz + 4));
+        healFountain(lv, a, O(a, 0, -2, 4), t);
+        DungeonHealHandler.registerHealSpot(lv.dimension(), O(a, 0, -1, 4));
 
-        // Waypoint : waystone assortie au thème, à l'est de l'estrade (activable pour retour rapide).
+        // Waypoint : waystone assortie au thème, à l'est (activable pour retour rapide).
         tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
-                lv, O(sp, 6, 2, hz), tier, floor);
+                lv, O(a, 6, 0, 0), tier, floor);
 
         // 2 armor stands équipés, encadrant le trésor.
-        armorStand(lv, O(sp, -4, 2, hz), floor, false);
-        armorStand(lv, O(sp, 4, 2, hz), floor, true);
+        armorStand(lv, O(a, -4, 0, 0), floor, false);
+        armorStand(lv, O(a, 4, 0, 0), floor, true);
 
         // 2 piédestaux présentoirs (bloc de valeur du tier posé sur une colonne).
-        pedestal(lv, O(sp, -2, 2, hz - 3), t, showcaseBlock(tier));
-        pedestal(lv, O(sp, 2, 2, hz - 3), t, showcaseBlock(tier));
+        pedestal(lv, O(a, -2, 0, -3), t, showcaseBlock(tier));
+        pedestal(lv, O(a, 2, 0, -3), t, showcaseBlock(tier));
     }
 
     /**
-     * Aménage une salle de boss : fontaine de soin (pour souffler après le combat) et 2 armor
-     * stands « trophées ». Le loot du boss reste géré par {@link DungeonBossHandler} / l'autel.
+     * Aménage une salle de boss autour d'un <b>point d'ancrage monde</b> {@code a} : fontaine de
+     * soin (refuge) et 2 armor stands « trophées ». Le loot reste géré par {@link DungeonBossHandler}.
      */
-    public static void dressBossRoom(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
-        int hz = -HZ() + 11;
-        FloorPalette tier = FloorPalette.forFloor(floor);
+    public static void dressBossRoom(ServerLevel lv, BlockPos a, BlockPalette t, int floor) {
+        // Fontaine de soin en retrait (sud), refuge après le combat.
+        healFountain(lv, a, O(a, 0, -2, 8), t);
+        DungeonHealHandler.registerHealSpot(lv.dimension(), O(a, 0, -1, 8));
 
-        // Fontaine de soin en retrait (sud de l'estrade), refuge après le combat.
-        healFountain(lv, sp, O(sp, 0, 0, hz + 8), t);
-        DungeonHealHandler.registerHealSpot(lv.dimension(), O(sp, 0, 1, hz + 8));
-
-        // 2 armor stands « gardiens » aux angles avant de l'estrade.
-        armorStand(lv, O(sp, -6, 2, hz + 5), floor, true);
-        armorStand(lv, O(sp, 6, 2, hz + 5), floor, false);
+        // 2 armor stands « gardiens » aux angles avant.
+        armorStand(lv, O(a, -6, 0, 5), floor, true);
+        armorStand(lv, O(a, 6, 0, 5), floor, false);
     }
 
     // ═══════════════ éléments ═══════════════

@@ -44,19 +44,25 @@ public final class DungeonTeleportHandler {
         return new BlockPos(col * FLOOR_SPACING, FLOOR_Y, row * FLOOR_SPACING);
     }
 
-    /** {@code true} si l'étage est un étage de combat (chaîne de pièces), pas boss (×10)/trésor (×5). */
+    /** {@code true} si l'étage est un étage de combat (vague), pas boss (×10)/trésor (×5). */
     public static boolean isCombatFloor(int floor) {
         return floor > 0 && floor % 10 != 0 && floor % 5 != 0;
     }
 
+    /** {@code true} si l'étage est une chaîne de pièces (combat OU trésor), pas un boss (×10). */
+    public static boolean isRoomChainFloor(int floor) {
+        return floor > 0 && floor % 10 != 0;
+    }
+
     /**
-     * Position où <b>téléporter le joueur</b> à l'entrée d'un étage. Sur un étage de combat (chaîne
-     * de pièces), c'est le centre de la <b>pièce d'apparition</b> ({@link DungeonRoomChain}) ; sur un
-     * étage boss/trésor (forteresse), c'est le centre de l'île ({@link #floorSpawnPos}).
+     * Position où <b>téléporter le joueur</b> à l'entrée d'un étage. Chaîne de pièces (combat/trésor)
+     * → centre de la <b>pièce d'apparition</b> ({@link DungeonRoomChain}). Boss (×10) → bord sud de
+     * l'arène géante (l'autel occupe le centre).
      */
     public static BlockPos floorPlayerSpawnPos(int floor) {
         BlockPos island = floorSpawnPos(floor);
-        return isCombatFloor(floor) ? DungeonRoomChain.spawnWorldPos(island) : island;
+        if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
+        return island.offset(0, 1, DungeonArchitect.HZ - 12); // boss : entrée sud, dégagée des piliers
     }
 
     /**

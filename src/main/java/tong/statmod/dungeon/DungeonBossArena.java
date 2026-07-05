@@ -49,19 +49,21 @@ public final class DungeonBossArena {
     }
 
     /**
-     * Façonne l'arène du boss au nord (centre {@code hz = -HZ+11}), selon la catégorie. On ne
-     * touche que le sol/plafond autour de l'estrade, pas l'autel lui-même.
+     * Façonne l'arène du boss autour d'un <b>point d'ancrage monde</b> {@code anchor} (centre de la
+     * pièce/estrade), selon la catégorie. On ne touche que le sol/plafond, pas l'autel lui-même.
+     * L'offset local {@code hz} passe désormais par l'anchor (hz=0) → réutilisable en forteresse
+     * comme en chaîne de pièces.
      */
-    public static void shape(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
-        int hz = -HZ + 11;
+    public static void shape(ServerLevel lv, BlockPos anchor, BlockPalette t, int floor) {
+        int hz = 0;
         Kind kind = kindForFloor(floor);
         switch (kind) {
-            case AQUATIC -> aquatic(lv, sp, t, hz);
-            case FLYING -> flying(lv, sp, t, hz);
-            case COLOSSUS -> colossus(lv, sp, t, hz);
-            case INFERNAL -> infernal(lv, sp, t, hz);
-            case UNDEAD -> undead(lv, sp, t, hz);
-            case ARENA -> arena(lv, sp, t, hz);
+            case AQUATIC -> aquatic(lv, anchor, t, hz);
+            case FLYING -> flying(lv, anchor, t, hz);
+            case COLOSSUS -> colossus(lv, anchor, t, hz);
+            case INFERNAL -> infernal(lv, anchor, t, hz);
+            case UNDEAD -> undead(lv, anchor, t, hz);
+            case ARENA -> arena(lv, anchor, t, hz);
         }
     }
 

@@ -41,8 +41,13 @@ public final class DungeonRoomChain {
 
     private DungeonRoomChain() {}
 
-    /** Construit tout l'intérieur d'un étage de combat en chaîne de pièces. */
-    public static void build(ServerLevel lv, BlockPos sp, BlockPalette t, int floor, Random rng) {
+    /**
+     * Construit tout l'intérieur d'un étage en chaîne de pièces. La dernière pièce dépend du rôle :
+     * combat → téléporteur ; trésor → coffres + aménagement ; boss → autel + arène + aménagement
+     * (le téléporteur y est posé mais scellé tant que l'objectif — vague/loot/boss — n'est pas rempli).
+     */
+    public static void build(ServerLevel lv, BlockPos sp, BlockPalette t, int floor,
+                             DungeonArchitect.Role role, Random rng) {
         List<DungeonLayout.Room> rooms = DungeonLayout.rooms();
 
         // (1) Coques de toutes les pièces.
@@ -59,7 +64,9 @@ public final class DungeonRoomChain {
             if (r.isFirst()) {
                 spawnPad(lv, sp, t, r);
             } else if (r.isLast()) {
-                exitRoom(lv, sp, t, r);
+                // BOSS ne passe PAS par la chaîne (arène dédiée géante) ; sécurité → exitRoom.
+                if (role == DungeonArchitect.Role.TREASURE) treasureRoom(lv, sp, t, floor, r);
+                else exitRoom(lv, sp, t, r);
             } else {
                 combatDressing(lv, sp, t, r, floor, rng);
             }
@@ -186,6 +193,32 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx + 2, 0, cz), stair(t.stair(), Direction.WEST));
         // Le bloc de descente.
         S(lv, O(sp, cx, 0, cz), B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
+    }
+
+    /**
+     * Dernière pièce d'un étage TRÉSOR : coffres au trésor + aménagement (fontaine, waystone, armor
+     * stands, piédestaux) + téléporteur scellé (s'ouvre au pillage du coffre, cf. DungeonVaultHandler).
+     */
+    private static void treasureRoom(ServerLevel lv, BlockPos sp, BlockPalette t, int floor,
+                                     DungeonLayout.Room r) {
+        int cx = r.centerX(), cz = r.centerZ();
+        BlockState pillar = B(t.decorPrimary());
+        // Estrade centrale + coffres (loot table dungeon_treasure) posés dessus.
+        for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
+            S(lv, O(sp, cx + dx, -1, cz + dz), B(t.accent()));
+        }
+        DungeonArchitect.placeChest(lv, O(sp, cx, 0, cz));
+        DungeonArchitect.placeChest(lv, O(sp, cx + 2, 0, cz));
+        DungeonArchitect.placeChest(lv, O(sp, cx - 2, 0, cz));
+        // Aménagement autour de l'estrade (anchor au niveau walkable de la pièce).
+        DungeonRoomDressing.dressTreasureRoom(lv, O(sp, cx, 0, cz), t, floor);
+        // Téléporteur mis en valeur au nord de la pièce (scellé tant que le coffre n'est pas ouvert).
+        int tz = r.minZ() + 3;
+        for (int[] c : new int[][]{{-2, 0}, {2, 0}}) {
+            for (int y = 0; y <= 3; y++) S(lv, O(sp, cx + c[0], y, tz), pillar);
+            S(lv, O(sp, cx + c[0], 4, tz), B(t.light()));
+        }
+        S(lv, O(sp, cx, 0, tz), B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
     }
 
     /** Pièce de combat intermédiaire : quelques colonnes + décor (les mobs viennent du spawner). */

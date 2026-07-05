@@ -230,6 +230,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonDimensions.java` | ResourceKeys pour `statmod:trial_dungeon` |
 | `dungeon/DungeonBlocks.java` | DeferredRegister : `dungeon_portal`, `return_beacon`, `next_floor_teleporter`, `boss_altar` |
 | `dungeon/DungeonPortalBlock.java` | Bloc d'entrée : right-click → tp donjon + particules PORTAL |
+| `item/DungeonBeaconItem.java` | Balise « portail de poche » (`statmod:dungeon_beacon`) : clic-droit n'importe où → entre au plus haut étage ; depuis le donjon → retour overworld. Craftable |
 | `dungeon/DungeonTeleportHandler.java` | TP serveur : `enterFloor()`, `returnToOverworld()`, `floorAtPos()`, `floorSpawnPos()` |
 | `dungeon/IslandGenerator.java` | Pipeline : `DungeonArchitect.buildFloor` (forteresse) + `IslandTerrainShaper.buildIslandGround` (relief pourtour) |
 | `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle (+ dressing salles récompense) |

@@ -13,6 +13,8 @@ public class Config {
     public static final ModConfigSpec.DoubleValue NON_COMBAT_XP_MULTIPLIER;
     public static final ModConfigSpec.IntValue MAX_STAT_LEVEL;
     public static final ModConfigSpec.IntValue BASE_PERK_POINTS_PER_LEVEL;
+    public static final ModConfigSpec.DoubleValue WEAPON_DAMAGE_SCALE;
+    public static final ModConfigSpec.DoubleValue WEAPON_DAMAGE_BASE;
     public static final ModConfigSpec.DoubleValue DUNGEON_XP_BASE_MULTIPLIER;
     public static final ModConfigSpec.DoubleValue DUNGEON_XP_PER_FLOOR;
     public static final ModConfigSpec.IntValue DUNGEON_BOSS_STAT_GAIN;
@@ -33,6 +35,14 @@ public class Config {
         BASE_PERK_POINTS_PER_LEVEL = BUILDER
                 .comment("Base perk points granted per stat level")
                 .defineInRange("basePerkPointsPerLevel", 1, 0, 10);
+        WEAPON_DAMAGE_BASE = BUILDER
+                .comment("Multiplicateur de dégâts de MÊLÉE de base du joueur (niveau 0 de stat).",
+                        "1.0 = dégâts d'arme bruts. Monte ce chiffre si TOUTES les armes tapent trop faible.")
+                .defineInRange("weaponDamageBase", 1.5, 0.5, 10.0);
+        WEAPON_DAMAGE_SCALE = BUILDER
+                .comment("Amplitude du bonus de dégâts par la stat de combat, au niveau MAX.",
+                        "À 3.0, une stat de combat maxée ajoute ×3 par-dessus la base (donc ~×4.5 total).")
+                .defineInRange("weaponDamageScale", 3.0, 0.0, 20.0);
         BUILDER.pop();
 
         BUILDER.push("trial_dungeon");
@@ -68,6 +78,22 @@ public class Config {
             return MAX_STAT_LEVEL.get();
         } catch (IllegalStateException e) {
             return 100;
+        }
+    }
+
+    public static double getWeaponDamageBase() {
+        try {
+            return WEAPON_DAMAGE_BASE.get();
+        } catch (IllegalStateException e) {
+            return 1.5;
+        }
+    }
+
+    public static double getWeaponDamageScale() {
+        try {
+            return WEAPON_DAMAGE_SCALE.get();
+        } catch (IllegalStateException e) {
+            return 3.0;
         }
     }
 

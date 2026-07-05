@@ -2,15 +2,22 @@ package tong.statmod.stats;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.perks.Perk;
+import tong.statmod.perks.PerkState;
+import tong.statmod.progression.WeaponResolver;
+import tong.statmod.storage.ModAttachments;
 
 @EventBusSubscriber(modid = STATMod.MODID)
 public class StatEffectApplier {
@@ -20,24 +27,29 @@ public class StatEffectApplier {
         float dmg = event.getNewDamage();
 
         if (event.getSource().getEntity() instanceof Player attacker) {
+            StatType weaponStat = WeaponResolver.statFor(attacker.getMainHandItem());
             int brute = RaceEffectApplier.getEffectiveLevel(attacker, StatType.BRUTE_FORCE.index);
             int blade = RaceEffectApplier.getEffectiveLevel(attacker, StatType.BLADE_TECHNIQUE.index);
-            dmg *= 1.0f + (brute + blade) * 0.005f;
-
             int precision = RaceEffectApplier.getEffectiveLevel(attacker, StatType.PRECISION.index);
-            dmg *= 1.0f + precision * 0.005f;
+            int rapidite = RaceEffectApplier.getEffectiveLevel(attacker, StatType.RAPIDITE.index);
+            int arcane = RaceEffectApplier.getEffectiveLevel(attacker, StatType.ARCANE_POWER.index);
+            float dmgBase = (float) tong.statmod.config.Config.getWeaponDamageBase();
+            float dmgScale = (float) tong.statmod.config.Config.getWeaponDamageScale();
+            dmg *= StatCombatScaling.weaponDamageMultiplier(
+                    weaponStat, brute, blade, precision, rapidite, arcane, dmgBase, dmgScale);
 
             int intimid = RaceEffectApplier.getEffectiveLevel(attacker, StatType.INTIMIDATION.index);
-            if (event.getEntity() instanceof LivingEntity) {
-                dmg *= 1.0f + intimid * 0.003f;
+            if (event.getEntity() instanceof LivingEntity target) {
+                boolean marked = target.hasEffect(MobEffects.GLOWING)
+                        || PerkState.isTrackedTarget(attacker.getUUID(), target.getId());
+                dmg *= StatCombatScaling.intimidationDamageMultiplier(intimid, marked);
             }
 
-            if (precision >= 50 && attacker.getHealth() >= attacker.getMaxHealth()) {
+            if (weaponStat == StatType.PRECISION && precision >= 50 && attacker.getHealth() >= attacker.getMaxHealth()) {
                 dmg *= 1.15f;
             }
 
-            int rapidite = RaceEffectApplier.getEffectiveLevel(attacker, StatType.RAPIDITE.index);
-            if (rapidite > 0 && attacker.getRandom().nextFloat() < rapidite * 0.001f) {
+            if (weaponStat == StatType.RAPIDITE && rapidite > 0 && attacker.getRandom().nextFloat() < rapidite * 0.001f) {
                 dmg *= 1.5f;
             }
 
@@ -54,19 +66,11 @@ public class StatEffectApplier {
 
         if (event.getEntity() instanceof Player victim) {
             int phys = RaceEffectApplier.getEffectiveLevel(victim, StatType.PHYSICAL_RESISTANCE.index);
-            dmg *= 1.0f - Math.min(0.5f, phys * 0.005f);
-
             int magicRes = RaceEffectApplier.getEffectiveLevel(victim, StatType.MAGIC_RESISTANCE.index);
-            if (magicRes > 0 && event.getSource().getDirectEntity() != null
-                    && event.getSource().getDirectEntity() != event.getSource().getEntity()) {
-                dmg *= 1.0f - Math.min(0.5f, magicRes * 0.005f);
-            }
-
             int will = RaceEffectApplier.getEffectiveLevel(victim, StatType.WILLPOWER.index);
-            dmg *= 1.0f - Math.min(0.4f, will * 0.003f);
-
             int endurance = RaceEffectApplier.getEffectiveLevel(victim, StatType.PHYSICAL_ENDURANCE.index);
-            dmg *= 1.0f - Math.min(0.3f, endurance * 0.002f);
+            dmg *= StatCombatScaling.incomingDamageMultiplier(
+                    damageRole(event.getSource()), phys, magicRes, endurance, will);
 
             int keen = RaceEffectApplier.getEffectiveLevel(victim, StatType.KEEN_SENSES.index);
             if (keen > 0 && victim.getRandom().nextFloat() < keen * 0.002f) {
@@ -92,5 +96,44 @@ public class StatEffectApplier {
                 event.setDamageMultiplier(event.getDamageMultiplier() * Math.max(0.1f, 1.0f - endurance * 0.003f));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onMobEffectApplicable(MobEffectEvent.Applicable event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        MobEffectInstance effect = event.getEffectInstance();
+        if (effect == null || effect.getEffect().value().isBeneficial()) {
+            return;
+        }
+        if (player.getData(ModAttachments.STATS).isPerkUnlocked(Perk.WILL_TRANSCENDENCE.id)) {
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMobEffectAdded(MobEffectEvent.Added event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        MobEffectInstance effect = event.getEffectInstance();
+        if (effect == null || effect.getEffect().value().isBeneficial()) {
+            return;
+        }
+
+        int will = RaceEffectApplier.getEffectiveLevel(player, StatType.WILLPOWER.index);
+        boolean ironWill = player.getData(ModAttachments.STATS).isPerkUnlocked(Perk.WILL_CORE.id);
+        effect.mapDuration(duration -> StatCombatScaling.negativeEffectDurationTicks(duration, will, ironWill));
+    }
+
+    private static StatCombatScaling.IncomingDamageRole damageRole(DamageSource source) {
+        if (source == null) {
+            return StatCombatScaling.IncomingDamageRole.ENVIRONMENT;
+        }
+        return StatCombatScaling.damageRole(
+                source.is(DamageTypes.MAGIC),
+                source.is(DamageTypes.INDIRECT_MAGIC),
+                source.getMsgId());
     }
 }

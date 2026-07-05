@@ -321,6 +321,10 @@ public final class DungeonRoomChain {
         }
         // Props d'ambiance disséminés partout : coffres épars, toiles, statues moddées, braseros, crânes.
         DungeonProps.decorate(lv, sp, t, r, floor, ceilH);
+        // Pièges (Simply Traps) au sol — dangereux à traverser.
+        DungeonTraps.place(lv, sp, r, floor);
+        // Salle secrète à récompenses (≈ 1 par étage) — placée EN DERNIER pour ne rien écraser.
+        DungeonSecretRoom.maybePlace(lv, sp, t, r, floor);
     }
 
     /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */

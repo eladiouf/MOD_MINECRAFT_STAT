@@ -1,16 +1,16 @@
 package tong.statmod.progression;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
@@ -19,7 +19,6 @@ import tong.statmod.storage.ModAttachments;
 
 import java.util.Set;
 
-@EventBusSubscriber(modid = STATMod.MODID)
 public class NonCombatXPHandler {
 
     @SubscribeEvent
@@ -36,6 +35,25 @@ public class NonCombatXPHandler {
         if (player.level().isClientSide) return;
 
         award(player, StatType.FORGING, Math.max(1, event.getCrafting().getCount()));
+    }
+
+    @SubscribeEvent
+    public static void onItemPickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre event) {
+        Player player = event.getPlayer();
+        if (player.level().isClientSide) return;
+
+        // First spell book pickup awards Erudition Lv1
+        if (player.getData(ModAttachments.STATS).getLevel(StatType.ERUDITION.index) == 0
+                && isIronSpellBook(event.getItemEntity().getItem())) {
+            award(player, StatType.ERUDITION, 10);
+        }
+    }
+
+    static boolean isIronSpellBook(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return false;
+        if (!ModList.get().isLoaded("irons_spellbooks")) return false;
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return "irons_spellbooks".equals(id.getNamespace()) && id.getPath().endsWith("_spell_book");
     }
 
     @SubscribeEvent

@@ -45,6 +45,16 @@ public final class DungeonRespawnHandler {
         // Mort punitive : le joueur perd une partie de ses points de donjon.
         DungeonPoints.applyDeathPenalty(player);
 
+        // Règle « 0 point → éjection » : si la mort a vidé les points, on renvoie le joueur à
+        // l'overworld AU LIEU de le faire réapparaître dans le donjon (les coins du shop restent
+        // acquis). On soigne d'abord pour ne pas le renvoyer mourant.
+        if (player.getData(tong.statmod.storage.ModAttachments.STATS).getDungeonPoints() <= 0) {
+            player.setHealth(player.getMaxHealth());
+            player.clearFire();
+            DungeonPointsEjection.enforce(player);
+            return;
+        }
+
         // Remet le joueur en état de combattre : PV pleins, feu éteint, malus purgés, faim rétablie.
         player.setHealth(player.getMaxHealth());
         player.clearFire();

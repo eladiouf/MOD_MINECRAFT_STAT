@@ -92,7 +92,11 @@ public class DungeonBossAltarBlock extends Block {
         if (spawned > 0) {
             level.setBlock(pos, state.setValue(ACTIVE, false), 3);
             sp.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.6f, 0.8f);
-            sp.displayClientMessage(Component.literal("L'autel s'éveille — étage " + floor + " !"), false);
+            // Titre dramatique à l'apparition du boss (nom du roster) — moment fort du donjon.
+            String bossName = roster.isEmpty() ? "Boss" : firstBossName(roster.get(0).entityId());
+            DungeonProgress.title(sp, Component.translatable("dungeon.title.boss", bossName),
+                    Component.translatable("dungeon.title.boss.sub"));
+            sp.playNotifySound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.7f, 1.0f);
         }
 
         return InteractionResult.CONSUME;
@@ -117,5 +121,20 @@ public class DungeonBossAltarBlock extends Block {
         ResourceLocation loc = ResourceLocation.tryParse(id);
         if (loc == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(loc)) return null; // pas de fallback Pig silencieux
         return BuiltInRegistries.ENTITY_TYPE.get(loc);
+    }
+
+    /** Nom lisible à partir d'un id d'entrée de roster (« slu:boss_malenia,... » → « Malenia »). */
+    private static String firstBossName(String entry) {
+        String id = entry.contains(",") ? entry.substring(0, entry.indexOf(',')) : entry;
+        String path = id.contains(":") ? id.substring(id.indexOf(':') + 1) : id;
+        if (path.startsWith("boss_")) path = path.substring(5);
+        String[] words = path.replace('_', ' ').trim().split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String w : words) {
+            if (w.isEmpty()) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(Character.toUpperCase(w.charAt(0))).append(w.substring(1));
+        }
+        return sb.length() == 0 ? "Boss" : sb.toString();
     }
 }

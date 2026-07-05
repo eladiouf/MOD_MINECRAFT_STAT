@@ -87,6 +87,20 @@ public final class DungeonProgress {
             sl.sendParticles(ParticleTypes.END_ROD,
                     p.x, p.y + 1.2, p.z, 18, 0.5, 0.7, 0.5, 0.05);
         }
+        // Titre à l'écran : moment fort, plus satisfaisant qu'une simple ligne de chat.
+        title(player, Component.translatable("dungeon.title.floor_cleared"),
+                Component.translatable("dungeon.title.floor_cleared.sub", floor + 1));
+        // Soin de récompense : on souffle entre deux étages (mi-PV rendus + brève régénération).
+        player.heal(player.getMaxHealth() * 0.5f);
+        player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                net.minecraft.world.effect.MobEffects.REGENERATION, 100, 1, false, true));
+    }
+
+    /** Envoie un titre + sous-titre à l'écran du joueur (animation standard fade/stay/fade). */
+    static void title(ServerPlayer player, Component title, Component subtitle) {
+        player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket(10, 50, 20));
+        player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket(subtitle));
+        player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket(title));
     }
 
     /** Message de jalon tous les 10 étages franchis — donne le sens d'un voyage. */

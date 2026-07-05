@@ -103,6 +103,10 @@ public final class DungeonTeleportHandler {
         // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
         DungeonMobSpawner.requestWave(dungeon, floor);
 
+        // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
+        // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
+        tong.statmod.network.SyncHelper.syncStats(player);
+
         // Annonce du thème de l'étage (chaque étage a le sien).
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(

@@ -15,8 +15,6 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 import tong.statmod.dungeon.DungeonThemes;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
 
 @OnlyIn(Dist.CLIENT)
 public final class DungeonHudOverlay {
@@ -37,8 +35,10 @@ public final class DungeonHudOverlay {
 
         Font font = mc.font;
         int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
-        PlayerStatData data = player.getData(ModAttachments.STATS);
-        int maxFloor = data.getDungeonFloorReached();
+        // Max floor et points viennent du cache client synchronisé (l'attachment n'est PAS
+        // auto-synchronisé au client → lire data.getDungeonPoints() donnait toujours 0).
+        int maxFloor = ClientStatCache.getDungeonFloorReached();
+        int dungeonPoints = ClientStatCache.getDungeonPoints();
         String type = floorType(floor);
         String tier = tierName(floor);
         int nextBoss = ((floor / 10) + 1) * 10;
@@ -49,7 +49,7 @@ public final class DungeonHudOverlay {
         String title = "§6☠ §lTrial Dungeon";
         String line1 = "§fFloor " + floor + " §7· " + type;
         String line2 = tier + " §7· Boss §f#" + nextBoss + " §7· Max §f" + maxFloor;
-        String points = "§e✦ §fPoints: §e" + data.getDungeonPoints();
+        String points = "§e✦ §fPoints: §e" + dungeonPoints;
         String line3 = objectiveLine(floor, conquered);
 
         // Nom du thème de l'étage (chaque étage a le sien).

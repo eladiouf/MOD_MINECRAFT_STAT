@@ -24,13 +24,16 @@ public final class ClientPayloadHandler {
 
     public static void handleBatchSync(BatchSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ClientStatCache.updateAll(payload.levels(), payload.xp(), payload.soulLevel());
+            // Le batch ne transporte pas les champs donjon : on préserve les valeurs déjà en cache.
+            ClientStatCache.updateAll(payload.levels(), payload.xp(), payload.soulLevel(),
+                    ClientStatCache.getDungeonPoints(), ClientStatCache.getDungeonFloorReached());
             ClientPerkCache.update(payload.perkIds(), payload.perStatPoints());
         });
     }
 
     public static void handleStatUpdate(StatUpdatePayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientStatCache.updateAll(payload.levels(), payload.xp(), payload.soulLevel()));
+        context.enqueueWork(() -> ClientStatCache.updateAll(payload.levels(), payload.xp(),
+                payload.soulLevel(), payload.dungeonPoints(), payload.dungeonFloorReached()));
     }
 
     public static void handleStaminaSync(StaminaSyncPayload payload, IPayloadContext context) {

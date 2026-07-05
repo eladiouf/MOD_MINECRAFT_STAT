@@ -14,7 +14,8 @@ public final class SyncHelper {
     public static void syncStats(ServerPlayer player) {
         PlayerStatData data = player.getData(ModAttachments.STATS);
         PacketDistributor.sendToPlayer(player,
-                new StatUpdatePayload(data.getLevels(), data.getXp(), data.getSoulLevel()));
+                new StatUpdatePayload(data.getLevels(), data.getXp(), data.getSoulLevel(),
+                        data.getDungeonPoints(), data.getDungeonFloorReached()));
     }
 
     public static void syncPerks(ServerPlayer player) {

@@ -51,7 +51,7 @@ public final class DungeonRoomChain {
         List<DungeonLayout.Room> rooms = DungeonLayout.rooms();
 
         // (1) Coques de toutes les pièces.
-        for (DungeonLayout.Room r : rooms) shell(lv, sp, t, r);
+        for (DungeonLayout.Room r : rooms) shell(lv, sp, t, r, floor);
 
         // (2) Portes entre pièces consécutives (après les coques → jamais re-murées).
         for (DungeonLayout.Room r : rooms) {
@@ -60,7 +60,8 @@ public final class DungeonRoomChain {
 
         // (3) Contenu par pièce.
         for (DungeonLayout.Room r : rooms) {
-            lightRoom(lv, sp, t, r);
+            int ceilH = roomCeilingHeight(floor, r);
+            lightRoom(lv, sp, t, r, ceilH);
             if (r.isFirst()) {
                 spawnPad(lv, sp, t, r);
             } else if (r.isLast()) {
@@ -72,42 +73,85 @@ public final class DungeonRoomChain {
                 DungeonMerchant.placeStall(lv, sp, r.centerX(), r.centerZ(), t,
                         r.index() % DungeonMerchant.STALL_KINDS, floor);
             } else {
-                decorateCombatRoom(lv, sp, t, r, floor);
+                decorateCombatRoom(lv, sp, t, r, floor, ceilH);
             }
         }
     }
 
-    // ═══════════════ coque d'une pièce ═══════════════
+    /** Hauteur de plafond d'une pièce (spawn/sortie = standard ; sinon variée). */
+    private static int roomCeilingHeight(int floor, DungeonLayout.Room r) {
+        return (r.isFirst() || r.isLast()) ? WALL_H : ceilingHeight(floor, r.index());
+    }
 
-    /** Sol (y=-1), murs pleins (y=0..WALL_H-1), plafond (y=WALL_H), intérieur dégagé. */
-    private static void shell(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
-        int x0 = r.minX() + PAD, x1 = r.maxX() - PAD;
-        int z0 = r.minZ() + PAD, z1 = r.maxZ() - PAD;
+    // ═══════════════ coque d'une pièce (forme + hauteur variables) ═══════════════
+
+    /** Silhouette au sol d'une pièce (varie la FORME, pas seulement la déco intérieure). */
+    private enum Shape { RECT, OCTAGON, CHAMFER, CROSS }
+
+    /**
+     * Coque d'une pièce avec <b>forme et hauteur variables</b> (déterministe par étage+pièce). La
+     * hauteur de plafond change (crypte basse → grande salle haute), et la silhouette au sol varie
+     * (rectangle / octogone / pans coupés / croix) : les coins « en trop » sont comblés en roche
+     * pleine. Le sol est posé sur toute la case (jamais de trou) ; les portes restent aux milieux
+     * des bords (toujours pleins) → jamais bloquées. Pièces de spawn/sortie forcées en rectangle.
+     */
+    private static void shell(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int floor) {
+        int x0 = r.minX(), x1 = r.maxX(), z0 = r.minZ(), z1 = r.maxZ();
+        boolean fixed = r.isFirst() || r.isLast();
+        int ceilH = roomCeilingHeight(floor, r);
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
 
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
-                boolean edge = (x == x0 || x == x1 || z == z0 || z == z1);
-                // Variation déterministe par position : les murs/sols mélangent les blocs du thème
-                // (base/accent/wall) → surfaces vivantes, pas plates (inspiré du DungeonMaterial pondéré).
-                S(lv, O(sp, x, -1, z), variedFloor(t, x, z));   // sol varié
-                S(lv, O(sp, x, WALL_H, z), B(t.ceiling()));     // plafond
+                S(lv, O(sp, x, -1, z), variedFloor(t, x, z));   // sol continu (toute la case)
+                boolean in = inside(r, x, z, shape);
+                if (!in) {
+                    // Coin « en trop » : masse rocheuse pleine jusqu'au plafond (change la silhouette).
+                    for (int y = 0; y <= ceilH; y++) S(lv, O(sp, x, y, z), variedWall(t, x, y, z));
+                    continue;
+                }
+                S(lv, O(sp, x, ceilH, z), B(t.ceiling()));       // plafond à hauteur variable
+                boolean edge = x == x0 || x == x1 || z == z0 || z == z1
+                        || !inside(r, x - 1, z, shape) || !inside(r, x + 1, z, shape)
+                        || !inside(r, x, z - 1, shape) || !inside(r, x, z + 1, shape);
                 if (edge) {
-                    for (int y = 0; y < WALL_H; y++) S(lv, O(sp, x, y, z), variedWall(t, x, y, z));
+                    for (int y = 0; y < ceilH; y++) S(lv, O(sp, x, y, z), variedWall(t, x, y, z));
+                    S(lv, O(sp, x, 0, z), B(t.accent()));        // plinthe au ras du sol
                 } else {
-                    for (int y = 0; y < WALL_H; y++) S(lv, O(sp, x, y, z), AIR());
+                    for (int y = 0; y < ceilH; y++) S(lv, O(sp, x, y, z), AIR());
                 }
             }
         }
-        // Accent au ras du sol le long des murs (plinthe) — donne du relief.
-        BlockState accent = B(t.accent());
-        for (int x = x0; x <= x1; x++) {
-            S(lv, O(sp, x, 0, z0), accent);
-            S(lv, O(sp, x, 0, z1), accent);
-        }
-        for (int z = z0; z <= z1; z++) {
-            S(lv, O(sp, x0, 0, z), accent);
-            S(lv, O(sp, x1, 0, z), accent);
-        }
+    }
+
+    /** Hauteur de plafond variée : crypte basse (8) → grande salle (20). */
+    private static int ceilingHeight(int floor, int idx) {
+        int[] h = {WALL_H - 4, WALL_H, WALL_H + 4, WALL_H + 8}; // 8, 12, 16, 20
+        return h[Math.floorMod(floor * 13 + idx * 29, h.length)];
+    }
+
+    /** Silhouette variée déterministe. */
+    private static Shape shapeFor(int floor, int idx) {
+        Shape[] s = Shape.values();
+        return s[Math.floorMod(floor * 17 + idx * 11, s.length)];
+    }
+
+    /**
+     * {@code true} si (x,z) est à l'intérieur de la pièce selon sa silhouette. Toutes les formes ne
+     * coupent que les COINS → les 4 milieux de bords restent pleins (portes toujours praticables).
+     */
+    private static boolean inside(DungeonLayout.Room r, int x, int z, Shape shape) {
+        int w = r.maxX() - r.minX(), d = r.maxZ() - r.minZ();
+        int lx = x - r.minX(), lz = z - r.minZ();
+        if (lx < 0 || lz < 0 || lx > w || lz > d) return false;
+        int ax = Math.min(lx, w - lx); // distance au mur X le plus proche
+        int az = Math.min(lz, d - lz); // distance au mur Z le plus proche
+        return switch (shape) {
+            case RECT -> true;
+            case OCTAGON -> ax + az >= 5;          // petits pans coupés
+            case CHAMFER -> ax + az >= 9;          // grands pans coupés
+            case CROSS -> !(ax < 9 && az < 9);     // coins carrés retirés → croix
+        };
     }
 
     /** Hash déterministe [0,100) d'une position — bruit reproductible (même étage → même donjon). */
@@ -178,14 +222,24 @@ public final class DungeonRoomChain {
 
     // ═══════════════ contenu des pièces ═══════════════
 
-    /** Éclairage : une source lumineuse au plafond au centre + aux angles bas. */
-    private static void lightRoom(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+    /**
+     * Éclairage adapté à la hauteur de la pièce : une source au centre du plafond + des lumières
+     * encastrées dans les 4 murs (aux quarts, y=4, posées sur le mur en dessous → supportées, même
+     * pour les torches). Évite les torches flottantes qui tombent.
+     */
+    private static void lightRoom(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
         BlockState light = B(t.light());
-        S(lv, O(sp, r.centerX(), WALL_H - 1, r.centerZ()), light);
-        int x0 = r.minX() + PAD + 1, x1 = r.maxX() - PAD - 1;
-        int z0 = r.minZ() + PAD + 1, z1 = r.maxZ() - PAD - 1;
-        for (int[] c : new int[][]{{x0, z0}, {x1, z0}, {x0, z1}, {x1, z1}}) {
-            S(lv, O(sp, c[0], 2, c[1]), light);
+        int cx = r.centerX(), cz = r.centerZ();
+        S(lv, O(sp, cx, ceilH, cz), light); // plafond central (remplace le plafond → supporté)
+        int qx = Math.max(4, (r.maxX() - r.minX()) / 4);
+        int qz = Math.max(4, (r.maxZ() - r.minZ()) / 4);
+        for (int dx : new int[]{-qx, qx}) {
+            S(lv, O(sp, cx + dx, 4, r.minZ()), light);
+            S(lv, O(sp, cx + dx, 4, r.maxZ()), light);
+        }
+        for (int dz : new int[]{-qz, qz}) {
+            S(lv, O(sp, r.minX(), 4, cz + dz), light);
+            S(lv, O(sp, r.maxX(), 4, cz + dz), light);
         }
     }
 
@@ -256,24 +310,24 @@ public final class DungeonRoomChain {
      * ou quatre grands piliers d'angle. Toutes restent traversables (aucune ne bloque les portes).
      */
     private static void decorateCombatRoom(ServerLevel lv, BlockPos sp, BlockPalette t,
-                                           DungeonLayout.Room r, int floor) {
+                                           DungeonLayout.Room r, int floor, int ceilH) {
         int variant = Math.floorMod(floor * 31 + r.index() * 7, 5);
         switch (variant) {
-            case 0 -> pillarHall(lv, sp, t, r);
+            case 0 -> pillarHall(lv, sp, t, r, ceilH);
             case 1 -> centralDais(lv, sp, t, r);
-            case 2 -> columnRing(lv, sp, t, r);
+            case 2 -> columnRing(lv, sp, t, r, ceilH);
             case 3 -> themedPool(lv, sp, t, r);
-            default -> quadPillars(lv, sp, t, r);
+            default -> quadPillars(lv, sp, t, r, ceilH);
         }
     }
 
-    /** Hall à piliers : grille de colonnes 1×1 espacées, laissant des allées pour circuler. */
-    private static void pillarHall(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+    /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */
+    private static void pillarHall(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
         BlockState pillar = B(t.decorPrimary());
         for (int x = r.minX() + 4; x <= r.maxX() - 4; x += 6) {
             for (int z = r.minZ() + 4; z <= r.maxZ() - 4; z += 6) {
-                for (int y = 0; y < WALL_H - 1; y++) S(lv, O(sp, x, y, z), pillar);
-                S(lv, O(sp, x, WALL_H - 1, z), B(t.accent()));
+                for (int y = 0; y < ceilH - 1; y++) S(lv, O(sp, x, y, z), pillar);
+                S(lv, O(sp, x, ceilH - 1, z), B(t.accent()));
             }
         }
     }
@@ -292,15 +346,15 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx, 1, cz), B(t.light()));
     }
 
-    /** Anneau de colonnes autour du centre (8 colonnes) — arène circulaire ouverte. */
-    private static void columnRing(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+    /** Anneau de colonnes autour du centre (8 colonnes montant au plafond) — arène circulaire. */
+    private static void columnRing(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
         int cx = r.centerX(), cz = r.centerZ();
         for (int i = 0; i < 8; i++) {
             double a = Math.PI * 2 * i / 8;
             int dx = (int) Math.round(Math.cos(a) * 6);
             int dz = (int) Math.round(Math.sin(a) * 6);
-            for (int y = 0; y < WALL_H - 2; y++) S(lv, O(sp, cx + dx, y, cz + dz), B(t.decorPrimary()));
-            S(lv, O(sp, cx + dx, WALL_H - 2, cz + dz), B(t.light()));
+            for (int y = 0; y < ceilH - 2; y++) S(lv, O(sp, cx + dx, y, cz + dz), B(t.decorPrimary()));
+            S(lv, O(sp, cx + dx, ceilH - 2, cz + dz), B(t.light()));
         }
     }
 
@@ -319,13 +373,13 @@ public final class DungeonRoomChain {
         }
     }
 
-    /** Quatre grands piliers d'angle (2×2) — cadre imposant, centre dégagé pour le combat. */
-    private static void quadPillars(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+    /** Quatre grands piliers d'angle (2×2) montant au plafond — cadre imposant, centre dégagé. */
+    private static void quadPillars(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
         int ox = Math.max(3, (r.maxX() - r.minX()) / 3);
         int oz = Math.max(3, (r.maxZ() - r.minZ()) / 3);
         for (int[] c : new int[][]{{-ox, -oz}, {ox, -oz}, {-ox, oz}, {ox, oz}}) {
             for (int dx = 0; dx <= 1; dx++) for (int dz = 0; dz <= 1; dz++) {
-                for (int y = 0; y < WALL_H - 1; y++)
+                for (int y = 0; y < ceilH - 1; y++)
                     S(lv, O(sp, r.centerX() + c[0] + dx, y, r.centerZ() + c[1] + dz), B(t.decorPrimary()));
             }
         }

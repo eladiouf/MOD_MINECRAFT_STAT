@@ -43,6 +43,9 @@ public final class IslandGenerator {
         long islandSeed = IslandShaper.seedFor(floor);
         new IslandTerrainShaper(islandSeed, floor, R).buildIslandGround(lv, sp, theme, tier);
 
+        // 3. Cage de blocs barrière autour de l'île : empêche de voler d'une île à l'autre.
+        DungeonBarrierCage.enclose(lv, sp);
+
         STATMod.LOGGER.info("[TrialDungeon] Floor {} generated ({}, {})", floor, theme.name(), role);
         return true;
     }

@@ -46,8 +46,8 @@ public final class DungeonRoomDressing {
                 lv, O(sp, 6, 2, hz), tier, floor);
 
         // 2 armor stands équipés, encadrant le trésor.
-        armorStand(lv, O(sp, -4, 2, hz), tier, false);
-        armorStand(lv, O(sp, 4, 2, hz), tier, true);
+        armorStand(lv, O(sp, -4, 2, hz), floor, false);
+        armorStand(lv, O(sp, 4, 2, hz), floor, true);
 
         // 2 piédestaux présentoirs (bloc de valeur du tier posé sur une colonne).
         pedestal(lv, O(sp, -2, 2, hz - 3), t, showcaseBlock(tier));
@@ -67,8 +67,8 @@ public final class DungeonRoomDressing {
         DungeonHealHandler.registerHealSpot(lv.dimension(), O(sp, 0, 1, hz + 8));
 
         // 2 armor stands « gardiens » aux angles avant de l'estrade.
-        armorStand(lv, O(sp, -6, 2, hz + 5), tier, true);
-        armorStand(lv, O(sp, 6, 2, hz + 5), tier, false);
+        armorStand(lv, O(sp, -6, 2, hz + 5), floor, true);
+        armorStand(lv, O(sp, 6, 2, hz + 5), floor, false);
     }
 
     // ═══════════════ éléments ═══════════════
@@ -96,43 +96,75 @@ public final class DungeonRoomDressing {
         S(lv, base.above(2), showcase);
     }
 
-    /** Armor stand orienté, équipé d'un set d'armure selon le tier. */
-    private static void armorStand(ServerLevel lv, BlockPos pos, FloorPalette t, boolean facingEast) {
+    /** Armor stand orienté, équipé d'un set d'armure selon le tier déduit de l'étage. */
+    private static void armorStand(ServerLevel lv, BlockPos pos, int floor, boolean facingEast) {
         ArmorStand stand = new ArmorStand(lv, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
         stand.setYRot(facingEast ? -90f : 90f);
         stand.setYHeadRot(facingEast ? -90f : 90f);
         stand.setInvulnerable(true);
         stand.setNoGravity(true);
         stand.setShowArms(true);
-        equip(stand, t);
+        equip(stand, floor);
         DungeonSpawnGuard.spawnAuthorized(() -> { lv.addFreshEntity(stand); return stand; });
     }
 
-    /** Équipe l'armor stand d'un set d'armure vanilla selon le tier. */
-    private static void equip(ArmorStand stand, FloorPalette t) {
-        switch (t) {
-            case EARLY -> set(stand, Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE,
-                    Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS, Items.IRON_SWORD);
-            case MID -> set(stand, Items.IRON_HELMET, Items.IRON_CHESTPLATE,
-                    Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.DIAMOND_SWORD);
-            case LATE -> set(stand, Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE,
-                    Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.DIAMOND_AXE);
-            case ABYSS -> set(stand, Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE,
-                    Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.NETHERITE_SWORD);
+    /**
+     * Équipe l'armor stand selon l'ÉTAGE. Les paliers dépassent la netherite via les sets end-game
+     * de {@code l2complements} (eternium → poseidite → sculkium → shulkerate), à partir de l'étage
+     * 40+. Fallback netherite si le mod est absent (résolution douce par ID).
+     */
+    private static void equip(ArmorStand stand, int floor) {
+        if (floor <= 10) {
+            setVanilla(stand, "chainmail", Items.IRON_SWORD);
+        } else if (floor <= 25) {
+            setVanilla(stand, "iron", Items.DIAMOND_SWORD);
+        } else if (floor <= 40) {
+            setVanilla(stand, "diamond", Items.DIAMOND_AXE);
+        } else if (floor <= 55) {
+            setVanilla(stand, "netherite", Items.NETHERITE_SWORD);
+        } else if (floor <= 70) {
+            setModdedOr(stand, "l2complements", "eternium", "netherite", Items.NETHERITE_SWORD);
+        } else if (floor <= 85) {
+            setModdedOr(stand, "l2complements", "poseidite", "netherite", Items.NETHERITE_SWORD);
+        } else if (floor <= 100) {
+            setModdedOr(stand, "l2complements", "sculkium", "netherite", Items.NETHERITE_SWORD);
+        } else {
+            setModdedOr(stand, "l2complements", "shulkerate", "netherite", Items.NETHERITE_SWORD);
         }
     }
 
-    private static void set(ArmorStand s, net.minecraft.world.item.Item head,
-                            net.minecraft.world.item.Item chest, net.minecraft.world.item.Item legs,
-                            net.minecraft.world.item.Item feet, net.minecraft.world.item.Item hand) {
-        s.setItemSlot(EquipmentSlot.HEAD, new ItemStack(head));
-        s.setItemSlot(EquipmentSlot.CHEST, new ItemStack(chest));
-        s.setItemSlot(EquipmentSlot.LEGS, new ItemStack(legs));
-        s.setItemSlot(EquipmentSlot.FEET, new ItemStack(feet));
+    /** Set d'armure vanilla (préfixe "chainmail"/"iron"/"diamond"/"netherite"). */
+    private static void setVanilla(ArmorStand s, String prefix, net.minecraft.world.item.Item hand) {
+        s.setItemSlot(EquipmentSlot.HEAD, stack("minecraft:" + prefix + "_helmet"));
+        s.setItemSlot(EquipmentSlot.CHEST, stack("minecraft:" + prefix + "_chestplate"));
+        s.setItemSlot(EquipmentSlot.LEGS, stack("minecraft:" + prefix + "_leggings"));
+        s.setItemSlot(EquipmentSlot.FEET, stack("minecraft:" + prefix + "_boots"));
         s.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(hand));
     }
 
-    /** Bloc présentoir de valeur selon le tier. */
+    /** Set d'armure moddé ({@code ns:set_*}) avec fallback vanilla si le mod/set est absent. */
+    private static void setModdedOr(ArmorStand s, String ns, String set, String vanillaFallback,
+                                    net.minecraft.world.item.Item hand) {
+        ItemStack chest = stack(ns + ":" + set + "_chestplate");
+        if (chest.isEmpty()) { setVanilla(s, vanillaFallback, hand); return; }
+        s.setItemSlot(EquipmentSlot.HEAD, stack(ns + ":" + set + "_helmet"));
+        s.setItemSlot(EquipmentSlot.CHEST, chest);
+        s.setItemSlot(EquipmentSlot.LEGS, stack(ns + ":" + set + "_leggings"));
+        s.setItemSlot(EquipmentSlot.FEET, stack(ns + ":" + set + "_boots"));
+        ItemStack sword = stack(ns + ":" + set + "_sword");
+        s.setItemSlot(EquipmentSlot.MAINHAND, sword.isEmpty() ? new ItemStack(hand) : sword);
+    }
+
+    /** Résout un ItemStack par ID, ou vide si l'item est absent (mod non installé). */
+    private static ItemStack stack(String id) {
+        var loc = net.minecraft.resources.ResourceLocation.tryParse(id);
+        if (loc == null || !net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(loc)) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc));
+    }
+
+    /** Bloc présentoir de valeur selon le tier (dépasse le netherite en profondeur). */
     private static BlockState showcaseBlock(FloorPalette t) {
         return switch (t) {
             case EARLY -> B(Blocks.IRON_BLOCK);

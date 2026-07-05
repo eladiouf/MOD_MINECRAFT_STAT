@@ -62,24 +62,30 @@ public class DungeonBossAltarBlock extends Block {
         // invocations/compagnons passent tant que le combat est suivi (DungeonBossTracker.isTracked),
         // ce que register() ci-dessous rend vrai dès le premier boss posé.
 
+        // Une BossEntry peut contenir PLUSIEURS ids séparés par des virgules (mode duo/vague) :
+        // "slu:boss_ornstein,slu:boss_smough". On les éclate tous ici — sinon resolveType échouait
+        // sur la chaîne à virgules et RIEN ne spawnait (bug « aucun boss à partir de l'étage 40 »,
+        // les étages ×10 ≥ 40 étant presque tous des duos/vagues).
         int spawned = 0;
-        for (int i = 0; i < roster.size(); i++) {
-            DungeonBossRoster.BossEntry entry = roster.get(i);
-            EntityType<?> type = resolveType(entry.entityId());
-            if (type == null) continue;
-            BlockPos spawnPos = pos.offset(0, 2, 2 + i * 3);
-            // Dégage un espace d'air 1×3 au point de spawn pour que le boss ne naisse pas encastré.
-            for (int dy = 0; dy < 3; dy++) {
-                sl.setBlock(spawnPos.above(dy), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
-            }
-            var spawnedEntity = DungeonSpawnGuard.spawnAuthorized(
-                    () -> type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE));
-            if (spawnedEntity != null) {
-                spawned++;
-                // Enregistre ce boss pour l'étage : l'étage suivant ne se débloque qu'au clear
-                // complet (tous les boss du roster morts) — cf. DungeonBossHandler.
-                DungeonBossTracker.register(floor, spawnedEntity.getUUID());
-                // La difficulté L2 par étage est calée par DungeonSpawnGuard.onEntityJoinLevel.
+        int slot = 0;
+        for (DungeonBossRoster.BossEntry entry : roster) {
+            for (String rawId : entry.entityId().split(",")) {
+                EntityType<?> type = resolveType(rawId.trim());
+                if (type == null) continue;
+                BlockPos spawnPos = pos.offset((slot % 2 == 0 ? -1 : 1) * (slot + 1), 2, 3 + slot * 3);
+                slot++;
+                // Dégage un espace d'air 1×3 au point de spawn (le boss ne naît pas encastré).
+                for (int dy = 0; dy < 3; dy++) {
+                    sl.setBlock(spawnPos.above(dy), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+                }
+                var spawnedEntity = DungeonSpawnGuard.spawnAuthorized(
+                        () -> type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE));
+                if (spawnedEntity != null) {
+                    spawned++;
+                    // Enregistre ce boss : l'étage ne se débloque qu'au clear complet (tous morts).
+                    DungeonBossTracker.register(floor, spawnedEntity.getUUID());
+                    // La difficulté L2 par étage est calée par DungeonSpawnGuard.onEntityJoinLevel.
+                }
             }
         }
 
@@ -109,7 +115,7 @@ public class DungeonBossAltarBlock extends Block {
 
     private static EntityType<?> resolveType(String id) {
         ResourceLocation loc = ResourceLocation.tryParse(id);
-        if (loc == null) return null;
+        if (loc == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(loc)) return null; // pas de fallback Pig silencieux
         return BuiltInRegistries.ENTITY_TYPE.get(loc);
     }
 }

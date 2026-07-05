@@ -235,6 +235,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/IslandGenerator.java` | Pipeline : `DungeonArchitect.buildFloor` (forteresse) + `IslandTerrainShaper.buildIslandGround` (relief pourtour) |
 | `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle (+ dressing). **Bâtie avec `BlockPalette`** (matériaux par thème) |
 | `dungeon/BlockPalette.java` | Interface des 12 blocs d'un étage (base/accent/light/underside/decor×2/wall/stair/slab/ceiling/scar/banner) |
+| `dungeon/DungeonDetailing.java` | Passe « builder pro » : 7 familles de détails thématisés placés intelligemment (torches murales, toiles d'angle, suspensions plafond, salissure murale, clutter au sol le long des murs, gravats, signature de thème). Blocs choisis pour tenir sans support |
 | `dungeon/ThemePalette.java` | Palette **par arc/thème** (10 identités : pierre, os, prismarine, **glace**, citrouille, améthyste, **nether**, obsidienne…) → l'architecture ressemble à son thème, pas juste au tier. Alignée sur les arcs de `DungeonThemes` |
 | `dungeon/DungeonRoomDressing.java` | Salles trésor (×5) & boss (×10) enrichies : fontaine de soin, waypoint (waystone), armor stands équipés par tier, piédestaux présentoirs |
 | `dungeon/DungeonHealHandler.java` | Points de soin : joueur proche d'une fontaine → Régén II + Résistance I (passe/seconde) |

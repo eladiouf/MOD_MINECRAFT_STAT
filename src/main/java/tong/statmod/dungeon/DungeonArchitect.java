@@ -105,6 +105,9 @@ public final class DungeonArchitect {
         if (role != Role.BOSS) roofing(lv, sp, t);
         lighting(lv, sp, t, floor);
         narrativeDressing(lv, sp, t, rng);
+        // Passe de détaillage « builder pro » : une multitude de petits détails thématisés, placés
+        // intelligemment contre la structure (murs, angles, plafond). Rend l'étage vivant.
+        DungeonDetailing.detail(lv, sp, ThemePalette.forFloor(floor), floor, rng);
         spawnThreshold(lv, sp, t);
 
         // Checkpoint Waystones sur les étages boss : une pierre à côté de l'autel. Une fois activée

@@ -302,6 +302,9 @@ public final class DungeonRoomChain {
             S(lv, O(sp, cx + c[0], 4, tz), B(t.light()));
         }
         S(lv, O(sp, cx, 0, tz), B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
+
+        // Villageois changeur (points → coins) au bord ouest de la salle au trésor.
+        DungeonExchanger.spawn(lv, O(sp, r.minX() + 3, 0, cz));
     }
 
     /**

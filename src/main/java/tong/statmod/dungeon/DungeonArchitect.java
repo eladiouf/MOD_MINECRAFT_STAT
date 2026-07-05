@@ -87,6 +87,15 @@ public final class DungeonArchitect {
         // Dégage tout l'intérieur (headroom pour la structure + le combat).
         air(lv, sp, -HX + 1, 0, -HZ + 1, HX - 1, WALL_H + 2, HZ - 1);
 
+        // ── ÉTAGES DE COMBAT : chaîne de pièces (serpentin) ──
+        // Chaque étage de combat est désormais une suite de pièces reliées (spawn → … → pièce de
+        // sortie avec le téléporteur), et non plus une forteresse monolithique. Les étages boss (×10)
+        // et trésor (×5) gardent la forteresse « The Descent » (grande salle unique de showcase).
+        if (role == Role.COMBAT) {
+            DungeonRoomChain.build(lv, sp, t, floor, rng);
+            return;
+        }
+
         // ── Coque constante (identité + flow) ──
         perimeterWall(lv, sp, t);
         cornerTowers(lv, sp, t);

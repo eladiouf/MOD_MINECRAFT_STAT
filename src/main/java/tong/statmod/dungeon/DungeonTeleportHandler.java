@@ -44,6 +44,21 @@ public final class DungeonTeleportHandler {
         return new BlockPos(col * FLOOR_SPACING, FLOOR_Y, row * FLOOR_SPACING);
     }
 
+    /** {@code true} si l'étage est un étage de combat (chaîne de pièces), pas boss (×10)/trésor (×5). */
+    public static boolean isCombatFloor(int floor) {
+        return floor > 0 && floor % 10 != 0 && floor % 5 != 0;
+    }
+
+    /**
+     * Position où <b>téléporter le joueur</b> à l'entrée d'un étage. Sur un étage de combat (chaîne
+     * de pièces), c'est le centre de la <b>pièce d'apparition</b> ({@link DungeonRoomChain}) ; sur un
+     * étage boss/trésor (forteresse), c'est le centre de l'île ({@link #floorSpawnPos}).
+     */
+    public static BlockPos floorPlayerSpawnPos(int floor) {
+        BlockPos island = floorSpawnPos(floor);
+        return isCombatFloor(floor) ? DungeonRoomChain.spawnWorldPos(island) : island;
+    }
+
     /**
      * Déduit l'étage le plus proche à partir d'une position (X,Z) dans la dimension.
      * Utilisé pour l'XP multiplier, le loot, le HUD.
@@ -88,8 +103,9 @@ public final class DungeonTeleportHandler {
             data.setLastOverworldPos(player.blockPosition().asLong());
         }
 
-        BlockPos spawn = floorSpawnPos(floor);
         IslandGenerator.generateFloor(dungeon, floor);
+        // Spawn au centre de la pièce d'apparition (étages de combat) ou au centre de l'île (boss/trésor).
+        BlockPos spawn = floorPlayerSpawnPos(floor);
 
         // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
         // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la

@@ -145,26 +145,29 @@ public final class DungeonMobSpawner {
         PENDING_FLOORS.add(floor);
         // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
 
-        // Mini-boss du thème au centre-nord de l'arène, en plus de la horde. (enqueueWave n'est
-        // appelé que pour les étages de COMBAT — les ×5/×10 ont leur propre rôle trésor/boss.)
+        // Centres des pièces de combat (toutes sauf la pièce d'apparition) : on répartit la horde
+        // dans les pièces à traverser, pour que chaque salle ait ses ennemis à nettoyer.
+        List<BlockPos> roomCenters = DungeonRoomChain.combatRoomCenters(sp);
+        if (roomCenters.isEmpty()) roomCenters = List.of(sp); // garde-fou
+
+        // Mini-boss du thème dans la DERNIÈRE pièce (celle de sortie), en gardien du téléporteur.
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         EntityType<?> miniBoss = firstAvailable(theme.miniBoss());
         if (miniBoss != null) {
-            BlockPos bossPos = sp.offset(0, 0, -6); // léger décalage nord, au fond de l'arène
+            BlockPos bossPos = roomCenters.get(roomCenters.size() - 1).offset(0, 0, -3);
             QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
         }
 
         int spawned = 0;
         int attempts = 0;
-        while (spawned < want && attempts < want * 5) { // Max 5 essais par mob
+        while (spawned < want && attempts < want * 6) { // Max 6 essais par mob
             attempts++;
 
-            // Position aléatoire dans l'anneau de combat (12-42 blocs — étage agrandi)
-            double angle = lv.random.nextDouble() * Math.PI * 2;
-            double distance = 12.0 + lv.random.nextDouble() * 30.0;
-            int dx = (int) Math.round(Math.cos(angle) * distance);
-            int dz = (int) Math.round(Math.sin(angle) * distance);
-            BlockPos pos = sp.offset(dx, 0, dz);
+            // Choisit une pièce puis un point dispersé à l'intérieur (rayon ~8 autour du centre).
+            BlockPos room = roomCenters.get(lv.random.nextInt(roomCenters.size()));
+            int dx = lv.random.nextInt(17) - 8;
+            int dz = lv.random.nextInt(17) - 8;
+            BlockPos pos = room.offset(dx, 0, dz);
 
             if (!isValidSpawnPosition(lv, pos)) continue;
 

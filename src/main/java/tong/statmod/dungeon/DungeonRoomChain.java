@@ -319,6 +319,8 @@ public final class DungeonRoomChain {
             case 3 -> themedPool(lv, sp, t, r);
             default -> quadPillars(lv, sp, t, r, ceilH);
         }
+        // Props d'ambiance disséminés partout : coffres épars, toiles, statues moddées, braseros, crânes.
+        DungeonProps.decorate(lv, sp, t, r, floor, ceilH);
     }
 
     /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */

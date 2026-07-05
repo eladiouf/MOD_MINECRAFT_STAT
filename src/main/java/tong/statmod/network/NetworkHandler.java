@@ -49,5 +49,10 @@ public class NetworkHandler {
 
         registrar.playToServer(ChangeStartBranchPayload.TYPE, ChangeStartBranchPayload.CODEC,
                 ServerPayloadHandler::handleChangeStartBranch);
+
+        registrar.playToClient(OpenExchangePayload.TYPE, OpenExchangePayload.CODEC,
+                ClientPayloadHandler::handleOpenExchange);
+        registrar.playToServer(ConvertPointsPayload.TYPE, ConvertPointsPayload.CODEC,
+                ServerPayloadHandler::handleConvertPoints);
     }
 }

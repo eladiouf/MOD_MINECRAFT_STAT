@@ -98,4 +98,25 @@ public final class ServerPayloadHandler {
             STATMod.LOGGER.info("{} switched start branch to {}", player.getName().getString(), target.id);
         });
     }
+
+    public static void handleConvertPoints(ConvertPointsPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer sp)) return;
+            PlayerStatData data = sp.getData(ModAttachments.STATS);
+            tong.statmod.dungeon.PointExchange.Result r = tong.statmod.dungeon.PointExchange.compute(
+                    payload.amount(), data.getDungeonPoints(), tong.statmod.config.Config.getPointToCoinRate());
+            if (r.converted() <= 0) return;
+            boolean credited = tong.statmod.integration.sdm.SDMEconomyBridge.addCoins(sp, r.coins());
+            if (!credited) {
+                sp.displayClientMessage(net.minecraft.network.chat.Component.translatable("shop.unavailable"), false);
+                return; // ne pas consommer les points si le crédit a échoué
+            }
+            data.addDungeonPoints(-r.converted());
+            SyncHelper.syncStats(sp);
+            long coins = tong.statmod.integration.sdm.SDMEconomyBridge.getCoins(sp);
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(sp,
+                    new OpenExchangePayload(data.getDungeonPoints(), coins)); // rafraîchit l'écran
+            tong.statmod.dungeon.DungeonPointsEjection.enforce(sp); // 0 point → overworld
+        });
+    }
 }

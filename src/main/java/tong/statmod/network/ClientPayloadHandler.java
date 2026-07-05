@@ -62,6 +62,12 @@ public final class ClientPayloadHandler {
                 .setScreen(new tong.statmod.client.codex.MageCodexScreen()));
     }
 
+    /** Ouvre/rafraîchit l'écran d'échange points → coins (Mission M6 shop). */
+    public static void handleOpenExchange(OpenExchangePayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> tong.statmod.client.PointExchangeScreen.openOrRefresh(
+                payload.points(), payload.coins()));
+    }
+
     /**
      * Door for the reverse bridge — emulate a Tensura keybind press/release on the
      * client so Tensura's full native flow runs (magic circle, charge, projectile).

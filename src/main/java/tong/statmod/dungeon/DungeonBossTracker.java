@@ -65,4 +65,11 @@ public final class DungeonBossTracker {
     public static void clear(int floor) {
         ALIVE.remove(floor);
     }
+
+    /** Tous les UUID de boss suivis, tous étages confondus (pour la barre de boss). */
+    public static Set<UUID> allTracked() {
+        Set<UUID> out = new HashSet<>();
+        for (Set<UUID> s : ALIVE.values()) out.addAll(s);
+        return out;
+    }
 }

@@ -448,6 +448,9 @@ public final class DungeonArchitect {
 
         switch (role) {
             case BOSS -> {
+                // Arène façonnée selon le TYPE du boss (bassin aquatique, arène haute pour un
+                // volant, fosse pour un colosse, magma pour un infernal, os pour un mort-vivant…).
+                DungeonBossArena.shape(lv, sp, t, floor);
                 S(lv, O(sp, 0, 2, hz), B(DungeonBlocks.BOSS_ALTAR.get()));
                 // Salle de boss enrichie : fontaine de soin + armor stands trophées.
                 DungeonRoomDressing.dressBossRoom(lv, sp, t, floor);

@@ -65,6 +65,7 @@ public final class DungeonExchanger {
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         int points = sp.getData(ModAttachments.STATS).getDungeonPoints();
         long coins = SDMEconomyBridge.getCoins(sp);
-        PacketDistributor.sendToPlayer(sp, new OpenExchangePayload(points, coins));
+        PacketDistributor.sendToPlayer(sp, new OpenExchangePayload(points, coins,
+                (float) tong.statmod.config.Config.getPointToCoinRate()));
     }
 }

@@ -244,6 +244,7 @@
   "shop.exchange.title": "Échange de points",
   "shop.exchange.points": "Points : %s",
   "shop.exchange.coins": "Coins : %s",
+  "shop.exchange.preview": "Après : %s points · %s coins",
   "shop.exchange.amount": "Montant",
   "shop.exchange.convert": "Convertir",
   "shop.exchange.max_safe": "Max sûr",

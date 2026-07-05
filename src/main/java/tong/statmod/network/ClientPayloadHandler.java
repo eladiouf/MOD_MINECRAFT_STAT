@@ -65,7 +65,7 @@ public final class ClientPayloadHandler {
     /** Ouvre/rafraîchit l'écran d'échange points → coins (Mission M6 shop). */
     public static void handleOpenExchange(OpenExchangePayload payload, IPayloadContext context) {
         context.enqueueWork(() -> tong.statmod.client.PointExchangeScreen.openOrRefresh(
-                payload.points(), payload.coins()));
+                payload.points(), payload.coins(), payload.rate()));
     }
 
     /**

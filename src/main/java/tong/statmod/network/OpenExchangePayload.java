@@ -7,8 +7,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.STATMod;
 
-/** S2C : ouvre/rafraîchit l'écran d'échange avec les points + coins courants. */
-public record OpenExchangePayload(int points, long coins) implements CustomPacketPayload {
+/** S2C : ouvre/rafraîchit l'écran d'échange avec les points + coins courants et le taux de conversion. */
+public record OpenExchangePayload(int points, long coins, float rate) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<OpenExchangePayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "open_exchange"));
 
@@ -16,6 +16,7 @@ public record OpenExchangePayload(int points, long coins) implements CustomPacke
             StreamCodec.composite(
                     ByteBufCodecs.VAR_INT, OpenExchangePayload::points,
                     ByteBufCodecs.VAR_LONG, OpenExchangePayload::coins,
+                    ByteBufCodecs.FLOAT, OpenExchangePayload::rate,
                     OpenExchangePayload::new
             );
 

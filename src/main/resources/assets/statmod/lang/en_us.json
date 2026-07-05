@@ -308,6 +308,7 @@
   "shop.exchange.title": "Point Exchange",
   "shop.exchange.points": "Points: %s",
   "shop.exchange.coins": "Coins: %s",
+  "shop.exchange.preview": "After: %s points · %s coins",
   "shop.exchange.amount": "Amount",
   "shop.exchange.convert": "Convert",
   "shop.exchange.max_safe": "Max safe",

@@ -14,22 +14,25 @@ public class PointExchangeScreen extends Screen {
 
     private int points;
     private long coins;
+    private float rate;
     private EditBox amountBox;
 
-    public PointExchangeScreen(int points, long coins) {
+    public PointExchangeScreen(int points, long coins, float rate) {
         super(Component.translatable("shop.exchange.title"));
         this.points = points;
         this.coins = coins;
+        this.rate = rate;
     }
 
     /** Ouvre l'écran s'il n'est pas déjà ouvert, sinon met à jour ses valeurs (rafraîchissement). */
-    public static void openOrRefresh(int points, long coins) {
+    public static void openOrRefresh(int points, long coins, float rate) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen instanceof PointExchangeScreen s) {
             s.points = points;
             s.coins = coins;
+            s.rate = rate;
         } else {
-            mc.setScreen(new PointExchangeScreen(points, coins));
+            mc.setScreen(new PointExchangeScreen(points, coins, rate));
         }
     }
 
@@ -65,6 +68,13 @@ public class PointExchangeScreen extends Screen {
         g.drawCenteredString(this.font, this.title, cx, cy - 60, 0xFFFFFF);
         g.drawCenteredString(this.font, Component.translatable("shop.exchange.points", points), cx, cy - 44, 0xFFE066);
         g.drawCenteredString(this.font, Component.translatable("shop.exchange.coins", coins), cx, cy - 32, 0x66FF66);
+        // Aperçu en direct du résultat selon le montant saisi (borné, comme le serveur).
+        int amount = Math.max(0, Math.min(parseAmount(), points));
+        int afterPoints = points - amount;
+        long afterCoins = coins + (long) Math.floor(amount * rate);
+        int color = afterPoints == 0 ? 0xFF5555 : 0xAAAAAA; // rouge si ça vide les points (éjection)
+        g.drawCenteredString(this.font,
+                Component.translatable("shop.exchange.preview", afterPoints, afterCoins), cx, cy - 20, color);
         super.render(g, mouseX, mouseY, partialTick);
     }
 

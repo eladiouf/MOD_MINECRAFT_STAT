@@ -115,7 +115,8 @@ public final class ServerPayloadHandler {
             SyncHelper.syncStats(sp);
             long coins = tong.statmod.integration.sdm.SDMEconomyBridge.getCoins(sp);
             net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(sp,
-                    new OpenExchangePayload(data.getDungeonPoints(), coins)); // rafraîchit l'écran
+                    new OpenExchangePayload(data.getDungeonPoints(), coins,
+                            (float) tong.statmod.config.Config.getPointToCoinRate())); // rafraîchit l'écran
             tong.statmod.dungeon.DungeonPointsEjection.enforce(sp); // 0 point → overworld
         });
     }

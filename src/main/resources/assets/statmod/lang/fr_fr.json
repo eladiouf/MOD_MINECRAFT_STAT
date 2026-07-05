@@ -240,5 +240,14 @@
   "item.statmod.legendary_magical_shard": "Éclat Magique Légendaire",
   "item.statmod.legendary_vital_shard": "Éclat Vital Légendaire",
   "item.statmod.legendary_agile_shard": "Éclat Agile Légendaire",
-  "item.statmod.legendary_spiritual_shard": "Éclat Spirituel Légendaire"
+  "item.statmod.legendary_spiritual_shard": "Éclat Spirituel Légendaire",
+  "shop.exchange.title": "Échange de points",
+  "shop.exchange.points": "Points : %s",
+  "shop.exchange.coins": "Coins : %s",
+  "shop.exchange.amount": "Montant",
+  "shop.exchange.convert": "Convertir",
+  "shop.exchange.max_safe": "Max sûr",
+  "shop.exchanger.name": "Changeur",
+  "shop.unavailable": "Le shop est indisponible (SDM non installé).",
+  "dungeon.ejected.no_points": "Plus de points — éjecté du donjon !"
 }

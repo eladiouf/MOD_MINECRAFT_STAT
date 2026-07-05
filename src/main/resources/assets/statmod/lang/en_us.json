@@ -304,5 +304,14 @@
   "item.statmod.legendary_magical_shard": "Legendary Magical Shard",
   "item.statmod.legendary_vital_shard": "Legendary Vital Shard",
   "item.statmod.legendary_agile_shard": "Legendary Agile Shard",
-  "item.statmod.legendary_spiritual_shard": "Legendary Spiritual Shard"
+  "item.statmod.legendary_spiritual_shard": "Legendary Spiritual Shard",
+  "shop.exchange.title": "Point Exchange",
+  "shop.exchange.points": "Points: %s",
+  "shop.exchange.coins": "Coins: %s",
+  "shop.exchange.amount": "Amount",
+  "shop.exchange.convert": "Convert",
+  "shop.exchange.max_safe": "Max safe",
+  "shop.exchanger.name": "Coin Changer",
+  "shop.unavailable": "The shop is unavailable (SDM not installed).",
+  "dungeon.ejected.no_points": "Out of points — ejected from the dungeon!"
 }

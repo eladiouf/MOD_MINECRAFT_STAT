@@ -75,6 +75,9 @@ public final class DungeonRoomChain {
             } else {
                 decorateCombatRoom(lv, sp, t, r, floor, ceilH);
             }
+            // Balisage EN DERNIER (après le décor) : traînée + fanal vers la porte de sortie → guide
+            // le joueur, jamais perdu ni à rebrousser chemin.
+            DungeonWayfinding.mark(lv, sp, r);
         }
     }
 

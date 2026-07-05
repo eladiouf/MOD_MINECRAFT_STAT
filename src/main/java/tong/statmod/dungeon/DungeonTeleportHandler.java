@@ -62,10 +62,28 @@ public final class DungeonTeleportHandler {
     public static BlockPos floorPlayerSpawnPos(int floor) {
         BlockPos island = floorSpawnPos(floor);
         if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
-        // Boss avec arène importée (BMD) : apparaître DANS l'arène (près du centre) — l'arène est plus
-        // petite que l'emprise, le bord sud serait dans le vide.
-        if (DungeonBossStructures.hasArenaDef(floor)) return island.offset(0, 2, 16);
-        return island.offset(0, 1, DungeonArchitect.HZ - 12); // boss générique : entrée sud, dégagée des piliers
+        // Boss (générique OU arène importée) : apparaître sur la PLATEFORME au bord sud, hors de la
+        // structure/arène (qui est centrée et plus petite que l'emprise) → jamais dans un bloc.
+        return island.offset(0, 1, DungeonArchitect.HZ - 12);
+    }
+
+    /**
+     * Corrige la position de spawn pour ne JAMAIS apparaître dans un bloc : scanne la colonne autour
+     * du Y voulu et renvoie le 1ᵉʳ emplacement libre (2 blocs d'air sur un sol solide). Filet de
+     * sécurité générique (utile surtout sous les arènes importées dont le sol varie).
+     */
+    private static BlockPos safeSpawn(ServerLevel lv, BlockPos want) {
+        int x = want.getX(), z = want.getZ();
+        // Cherche vers le haut depuis un peu sous le Y voulu : premier bloc plein avec 2 d'air au-dessus.
+        for (int y = want.getY() - 3; y <= want.getY() + 40; y++) {
+            BlockPos foot = new BlockPos(x, y, z);
+            if (!lv.getBlockState(foot.below()).isAir()
+                    && lv.getBlockState(foot).isAir()
+                    && lv.getBlockState(foot.above()).isAir()) {
+                return foot;
+            }
+        }
+        return want; // fallback : rien trouvé, on garde la position demandée
     }
 
     /**
@@ -113,8 +131,8 @@ public final class DungeonTeleportHandler {
         }
 
         IslandGenerator.generateFloor(dungeon, floor);
-        // Spawn au centre de la pièce d'apparition (étages de combat) ou au centre de l'île (boss/trésor).
-        BlockPos spawn = floorPlayerSpawnPos(floor);
+        // Spawn au centre de la pièce d'apparition (combat/trésor) ou au bord sud de la plateforme (boss).
+        BlockPos spawn = safeSpawn(dungeon, floorPlayerSpawnPos(floor));
 
         // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
         // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la

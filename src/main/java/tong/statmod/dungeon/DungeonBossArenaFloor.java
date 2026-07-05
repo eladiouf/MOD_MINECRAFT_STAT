@@ -36,21 +36,8 @@ public final class DungeonBossArenaFloor {
 
     /** Construit l'arène de boss complète autour du centre d'île {@code sp} (y=100). */
     public static void build(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
-        BlockState floorB = B(t.base());
-        BlockState wallB = B(t.wallBlock());
-
-        // ── Sol plein sur toute l'emprise (y=-1) ──
-        fill(lv, sp, -HX, -1, -HZ, HX, -1, HZ, floorB);
-
-        // ── Remparts périmétriques (hauts, à ciel ouvert) ──
-        for (int x = -HX; x <= HX; x++) {
-            column(lv, sp, x, -HZ, WALL_H, wallB);
-            column(lv, sp, x, HZ, WALL_H, wallB);
-        }
-        for (int z = -HZ; z <= HZ; z++) {
-            column(lv, sp, -HX, z, WALL_H, wallB);
-            column(lv, sp, HX, z, WALL_H, wallB);
-        }
+        // Plateforme de base (sol plein + remparts solides, à ciel ouvert).
+        buildPlatform(lv, sp, t);
 
         // ── Couronne de grands piliers autour de l'arène (les « extrémités ») ──
         pillarRing(lv, sp, t);
@@ -71,33 +58,55 @@ public final class DungeonBossArenaFloor {
         exitGate(lv, sp, t);
     }
 
+    /** Plateforme de base : sol plein sur toute l'emprise + remparts solides, à ciel ouvert. */
+    public static void buildPlatform(ServerLevel lv, BlockPos sp, BlockPalette t) {
+        BlockState floorB = B(t.base());
+        BlockState wallB = B(t.base()); // bloc PLEIN (pas wallBlock() qui est un muret ajouré)
+        fill(lv, sp, -HX, -1, -HZ, HX, -1, HZ, floorB);
+        for (int x = -HX; x <= HX; x++) {
+            column(lv, sp, x, -HZ, WALL_H, wallB);
+            column(lv, sp, x, HZ, WALL_H, wallB);
+        }
+        for (int z = -HZ; z <= HZ; z++) {
+            column(lv, sp, -HX, z, WALL_H, wallB);
+            column(lv, sp, HX, z, WALL_H, wallB);
+        }
+    }
+
     /**
-     * Finalise une arène IMPORTÉE (déjà posée par {@link DungeonBossStructures}) : pose l'autel, un
-     * checkpoint waystone, et le téléporteur scellé, chacun sur un petit pad dégagé (au cas où le sol
-     * de la structure ne tombe pas pile au niveau attendu). {@code c} = centre monde de l'arène.
+     * Finalise une arène IMPORTÉE (déjà posée sur la plateforme) : pose l'autel du boss sur le VRAI
+     * sol de l'arène (trouvé par scan de la colonne centrale → s'adapte à la hauteur réelle de la
+     * structure) ; waystone + téléporteur restent SUR LA PLATEFORME, au sud, hors de la structure.
      */
-    public static void finishImportedArena(ServerLevel lv, BlockPos c, BlockPos sp, BlockPalette t, int floor) {
-        // Autel légèrement au sud du centre (le centre reste le point de spawn du boss dans l'arène).
-        BlockPos altar = c.offset(0, 0, 6);
-        clearPad(lv, altar, t);
+    public static void finishImportedArena(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
+        // ── Autel DANS la structure : sur le sol réel de l'arène (scan de la colonne centrale). ──
+        int arenaFloorY = surfaceY(lv, sp.getX(), sp.getZ(), sp.getY() + 60, sp.getY() - 6);
+        BlockPos altar = new BlockPos(sp.getX(), arenaFloorY + 1, sp.getZ());
+        clearColumn(lv, altar); // dégage l'autel + espace au-dessus (pas encastré dans un décor central)
         S(lv, altar, B(DungeonBlocks.BOSS_ALTAR.get()));
 
-        // Checkpoint waystone à côté de l'autel.
+        // ── Waystone + téléporteur HORS structure, sur la plateforme (y=platform surface), au sud. ──
+        int platformY = sp.getY(); // sol walkable de la plateforme (bloc à y-1)
+        BlockPos way = new BlockPos(sp.getX() + 4, platformY, sp.getZ() + HZ - 10);
         tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
-                lv, altar.offset(3, 0, 0), FloorPalette.forFloor(floor), floor);
-
-        // Téléporteur scellé, plus au sud (sortie une fois le boss vaincu).
-        BlockPos gate = c.offset(0, 0, 12);
-        clearPad(lv, gate, t);
+                lv, way, FloorPalette.forFloor(floor), floor);
+        BlockPos gate = new BlockPos(sp.getX(), platformY, sp.getZ() + HZ - 6);
+        clearColumn(lv, gate);
         S(lv, gate, B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
     }
 
-    /** Dégage un pad 3×3 (sol plein + 3 d'air) autour de {@code p} — garantit une surface praticable. */
-    private static void clearPad(ServerLevel lv, BlockPos p, BlockPalette t) {
-        for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
-            S(lv, p.offset(dx, -1, dz), B(t.base()));
-            for (int dy = 0; dy <= 2; dy++) S(lv, p.offset(dx, dy, dz), B(net.minecraft.world.level.block.Blocks.AIR));
+    /** Y de la 1ʳᵉ surface solide (bloc plein avec de l'air au-dessus), scannée du haut vers le bas. */
+    private static int surfaceY(ServerLevel lv, int x, int z, int top, int bottom) {
+        for (int y = top; y >= bottom; y--) {
+            BlockPos p = new BlockPos(x, y, z);
+            if (!lv.getBlockState(p).isAir() && lv.getBlockState(p.above()).isAir()) return y;
         }
+        return bottom;
+    }
+
+    /** Dégage 3 blocs d'air au-dessus de {@code p} (pour qu'un bloc posé ne soit pas encastré). */
+    private static void clearColumn(ServerLevel lv, BlockPos p) {
+        for (int dy = 1; dy <= 3; dy++) S(lv, p.above(dy), B(net.minecraft.world.level.block.Blocks.AIR));
     }
 
     /** Couronne de piliers 3×3 le long des 4 bords, retirés du rempart, avec cap lumineux. */

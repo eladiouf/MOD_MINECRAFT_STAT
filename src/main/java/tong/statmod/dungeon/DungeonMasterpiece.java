@@ -37,7 +37,7 @@ public final class DungeonMasterpiece {
     // ═══════════════ UNDERSIDE CONE ═══════════════
 
     /** Cône rocheux décroissant sous l'île (profond au centre, fin au bord). */
-    static void buildUnderside(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void buildUnderside(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState u1 = t.underside() == STONE ? B(STONE) : B(t.underside());
         BlockState u2 = t.underside() == STONE ? B(COBBLESTONE) : B(t.decorPrimary());
         for (int dx = -R; dx <= R; dx++) for (int dz = -R; dz <= R; dz++) {

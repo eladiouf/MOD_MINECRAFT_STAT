@@ -45,7 +45,7 @@ public final class IslandTerrainShaper {
      * Le relief est ajouté au-dessus de {@code y=0} (le cône underside fournit déjà le sol
      * {@code y=-1}), donc aucune colonne ne peut créer de vide.
      */
-    public void buildIslandGround(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    public void buildIslandGround(ServerLevel lv, BlockPos sp, BlockPalette t, FloorPalette tier) {
         int radius = shaper.radius();
 
         for (int dx = -radius; dx <= radius; dx++) {
@@ -55,13 +55,13 @@ public final class IslandTerrainShaper {
                 int h = rimHeightAt(dx, dz);
                 if (h <= 0) continue;
 
-                // Colonne pleine y=0..h-1 posée sur le sol underside (y=-1). Sommet = surface.
+                // Colonne pleine y=0..h-1 posée sur le sol underside (y=-1). Sommet = surface (thème).
                 for (int y = 0; y < h; y++) {
                     lv.setBlock(sp.offset(dx, y, dz), rimBlock(t, y, h), 3);
                 }
-                // Végétation / cristaux sur les sommets dégagés.
+                // Végétation / cristaux sur les sommets dégagés (par tier).
                 if (shouldDecorate(dx, dz)) {
-                    addDecoration(lv, sp.offset(dx, h, dz), t, dx, dz);
+                    addDecoration(lv, sp.offset(dx, h, dz), tier, dx, dz);
                 }
             }
         }
@@ -99,7 +99,7 @@ public final class IslandTerrainShaper {
     }
 
     /** Bloc de la colonne de pourtour : cœur en base, sommet en surface d'accent. */
-    private BlockState rimBlock(FloorPalette t, int y, int h) {
+    private BlockState rimBlock(BlockPalette t, int y, int h) {
         if (y == h - 1) return t.accent().defaultBlockState();          // surface foulée
         if (y >= h - 2) return t.decorPrimary().defaultBlockState();    // sous-couche rocheuse
         return t.base().defaultBlockState();                            // masse

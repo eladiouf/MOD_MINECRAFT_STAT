@@ -33,46 +33,48 @@ public final class DungeonRoomDressing {
      * Aménage une salle trésor : fontaine de soin au centre, waystone (waypoint), 2 armor stands
      * équipés d'armures de tier, et 2 piédestaux présentoirs (blocs de valeur du tier).
      */
-    public static void dressTreasureRoom(ServerLevel lv, BlockPos sp, FloorPalette t, int floor) {
+    public static void dressTreasureRoom(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
         int hz = -HZ() + 11;
+        FloorPalette tier = FloorPalette.forFloor(floor); // armures/présentoirs selon la difficulté
 
         // Fontaine de soin — bassin 3×3 d'eau bordé, avec une source lumineuse centrale.
         healFountain(lv, sp, O(sp, 0, 0, hz + 4), t);
         DungeonHealHandler.registerHealSpot(lv.dimension(), O(sp, 0, 1, hz + 4));
 
-        // Waypoint : waystone assortie au tier, à l'est de l'estrade (activable pour retour rapide).
+        // Waypoint : waystone assortie au thème, à l'est de l'estrade (activable pour retour rapide).
         tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
-                lv, O(sp, 6, 2, hz), t, floor);
+                lv, O(sp, 6, 2, hz), tier, floor);
 
         // 2 armor stands équipés, encadrant le trésor.
-        armorStand(lv, O(sp, -4, 2, hz), t, false);
-        armorStand(lv, O(sp, 4, 2, hz), t, true);
+        armorStand(lv, O(sp, -4, 2, hz), tier, false);
+        armorStand(lv, O(sp, 4, 2, hz), tier, true);
 
         // 2 piédestaux présentoirs (bloc de valeur du tier posé sur une colonne).
-        pedestal(lv, O(sp, -2, 2, hz - 3), t, showcaseBlock(t));
-        pedestal(lv, O(sp, 2, 2, hz - 3), t, showcaseBlock(t));
+        pedestal(lv, O(sp, -2, 2, hz - 3), t, showcaseBlock(tier));
+        pedestal(lv, O(sp, 2, 2, hz - 3), t, showcaseBlock(tier));
     }
 
     /**
      * Aménage une salle de boss : fontaine de soin (pour souffler après le combat) et 2 armor
      * stands « trophées ». Le loot du boss reste géré par {@link DungeonBossHandler} / l'autel.
      */
-    public static void dressBossRoom(ServerLevel lv, BlockPos sp, FloorPalette t, int floor) {
+    public static void dressBossRoom(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
         int hz = -HZ() + 11;
+        FloorPalette tier = FloorPalette.forFloor(floor);
 
         // Fontaine de soin en retrait (sud de l'estrade), refuge après le combat.
         healFountain(lv, sp, O(sp, 0, 0, hz + 8), t);
         DungeonHealHandler.registerHealSpot(lv.dimension(), O(sp, 0, 1, hz + 8));
 
         // 2 armor stands « gardiens » aux angles avant de l'estrade.
-        armorStand(lv, O(sp, -6, 2, hz + 5), t, true);
-        armorStand(lv, O(sp, 6, 2, hz + 5), t, false);
+        armorStand(lv, O(sp, -6, 2, hz + 5), tier, true);
+        armorStand(lv, O(sp, 6, 2, hz + 5), tier, false);
     }
 
     // ═══════════════ éléments ═══════════════
 
-    /** Bassin de soin 3×3 : bordure de blocs de tier, eau au centre, lanterne d'âme lumineuse. */
-    private static void healFountain(ServerLevel lv, BlockPos sp, BlockPos c, FloorPalette t) {
+    /** Bassin de soin 3×3 : bordure de blocs du thème, eau au centre, lanterne d'âme lumineuse. */
+    private static void healFountain(ServerLevel lv, BlockPos sp, BlockPos c, BlockPalette t) {
         BlockState rim = B(t.decorPrimary());
         for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
             BlockPos p = c.offset(dx, 0, dz);
@@ -88,7 +90,7 @@ public final class DungeonRoomDressing {
     }
 
     /** Piédestal : colonne + dalle + bloc présentoir au sommet. */
-    private static void pedestal(ServerLevel lv, BlockPos base, FloorPalette t, BlockState showcase) {
+    private static void pedestal(ServerLevel lv, BlockPos base, BlockPalette t, BlockState showcase) {
         S(lv, base, B(t.decorPrimary()));
         S(lv, base.above(), B(t.slab()));
         S(lv, base.above(2), showcase);

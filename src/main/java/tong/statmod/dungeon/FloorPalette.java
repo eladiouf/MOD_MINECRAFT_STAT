@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.Blocks;
  * <p>Le mapping Tier → {@link Block} est résolu paresseusement pour permettre les tests unit
  * sans initialiser {@code Blocks} (qui déclenche toute la chaîne SoundEvents / Bootstrap).
  */
-public enum FloorPalette {
+public enum FloorPalette implements BlockPalette {
 
     EARLY,
     MID,
@@ -126,6 +126,26 @@ public enum FloorPalette {
             case MID -> Blocks.DARK_OAK_PLANKS;
             case LATE -> Blocks.POLISHED_BLACKSTONE;
             case ABYSS -> Blocks.OBSIDIAN;
+        };
+    }
+
+    /** Cicatrice au sol (dressing narratif). */
+    public Block scar() {
+        return switch (this) {
+            case EARLY -> Blocks.GRAVEL;
+            case MID -> Blocks.COBBLED_DEEPSLATE;
+            case LATE -> Blocks.MAGMA_BLOCK;
+            case ABYSS -> Blocks.CRYING_OBSIDIAN;
+        };
+    }
+
+    /** Bannière déchirée (dressing narratif). */
+    public Block banner() {
+        return switch (this) {
+            case EARLY -> Blocks.RED_WOOL;
+            case MID -> Blocks.BLUE_WOOL;
+            case LATE -> Blocks.NETHER_WART_BLOCK;
+            case ABYSS -> Blocks.PURPLE_WOOL;
         };
     }
 }

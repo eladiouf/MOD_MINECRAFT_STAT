@@ -233,7 +233,9 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `item/DungeonBeaconItem.java` | Balise « portail de poche » (`statmod:dungeon_beacon`) : clic-droit n'importe où → entre au plus haut étage ; depuis le donjon → retour overworld. Craftable |
 | `dungeon/DungeonTeleportHandler.java` | TP serveur : `enterFloor()`, `returnToOverworld()`, `floorAtPos()`, `floorSpawnPos()` |
 | `dungeon/IslandGenerator.java` | Pipeline : `DungeonArchitect.buildFloor` (forteresse) + `IslandTerrainShaper.buildIslandGround` (relief pourtour) |
-| `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle (+ dressing salles récompense) |
+| `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle (+ dressing). **Bâtie avec `BlockPalette`** (matériaux par thème) |
+| `dungeon/BlockPalette.java` | Interface des 12 blocs d'un étage (base/accent/light/underside/decor×2/wall/stair/slab/ceiling/scar/banner) |
+| `dungeon/ThemePalette.java` | Palette **par arc/thème** (10 identités : pierre, os, prismarine, **glace**, citrouille, améthyste, **nether**, obsidienne…) → l'architecture ressemble à son thème, pas juste au tier. Alignée sur les arcs de `DungeonThemes` |
 | `dungeon/DungeonRoomDressing.java` | Salles trésor (×5) & boss (×10) enrichies : fontaine de soin, waypoint (waystone), armor stands équipés par tier, piédestaux présentoirs |
 | `dungeon/DungeonHealHandler.java` | Points de soin : joueur proche d'une fontaine → Régén II + Résistance I (passe/seconde) |
 | `dungeon/IslandTerrainShaper.java` | Relief organique **montant uniquement** sur le pourtour (hors emprise forteresse) — `rimHeightAt` pure/testable |
@@ -248,7 +250,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonProgress.java` | Autorité unique de conquête : unlock étage suivant + célébration (son/particules/message) + jalons |
 | `dungeon/DungeonBossHandler.java` | Handler de conquête unifié (combat = vague nettoyée, boss = roster mort) → `DungeonProgress` |
 | `dungeon/DungeonVaultHandler.java` | Conquête des étages trésor : ouvrir le coffre (`RightClickBlock`) → `DungeonProgress` |
-| `dungeon/FloorPalette.java` | Tier EARLY/MID/LATE/ABYSS → base/accent/light/underside/decorPrimary/decorSecondary |
+| `dungeon/FloorPalette.java` | Palette par **tier** EARLY/MID/LATE/ABYSS (implémente `BlockPalette`). Sert de fallback + pilote la difficulté (armures des salles, végétation du pourtour) |
 | `dungeon/DungeonSpawnGuard.java` | Liste blanche stricte : autorise seulement `AUTHORIZED_TAG` + invocations de boss suivi ; annule tout le reste |
 | `dungeon/DungeonBossAltarBlock.java` | Bloc autel activable par le joueur pour spawner les boss du roster |
 | `dungeon/DungeonBossRoster.java` | Roster prédéfini de 30 étages boss (floor → boss SLU/Vanilla) |

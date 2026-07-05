@@ -74,7 +74,9 @@ public final class DungeonArchitect {
     // ═══════════════ ENTRY POINT ═══════════════
 
     public static void buildFloor(ServerLevel lv, BlockPos sp, int floor, Role role) {
-        FloorPalette t = FloorPalette.forFloor(floor);
+        // Palette par THÈME/arc (glace, os, nether, corail…) → l'architecture ressemble à son
+        // thème, pas juste à son tier. Fallback tier via FloorPalette si besoin ailleurs.
+        BlockPalette t = ThemePalette.forFloor(floor);
         // Seed déterministe par étage : même étage → même donjon, étages différents → layouts
         // différents. C'est ce qui fait qu'aucun étage ne ressemble à un autre.
         Random rng = new Random(floor * 0x9E3779B97F4A7C15L + 0xD1CE);
@@ -111,13 +113,13 @@ public final class DungeonArchitect {
         if (role == Role.BOSS) {
             int hz = -HZ + 11;
             tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
-                    lv, O(sp, 4, 2, hz), t, floor);
+                    lv, O(sp, 4, 2, hz), FloorPalette.forFloor(floor), floor);
         }
     }
 
     // ═══════════════ 1. PERIMETER WALL + BATTLEMENTS ═══════════════
 
-    static void perimeterWall(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void perimeterWall(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState wall = B(t.base());
         BlockState brick = B(t.accent());
         BlockState cap = B(t.decorPrimary());
@@ -144,12 +146,12 @@ public final class DungeonArchitect {
 
     // ═══════════════ 2. CORNER TOWERS ═══════════════
 
-    static void cornerTowers(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void cornerTowers(ServerLevel lv, BlockPos sp, BlockPalette t) {
         int[][] c = {{-HX, -HZ}, {HX, -HZ}, {-HX, HZ}, {HX, HZ}};
         for (int[] p : c) tower(lv, sp, p[0], p[1], t);
     }
 
-    static void tower(ServerLevel lv, BlockPos sp, int cx, int cz, FloorPalette t) {
+    static void tower(ServerLevel lv, BlockPos sp, int cx, int cz, BlockPalette t) {
         BlockState wall = B(t.base());
         BlockState brick = B(t.accent());
         BlockState cap = B(t.decorPrimary());
@@ -182,7 +184,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 3. GATEHOUSE (sud, +Z) + RETURN BEACON ═══════════════
 
-    static void gatehouse(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void gatehouse(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState brick = B(t.accent());
         BlockState wall = B(t.base());
         BlockState light = B(t.light());
@@ -212,7 +214,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 4. PROCESSIONAL AVENUE (colonnade centrale N-S) ═══════════════
 
-    static void processionalAvenue(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void processionalAvenue(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState pillar = B(t.decorPrimary());
         BlockState brick = B(t.accent());
         BlockState light = B(t.light());
@@ -242,12 +244,12 @@ public final class DungeonArchitect {
 
     static final int WING_STYLES = 3;
 
-    static void combatWings(ServerLevel lv, BlockPos sp, FloorPalette t, int style) {
+    static void combatWings(ServerLevel lv, BlockPos sp, BlockPalette t, int style) {
         wing(lv, sp, -1, t, style);
         wing(lv, sp, +1, t, style);
     }
 
-    static void wing(ServerLevel lv, BlockPos sp, int side, FloorPalette t, int style) {
+    static void wing(ServerLevel lv, BlockPos sp, int side, BlockPalette t, int style) {
         int wallX = side * HX;
         int innerX = side * (HX - 12);
         BlockState base = B(t.base());
@@ -270,7 +272,7 @@ public final class DungeonArchitect {
     }
 
     /** Style 0 — colonnade ouverte avec contreforts lumineux. */
-    static void wingColonnade(ServerLevel lv, BlockPos sp, int side, FloorPalette t, int wallX) {
+    static void wingColonnade(ServerLevel lv, BlockPos sp, int side, BlockPalette t, int wallX) {
         BlockState pillar = B(t.decorPrimary());
         BlockState light = B(t.light());
         for (int z = -HZ + 6; z <= HZ - 6; z += 8) {
@@ -280,7 +282,7 @@ public final class DungeonArchitect {
     }
 
     /** Style 1 — rangée de cellules de prison à barreaux de fer. */
-    static void wingPrison(ServerLevel lv, BlockPos sp, int side, FloorPalette t, int wallX) {
+    static void wingPrison(ServerLevel lv, BlockPos sp, int side, BlockPalette t, int wallX) {
         BlockState wall = B(t.base());
         BlockState bars = B(IRON_BARS);
         int cellX = wallX - side * 4; // façade des cellules face à l'avenue
@@ -299,7 +301,7 @@ public final class DungeonArchitect {
     }
 
     /** Style 2 — crypte à niches funéraires (os + arches basses). */
-    static void wingCrypt(ServerLevel lv, BlockPos sp, int side, FloorPalette t, int wallX) {
+    static void wingCrypt(ServerLevel lv, BlockPos sp, int side, BlockPalette t, int wallX) {
         BlockState brick = B(t.accent());
         BlockState bone = B(BONE_BLOCK);
         int nicheX = wallX - side * 2;
@@ -316,7 +318,7 @@ public final class DungeonArchitect {
 
     static final int MID_TYPES = 4;
 
-    static void midSection(ServerLevel lv, BlockPos sp, FloorPalette t, int type) {
+    static void midSection(ServerLevel lv, BlockPos sp, BlockPalette t, int type) {
         switch (type) {
             case 0 -> midChasm(lv, sp, t);
             case 1 -> midSunkenArena(lv, sp, t);
@@ -330,7 +332,7 @@ public final class DungeonArchitect {
      * dépression peu profonde à <b>fond solide</b> (pas de vide) : on ne peut pas tomber dans
      * un trou, le sol du donjon reste plein.
      */
-    static void midChasm(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void midChasm(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState brick = B(t.accent());
         BlockState rail = B(t.wallBlock());
         BlockState bottom = B(t.underside());
@@ -348,7 +350,7 @@ public final class DungeonArchitect {
     }
 
     /** Type 1 — arène en contrebas (fosse circulaire à gradins), cœur de combat. */
-    static void midSunkenArena(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void midSunkenArena(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState floor = B(t.base());
         BlockState step = B(t.slab());
         for (int dx = -9; dx <= 9; dx++) for (int dz = -9; dz <= 9; dz++) {
@@ -364,7 +366,7 @@ public final class DungeonArchitect {
     }
 
     /** Type 2 — forêt de piliers (combat en couvert, lignes de vue cassées). */
-    static void midPillarForest(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void midPillarForest(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState pillar = B(t.decorPrimary());
         BlockState light = B(t.light());
         for (int x = -9; x <= 9; x += 3) for (int z = -6; z <= 6; z += 3) {
@@ -379,7 +381,7 @@ public final class DungeonArchitect {
      * Type 3 — salle effondrée : colonnes brisées et gravats (feel ruine). Aucun trou dans le
      * sol — le donjon reste plein et sûr.
      */
-    static void midCollapsed(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void midCollapsed(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState rubble = B(t.decorSecondary());
         BlockState broken = B(t.base());
         Random r = new Random(0xC0113D);
@@ -393,7 +395,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 7. THE HEART (nord, -Z) selon le rôle ═══════════════
 
-    static void theHeart(ServerLevel lv, BlockPos sp, FloorPalette t, Role role, int floor) {
+    static void theHeart(ServerLevel lv, BlockPos sp, BlockPalette t, Role role, int floor) {
         BlockState brick = B(t.accent());
         BlockState pillar = B(t.decorPrimary());
         BlockState light = B(t.light());
@@ -471,7 +473,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 8. ROOFING (toiture partielle à puits de lumière) ═══════════════
 
-    static void roofing(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void roofing(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState roof = B(t.ceiling());
         BlockState beam = B(t.decorPrimary());
         // Toit sur les ailes (au-delà de |x|>=12), open sur l'avenue centrale (puits de lumière).
@@ -486,7 +488,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 9. LIGHTING (braseros au sol) ═══════════════
 
-    static void lighting(ServerLevel lv, BlockPos sp, FloorPalette t, int floor) {
+    static void lighting(ServerLevel lv, BlockPos sp, BlockPalette t, int floor) {
         BlockState post = B(t.decorPrimary());
         BlockState light = B(t.light());
         Random rng = new Random(floor * 733L + 17L);
@@ -509,7 +511,7 @@ public final class DungeonArchitect {
 
     // ═══════════════ 9b. NARRATIVE DRESSING (l'espace raconte une histoire) ═══════════════
 
-    static void narrativeDressing(ServerLevel lv, BlockPos sp, FloorPalette t, Random rng) {
+    static void narrativeDressing(ServerLevel lv, BlockPos sp, BlockPalette t, Random rng) {
         // Restes de combats passés : ossements, toiles, gravats, poteries, cicatrices de brûlé.
         // Positionné aléatoirement (seed d'étage) en évitant l'avenue centrale et le spawn.
         int placed = 0, attempts = 0;
@@ -531,14 +533,14 @@ public final class DungeonArchitect {
                     S(lv, g, B(t.decorPrimary()));
                     if (rng.nextBoolean()) S(lv, g.above(), B(t.decorSecondary()));
                 }
-                case 6 -> S(lv, g.below(), B(tierScar(t)));                   // cicatrice au sol
+                case 6 -> S(lv, g.below(), B(t.scar()));                      // cicatrice au sol
                 default -> { S(lv, g, B(CANDLE)); }                           // bougie/veillée
             }
             placed++;
         }
 
         // Bannières déchirées suspendues aux murs des ailes (verticales, wool teinté).
-        BlockState banner = B(tierBanner(t));
+        BlockState banner = B(t.banner());
         for (int side : new int[]{-1, 1}) {
             for (int z = -HZ + 8; z <= HZ - 8; z += 12) {
                 int x = side * (HX - 1);
@@ -548,27 +550,9 @@ public final class DungeonArchitect {
         }
     }
 
-    static Block tierScar(FloorPalette t) {
-        return switch (t) {
-            case EARLY -> GRAVEL;
-            case MID -> COBBLED_DEEPSLATE;
-            case LATE -> MAGMA_BLOCK;
-            case ABYSS -> CRYING_OBSIDIAN;
-        };
-    }
-
-    static Block tierBanner(FloorPalette t) {
-        return switch (t) {
-            case EARLY -> RED_WOOL;
-            case MID -> BLUE_WOOL;
-            case LATE -> NETHER_WART_BLOCK;
-            case ABYSS -> PURPLE_WOOL;
-        };
-    }
-
     // ═══════════════ 10. SPAWN THRESHOLD (centre dégagé) ═══════════════
 
-    static void spawnThreshold(ServerLevel lv, BlockPos sp, FloorPalette t) {
+    static void spawnThreshold(ServerLevel lv, BlockPos sp, BlockPalette t) {
         BlockState floor = B(t.accent());
         BlockState light = B(t.light());
         // Dalle 5×5 + 4 blocs d'air de headroom.

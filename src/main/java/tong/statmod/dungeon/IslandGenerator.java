@@ -28,7 +28,8 @@ public final class IslandGenerator {
     public static boolean generateFloor(ServerLevel lv, int floor) {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         if (!lv.getBlockState(sp.below()).isAir()) return false;
-        FloorPalette t = FloorPalette.forFloor(floor);
+        FloorPalette tier = FloorPalette.forFloor(floor);
+        ThemePalette theme = ThemePalette.forFloor(floor); // identité matérielle par thème/arc
 
         DungeonArchitect.Role role =
                 (floor % 10 == 0) ? DungeonArchitect.Role.BOSS
@@ -38,11 +39,11 @@ public final class IslandGenerator {
         // 1. Forteresse (pose l'underside conique + le sol plat intérieur + toute la structure).
         DungeonArchitect.buildFloor(lv, sp, floor, role);
 
-        // 2. Relief organique du pourtour (hors emprise de la forteresse).
+        // 2. Relief organique du pourtour (hors emprise) — surface par thème, végétation par tier.
         long islandSeed = IslandShaper.seedFor(floor);
-        new IslandTerrainShaper(islandSeed, floor, R).buildIslandGround(lv, sp, t);
+        new IslandTerrainShaper(islandSeed, floor, R).buildIslandGround(lv, sp, theme, tier);
 
-        STATMod.LOGGER.info("[TrialDungeon] Floor {} generated ({}, {})", floor, t.name(), role);
+        STATMod.LOGGER.info("[TrialDungeon] Floor {} generated ({}, {})", floor, theme.name(), role);
         return true;
     }
 

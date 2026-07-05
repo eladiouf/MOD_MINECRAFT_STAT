@@ -2,9 +2,10 @@
   "required": true,
   "minVersion": "0.8",
   "package": "tong.statmod.mixin",
+  "plugin": "tong.statmod.mixin.StatModMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "statmod.refmap.json",
   "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "IronInscriptionTableScreenMixin", "EpicFightPlayerScaleMixin", "PuffishSkillsScreenMixin"],
-  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "AssemblyCraftingResultMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin", "IronSpellIconResolverMixin"],
+  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "AssemblyCraftingResultMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedForgingRecipeMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin", "IronSpellIconResolverMixin"],
   "server": []
 }

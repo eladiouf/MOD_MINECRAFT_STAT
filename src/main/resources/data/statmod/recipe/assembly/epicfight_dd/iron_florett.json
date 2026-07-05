@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "epicfight_dd:iron_florett"
+  }
+}

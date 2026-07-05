@@ -16,12 +16,12 @@ import tong.statmod.integration.TensuraEventSubscriber;
 import tong.statmod.integration.epicfight.EpicFightCompat;
 import tong.statmod.integration.parcool.ParcoolCompat;
 import tong.statmod.integration.ironspells.IronSpellsCompat;
+import tong.statmod.integration.ironspells.bridge.TensuraSpellLevelModifier;
 import tong.statmod.integration.ironspells.bridge.TensuraSpellWrapperRegistry;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.tensura.MagiculeScalingHandler;
 import tong.statmod.integration.tensura.RacePhysicalEffects;
 import tong.statmod.integration.tensura.SummonScalingHandler;
-import tong.statmod.integration.tensura.TensuraCraftQualityHandler;
 import tong.statmod.integration.tensura.TensuraEpHandler;
 import tong.statmod.integration.tensura.TensuraRaceHandler;
 import tong.statmod.integration.overgeared.OvergearedCompat;
@@ -29,8 +29,11 @@ import tong.statmod.block.ForgingBlocks;
 import tong.statmod.block.entity.ModBlockEntities;
 import tong.statmod.dungeon.DungeonBlocks;
 import tong.statmod.dungeon.DungeonBossHandler;
+import tong.statmod.dungeon.DungeonMobSpawner;
+import tong.statmod.dungeon.DungeonProtectionHandler;
 import tong.statmod.dungeon.DungeonSpawnGuard;
 import tong.statmod.item.ForgingBlueprints;
+import tong.statmod.item.ForgingFormComponents;
 import tong.statmod.item.ForgingGrips;
 import tong.statmod.item.ForgingIntermediates;
 import tong.statmod.item.ForgingMaterials;
@@ -44,9 +47,11 @@ import tong.statmod.progression.CombatXPHandler;
 import tong.statmod.progression.NonCombatXPHandler;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stamina.StaminaEvents;
+import tong.statmod.stats.CraftingSupportEffectHandler;
 import tong.statmod.stats.StatAttributeHandler;
 import tong.statmod.stats.StatCommands;
 import tong.statmod.storage.ModAttachments;
+import tong.statmod.storage.PlayerCloneDataHandler;
 import tong.statmod.time.OverworldTimeController;
 import tong.statmod.time.SleepRecoveryHandler;
 
@@ -63,6 +68,7 @@ public class STATMod {
         ForgingMaterials.register(modBus);
         ForgingIntermediates.register(modBus);
         ForgingGrips.register(modBus);
+        ForgingFormComponents.register(modBus);
         ForgingTools.register(modBus);
         ForgingBlueprints.register(modBus);
         ForgingBlocks.register(modBus);
@@ -73,32 +79,62 @@ public class STATMod {
         RuneShards.register(modBus);
         ModSounds.register(modBus);
         ModLootModifiers.register(modBus);
-        TensuraSpellWrapperRegistry.register(modBus);
+        modBus.register(tong.statmod.network.NetworkHandler.class);
+        if (net.neoforged.fml.loading.FMLEnvironment.dist == net.neoforged.api.distmarker.Dist.CLIENT) {
+            modBus.register(tong.statmod.client.ClientSetup.class);
+            modBus.register(tong.statmod.client.cosmetic.RaceCosmeticEvents.class);
+            NeoForge.EVENT_BUS.register(tong.statmod.client.ClientInputHandler.class);
+        }
+        boolean tensuraLoaded = ModList.get().isLoaded("tensura");
+        boolean epicFightLoaded = ModList.get().isLoaded("epicfight");
+        boolean parcoolLoaded = ModList.get().isLoaded("parcool");
+        boolean overgearedLoaded = ModList.get().isLoaded("overgeared");
+        boolean puffishLoaded = ModList.get().isLoaded("puffish_skills");
+        boolean ironSpellsLoaded = ModList.get().isLoaded("irons_spellbooks");
+        if (ironSpellsLoaded && tensuraLoaded) {
+            TensuraSpellWrapperRegistry.register(modBus);
+        }
         NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->
                 StatCommands.register(event.getDispatcher()));
         NeoForge.EVENT_BUS.register(CombatXPHandler.class);
         NeoForge.EVENT_BUS.register(NonCombatXPHandler.class);
         NeoForge.EVENT_BUS.register(StatAttributeHandler.class);
+        NeoForge.EVENT_BUS.register(CraftingSupportEffectHandler.class);
         NeoForge.EVENT_BUS.register(StaminaEvents.class);
+        NeoForge.EVENT_BUS.register(PlayerCloneDataHandler.class);
         NeoForge.EVENT_BUS.register(SoulLevelSyncHandler.class);
         NeoForge.EVENT_BUS.register(OverworldTimeController.class);
         NeoForge.EVENT_BUS.register(SleepRecoveryHandler.class);
         NeoForge.EVENT_BUS.register(DungeonBossHandler.class);
+        NeoForge.EVENT_BUS.register(DungeonMobSpawner.class);
         NeoForge.EVENT_BUS.register(DungeonSpawnGuard.class);
-        if (ModList.get().isLoaded("tensura")) {
+        NeoForge.EVENT_BUS.register(DungeonProtectionHandler.class);
+        if (tensuraLoaded) {
             TensuraEventSubscriber.register();
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);
-            NeoForge.EVENT_BUS.register(TensuraCraftQualityHandler.class);
             NeoForge.EVENT_BUS.register(SummonScalingHandler.class);
             NeoForge.EVENT_BUS.register(RacePhysicalEffects.class);
+            TensuraEpHandler.init();
+            TensuraRaceHandler.init();
         }
-        TensuraEpHandler.init();
-        TensuraRaceHandler.init();
-        EpicFightCompat.init();
-        ParcoolCompat.init();
-        OvergearedCompat.init();
-        PuffishSkillsCompat.init();
-        IronSpellsCompat.init();
+        if (ironSpellsLoaded && tensuraLoaded) {
+            NeoForge.EVENT_BUS.register(TensuraSpellLevelModifier.class);
+        }
+        if (epicFightLoaded) {
+            EpicFightCompat.init();
+        }
+        if (parcoolLoaded) {
+            ParcoolCompat.init();
+        }
+        if (overgearedLoaded) {
+            OvergearedCompat.init();
+        }
+        if (puffishLoaded) {
+            PuffishSkillsCompat.init();
+        }
+        if (ironSpellsLoaded) {
+            IronSpellsCompat.init();
+        }
         LOGGER.info("STAT Mod initialized on NeoForge 1.21.1");
     }
 }

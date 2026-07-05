@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_bow_limb_diamond"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:war_bow"
+  }
+}

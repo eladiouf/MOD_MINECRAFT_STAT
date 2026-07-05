@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:leather"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "epicfight:wooden_tachi"
+  }
+}

@@ -1,8 +1,8 @@
 package tong.statmod.stamina;
 
 public final class StaminaRules {
-    public static final float BASE_MAX_STAMINA = 100.0f;
-    public static final float ENDURANCE_BONUS_PER_LEVEL = 1.0f;
+    public static final float BASE_MAX_STAMINA = 300.0f;
+    public static final float ENDURANCE_BONUS_PER_LEVEL = 3.0f;
     public static final float LOW_THRESHOLD_RATIO = 0.35f;
     public static final float CRITICAL_THRESHOLD_RATIO = 0.15f;
     public static final float MIN_RECOVERY_MULTIPLIER = 0.35f;
@@ -14,7 +14,7 @@ public final class StaminaRules {
     }
 
     public static StaminaThreshold threshold(float current, float max) {
-        if (max <= 0.0f) {
+        if (!Float.isFinite(current) || !Float.isFinite(max) || max <= 0.0f) {
             return StaminaThreshold.CRITICAL;
         }
 
@@ -25,22 +25,20 @@ public final class StaminaRules {
     }
 
     public static float passiveRecoveryPerTick(boolean meditating) {
-        return meditating ? 0.18f : 0.02f;
+        return meditating ? 0.18f : 0.0f;
     }
 
     public static float passiveDrainPerTick(boolean sprinting, boolean airborne) {
-        float drain = 0.0025f;
-        if (sprinting) drain += 0.08f;
-        if (airborne) drain += 0.02f;
-        return drain;
+        return sprinting ? 0.025f : 0.0f;
     }
 
     public static float foodRecoveryAmount(int nutrition, float saturationModifier) {
-        return Math.max(0.0f, nutrition * 1.5f + saturationModifier * 4.0f);
+        float safeSaturation = Float.isFinite(saturationModifier) ? saturationModifier : 0.0f;
+        return Math.max(0.0f, nutrition * 1.5f + safeSaturation * 4.0f);
     }
 
     public static float fatigueDebtFromSpend(float spentStamina) {
-        return Math.max(0.0f, spentStamina) * 0.25f;
+        return Float.isFinite(spentStamina) ? Math.max(0.0f, spentStamina) * 0.25f : 0.0f;
     }
 
     public static float fatigueReliefPerTick(boolean meditating, boolean sleeping) {
@@ -51,7 +49,8 @@ public final class StaminaRules {
     }
 
     public static float foodFatigueRelief(int nutrition, float saturationModifier) {
-        return Math.max(0.0f, nutrition * 0.5f + saturationModifier);
+        float safeSaturation = Float.isFinite(saturationModifier) ? saturationModifier : 0.0f;
+        return Math.max(0.0f, nutrition * 0.5f + safeSaturation);
     }
 
     public static float wakeFatigueRelief() {
@@ -60,7 +59,8 @@ public final class StaminaRules {
 
     public static float recoveryMultiplierFromDebt(float fatigueDebt, int enduranceLevel) {
         float max = Math.max(1.0f, maxStamina(enduranceLevel));
-        float ratio = Math.min(1.0f, Math.max(0.0f, fatigueDebt) / max);
+        float safeDebt = Float.isFinite(fatigueDebt) ? fatigueDebt : max;
+        float ratio = Math.min(1.0f, Math.max(0.0f, safeDebt) / max);
         return Math.max(MIN_RECOVERY_MULTIPLIER, 1.0f - ratio * 0.65f);
     }
 }

@@ -50,8 +50,8 @@ class ModAttachmentsMagicSerializationTest {
         PlayerStatData restored = new PlayerStatData();
         MagicStateSerializer.deserialize(legacyTag, restored);
 
-        // Migration : 10 + 5 + 3 = 18 magic points unifiés
-        assertEquals(18, restored.getMagicPoints());
+        // Migration : 5 (default) + 10 + 5 + 3 = 23 magic points unifiés
+        assertEquals(23, restored.getMagicPoints());
         // Pools legacy drainés
         assertEquals(0, restored.getArcanePoints());
         assertEquals(0, restored.getSchoolPoints(MagicBranch.FIRE));

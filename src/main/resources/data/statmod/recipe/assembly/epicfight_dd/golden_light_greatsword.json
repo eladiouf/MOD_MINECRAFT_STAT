@@ -6,7 +6,31 @@
       "item": "statmod:rough_blade_gold"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "statmod:rough_blade_gold"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:rough_blade_gold"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:redstone"
     }
   ],
   "result": {

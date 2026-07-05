@@ -1,0 +1,5 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"minecraft:sugar_cane"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"simplyswords:diamond_sai","components":{"minecraft:enchantments":{"levels":{"tensura:stagnation":1}},"overgeared:forging_quality":"well","tensura:max_existence_point":0.0}},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

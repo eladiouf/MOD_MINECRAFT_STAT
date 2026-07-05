@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "L": {
+      "item": "statmod:leather_wrap"
+    }
+  },
+  "pattern": [
+    " I ",
+    "GLG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:katana_tsuba"
+  }
+}

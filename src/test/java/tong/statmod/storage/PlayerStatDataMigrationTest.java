@@ -26,7 +26,7 @@ class PlayerStatDataMigrationTest {
         PlayerStatData d = new PlayerStatData();
         int migrated = d.migrateLegacyPointsToUnified();
         assertEquals(0, migrated);
-        assertEquals(0, d.getMagicPoints());
+        assertEquals(5, d.getMagicPoints());
     }
 
     @Test
@@ -35,7 +35,7 @@ class PlayerStatDataMigrationTest {
         d.setArcanePoints(15);
         int migrated = d.migrateLegacyPointsToUnified();
         assertEquals(15, migrated);
-        assertEquals(15, d.getMagicPoints());
+        assertEquals(20, d.getMagicPoints());
         assertEquals(0, d.getArcanePoints(), "legacy arcane drained to 0");
     }
 
@@ -47,7 +47,7 @@ class PlayerStatDataMigrationTest {
         d.setSchoolPoints(MagicBranch.AIR, 2);
         int migrated = d.migrateLegacyPointsToUnified();
         assertEquals(10, migrated);
-        assertEquals(10, d.getMagicPoints());
+        assertEquals(15, d.getMagicPoints());
         assertEquals(0, d.getSchoolPoints(MagicBranch.FIRE));
         assertEquals(0, d.getSchoolPoints(MagicBranch.WATER));
     }
@@ -60,7 +60,7 @@ class PlayerStatDataMigrationTest {
         d.setSchoolPoints(MagicBranch.HOLY, 5);
         int migrated = d.migrateLegacyPointsToUnified();
         assertEquals(35, migrated);
-        assertEquals(35, d.getMagicPoints());
+        assertEquals(40, d.getMagicPoints());
     }
 
     @Test
@@ -81,7 +81,7 @@ class PlayerStatDataMigrationTest {
         d.migrateLegacyPointsToUnified();
         int second = d.migrateLegacyPointsToUnified();
         assertEquals(0, second, "second call should be a no-op (legacy pools already drained)");
-        assertEquals(15, d.getMagicPoints());
+        assertEquals(20, d.getMagicPoints());
     }
 
     @Test
@@ -99,7 +99,7 @@ class PlayerStatDataMigrationTest {
     void addArcanePoints_writes_to_unified_pool() {
         PlayerStatData d = new PlayerStatData();
         d.addArcanePoints(7);
-        assertEquals(7, d.getMagicPoints(),
+        assertEquals(12, d.getMagicPoints(),
                 "addArcanePoints is a compat shim — must pour into unified pool");
     }
 
@@ -115,7 +115,7 @@ class PlayerStatDataMigrationTest {
 
         PlayerStatData data = readViaSerializer(tag);
 
-        assertEquals(0, data.getMagicPoints(), "magicPoints defaults to 0 when missing from tag");
+        assertEquals(5, data.getMagicPoints(), "magicPoints defaults to 5 when missing from tag");
         assertEquals(0, data.getLastPerkGrantTier(), "lastPerkGrantTier defaults to 0 when missing");
         assertEquals(0, data.getMagicNodes().length, "magicNodes defaults to empty array");
         assertEquals(0, data.getLearnedSpells().length, "learnedSpells defaults to empty array");

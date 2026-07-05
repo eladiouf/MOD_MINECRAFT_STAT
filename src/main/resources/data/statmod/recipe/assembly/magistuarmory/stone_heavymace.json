@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_axe_head_diamond"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:rough_axe_head_diamond"
+    },
+    {
+      "item": "statmod:rough_axe_head_diamond"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "magistuarmory:stone_heavymace"
+  }
+}

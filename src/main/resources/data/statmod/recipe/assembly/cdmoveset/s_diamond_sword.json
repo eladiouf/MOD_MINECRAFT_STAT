@@ -6,7 +6,22 @@
       "item": "statmod:rough_blade_diamond"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:wire_wrap"
     }
   ],
   "result": {

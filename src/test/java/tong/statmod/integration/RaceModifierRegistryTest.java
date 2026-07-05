@@ -1,6 +1,15 @@
 package tong.statmod.integration;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stats.StatType;
+
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,6 +46,36 @@ class RaceModifierRegistryTest {
         assertTrue(RaceModifierRegistry.isMonster("tensura:slime"));
     }
 
+    @Test
+    void raceModifiersDoNotDeclareTheSameStatTwiceForOneRace() throws Exception {
+        for (Map.Entry<String, RaceData> entry : registeredRaceData().entrySet()) {
+            Set<Integer> statIndexes = new HashSet<>();
+            for (RaceModifier modifier : entry.getValue().modifiers()) {
+                assertTrue(statIndexes.add(modifier.statIndex()),
+                        entry.getKey() + " declares duplicate race modifier for stat "
+                                + modifier.statIndex());
+            }
+        }
+    }
+
+    @Test
+    void vampireLordUsesItsStrongIntimidationBonus() {
+        RaceData data = RaceModifierRegistry.get("tensura:vampire_lord");
+
+        assertEquals(6, flatBonusFor(data, StatType.INTIMIDATION.index));
+    }
+
+    @Test
+    void raceModifierRegistryUsesNamedStatTypesInsteadOfNumericIndexes() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java",
+                "tong", "statmod", "integration", "RaceModifierRegistry.java"));
+
+        assertFalse(Pattern.compile("mod\\(\\s*\\d+\\s*,").matcher(source).find(),
+                "race modifiers must use StatType names instead of fragile numeric indexes");
+        assertTrue(source.contains("mod(StatType."),
+                "race modifiers should be declared with named StatType values");
+    }
+
     private static void assertMagicBonuses(String raceId) {
         RaceData data = RaceModifierRegistry.get(raceId);
         assertEquals(1, flatBonusFor(data, 13), raceId + " should grant +1 CASTING_SPEED");
@@ -49,5 +88,12 @@ class RaceModifierRegistryTest {
                 .mapToInt(RaceModifier::flatBonus)
                 .findFirst()
                 .orElse(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, RaceData> registeredRaceData() throws Exception {
+        Field registry = RaceModifierRegistry.class.getDeclaredField("REGISTRY");
+        registry.setAccessible(true);
+        return (Map<String, RaceData>) registry.get(null);
     }
 }

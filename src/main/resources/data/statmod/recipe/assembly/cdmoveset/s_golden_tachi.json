@@ -6,7 +6,28 @@
       "item": "statmod:rough_blade_gold"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:coal"
     }
   ],
   "result": {

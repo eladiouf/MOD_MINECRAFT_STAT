@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:steel_axe_head"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "overgeared:steel_axe_head"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "l2complements:eternium_axe"
+  }
+}

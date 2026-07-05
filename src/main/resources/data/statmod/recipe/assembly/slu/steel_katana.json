@@ -6,7 +6,25 @@
       "item": "overgeared:steel_sword_blade"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
     }
   ],
   "result": {

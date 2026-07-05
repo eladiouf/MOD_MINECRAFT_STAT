@@ -6,7 +6,22 @@
       "item": "statmod:rough_blade_diamond"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:rough_blade_diamond"
     }
   ],
   "result": {

@@ -32,4 +32,16 @@ class PerkPointAllocatorTest {
         assertEquals(2, data.getPerkPointsForStat(StatType.BLADE_TECHNIQUE.index));
         assertEquals(0, data.getPerkPointsForStat(StatType.ARCANE_POWER.index));
     }
+
+    @Test
+    void refundCannotBeMultipliedByDuplicatedPersistedPerks() {
+        PlayerStatData data = new PlayerStatData();
+        data.setUnlockedPerks(new int[]{Perk.BRUTE_CORE.id, Perk.BRUTE_CORE.id});
+
+        int refunded = PerkPointAllocator.refundPaidUnlockedPerks(data);
+
+        assertEquals(Perk.BRUTE_CORE.tier.cost, refunded);
+        assertEquals(Perk.BRUTE_CORE.tier.cost,
+                data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+    }
 }

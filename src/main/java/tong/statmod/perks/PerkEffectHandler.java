@@ -1,17 +1,26 @@
 package tong.statmod.perks;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
@@ -19,11 +28,13 @@ import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tong.statmod.STATMod;
+import tong.statmod.progression.WeaponResolver;
+import tong.statmod.stats.CraftingSupportEffectHandler;
+import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,10 +76,7 @@ public final class PerkEffectHandler {
                     .forEach(e -> e.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, false, false)));
         }
 
-        // BLADE_ACTIVE id=7: Flowing Strike — record combo hits
-        if (perks.isUnlocked(Perk.byId(7))) {
-            PerkState.recordComboHit(uuid, System.currentTimeMillis(), 5000);
-        }
+        // BLADE_ACTIVE id=7: Flowing Strike — combo hits are recorded from real damage events.
 
         // AGIL_CORE id=18: Light Feet — +5% movement speed
         if (perks.isUnlocked(Perk.byId(18))) {
@@ -109,18 +117,15 @@ public final class PerkEffectHandler {
             }
         }
 
-        // COOK_ACTIVE id=61: Iron Stomach — clear bad effects periodically
-        if (perks.isUnlocked(Perk.byId(61)) && player.tickCount % 40 == 0) {
-            player.removeEffect(MobEffects.HUNGER);
-            player.removeEffect(MobEffects.POISON);
-            player.removeEffect(MobEffects.WITHER);
-        }
+        // COOK_ACTIVE id=61: Iron Stomach — handled by CraftingSupportEffectHandler on effect application.
 
         // WILL_CORE id=78: Iron Will — reduce negative effect duration
         // Handled via onLivingDamagePre and potion effect application
 
         // BLADE_SYNERGY id=8: Dance of Blades — combo hits grant speed
-        if (perks.isUnlocked(Perk.byId(8))) {
+        if (perks.isUnlocked(Perk.BLADE_SYNERGY)
+                && PerkCombatScaling.canUseWeaponFamilyPerk(
+                        WeaponResolver.statFor(player.getMainHandItem()), Perk.BLADE_SYNERGY)) {
             int combo = PerkState.getComboCount(uuid, System.currentTimeMillis(), 5000);
             if (combo >= 3 && !player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 0, false, false));
@@ -139,13 +144,7 @@ public final class PerkEffectHandler {
             }
         }
 
-        // COOK_TRANSCENDENCE id=65: Ambrosia — food gives regen
-        if (perks.isUnlocked(Perk.byId(65))) {
-            FoodData food = player.getFoodData();
-            if (food.getFoodLevel() >= 20 && !player.hasEffect(MobEffects.REGENERATION)) {
-                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 0, false, false));
-            }
-        }
+        // COOK_TRANSCENDENCE id=65: Ambrosia — handled when food is eaten.
 
         // INTIM_ACTIVE id=73: Intimidating Aura — nearby mobs deal less damage
         if (perks.isUnlocked(Perk.byId(73))) {
@@ -176,7 +175,9 @@ public final class PerkEffectHandler {
         }
 
         // RAPID_SITUATIONAL id=15: Flurry — attacks faster as combo builds
-        if (perks.isUnlocked(Perk.byId(15))) {
+        if (perks.isUnlocked(Perk.RAPID_SITUATIONAL)
+                && PerkCombatScaling.canUseWeaponFamilyPerk(
+                        WeaponResolver.statFor(player.getMainHandItem()), Perk.RAPID_SITUATIONAL)) {
             int frenzy = PerkState.getFrenzyStacks(uuid);
             if (frenzy > 0) {
                 float speedMult = 1.0f + frenzy * 0.03f;
@@ -203,6 +204,24 @@ public final class PerkEffectHandler {
             if (nearGlowing && !player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 1, false, false));
             }
+        }
+
+        // SENSE_SYNERGY id=50: Predator's Instinct — mark hidden mobs.
+        if (perks.isUnlocked(Perk.SENSE_SYNERGY)) {
+            player.level().getEntitiesOfClass(Mob.class,
+                    player.getBoundingBox().inflate(24),
+                    e -> e.isAlive() && (e.isInvisible() || !player.hasLineOfSight(e)))
+                    .forEach(e -> {
+                        int revealTicks = PerkPerceptionScaling.hiddenMobRevealDurationTicks(true, true);
+                        if (revealTicks > 0) {
+                            e.addEffect(new MobEffectInstance(MobEffects.GLOWING, revealTicks, 0, false, false));
+                        }
+                    });
+        }
+
+        // SENSE_TRANSCENDENCE id=53: Omniscience — actionbar health readout for nearest entity.
+        if (perks.isUnlocked(Perk.SENSE_TRANSCENDENCE)) {
+            showSenseHealthReadout(player);
         }
 
         // PRECI_SITUATIONAL id=39: Critical Eye — +15% crit at max health (handled in onCriticalHit)
@@ -232,44 +251,64 @@ public final class PerkEffectHandler {
         if (event.getSource().getEntity() instanceof Player attacker) {
             PerkManager perks = managerFor(attacker);
             UUID uuid = attacker.getUUID();
+            StatType weaponStat = WeaponResolver.statFor(attacker.getMainHandItem());
 
-            if (perks.isUnlocked(Perk.byId(0))) dmg *= 1.05f;
-            if (perks.isUnlocked(Perk.byId(6))) dmg *= 1.05f;
+            dmg *= PerkCombatScaling.coreWeaponDamageMultiplier(
+                    weaponStat,
+                    perks.isUnlocked(Perk.BRUTE_CORE),
+                    perks.isUnlocked(Perk.BLADE_CORE),
+                    perks.isUnlocked(Perk.PRECI_CORE));
+            dmg *= PerkCombatScaling.bruteTranscendenceDamageMultiplier(
+                    weaponStat,
+                    perks.isUnlocked(Perk.BRUTE_TRANSCENDENCE));
             if (perks.isUnlocked(Perk.byId(72))
                     && PerkState.isTrackedTarget(uuid, event.getEntity().getId())) {
                 dmg *= 1.05f;
             }
+            dmg *= CraftingSupportEffectHandler.sharpeningDamageMultiplier(
+                    perks.isUnlocked(Perk.FORGE_SITUATIONAL),
+                    attacker.getMainHandItem().isDamageableItem()
+                            && PerkState.isOnCooldown(uuid, Perk.FORGE_SITUATIONAL.id, 30_000L));
+
+            // TRACK_SITUATIONAL id=45: Sillage — hitting mobs leaves a scent trail.
+            if (event.getEntity() instanceof Mob target
+                    && perks.isUnlocked(Perk.TRACK_SITUATIONAL)) {
+                int scentTicks = PerkPerceptionScaling.scentTrailDurationTicks(true, target.isAlive());
+                if (scentTicks > 0) {
+                    target.addEffect(new MobEffectInstance(MobEffects.GLOWING, scentTicks, 0, false, false));
+                    PerkState.addTrackedTarget(uuid, target.getId());
+                }
+            }
 
             // BRUTE_SITUATIONAL id=3: Berserker — +20% below 30% HP
-            if (perks.isUnlocked(Perk.byId(3))
+            if (perks.isUnlocked(Perk.BRUTE_SITUATIONAL)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BRUTE_SITUATIONAL)
                     && attacker.getHealth() < attacker.getMaxHealth() * 0.3f) {
                 dmg *= 1.20f;
             }
 
             // BRUTE_SYNERGY id=2: Crushing Force — +15% below 50% HP
-            if (perks.isUnlocked(Perk.byId(2))
+            if (perks.isUnlocked(Perk.BRUTE_SYNERGY)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BRUTE_SYNERGY)
                     && attacker.getHealth() < attacker.getMaxHealth() * 0.5f) {
                 dmg *= 1.15f;
             }
 
             // BRUTE_ACTIVE id=1: Mighty Swing — charged attack +10%
-            if (perks.isUnlocked(Perk.byId(1)) && attacker.isAutoSpinAttack()) {
+            if (perks.isUnlocked(Perk.BRUTE_ACTIVE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BRUTE_ACTIVE)
+                    && attacker.isAutoSpinAttack()) {
                 dmg *= 1.10f;
             }
 
             // BLADE_ACTIVE id=7: Flowing Strike — every 3rd hit double damage
-            if (perks.isUnlocked(Perk.byId(7))) {
+            if (perks.isUnlocked(Perk.BLADE_ACTIVE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BLADE_ACTIVE)) {
                 PerkState.recordComboHit(uuid, System.currentTimeMillis(), 5000);
                 if (PerkState.getComboCount(uuid, System.currentTimeMillis(), 5000) >= 3) {
                     dmg *= 2.0f;
                     PerkState.setCooldown(uuid, 7);
                 }
-            }
-
-            // BLADE_TRANSCENDENCE id=11: One With the Blade — all crit for 5s after kill
-            if (perks.isUnlocked(Perk.byId(11))
-                    && !PerkState.isOnCooldown(uuid, 11, 5000L)) {
-                // handled via onCriticalHit
             }
 
             // AGIL_ACTIVE id=19: Agile Strikes — moving attacks +10%
@@ -286,34 +325,37 @@ public final class PerkEffectHandler {
             }
 
             // RAPID_ACTIVE id=13: Double Strike — 10% chance to hit twice
-            if (perks.isUnlocked(Perk.byId(13)) && attacker.getRandom().nextFloat() < 0.10f) {
+            if (perks.isUnlocked(Perk.RAPID_ACTIVE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.RAPID_ACTIVE)
+                    && attacker.getRandom().nextFloat() < 0.10f) {
                 if (event.getEntity() instanceof LivingEntity target) {
                     target.hurt(attacker.damageSources().mobAttack(attacker), dmg * 0.5f);
                 }
             }
 
             // BRUTE_MASTERY id=4: Colossus — stun targets below 50% HP
-            if (perks.isUnlocked(Perk.byId(4)) && event.getEntity() instanceof LivingEntity target) {
+            if (perks.isUnlocked(Perk.BRUTE_MASTERY)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BRUTE_MASTERY)
+                    && event.getEntity() instanceof LivingEntity target) {
                 if (target.getHealth() < target.getMaxHealth() * 0.5f) {
                     target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2, false, false));
                     target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 1, false, false));
                 }
             }
 
-            // PRECI_CORE id=36: Steady Aim — +5% ranged damage
-            if (perks.isUnlocked(Perk.byId(36))) {
-                dmg *= 1.05f;
-            }
-
             // PRECI_MASTERY id=40: Deadshot — headshot multiplier +50%
-            if (perks.isUnlocked(Perk.byId(40)) && event.getEntity() instanceof LivingEntity target) {
+            if (perks.isUnlocked(Perk.PRECI_MASTERY)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.PRECI_MASTERY)
+                    && event.getEntity() instanceof LivingEntity target) {
                 if (attacker.getEyeY() - target.getEyeY() > 1.0) {
                     dmg *= 1.5f;
                 }
             }
 
             // PRECI_TRANSCENDENCE id=41: True Strike — ignore armor
-            if (perks.isUnlocked(Perk.byId(41)) && event.getEntity() instanceof LivingEntity target) {
+            if (perks.isUnlocked(Perk.PRECI_TRANSCENDENCE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.PRECI_TRANSCENDENCE)
+                    && event.getEntity() instanceof LivingEntity target) {
                 AttributeInstance armor = target.getAttribute(Attributes.ARMOR);
                 if (armor != null) {
                     savedArmorBase.put(target.getUUID(), armor.getBaseValue());
@@ -328,16 +370,27 @@ public final class PerkEffectHandler {
             }
 
             // PRECI_SITUATIONAL id=39: Critical Eye — +15% dmg at max health
-            if (perks.isUnlocked(Perk.byId(39))
+            if (perks.isUnlocked(Perk.PRECI_SITUATIONAL)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.PRECI_SITUATIONAL)
                     && attacker.getHealth() >= attacker.getMaxHealth()) {
                 dmg *= 1.15f;
             }
 
+            boolean projectileDamage = event.getSource().getDirectEntity() instanceof Projectile;
+            boolean markedProjectileTarget = projectileDamage
+                    && (event.getEntity().hasEffect(MobEffects.GLOWING)
+                    || PerkState.isTrackedTarget(uuid, event.getEntity().getId()));
+            dmg *= PerkCombatScaling.precisionMarkedProjectileDamageMultiplier(
+                    weaponStat,
+                    perks.isUnlocked(Perk.PRECI_SYNERGY),
+                    projectileDamage,
+                    markedProjectileTarget);
+
             // BLADE_TRANSCENDENCE id=11: One With the Blade — bonus dmg for 5s after kill
-            if (perks.isUnlocked(Perk.byId(11))
-                    && !PerkState.isOnCooldown(uuid, 11, 5000L)) {
-                dmg *= 1.5f;
-            }
+            dmg *= PerkCombatScaling.bladePostKillDamageMultiplier(
+                    weaponStat,
+                    perks.isUnlocked(Perk.BLADE_TRANSCENDENCE),
+                    PerkState.isOnCooldown(uuid, Perk.BLADE_TRANSCENDENCE.id, 5000L));
 
             // TRACK_SYNERGY id=44: Pack Hunter — extra damage near allies
             if (perks.isUnlocked(Perk.byId(44))) {
@@ -355,6 +408,9 @@ public final class PerkEffectHandler {
         if (event.getEntity() instanceof Player victim) {
             PerkManager perks = managerFor(victim);
             UUID uuid = victim.getUUID();
+            StatType victimWeaponStat = WeaponResolver.statFor(victim.getMainHandItem());
+            boolean dodgeTriggered = false;
+            boolean perfectDodgeTriggered = false;
 
             if (perks.isUnlocked(Perk.byId(24))) dmg *= 0.95f;
 
@@ -393,29 +449,49 @@ public final class PerkEffectHandler {
             }
 
             // SENSE_CORE id=48: Sixth Sense — 5% dodge chance
-            if (perks.isUnlocked(Perk.byId(48)) && victim.getRandom().nextFloat() < 0.05f) {
+            if (dmg > 0.0f && perks.isUnlocked(Perk.byId(48)) && victim.getRandom().nextFloat() < 0.05f) {
                 dmg = 0f;
-            }
-
-            // AGIL_SITUATIONAL id=21: Evasion — 20% dodge
-            if (perks.isUnlocked(Perk.byId(21)) && victim.getRandom().nextFloat() < 0.20f) {
-                dmg = 0f;
+                dodgeTriggered = true;
+                perfectDodgeTriggered = true;
                 PerkState.setLastDodge(uuid);
             }
 
-            // AGIL_TRANSCENDENCE id=23: Untouchable — 100% dodge for 3s after damage
-            if (perks.isUnlocked(Perk.byId(23))
-                    && !PerkState.isOnCooldown(uuid, 23, 3000L)
-                    && PerkState.getLastDodgeTime(uuid) > 0
-                    && System.currentTimeMillis() - PerkState.getLastDodgeTime(uuid) < 3000) {
+            // AGIL_SITUATIONAL id=21: Evasion — 20% dodge
+            if (dmg > 0.0f && perks.isUnlocked(Perk.byId(21)) && victim.getRandom().nextFloat() < 0.20f) {
                 dmg = 0f;
+                PerkState.setLastDodge(uuid);
+                dodgeTriggered = true;
+                perfectDodgeTriggered = true;
+            }
+
+            // AGIL_TRANSCENDENCE id=23: Untouchable — 100% dodge for 3s after taking damage.
+            if (dmg > 0.0f && PerkMobilityScaling.agilityUntouchableDodgesIncomingHit(
+                    perks.isUnlocked(Perk.AGIL_TRANSCENDENCE),
+                    PerkState.isOnCooldown(uuid, Perk.AGIL_TRANSCENDENCE.id, 3000L))) {
+                dmg = 0f;
+                PerkState.setLastDodge(uuid);
+                dodgeTriggered = true;
+                perfectDodgeTriggered = true;
             }
 
             // SENSE_MASTERY id=52: Foresight — dodge once per 10s
-            if (perks.isUnlocked(Perk.byId(52))
+            if (dmg > 0.0f
+                    && perks.isUnlocked(Perk.byId(52))
                     && !PerkState.isOnCooldown(uuid, 52, 10_000L)) {
                 dmg = 0f;
                 PerkState.setCooldown(uuid, 52, 10_000L);
+                PerkState.setLastDodge(uuid);
+                dodgeTriggered = true;
+                perfectDodgeTriggered = true;
+            }
+
+            if (dodgeTriggered) {
+                applyRapidDodgeEffects(victim, perks, perfectDodgeTriggered);
+            }
+
+            if (PerkMobilityScaling.agilityUntouchableStartsWindow(
+                    perks.isUnlocked(Perk.AGIL_TRANSCENDENCE), dmg)) {
+                PerkState.setCooldown(uuid, Perk.AGIL_TRANSCENDENCE.id, 3000L);
             }
 
             // WILL_ACTIVE id=79: Focused Mind — resist knockback when blocking
@@ -432,7 +508,9 @@ public final class PerkEffectHandler {
             }
 
             // BLADE_SITUATIONAL id=9: Parry Master — reflect 50% when blocking
-            if (perks.isUnlocked(Perk.byId(9)) && victim.isBlocking()
+            if (perks.isUnlocked(Perk.BLADE_SITUATIONAL)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(victimWeaponStat, Perk.BLADE_SITUATIONAL)
+                    && victim.isBlocking()
                     && event.getSource().getEntity() instanceof LivingEntity attacker) {
                 attacker.hurt(victim.damageSources().mobAttack(victim), dmg * 0.5f);
             }
@@ -467,6 +545,35 @@ public final class PerkEffectHandler {
     }
 
     @SubscribeEvent
+    public static void onProjectileImpact(ProjectileImpactEvent event) {
+        if (!(event.getProjectile() instanceof AbstractArrow arrow)
+                || arrow.level().isClientSide
+                || !(arrow.getOwner() instanceof Player owner)
+                || !(event.getRayTraceResult() instanceof EntityHitResult hit)
+                || !(hit.getEntity() instanceof LivingEntity primary)) {
+            return;
+        }
+
+        ItemStack weapon = arrow.getWeaponItem();
+        StatType weaponStat = weapon == null || weapon.isEmpty()
+                ? WeaponResolver.statFor(owner.getMainHandItem())
+                : WeaponResolver.statFor(weapon);
+        PerkManager perks = managerFor(owner);
+        if (!PerkCombatScaling.canPierceSecondaryTarget(
+                weaponStat, perks.isUnlocked(Perk.PRECI_ACTIVE), true)) {
+            return;
+        }
+
+        LivingEntity secondary = findPiercingSecondaryTarget(arrow, owner, primary, hit.getLocation());
+        if (secondary == null) {
+            return;
+        }
+
+        float damage = Math.max(1.0f, (float) arrow.getBaseDamage());
+        secondary.hurt(arrow.damageSources().arrow(arrow, owner), damage);
+    }
+
+    @SubscribeEvent
     public static void onLivingDamagePost(LivingDamageEvent.Post event) {
         LivingEntity target = event.getEntity();
         UUID uuid = target.getUUID();
@@ -488,6 +595,7 @@ public final class PerkEffectHandler {
 
             PerkManager perks = managerFor(player);
             UUID uuid = player.getUUID();
+            StatType killWeaponStat = WeaponResolver.statFor(player.getMainHandItem());
             PerkState.recordKill(uuid);
 
             // ENDUR_ACTIVE id=31: Second Wind
@@ -503,7 +611,8 @@ public final class PerkEffectHandler {
             }
 
             // BLADE_MASTERY id=10: Blade Storm AOE
-            if (perks.isUnlocked(Perk.byId(10))) {
+            if (perks.isUnlocked(Perk.BLADE_MASTERY)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(killWeaponStat, Perk.BLADE_MASTERY)) {
                 player.level().getEntitiesOfClass(LivingEntity.class,
                         player.getBoundingBox().inflate(4),
                         e -> e != player && e.isAlive() && e != event.getEntity())
@@ -511,7 +620,9 @@ public final class PerkEffectHandler {
             }
 
             // BRUTE_TRANSCENDENCE id=5: Titan's Wrath — enemies explode on kill
-            if (perks.isUnlocked(Perk.byId(5)) && event.getEntity() != null) {
+            if (perks.isUnlocked(Perk.BRUTE_TRANSCENDENCE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(killWeaponStat, Perk.BRUTE_TRANSCENDENCE)
+                    && event.getEntity() != null) {
                 player.level().explode(null,
                         event.getEntity().getX(),
                         event.getEntity().getY(),
@@ -520,13 +631,15 @@ public final class PerkEffectHandler {
             }
 
             // BLADE_TRANSCENDENCE id=11: One With the Blade — all crit for 5s
-            if (perks.isUnlocked(Perk.byId(11))) {
+            if (perks.isUnlocked(Perk.BLADE_TRANSCENDENCE)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(killWeaponStat, Perk.BLADE_TRANSCENDENCE)) {
                 PerkState.setCooldown(uuid, 11, 5000L);
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 100, 1, false, false));
             }
 
             // RAPID_SYNERGY id=14: Blinding Speed — kills grant speed
-            if (perks.isUnlocked(Perk.byId(14))) {
+            if (perks.isUnlocked(Perk.RAPID_SYNERGY)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(killWeaponStat, Perk.RAPID_SYNERGY)) {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 1, false, false));
             }
 
@@ -553,21 +666,13 @@ public final class PerkEffectHandler {
             }
 
             // RAPID_SITUATIONAL id=15: Flurry — frenzy resets on kill, give stacks
-            if (perks.isUnlocked(Perk.byId(15))) {
+            if (perks.isUnlocked(Perk.RAPID_SITUATIONAL)
+                    && PerkCombatScaling.canUseWeaponFamilyPerk(killWeaponStat, Perk.RAPID_SITUATIONAL)) {
                 PerkState.addFrenzyStack(uuid);
             }
 
             // SENSE_ACTIVE id=49: Treasure Hunter — double XP (handled in onLivingExperienceDrop)
-            // COOK_MASTERY id=64: Feast — share food effect (handled via potion clouds)
-            if (perks.isUnlocked(Perk.byId(64))) {
-                player.level().getEntitiesOfClass(Player.class,
-                        player.getBoundingBox().inflate(8),
-                        p -> p != player && p.isAlive())
-                        .forEach(p -> {
-                            p.addEffect(new MobEffectInstance(MobEffects.SATURATION, 100, 0, false, false));
-                            p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, false, false));
-                        });
-            }
+            // COOK_MASTERY id=64: Feast — handled when food is eaten.
         }
     }
 
@@ -608,6 +713,54 @@ public final class PerkEffectHandler {
         }
     }
 
+    private static void applyRapidDodgeEffects(Player player, PerkManager perks, boolean perfectDodgeTriggered) {
+        int slowTicks = PerkMobilityScaling.rapidDodgeSlowdownDurationTicks(
+                perks.isUnlocked(Perk.RAPID_MASTERY), perfectDodgeTriggered);
+        if (slowTicks > 0) {
+            player.level().getEntitiesOfClass(Mob.class,
+                    player.getBoundingBox().inflate(10),
+                    LivingEntity::isAlive)
+                    .forEach(mob -> mob.addEffect(new MobEffectInstance(
+                            MobEffects.MOVEMENT_SLOWDOWN, slowTicks, 1, false, false)));
+        }
+
+        UUID uuid = player.getUUID();
+        boolean stopReady = perks.isUnlocked(Perk.RAPID_TRANSCENDENCE)
+                && !PerkState.isOnCooldown(uuid, Perk.RAPID_TRANSCENDENCE.id, 10_000L);
+        int stopTicks = PerkMobilityScaling.rapidPerfectDodgeStopDurationTicks(stopReady, perfectDodgeTriggered);
+        if (stopTicks <= 0) {
+            return;
+        }
+
+        player.level().getEntitiesOfClass(Mob.class,
+                player.getBoundingBox().inflate(12),
+                LivingEntity::isAlive)
+                .forEach(mob -> {
+                    mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, stopTicks, 9, false, false));
+                    mob.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, stopTicks, 4, false, false));
+                });
+        PerkState.setCooldown(uuid, Perk.RAPID_TRANSCENDENCE.id, 10_000L);
+    }
+
+    private static void showSenseHealthReadout(Player player) {
+        player.level().getEntitiesOfClass(LivingEntity.class,
+                player.getBoundingBox().inflate(32),
+                e -> e != player && e.isAlive())
+                .stream()
+                .min((left, right) -> Double.compare(player.distanceToSqr(left), player.distanceToSqr(right)))
+                .ifPresent(target -> {
+                    if (!PerkPerceptionScaling.canRevealHealthReadout(true, target.isAlive())) {
+                        return;
+                    }
+                    String message = String.format(java.util.Locale.ROOT,
+                            "%s: %.1f/%.1f HP",
+                            target.getDisplayName().getString(),
+                            target.getHealth(),
+                            target.getMaxHealth());
+                    player.displayClientMessage(Component.literal(message), true);
+                });
+    }
+
     private static void applyMovementSpeedModifier(Player player, double multiplier) {
         AttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attr == null) return;
@@ -634,5 +787,43 @@ public final class PerkEffectHandler {
     private static void removeAttackSpeedModifier(Player player) {
         AttributeInstance attr = player.getAttribute(Attributes.ATTACK_SPEED);
         if (attr != null) attr.removeModifier(ATTACK_SPEED_MOD_ID);
+    }
+
+    private static LivingEntity findPiercingSecondaryTarget(AbstractArrow arrow,
+                                                            Player owner,
+                                                            LivingEntity primary,
+                                                            Vec3 impactLocation) {
+        Vec3 direction = arrow.getDeltaMovement();
+        if (direction.lengthSqr() < 1.0E-6) {
+            return null;
+        }
+        direction = direction.normalize();
+        Vec3 end = impactLocation.add(direction.scale(5.0d));
+        AABB searchBox = new AABB(impactLocation, end).inflate(1.25d);
+        LivingEntity best = null;
+        double bestProjection = Double.MAX_VALUE;
+
+        for (LivingEntity candidate : arrow.level().getEntitiesOfClass(LivingEntity.class, searchBox, LivingEntity::isAlive)) {
+            if (candidate == primary || candidate == owner || candidate == arrow.getOwner()) {
+                continue;
+            }
+            double projection = candidate.position()
+                    .add(0.0d, candidate.getBbHeight() * 0.5d, 0.0d)
+                    .subtract(impactLocation)
+                    .dot(direction);
+            if (projection <= 0.25d || projection > 5.0d) {
+                continue;
+            }
+            Vec3 closestPoint = impactLocation.add(direction.scale(projection));
+            double distanceSqr = candidate.position()
+                    .add(0.0d, candidate.getBbHeight() * 0.5d, 0.0d)
+                    .distanceToSqr(closestPoint);
+            if (distanceSqr <= 1.75d && projection < bestProjection) {
+                best = candidate;
+                bestProjection = projection;
+            }
+        }
+
+        return best;
     }
 }

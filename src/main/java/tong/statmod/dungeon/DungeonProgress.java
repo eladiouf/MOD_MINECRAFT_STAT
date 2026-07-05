@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 import tong.statmod.STATMod;
 import tong.statmod.config.Config;
+import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
@@ -50,7 +51,7 @@ public final class DungeonProgress {
         if (bossReward) {
             int gain = Config.getDungeonBossStatGain();
             int statIndex = PHYSICAL_STAT_INDICES[player.getRandom().nextInt(PHYSICAL_STAT_INDICES.length)];
-            data.addLevels(statIndex, gain);
+            RaceEffectApplier.addLevels(player, statIndex, gain, data, true);
             StatType stat = StatType.byIndex(statIndex);
             String statName = stat != null ? stat.displayName : "?";
             player.displayClientMessage(Component.translatable(

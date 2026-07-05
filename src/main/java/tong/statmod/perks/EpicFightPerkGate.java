@@ -54,6 +54,25 @@ public final class EpicFightPerkGate {
         return true;
     }
 
+    public static boolean revokeReward(Player player, Perk perk) {
+        if (player == null || perk == null || !ModList.get().isLoaded("epicfight")) {
+            return false;
+        }
+
+        Skill skill = resolveSkill(perk);
+        if (skill == null) {
+            return false;
+        }
+
+        var patch = EpicFightCapabilities.getPlayerPatch(player);
+        if (patch == null) {
+            return false;
+        }
+
+        PlayerSkills skills = patch.getPlayerSkills();
+        return skills != null && skills.removeLearnedSkill(skill);
+    }
+
     private static Skill resolveSkill(Perk perk) {
         String id = resolveSkillId(perk);
         if (id == null) {

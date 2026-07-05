@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_axe_head_low_magisteel"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:rough_axe_head_low_magisteel"
+    },
+    {
+      "item": "statmod:rough_axe_head_low_magisteel"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:rough_axe_head_low_magisteel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:low_magisteel_pickaxe"
+  }
+}

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.perks.PerkPointAllocator;
+import tong.statmod.perks.PerkManager;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -21,9 +22,7 @@ public class RespecStoneItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (level.isClientSide) return super.use(level, player, hand);
         PlayerStatData data = player.getData(ModAttachments.STATS);
-        int totalRefund = PerkPointAllocator.refundPaidUnlockedPerks(data);
-
-        data.clearUnlockedPerks();
+        int totalRefund = new PerkManager(data).resetAll(player, true);
         player.sendSystemMessage(Component.literal("All perks reset! " + totalRefund + " points refunded."));
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             SyncHelper.syncPerks(serverPlayer);

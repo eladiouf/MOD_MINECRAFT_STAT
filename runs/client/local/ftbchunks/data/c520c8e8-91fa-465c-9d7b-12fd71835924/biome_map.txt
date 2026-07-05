@@ -1,0 +1,8 @@
+#34D minecraft:deep_lukewarm_ocean
+#010 minecraft:forest
+#79A minecraft:lukewarm_ocean
+#4F1 minecraft:ocean
+#3DC minecraft:plains
+#67B minecraft:savanna
+#774 minecraft:sunflower_plains
+#495 minecraft:the_void

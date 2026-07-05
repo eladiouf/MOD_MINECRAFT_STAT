@@ -1,0 +1,20 @@
+{
+  "type": "overgeared:item_to_tooltype",
+  "item": [
+    { "item": "statmod:rough_dagger_blade_gold" },
+    { "item": "statmod:rough_dagger_blade_tin" },
+    { "item": "statmod:rough_dagger_blade_bronze" },
+    { "item": "statmod:rough_dagger_blade_diamond" },
+    { "item": "statmod:rough_dagger_blade_pyrium" },
+    { "item": "statmod:rough_dagger_blade_arcane" },
+    { "item": "statmod:rough_dagger_blade_mithril" },
+    { "item": "statmod:rough_dagger_blade_low_magisteel" },
+    { "item": "statmod:rough_dagger_blade_magisteel" },
+    { "item": "statmod:rough_dagger_blade_pure_magisteel" },
+    { "item": "statmod:rough_dagger_blade_high_magisteel" },
+    { "item": "statmod:rough_dagger_blade_orichalcum" },
+    { "item": "statmod:rough_dagger_blade_adamantite" },
+    { "item": "statmod:rough_dagger_blade_hihiirokane" }
+  ],
+  "tooltype": "shovel"
+}

@@ -7,6 +7,9 @@ public final class StaminaManager {
         if (data == null || amount <= 0.0f) {
             return true;
         }
+        if (!Float.isFinite(amount)) {
+            return false;
+        }
         if (data.currentStamina() < amount) {
             return false;
         }
@@ -16,7 +19,7 @@ public final class StaminaManager {
     }
 
     public static void restore(StaminaData data, float amount, int enduranceLevel) {
-        if (data == null || amount <= 0.0f) {
+        if (data == null || amount <= 0.0f || !Float.isFinite(amount)) {
             return;
         }
         float max = StaminaRules.maxStamina(enduranceLevel);
@@ -32,6 +35,7 @@ public final class StaminaManager {
         if (data == null) {
             return;
         }
+        clampToMax(data, enduranceLevel);
         if (sleeping) {
             restore(data, 0.35f, enduranceLevel);
             relieveFatigue(data, StaminaRules.fatigueReliefPerTick(false, true));
@@ -45,7 +49,7 @@ public final class StaminaManager {
     }
 
     public static void consumeUnchecked(StaminaData data, float amount) {
-        if (data == null || amount <= 0.0f) {
+        if (data == null || amount <= 0.0f || !Float.isFinite(amount)) {
             return;
         }
         data.setCurrentStamina(data.currentStamina() - amount);
@@ -53,9 +57,16 @@ public final class StaminaManager {
     }
 
     public static void relieveFatigue(StaminaData data, float amount) {
-        if (data == null || amount <= 0.0f) {
+        if (data == null || amount <= 0.0f || !Float.isFinite(amount)) {
             return;
         }
         data.setFatigueDebt(data.fatigueDebt() - amount);
+    }
+
+    private static void clampToMax(StaminaData data, int enduranceLevel) {
+        float max = StaminaRules.maxStamina(enduranceLevel);
+        if (data.currentStamina() > max) {
+            data.setCurrentStamina(max);
+        }
     }
 }

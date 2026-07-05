@@ -1,0 +1,7 @@
+#292 minecraft:frozen_ocean
+#3A0 minecraft:frozen_river
+#72D minecraft:snowy_beach
+#4E5 minecraft:snowy_plains
+#340 minecraft:snowy_taiga
+#51A minecraft:stony_shore
+#495 minecraft:the_void

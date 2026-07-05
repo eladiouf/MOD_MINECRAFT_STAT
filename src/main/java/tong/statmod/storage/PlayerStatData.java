@@ -399,7 +399,7 @@ public class PlayerStatData {
     public void setDungeonPoints(int points) { dungeonPoints = Math.max(0, points); }
     /** Ajoute des points (jamais sous 0). Retourne le nouveau total. */
     public int addDungeonPoints(int delta) {
-        dungeonPoints = Math.max(0, dungeonPoints + delta);
+        dungeonPoints = saturatingAddNonNegative(dungeonPoints, delta);
         return dungeonPoints;
     }
 
@@ -492,8 +492,10 @@ public class PlayerStatData {
         boolean magicLocked = (magicRace == null);
         for (int i = 0; i < STAT_COUNT; i++) {
             int level = levels[i];
-            // Skip les stats magiques quand pas de race choisie.
-            if (magicLocked && i >= 7 && i <= 15 && level == 0) continue;
+            StatType stat = StatType.byIndex(i);
+            // Tant que la race magique n'est pas choisie, les stats purement magiques
+            // ne doivent pas gonfler le niveau global via commandes, migration ou data legacy.
+            if (magicLocked && isMagicLockedStat(stat)) continue;
             // Skip les stats jamais montées — n'inclure que celles avec ≥ 1.
             if (level == 0) continue;
             sum += level;
@@ -639,5 +641,13 @@ public class PlayerStatData {
                 xp[i] = 0;
             }
         }
+    }
+
+    private static boolean isMagicLockedStat(StatType stat) {
+        if (stat == null) {
+            return false;
+        }
+        return stat.family() == StatFamily.MAGICAL_CORE
+                || stat.family() == StatFamily.ELEMENTAL_SPECIALIZATION;
     }
 }

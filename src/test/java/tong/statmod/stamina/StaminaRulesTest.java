@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class StaminaRulesTest {
     @Test
     void maxStaminaUsesBasePlusEnduranceScaling() {
-        assertEquals(100.0f, StaminaRules.maxStamina(0));
-        assertEquals(150.0f, StaminaRules.maxStamina(50));
+        assertEquals(300.0f, StaminaRules.maxStamina(0));
+        assertEquals(450.0f, StaminaRules.maxStamina(50));
     }
 
     @Test

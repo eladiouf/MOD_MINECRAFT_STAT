@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_arcane"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "statmod:rough_blade_arcane"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "irons_spellbooks:claymore"
+  }
+}

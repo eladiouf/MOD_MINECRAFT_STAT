@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "slu:storm_curved_sword"
+  }
+}

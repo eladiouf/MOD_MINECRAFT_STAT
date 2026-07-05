@@ -1,0 +1,7 @@
+#4CA minecraft:dripstone_caves
+#010 minecraft:forest
+#4B0 minecraft:jungle
+#5FF minecraft:river
+#67B minecraft:savanna
+#706 minecraft:savanna_plateau
+#495 minecraft:the_void

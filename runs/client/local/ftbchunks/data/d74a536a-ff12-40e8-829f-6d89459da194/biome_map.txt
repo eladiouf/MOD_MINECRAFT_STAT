@@ -1,0 +1,9 @@
+#556 minecraft:beach
+#34D minecraft:deep_lukewarm_ocean
+#010 minecraft:forest
+#79A minecraft:lukewarm_ocean
+#28D minecraft:mangrove_swamp
+#5FF minecraft:river
+#67B minecraft:savanna
+#495 minecraft:the_void
+#579 minecraft:windswept_savanna

@@ -1,0 +1,14 @@
+{
+  "bookGuiScale": 0,
+  "clickedVisualize": false,
+  "bookData": {
+    "parcool:parcool_guide": {
+      "viewedEntries": [
+        "parcool:about/stamina",
+        "parcool:about/about_parcool"
+      ],
+      "bookmarks": [],
+      "completedManualQuests": []
+    }
+  }
+}

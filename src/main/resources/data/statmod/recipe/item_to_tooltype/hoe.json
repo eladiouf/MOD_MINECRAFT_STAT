@@ -1,0 +1,20 @@
+{
+  "type": "overgeared:item_to_tooltype",
+  "item": [
+    { "item": "statmod:rough_bow_limb_gold" },
+    { "item": "statmod:rough_bow_limb_tin" },
+    { "item": "statmod:rough_bow_limb_bronze" },
+    { "item": "statmod:rough_bow_limb_diamond" },
+    { "item": "statmod:rough_bow_limb_pyrium" },
+    { "item": "statmod:rough_bow_limb_arcane" },
+    { "item": "statmod:rough_bow_limb_mithril" },
+    { "item": "statmod:rough_bow_limb_low_magisteel" },
+    { "item": "statmod:rough_bow_limb_magisteel" },
+    { "item": "statmod:rough_bow_limb_pure_magisteel" },
+    { "item": "statmod:rough_bow_limb_high_magisteel" },
+    { "item": "statmod:rough_bow_limb_orichalcum" },
+    { "item": "statmod:rough_bow_limb_adamantite" },
+    { "item": "statmod:rough_bow_limb_hihiirokane" }
+  ],
+  "tooltype": "hoe"
+}

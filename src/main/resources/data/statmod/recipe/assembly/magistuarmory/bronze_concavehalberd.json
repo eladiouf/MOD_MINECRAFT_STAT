@@ -6,7 +6,28 @@
       "item": "statmod:rough_spear_tip_bronze"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:rough_spear_tip_bronze"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "minecraft:iron_ingot"
     }
   ],
   "result": {

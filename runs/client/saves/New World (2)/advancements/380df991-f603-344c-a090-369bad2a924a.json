@@ -1,176 +1,158 @@
 {
-  "minecraft:recipes/decorations/crafting_table": {
-    "criteria": {
-      "unlock_right_away": "2026-06-30 20:30:43 +0000"
-    },
-    "done": true
-  },
-  "xbbsroaringknightmod:root_roaring_knight": {
-    "criteria": {
-      "root_roaring_knight": "2026-06-30 20:30:43 +0000"
-    },
-    "done": true
-  },
-  "overgeared:root": {
-    "criteria": {
-      "Trigger": "2026-06-30 20:30:43 +0000"
-    },
-    "done": true
-  },
-  "parcool:grant_parcool_guide": {
-    "criteria": {
-      "tick": "2026-06-30 20:30:43 +0000"
-    },
-    "done": true
-  },
-  "minecraft:adventure/adventuring_time": {
-    "criteria": {
-      "minecraft:swamp": "2026-06-30 20:30:45 +0000",
-      "minecraft:old_growth_spruce_taiga": "2026-06-30 20:35:23 +0000"
-    },
-    "done": false
-  },
-  "tensura:fast_learner": {
-    "criteria": {
-      "skill": "2026-06-30 20:30:48 +0000"
-    },
-    "done": true
-  },
-  "tensura:real_adventure": {
-    "criteria": {
-      "ability": "2026-06-30 20:30:48 +0000"
-    },
-    "done": true
-  },
-  "tensura:reincarnated": {
-    "criteria": {
-      "reincarnation": "2026-06-30 20:30:48 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/cherry_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/bamboo_raft": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/transportation/palm_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/spruce_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/birch_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/oak_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/mangrove_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/acacia_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/jungle_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/dark_oak_boat": {
-    "criteria": {
-      "in_water": "2026-06-30 20:30:58 +0000"
-    },
-    "done": true
-  },
   "tensura:d_rank": {
     "criteria": {
-      "ep": "2026-06-30 20:31:15 +0000"
+      "ep": "2026-07-04 20:24:44 +0000"
     },
     "done": true
   },
-  "minecraft:recipes/redstone/dispenser": {
+  "l2hostility:hostility/patchouli": {
     "criteria": {
-      "has_bow": "2026-06-30 20:34:10 +0000"
-    },
-    "done": true
-  },
-  "minecraft:husbandry/root": {
-    "criteria": {
-      "consumed_item": "2026-06-30 20:35:47 +0000"
-    },
-    "done": true
-  },
-  "tensura:start_smithing": {
-    "criteria": {
-      "schematic": "2026-06-30 20:35:47 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/bottles_of_medium_crystal": {
-    "criteria": {
-      "has_medium_crystal": "2026-06-30 21:52:03 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/building_blocks/medium_quality_magic_crystal_blockfrom_medium_quality_magic_crystal": {
-    "criteria": {
-      "has_medium_quality_magic_crystal": "2026-06-30 21:52:03 +0000"
+      "0": "2026-07-04 20:26:51 +0000"
     },
     "done": true
   },
   "tensura:empowerment": {
     "criteria": {
-      "ep": "2026-06-30 21:52:03 +0000"
+      "ep": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-07-04 20:23:28 +0000"
     },
     "done": true
   },
   "minecraft:recipes/decorations/chest": {
     "criteria": {
-      "has_lots_of_items": "2026-06-30 21:52:03 +0000"
+      "has_lots_of_items": "2026-07-04 20:26:57 +0000"
     },
     "done": true
   },
-  "tensura:getcha_better_leathers": {
+  "minecraft:adventure/kill_all_mobs": {
     "criteria": {
-      "monster_leathers": "2026-06-30 21:52:03 +0000"
+      "minecraft:zombie": "2026-07-04 20:26:51 +0000"
+    },
+    "done": false
+  },
+  "mowziesmobs:root": {
+    "criteria": {
+      "custom_test_name": "2026-07-04 20:23:28 +0000"
     },
     "done": true
   },
-  "tensura:recipes/misc/pouch_c": {
+  "tensura:real_adventure": {
     "criteria": {
-      "has_monster_leather_c": "2026-06-30 21:52:03 +0000"
+      "ability": "2026-07-04 20:24:06 +0000"
+    },
+    "done": true
+  },
+  "born_in_chaos_v1:squireofthe_dark_lord": {
+    "criteria": {
+      "squireofthe_dark_lord_5": "2026-07-04 20:24:59 +0000"
+    },
+    "done": false
+  },
+  "born_in_chaos_v1:chaos_knight": {
+    "criteria": {
+      "chaos_knight_0": "2026-07-04 20:25:53 +0000"
     },
     "done": true
   },
   "minecraft:adventure/root": {
     "criteria": {
-      "killed_something": "2026-06-30 21:52:03 +0000"
+      "killed_something": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:hostility/root": {
+    "criteria": {
+      "0": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "parcool:grant_parcool_guide": {
+    "criteria": {
+      "tick": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "born_in_chaos_v1:bornin_chaos": {
+    "criteria": {
+      "bornin_chaos_0": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "slu:souls_like_universe": {
+    "criteria": {
+      "souls_like_universe_0": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:recipes/misc/chaos_ingot": {
+    "criteria": {
+      "has_hostility_orb": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:recipes/misc/bottle_of_sanity_craft": {
+    "criteria": {
+      "has_hostility_orb": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "xbbsroaringknightmod:root_roaring_knight": {
+    "criteria": {
+      "root_roaring_knight": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "lootr:root": {
+    "criteria": {
+      "always_true": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "tensura:fast_learner": {
+    "criteria": {
+      "skill": "2026-07-04 20:24:06 +0000"
+    },
+    "done": true
+  },
+  "apotheosis:progression/root": {
+    "criteria": {
+      "tick": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "overgeared:root": {
+    "criteria": {
+      "Trigger": "2026-07-04 20:23:28 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/kill_a_mob": {
+    "criteria": {
+      "minecraft:zombie": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:beach": "2026-07-04 20:24:10 +0000",
+      "minecraft:plains": "2026-07-04 20:23:29 +0000"
+    },
+    "done": false
+  },
+  "l2hostility:hostility/kill_first": {
+    "criteria": {
+      "0": "2026-07-04 20:26:51 +0000"
+    },
+    "done": true
+  },
+  "tensura:reincarnated": {
+    "criteria": {
+      "reincarnation": "2026-07-04 20:24:06 +0000"
     },
     "done": true
   },

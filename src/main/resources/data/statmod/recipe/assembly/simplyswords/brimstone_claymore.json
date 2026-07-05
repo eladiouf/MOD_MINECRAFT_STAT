@@ -1,4 +1,4 @@
-﻿{
+{
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
@@ -6,7 +6,28 @@
       "item": "statmod:rough_blade_pure_magisteel"
     },
     {
+      "item": "statmod:claymore_pommel"
+    },
+    {
       "item": "statmod:runic_grip"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "statmod:rough_blade_pure_magisteel"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:copper_ingot"
     }
   ],
   "result": {
@@ -14,4 +35,3 @@
     "id": "simplyswords:brimstone_claymore"
   }
 }
-

@@ -6,7 +6,28 @@
       "item": "statmod:rough_spear_tip_hihiirokane"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

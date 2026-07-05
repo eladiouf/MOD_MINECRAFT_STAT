@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "W": {
+      "item": "statmod:wooden_grip"
+    }
+  },
+  "pattern": [
+    " N ",
+    "WIW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:halberd_socket"
+  }
+}

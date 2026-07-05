@@ -12,9 +12,15 @@ public final class ClientStaminaCache {
     private ClientStaminaCache() {}
 
     public static void update(float newCurrentStamina, float newFatigueDebt, boolean newMeditating) {
-        currentStamina = newCurrentStamina;
-        fatigueDebt = newFatigueDebt;
+        currentStamina = sanitizeNonNegative(newCurrentStamina);
+        fatigueDebt = sanitizeNonNegative(newFatigueDebt);
         meditating = newMeditating;
+    }
+
+    public static void reset() {
+        currentStamina = 0.0f;
+        fatigueDebt = 0.0f;
+        meditating = false;
     }
 
     public static float getCurrentStamina() {
@@ -27,5 +33,9 @@ public final class ClientStaminaCache {
 
     public static boolean isMeditating() {
         return meditating;
+    }
+
+    private static float sanitizeNonNegative(float value) {
+        return Float.isFinite(value) ? Math.max(0.0f, value) : 0.0f;
     }
 }

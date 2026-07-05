@@ -50,6 +50,7 @@ class MagicEligibilityResolverTest {
         // 0 magic points + saturated stats → bloqué par cost
         d.setLevel(StatType.ARCANE_POWER.index, 20);
         d.setLevel(StatType.ERUDITION.index, 20);
+        d.setMagicPoints(0);
         MagicNode root = MagicTreeCatalog.byId("common/foundation/arcane_focus");
         assertEquals(MagicEligibilityResolver.Failure.NOT_ENOUGH_POINTS,
                 MagicEligibilityResolver.evaluate(d, root).failure());
@@ -82,13 +83,14 @@ class MagicEligibilityResolverTest {
     // ---------- 3 gates stats ----------
 
     @Test
-    void low_arcane_power_blocks_with_STAT_REQUIREMENT_NOT_MET() {
+    void low_arcane_power_blocks_t2_tier() {
         PlayerStatData d = fullyEquipped(MagicRace.ELF, MagicBranch.FIRE);
-        d.setLevel(StatType.ARCANE_POWER.index, 0); // sous le seuil
+        d.setLevel(StatType.ARCANE_POWER.index, 0); // sous le seuil T2
         d.addMagicNode("common/foundation/arcane_focus");
-        d.addMagicNode("common/foundation/mana_well");
-        MagicNode opener = MagicTreeCatalog.byId("fire/opener/ignition");
-        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, opener);
+        d.addMagicNode("fire/opener/ignition");
+        d.addMagicNode("fire/tier/ember_path");
+        MagicNode flamePath = MagicTreeCatalog.byId("fire/tier/flame_path");
+        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, flamePath);
         assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
         assertFalse(result.missingStats().isEmpty(), "missing stats should list ARCANE_POWER");
         assertTrue(result.missingStats().stream()
@@ -96,19 +98,17 @@ class MagicEligibilityResolverTest {
     }
 
     @Test
-    void low_tertiary_blocks_for_mobility_spell() {
-        // Start branch != Water pour que le delta -1 ne ramène pas AGILITY à 0.
+    void low_tertiary_blocks_t2_tier() {
         PlayerStatData d = fullyEquipped(MagicRace.HUMAN, MagicBranch.FIRE);
-        d.setLevel(StatType.AGILITY.index, 0); // sort de mobilité → AGILITY ≥ 1 required
+        d.setLevel(StatType.FIRE_AFFINITY.index, 0); // flame_path needs FIRE_AFFINITY ≥ 3
         d.addMagicNode("common/foundation/arcane_focus");
-        d.addMagicNode("common/foundation/mana_well");
-        d.addMagicNode("water/opener/ice_awakening");
-        d.addMagicNode("water/tier/frost_path");
-        MagicNode frostStep = MagicTreeCatalog.byId("water/signature/frost_step");
-        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, frostStep);
+        d.addMagicNode("fire/opener/ignition");
+        d.addMagicNode("fire/tier/ember_path");
+        MagicNode flamePath = MagicTreeCatalog.byId("fire/tier/flame_path");
+        MagicEligibilityResolver.Result result = MagicEligibilityResolver.evaluate(d, flamePath);
         assertEquals(MagicEligibilityResolver.Failure.STAT_REQUIREMENT_NOT_MET, result.failure());
         assertTrue(result.missingStats().stream()
-                .anyMatch(g -> g.contains("Agility")));
+                .anyMatch(g -> g.contains("Fire Affinity")));
     }
 
     @Test

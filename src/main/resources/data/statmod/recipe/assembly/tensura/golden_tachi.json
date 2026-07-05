@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_gold"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:golden_tachi"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:steel_sword_blade"
+    },
+    {
+      "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "overgeared:steel_sword_blade"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "magistuarmoryaddon:steel_scimitar"
+  }
+}

@@ -6,7 +6,25 @@
       "item": "overgeared:steel_axe_head"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "statmod:warhammer_core"
     }
   ],
   "result": {

@@ -22,7 +22,7 @@ class SchoolProgressTrackerTest {
         int granted = SchoolProgressTracker.applyMastery(d, MagicBranch.FIRE, 50);
         assertEquals(0, granted);
         assertEquals(50, d.getSchoolMasteryProgress(MagicBranch.FIRE));
-        assertEquals(0, d.getMagicPoints());
+        assertEquals(5, d.getMagicPoints());
     }
 
     @Test
@@ -32,7 +32,7 @@ class SchoolProgressTrackerTest {
         assertEquals(1, granted, "125 / 100 = 1 continuous point");
         // Sous Mission ε, le progress stocke le lifetime cumulé (125), pas un remainder.
         assertEquals(125, d.getSchoolMasteryProgress(MagicBranch.FIRE));
-        assertEquals(1, d.getMagicPoints());
+        assertEquals(6, d.getMagicPoints());
     }
 
     @Test
@@ -44,7 +44,7 @@ class SchoolProgressTrackerTest {
         int granted = SchoolProgressTracker.applyMastery(d, MagicBranch.FIRE, 80);
         assertEquals(1, granted);
         assertEquals(160, d.getSchoolMasteryProgress(MagicBranch.FIRE));
-        assertEquals(1, d.getMagicPoints());
+        assertEquals(6, d.getMagicPoints());
     }
 
     @Test

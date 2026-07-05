@@ -254,7 +254,8 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/DungeonVaultHandler.java` | Conquête des étages trésor : ouvrir le coffre (`RightClickBlock`) → `DungeonProgress` |
 | `dungeon/FloorPalette.java` | Palette par **tier** EARLY/MID/LATE/ABYSS (implémente `BlockPalette`). Sert de fallback + pilote la difficulté (armures des salles, végétation du pourtour) |
 | `dungeon/DungeonSpawnGuard.java` | Liste blanche stricte : autorise seulement `AUTHORIZED_TAG` + invocations de boss suivi ; annule tout le reste |
-| `dungeon/DungeonBossAltarBlock.java` | Bloc autel activable par le joueur pour spawner les boss du roster |
+| `dungeon/DungeonBossAltarBlock.java` | Bloc autel activable par le joueur pour spawner les boss du roster (éclate les entrées duo/vague sur les virgules) |
+| `dungeon/DungeonBossArena.java` | Arène de boss **façonnée selon le type du boss** (AQUATIC bassin, FLYING arène haute, COLOSSUS fosse, INFERNAL magma, UNDEAD os/soul sand, ARENA colonnes) déduit de l'id du roster |
 | `dungeon/DungeonBossRoster.java` | Roster prédéfini de 30 étages boss (floor → boss SLU/Vanilla) |
 | `dungeon/DungeonBossHandler.java` | Handler `LivingDeathEvent` : sur boss floor, tout kill joueur → +stats + unlock étage suivant (fixé 2026-07-03) |
 | `dungeon/DungeonXpMultiplier.java` | Multiplicateur d'XP par étage |

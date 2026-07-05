@@ -6,7 +6,34 @@
       "item": "overgeared:iron_sword_blade"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "overgeared:iron_sword_blade"
     }
   ],
   "result": {

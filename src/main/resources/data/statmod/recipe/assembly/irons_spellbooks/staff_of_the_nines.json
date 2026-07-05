@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_staff_core_arcane"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:rough_staff_core_arcane"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "irons_spellbooks:staff_of_the_nines"
+  }
+}

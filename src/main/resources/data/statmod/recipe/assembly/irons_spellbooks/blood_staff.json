@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_staff_core_pyrium"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:rough_staff_core_pyrium"
+    },
+    {
+      "item": "statmod:rough_staff_core_pyrium"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "statmod:rough_staff_core_pyrium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "irons_spellbooks:blood_staff"
+  }
+}

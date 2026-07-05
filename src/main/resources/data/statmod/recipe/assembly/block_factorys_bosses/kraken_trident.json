@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_spear_tip_mithril"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:prismarine_shard"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:prismarine_shard"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:prismarine_shard"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "block_factorys_bosses:kraken_trident"
+  }
+}

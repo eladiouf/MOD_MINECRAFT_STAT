@@ -1,6 +1,7 @@
 package tong.statmod.integration.parcool;
 
 import org.junit.jupiter.api.Test;
+import tong.statmod.stamina.StaminaRules;
 import tong.statmod.stamina.StaminaThreshold;
 import tong.statmod.stats.StatType;
 
@@ -35,8 +36,14 @@ class ParcoolCompatTest {
     void staminaCostsCoverBurstAndSustainedParkourActions() {
         assertEquals(4.0f, ParcoolCompat.staminaCostForAction("vault"), 0.0001f);
         assertEquals(8.0f, ParcoolCompat.staminaCostForAction("roll"), 0.0001f);
-        assertEquals(2.0f, ParcoolCompat.staminaTickDrainForAction("wallrun"), 0.0001f);
+        assertEquals(0.5f, ParcoolCompat.staminaTickDrainForAction("wallrun"), 0.0001f);
         assertEquals(0.0f, ParcoolCompat.staminaTickDrainForAction("vault"), 0.0001f);
+    }
+
+    @Test
+    void sustainedParkourDrainSupportsLongCombatMovementWithoutPassiveRegen() {
+        float twoMinutesWallrunCost = ParcoolCompat.staminaTickDrainForAction("wallrun") * 120.0f;
+        assertTrue(twoMinutesWallrunCost <= StaminaRules.BASE_MAX_STAMINA * 0.25f);
     }
 
     @Test

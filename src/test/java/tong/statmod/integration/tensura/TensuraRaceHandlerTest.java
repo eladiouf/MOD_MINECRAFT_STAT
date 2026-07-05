@@ -8,6 +8,8 @@ import tong.statmod.perks.Perk;
 import tong.statmod.storage.PlayerStatData;
 import tong.statmod.perks.PerkManager;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -126,6 +128,43 @@ class TensuraRaceHandlerTest {
         assertTrue(changed);
         assertEquals(tong.statmod.magic.MagicRace.ELF, data.getMagicRace());
         assertEquals(tong.statmod.magic.MagicBranch.AIR, data.getChosenStartBranch());
+    }
+
+    @Test
+    void raceBonusRefreshIteratesRuntimeStatCount() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java",
+                "tong", "statmod", "integration", "tensura", "TensuraRaceHandler.java"));
+
+        assertTrue(source.contains("i < PlayerStatData.STAT_COUNT"),
+                "race bonus refresh must cover the runtime stat count");
+        assertFalse(source.contains("i < 23"),
+                "hardcoded stat-count loops desync when stats are added or removed");
+    }
+
+    @Test
+    void flatBonusAndXpMultiplierDelegateToRaceEffectApplier() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java",
+                "tong", "statmod", "integration", "tensura", "TensuraRaceHandler.java"));
+
+        assertTrue(source.contains("return RaceEffectApplier.getRaceFlatBonus(player, statIndex);"),
+                "TensuraRaceHandler.getFlatBonus should delegate to the central race effect logic");
+        assertTrue(source.contains("return RaceEffectApplier.getXpMultiplier(player, statIndex);"),
+                "TensuraRaceHandler.getXpMultiplier should delegate to the central race effect logic");
+        assertFalse(source.contains("RaceModifierRegistry.get(raceId).modifiers().stream()"),
+                "TensuraRaceHandler should not duplicate race modifier scans");
+    }
+
+    @Test
+    void magicRaceSyncRefreshesProgressionImmediatelyWhenItChangesGlobalLevel() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java",
+                "tong", "statmod", "integration", "tensura", "TensuraRaceHandler.java"));
+
+        assertTrue(source.contains("LevelUpHandler.grantPendingPerkTiers(data);"),
+                "magic race sync should immediately grant any newly reachable global-tier perk points");
+        assertTrue(source.contains("SyncHelper.syncStats(serverPlayer);"),
+                "magic race sync must refresh stat UI because global level can change when magical stats unlock");
+        assertTrue(source.contains("SyncHelper.syncPerks(serverPlayer);"),
+                "magic race sync must refresh perk UI immediately when those newly active magical stats cross a tier");
     }
 
     private static void assertHasMagicRaceBonuses(String raceId) {

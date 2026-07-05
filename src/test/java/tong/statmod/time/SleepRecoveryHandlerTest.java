@@ -3,6 +3,9 @@ package tong.statmod.time;
 import org.junit.jupiter.api.Test;
 import tong.statmod.stamina.StaminaData;
 
+import tong.statmod.stamina.StaminaRules;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SleepRecoveryHandlerTest {
@@ -12,7 +15,7 @@ class SleepRecoveryHandlerTest {
         data.setCurrentStamina(10.0f);
 
         SleepRecoveryHandler.applyWakeBonus(data, 50);
-        assertTrue(data.currentStamina() > 30.0f);
+        assertEquals(StaminaRules.maxStamina(50), data.currentStamina(), 0.0001f);
     }
 
     @Test

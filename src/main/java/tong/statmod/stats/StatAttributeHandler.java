@@ -8,7 +8,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tong.statmod.STATMod;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@EventBusSubscriber(modid = STATMod.MODID)
 public class StatAttributeHandler {
     private static final ResourceLocation RAPIDITE_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "rapidite_attack_speed");
     private static final ResourceLocation AGILITY_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "agility_movement_speed");

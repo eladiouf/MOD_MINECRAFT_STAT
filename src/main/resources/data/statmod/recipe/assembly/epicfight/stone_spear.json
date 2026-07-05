@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "epicfight:stone_spear"
+  }
+}

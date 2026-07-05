@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_axe_head_high_magisteel"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:rough_axe_head_high_magisteel"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:high_magisteel_axe"
+  }
+}

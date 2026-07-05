@@ -1,10 +1,12 @@
 ---
 title: Perks
-description: "Liste des 84 perks"
+description: "Liste des 138 perks"
 nav_order: 5
 ---
 
 # Perks
+
+STAT MOD expose 138 perks runtime : 6 tiers pour chacune des 23 stats.
 
 | Perk | Stat | Tier |
 |------|------|------|

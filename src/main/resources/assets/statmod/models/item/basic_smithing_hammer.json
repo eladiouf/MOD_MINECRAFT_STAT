@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "minecraft:item/mace"
+    "layer0": "statmod:item/basic_smithing_hammer"
   }
 }

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_low_magisteel"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:rough_blade_low_magisteel"
+    },
+    {
+      "item": "statmod:rough_blade_low_magisteel"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:low_magisteel_kodachi"
+  }
+}

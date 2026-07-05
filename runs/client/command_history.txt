@@ -1,1 +1,50 @@
+/statlevel all 1
+/effect clear
+/statdungeon unlock 100
+/statdungeon tp 10
+/statdungeon tp 20
+/statdungeon tp 30
+/statdungeon tp 40
+/statdungeon tp 10
+/statdungeon regen 10
+/kill
+/statdungeon unlock 100
+/statdungeon tp 10
+/kill @s
+/statdungeon tp 10
+/statdungeon unlock 50
+/statdungeon tp 10
+/gamemode survival
+/gamerule keepInventory true
+/kill
+/kill @e
+/epicfight stamina set 1000
+/epicfight stamina get @a 100
+/epicfight stamina
+/epicfight stamina add @a 100
+/statlevel all 80
+/statdungeon regen 1
+/statdungeon unlock 10
+/statdungeon regen 10
+/statdungeon regen 1
+/statdungeon unlock 10
+/statdungeon unlock 20
+/statdungeon unlock 30
 /tensura reset Dev race
+/statdungeon unlock 100
+/statdungeon tp 5
+/statdungeon tp 25
+/statdungeon tp 55
+/statdungeon tp 75
+/statdungeon tp 95
+/statdungeon tp 100
+/statdungeon tp 1
+/statlevel all 1
+/statperk 100
+/magic grantarcane 111
+/mana get Dev 100
+/mana get Dev 30
+/statdungeon tp 20
+/statdungeon tp 30
+/statdungeon tp 40
+/statdungeon tp 41

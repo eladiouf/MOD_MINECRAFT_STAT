@@ -25,8 +25,10 @@ public class PlayerListMixin {
         BatchSyncPayload payload = new BatchSyncPayload(
                 data.getLevels(), data.getXp(), data.getPerkPoints(), data.getUnlockedPerks(), data.getSoulLevel());
         PacketDistributor.sendToPlayer(player, payload);
+        SyncHelper.syncStats(player);
+        SyncHelper.syncStamina(player);
         SyncHelper.syncMagic(player);
         PuffishSkillsCompat.sync(player, data);
-        STATMod.LOGGER.info("Synced stat and magic data to {}", player.getName().getString());
+        STATMod.LOGGER.info("Synced stat, stamina and magic data to {}", player.getName().getString());
     }
 }

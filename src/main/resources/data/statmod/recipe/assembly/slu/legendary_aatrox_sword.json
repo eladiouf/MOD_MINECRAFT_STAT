@@ -6,7 +6,28 @@
       "item": "statmod:rough_blade_hihiirokane"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:rough_blade_hihiirokane"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:rough_blade_hihiirokane"
     }
   ],
   "result": {

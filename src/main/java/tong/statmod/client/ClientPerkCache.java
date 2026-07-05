@@ -14,11 +14,18 @@ public final class ClientPerkCache {
 
     public static void update(int[] perkIds, int[] points) {
         boolean[] next = new boolean[Perk.values().length];
-        for (int id : perkIds) {
-            if (id >= 0 && id < next.length) next[id] = true;
+        if (perkIds != null) {
+            for (int id : perkIds) {
+                if (id >= 0 && id < next.length) next[id] = true;
+            }
         }
         unlocked = next;
-        familyPoints = points.clone();
+        familyPoints = sanitizedCopy(points);
+    }
+
+    public static void reset() {
+        unlocked = new boolean[Perk.values().length];
+        familyPoints = new int[0];
     }
 
     public static boolean isUnlocked(Perk perk) {
@@ -35,4 +42,15 @@ public final class ClientPerkCache {
     }
 
     public static int[] getPerStatPoints() { return familyPoints.clone(); }
+
+    private static int[] sanitizedCopy(int[] source) {
+        if (source == null || source.length == 0) {
+            return new int[0];
+        }
+        int[] copy = new int[source.length];
+        for (int i = 0; i < source.length; i++) {
+            copy[i] = Math.max(0, source[i]);
+        }
+        return copy;
+    }
 }

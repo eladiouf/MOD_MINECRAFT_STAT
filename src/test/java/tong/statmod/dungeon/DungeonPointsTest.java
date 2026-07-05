@@ -36,6 +36,15 @@ public class DungeonPointsTest {
     }
 
     @Test
+    void pointsSaturateInsteadOfOverflowingNegative() {
+        PlayerStatData d = new PlayerStatData();
+        d.setDungeonPoints(Integer.MAX_VALUE - 5);
+
+        assertEquals(Integer.MAX_VALUE, d.addDungeonPoints(10));
+        assertEquals(Integer.MAX_VALUE, d.getDungeonPoints());
+    }
+
+    @Test
     void pointsCopiedOnDataCopy() {
         PlayerStatData src = new PlayerStatData();
         src.addDungeonPoints(77);

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:steel_sword_blade"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "overgeared:steel_sword_blade"
+    },
+    {
+      "item": "overgeared:steel_sword_blade"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "born_in_chaos_v1:spiritual_sword"
+  }
+}

@@ -6,7 +6,31 @@
       "item": "statmod:rough_spear_tip_gold"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:rabbit_hide"
+    },
+    {
+      "item": "statmod:rough_spear_tip_gold"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "minecraft:rabbit_hide"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:bamboo"
     }
   ],
   "result": {

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:rough_blade_diamond"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:diamond_short_sword"
+  }
+}

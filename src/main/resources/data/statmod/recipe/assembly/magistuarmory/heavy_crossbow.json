@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_bow_limb_diamond"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "statmod:rough_bow_limb_diamond"
+    },
+    {
+      "item": "minecraft:chain"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "magistuarmory:heavy_crossbow"
+  }
+}

@@ -104,4 +104,34 @@ class LevelUpHandlerTest {
         PerkPointAllocator.grantPointsToAllFamilies(new PlayerStatData(), 0);
         PerkPointAllocator.grantPointsToAllFamilies(new PlayerStatData(), -1);
     }
+
+    @Test
+    void grantPendingPerkTiersCreditsReachedTierAndPersistsMarker() {
+        PlayerStatData data = new PlayerStatData();
+        for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
+            data.setLevel(i, 10);
+        }
+
+        int granted = LevelUpHandler.grantPendingPerkTiers(data);
+
+        assertEquals(1, granted);
+        assertEquals(1, data.getLastPerkGrantTier());
+        assertEquals(1, data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+        assertEquals(1, data.getPerkPointsForStat(StatType.ARCANE_POWER.index));
+    }
+
+    @Test
+    void grantPendingPerkTiersDoesNothingWhenTierAlreadyGranted() {
+        PlayerStatData data = new PlayerStatData();
+        for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
+            data.setLevel(i, 10);
+        }
+        data.setLastPerkGrantTier(1);
+
+        int granted = LevelUpHandler.grantPendingPerkTiers(data);
+
+        assertEquals(0, granted);
+        assertEquals(1, data.getLastPerkGrantTier());
+        assertEquals(0, data.getPerkPointsForStat(StatType.BRUTE_FORCE.index));
+    }
 }

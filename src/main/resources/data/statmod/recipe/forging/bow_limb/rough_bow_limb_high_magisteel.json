@@ -1,23 +1,23 @@
 {
-  "type": "overgeared:forging",
-  "blueprint": [
-    "bow"
-  ],
-  "category": "TOOL_HEADS",
-  "hammering": 10,
-  "key": {
-    "#": {
-      "item": "statmod:heated_high_magisteel_ingot"
-    }
-  },
-  "pattern": [
-    "##",
-    "# "
-  ],
-  "result": {
-    "count": 1,
-    "id": "statmod:rough_bow_limb_high_magisteel"
-  },
-  "show_notification": false,
-  "tier": "diamond"
+    "type":  "overgeared:forging",
+    "blueprint":  [
+                      "hoe"
+                  ],
+    "category":  "TOOL_HEADS",
+    "hammering":  10,
+    "key":  {
+                "#":  {
+                          "item":  "statmod:heated_high_magisteel_ingot"
+                      }
+            },
+    "pattern":  [
+                    "##",
+                    "# "
+                ],
+    "result":  {
+                   "count":  1,
+                   "id":  "statmod:rough_bow_limb_high_magisteel"
+               },
+    "show_notification":  false,
+    "tier":  "above_b"
 }

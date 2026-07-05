@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_staff_core_arcane"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:staff_focus"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "slu:margit_wand"
+  }
+}

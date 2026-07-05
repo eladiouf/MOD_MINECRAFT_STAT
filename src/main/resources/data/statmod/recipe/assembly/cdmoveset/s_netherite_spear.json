@@ -6,7 +6,25 @@
       "item": "statmod:rough_spear_tip_diamond"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    },
+    {
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

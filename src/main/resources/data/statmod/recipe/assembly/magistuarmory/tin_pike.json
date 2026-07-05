@@ -6,7 +6,28 @@
       "item": "statmod:rough_spear_tip_tin"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:chain"
     }
   ],
   "result": {

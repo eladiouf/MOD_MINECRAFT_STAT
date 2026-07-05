@@ -46,7 +46,11 @@ public final class EpicFightCompat {
     private static final Map<UUID, Integer> lastStunArmor = new ConcurrentHashMap<>();
     private static final Map<UUID, Integer> lastImpact = new ConcurrentHashMap<>();
     private static final Map<UUID, Float> lastReach = new ConcurrentHashMap<>();
+    private static final Map<UUID, Float> lastServerMaxStamina = new ConcurrentHashMap<>();
+    private static final Map<UUID, Float> lastClientMaxStamina = new ConcurrentHashMap<>();
     private static final class ResourceIds {
+        private static final net.minecraft.resources.ResourceLocation MAX_STAMINA =
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "epicfight_max_stamina");
         private static final net.minecraft.resources.ResourceLocation WEIGHT =
                 net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "epicfight_weight");
         private static final net.minecraft.resources.ResourceLocation STUN_ARMOR =
@@ -148,11 +152,11 @@ public final class EpicFightCompat {
     @net.neoforged.bus.api.SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
+        syncEpicFightStaminaDisplay(player);
         if (player.level().isClientSide) return;
         if (player.tickCount % 20 != 0) return;
 
         UUID uuid = player.getUUID();
-        syncEpicFightStaminaDisplay(player);
         applyAttribute(player, EpicFightAttributes.WEIGHT, ResourceIds.WEIGHT,
                 RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index),
                 lastWeight, uuid, weightModifierAmount(
@@ -306,17 +310,22 @@ public final class EpicFightCompat {
 
     private static void onConsumeSkill(SkillConsumeEvent event) {
         Player player = event.getEntityPatch().getOriginal() instanceof Player p ? p : null;
-        if (player == null || player.level().isClientSide) return;
+        if (player == null) return;
 
         float multiplier = EpicFightCooldownHandler.resourceMultiplier(
                 RaceEffectApplier.getEffectiveLevel(player, StatType.RAPIDITE.index),
                 RaceEffectApplier.getEffectiveLevel(player, StatType.CASTING_SPEED.index),
                 RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index),
                 event.getResourceType());
-        float adjustedAmount = event.getAmount() * multiplier;
         if (event.getResourceType() == Skill.Resource.STAMINA) {
+            if (player.level().isClientSide) {
+                event.setAmount(0.0f);
+                return;
+            }
             int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
             float statModMax = StaminaRules.maxStamina(endurance);
+            float adjustedAmount = EpicFightStaminaBridge.sustainableSkillCost(
+                    event.getAmount(), multiplier, statModMax);
             var stamina = player.getData(ModAttachments.STAMINA);
             var threshold = StaminaRules.threshold(stamina.currentStamina(), statModMax);
             if (!EpicFightStaminaBridge.canUseSkill(threshold, stamina.currentStamina(), adjustedAmount)) {
@@ -324,10 +333,13 @@ public final class EpicFightCompat {
                 return;
             }
             StaminaManager.consume(stamina, adjustedAmount);
+            syncEpicFightStaminaDisplay(player);
             event.setAmount(0.0f);
             SyncHelper.syncStamina((ServerPlayer) player);
             return;
         }
+        if (player.level().isClientSide) return;
+        float adjustedAmount = event.getAmount() * multiplier;
         event.setAmount(adjustedAmount);
     }
 
@@ -338,11 +350,34 @@ public final class EpicFightCompat {
         }
         int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
         float statModMax = StaminaRules.maxStamina(endurance);
+        Map<UUID, Float> maxStaminaCache = player.level().isClientSide ? lastClientMaxStamina : lastServerMaxStamina;
+        applyEpicFightMaxStamina(player, statModMax, player.getUUID(), maxStaminaCache);
         float display = EpicFightStaminaBridge.patchDisplayStamina(
                 player.getData(ModAttachments.STAMINA).currentStamina(),
                 statModMax,
                 patch.getMaxStamina());
         patch.setStamina(display);
+    }
+
+    private static void applyEpicFightMaxStamina(Player player, float statModMax, UUID uuid,
+                                                 Map<UUID, Float> maxStaminaCache) {
+        Float previous = maxStaminaCache.get(uuid);
+        if (previous != null && Float.compare(previous, statModMax) == 0) {
+            return;
+        }
+
+        var instance = player.getAttribute(EpicFightAttributes.MAX_STAMINA);
+        if (instance == null) {
+            return;
+        }
+
+        instance.removeModifier(ResourceIds.MAX_STAMINA);
+        double amount = statModMax - instance.getValue();
+        if (Math.abs(amount) > 1.0e-6d) {
+            instance.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                    ResourceIds.MAX_STAMINA, amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
+        }
+        maxStaminaCache.put(uuid, statModMax);
     }
 
     public static float airAttackMultiplier(int agility, boolean airborne) {

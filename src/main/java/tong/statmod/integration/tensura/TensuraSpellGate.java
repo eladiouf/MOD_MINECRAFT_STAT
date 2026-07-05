@@ -2,6 +2,7 @@ package tong.statmod.integration.tensura;
 
 import io.github.manasmods.manascore.skill.api.SkillAPI;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -65,6 +66,20 @@ public final class TensuraSpellGate {
         if (resolved == null) return false;
 
         return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(TensuraSkillIds.canonicalize(resolved)));
+    }
+
+    public static boolean revokeReward(Player player, Perk perk) {
+        String resolved = resolveForPerk(perk);
+        if (player == null || resolved == null || !resolved.startsWith("tensura:")) {
+            return false;
+        }
+
+        ResourceLocation id = ResourceLocation.parse(resolved);
+        boolean learned = SkillAPI.getSkillsFrom(player).getSkill(id).isPresent();
+        if (learned) {
+            SkillAPI.getSkillsFrom(player).forgetSkill(id, Component.empty());
+        }
+        return learned;
     }
 
     private static String resolveByStat(StatType stat, PerkTier tier) {

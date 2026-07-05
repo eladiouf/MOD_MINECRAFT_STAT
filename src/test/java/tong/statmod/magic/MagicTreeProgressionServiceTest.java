@@ -20,6 +20,7 @@ class MagicTreeProgressionServiceTest {
     @Test
     void unlock_records_node_spends_points_and_learns_spells() {
         PlayerStatData d = new PlayerStatData();
+        d.setMagicPoints(0);
         d.setMagicRace(MagicRace.DWARF);
         saturateStats(d);
         d.addArcanePoints(5);
@@ -38,6 +39,7 @@ class MagicTreeProgressionServiceTest {
     @Test
     void unlock_school_node_spends_unified_points() {
         PlayerStatData d = new PlayerStatData();
+        d.setMagicPoints(0);
         d.setMagicRace(MagicRace.DWARF);
         saturateStats(d);
         d.addSchoolPoints(MagicBranch.FIRE, 3);
@@ -96,6 +98,7 @@ class MagicTreeProgressionServiceTest {
     @Test
     void unlock_rolls_back_when_tensura_runtime_grant_fails() {
         PlayerStatData d = new PlayerStatData();
+        d.setMagicPoints(0);
         d.setMagicRace(MagicRace.DWARF);
         saturateStats(d);
         d.addSchoolPoints(MagicBranch.FIRE, 5);

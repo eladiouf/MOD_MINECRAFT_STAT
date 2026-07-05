@@ -1,0 +1,8 @@
+#556 minecraft:beach
+#3DE minecraft:deep_ocean
+#010 minecraft:forest
+#241 tensura:miasmic_plains
+#4F1 minecraft:ocean
+#5FF minecraft:river
+#4D3 minecraft:swamp
+#495 minecraft:the_void

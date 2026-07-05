@@ -6,7 +6,25 @@
       "item": "statmod:rough_dagger_blade_diamond"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "statmod:rough_dagger_blade_diamond"
+    },
+    {
+      "item": "statmod:rapier_guard"
     }
   ],
   "result": {

@@ -1,4 +1,4 @@
-﻿{
+{
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
@@ -6,7 +6,31 @@
       "item": "statmod:rough_spear_tip_arcane"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:runic_grip"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "statmod:rough_spear_tip_arcane"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:runic_grip"
+    },
+    {
+      "item": "statmod:runic_grip"
+    },
+    {
+      "item": "minecraft:ender_pearl"
     }
   ],
   "result": {
@@ -14,4 +38,3 @@
     "id": "simplyswords:runic_halberd"
   }
 }
-

@@ -6,7 +6,28 @@
       "item": "overgeared:iron_axe_head"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:rabbit_hide"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:rabbit_hide"
     }
   ],
   "result": {

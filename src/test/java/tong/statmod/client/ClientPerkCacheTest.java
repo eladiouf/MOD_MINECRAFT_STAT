@@ -7,6 +7,7 @@ import tong.statmod.stats.StatType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientPerkCacheTest {
@@ -30,5 +31,15 @@ class ClientPerkCacheTest {
         ClientPerkCache.update(new int[]{lastPerkId}, new int[StatFamily.values().length]);
 
         assertTrue(ClientPerkCache.isUnlocked(lastPerk));
+    }
+
+    @Test
+    void nullAndNegativePayloadValuesAreSanitizedForUiSafety() {
+        assertDoesNotThrow(() -> ClientPerkCache.update(null, new int[]{-3, 2}));
+        assertEquals(0, ClientPerkCache.getPointsForFamily(0));
+        assertEquals(2, ClientPerkCache.getPointsForFamily(1));
+
+        assertDoesNotThrow(() -> ClientPerkCache.update(new int[]{-1, 999999}, null));
+        assertEquals(0, ClientPerkCache.getPointsForFamily(0));
     }
 }

@@ -6,7 +6,22 @@
       "item": "statmod:rough_axe_head_hihiirokane"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
     }
   ],
   "result": {

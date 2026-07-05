@@ -15,7 +15,7 @@ public final class SleepRecoveryHandler {
     private SleepRecoveryHandler() {}
 
     public static void applyWakeBonus(StaminaData data, int enduranceLevel) {
-        StaminaManager.restore(data, 35.0f, enduranceLevel);
+        StaminaManager.restore(data, StaminaRules.maxStamina(enduranceLevel), enduranceLevel);
         StaminaManager.relieveFatigue(data, StaminaRules.wakeFatigueRelief());
     }
 

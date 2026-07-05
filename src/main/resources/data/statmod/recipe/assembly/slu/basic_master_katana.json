@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:steel_sword_blade"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:katana_tsuba"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "slu:basic_master_katana"
+  }
+}

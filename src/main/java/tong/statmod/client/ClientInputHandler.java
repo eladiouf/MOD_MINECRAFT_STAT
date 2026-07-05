@@ -1,15 +1,12 @@
 package tong.statmod.client;
 
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.network.OpenVirtualInscriptionPayload;
 
-@EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public final class ClientInputHandler {
     private ClientInputHandler() {}
 

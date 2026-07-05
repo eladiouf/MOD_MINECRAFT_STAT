@@ -1,7 +1,10 @@
 package tong.statmod.api;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.network.SyncHelper;
+import tong.statmod.progression.LevelUpHandler;
 import tong.statmod.stats.StatFamily;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -49,11 +52,25 @@ public class STATModAPIImpl implements STATModAPI {
 
     @Override
     public void addXpToStat(Player player, int statIndex, int xpAmount) {
-        RaceEffectApplier.addScaledXp(player, statIndex, xpAmount, stats(player), false);
+        PlayerStatData data = stats(player);
+        RaceEffectApplier.addScaledXp(player, statIndex, xpAmount, data, false);
+        syncStatsIfServer(player, data);
     }
 
     @Override
     public void addXpRaw(Player player, int statIndex, int xpAmount) {
-        stats(player).addXp(statIndex, xpAmount);
+        PlayerStatData data = stats(player);
+        RaceEffectApplier.addRawXp(player, statIndex, xpAmount, data);
+        syncStatsIfServer(player, data);
+    }
+
+    private static void syncStatsIfServer(Player player, PlayerStatData data) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            int granted = LevelUpHandler.grantPendingPerkTiers(data);
+            SyncHelper.syncStats(serverPlayer);
+            if (granted > 0) {
+                SyncHelper.syncPerks(serverPlayer);
+            }
+        }
     }
 }

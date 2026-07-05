@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:rabbit_hide"
+    },
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    },
+    {
+      "item": "statmod:rough_spear_tip_diamond"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyswords:watching_warglaive"
+  }
+}

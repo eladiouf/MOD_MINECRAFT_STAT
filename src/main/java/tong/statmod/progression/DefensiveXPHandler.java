@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
@@ -30,6 +31,37 @@ import tong.statmod.storage.PlayerStatData;
  */
 @EventBusSubscriber(modid = STATMod.MODID)
 public class DefensiveXPHandler {
+    private static final int MOVEMENT_TRAINING_PERIOD_TICKS = 100;
+
+    @SubscribeEvent
+    public static void onMovementTrainingTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.tickCount % MOVEMENT_TRAINING_PERIOD_TICKS != 0) return;
+
+        boolean moving = player.getDeltaMovement().horizontalDistanceSqr() > 0.01d;
+        boolean flying = player.getAbilities().flying || player.isFallFlying();
+        boolean passenger = player.isPassenger() || player.isSpectator();
+        int agilityXp = ActivityXpScaling.agilityXpForMovement(
+                moving, player.isSprinting(), flying, passenger);
+        int enduranceXp = ActivityXpScaling.enduranceXpForMovement(
+                moving, player.isSprinting(), player.isSwimming(), flying, passenger);
+        if (agilityXp <= 0 && enduranceXp <= 0) {
+            return;
+        }
+
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        boolean leveled = false;
+        if (agilityXp > 0) {
+            leveled |= RaceEffectApplier.addScaledXp(
+                    player, StatType.AGILITY.index, agilityXp, data, false);
+        }
+        if (enduranceXp > 0) {
+            leveled |= RaceEffectApplier.addScaledXp(
+                    player, StatType.PHYSICAL_ENDURANCE.index, enduranceXp, data, false);
+        }
+        if (leveled) SoundHelper.playLevelUp(player);
+        SyncHelper.syncStats(player);
+    }
 
     /**
      * Encaisser du damage physique entraîne PHYSICAL_RESISTANCE. Filtre les sources magic
@@ -48,6 +80,11 @@ public class DefensiveXPHandler {
         int xp = Math.max(1, Math.round(event.getOriginalDamage() / 2.0f));
         boolean leveled = RaceEffectApplier.addScaledXp(
                 player, StatType.PHYSICAL_RESISTANCE.index, xp, data, true);
+        int enduranceXp = ActivityXpScaling.enduranceXpForPhysicalDamage(event.getOriginalDamage());
+        if (enduranceXp > 0) {
+            leveled |= RaceEffectApplier.addScaledXp(
+                    player, StatType.PHYSICAL_ENDURANCE.index, enduranceXp, data, true);
+        }
         if (leveled) SoundHelper.playLevelUp(player);
         SyncHelper.syncStats(player);
     }

@@ -3,7 +3,22 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_staff_core_diamond"
+      "item": "statmod:rough_axe_head_diamond"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "statmod:staff_focus"
     },
     {
       "item": "statmod:wooden_grip"

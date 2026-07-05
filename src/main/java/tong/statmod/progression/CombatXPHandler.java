@@ -3,21 +3,20 @@ package tong.statmod.progression;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import tong.statmod.STATMod;
 import tong.statmod.dungeon.DungeonXpMultiplier;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
+import tong.statmod.storage.PlayerStatData;
 
-@EventBusSubscriber(modid = STATMod.MODID)
 public class CombatXPHandler {
 
     @SubscribeEvent
@@ -31,9 +30,15 @@ public class CombatXPHandler {
         xp = DungeonXpMultiplier.applyToXp(xp, player.level().dimension(), player.getBlockX(), player.getBlockZ());
         StatType stat = resolveWeaponStat(player.getMainHandItem());
 
-        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, player.getData(ModAttachments.STATS), true);
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, data, true);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
+        if (wasThreateningTarget(target, player)) {
+            int mp = 1;
+            data.addMagicPoints(mp);
+            SyncHelper.syncMagic((ServerPlayer) player);
+        }
 
         // Bonus TRACKING pour les kills longue distance (>= 8 blocs).
         if (event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile) {
@@ -57,5 +62,10 @@ public class CombatXPHandler {
 
     static StatType resolveWeaponStat(ItemStack stack) {
         return WeaponResolver.statFor(stack);
+    }
+
+    private static boolean wasThreateningTarget(LivingEntity target, Player player) {
+        return target instanceof Mob mob && mob.getTarget() == player
+                || target.getLastHurtMob() == player;
     }
 }

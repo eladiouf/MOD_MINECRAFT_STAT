@@ -17,7 +17,10 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
+import tong.statmod.perks.Perk;
 import tong.statmod.stats.StatType;
+import tong.statmod.storage.ModAttachments;
+import tong.statmod.storage.PlayerStatData;
 
 import java.util.Map;
 import java.util.UUID;
@@ -28,6 +31,8 @@ final class IronSpellAttributeBridge {
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_max_mana_bridge");
     private static final ResourceLocation MANA_REGEN_ID =
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_mana_regen_bridge");
+    private static final ResourceLocation BASE_MANA_REGEN_SUPPRESSION_ID =
+            ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_base_mana_regen_suppression");
     private static final ResourceLocation SPELL_POWER_ID =
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_spell_power_bridge");
     private static final ResourceLocation SPELL_RESIST_ID =
@@ -57,6 +62,7 @@ final class IronSpellAttributeBridge {
     }
 
     static void apply(ServerPlayer player) {
+        suppressBaseManaRegen(player);
         Snapshot next = Snapshot.capture(player);
         UUID uuid = player.getUUID();
         Snapshot previous = LAST_APPLIED.get(uuid);
@@ -68,17 +74,22 @@ final class IronSpellAttributeBridge {
         double previousMaxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
 
         applyModifier(player, AttributeRegistry.MAX_MANA, MAX_MANA_ID,
-                IronSpellStatScaler.maxManaBonus(next.manaPoolLevel()));
+                IronSpellStatScaler.maxManaBonus(next.manaPoolLevel(), next.manaPoolCoreUnlocked())
+                        + next.manaPoolAdvancedManaBonus());
         applyModifier(player, AttributeRegistry.MANA_REGEN, MANA_REGEN_ID,
                 IronSpellStatScaler.manaRegenBonus(next.manaPoolLevel(), next.eruditionLevel()));
         applyModifier(player, AttributeRegistry.SPELL_POWER, SPELL_POWER_ID,
-                IronSpellStatScaler.spellPowerBonus(next.arcanePowerLevel()));
+                IronSpellStatScaler.spellPowerBonus(next.arcanePowerLevel(), next.arcaneCoreUnlocked())
+                        + next.arcaneAdvancedPowerBonus());
         applyModifier(player, AttributeRegistry.SPELL_RESIST, SPELL_RESIST_ID,
-                IronSpellStatScaler.spellResistBonus(next.magicResistanceLevel()));
+                IronSpellStatScaler.spellResistBonus(next.magicResistanceLevel(), next.magicResistanceCoreUnlocked())
+                        + next.magicResistanceAdvancedBonus());
         applyModifier(player, AttributeRegistry.CAST_TIME_REDUCTION, CAST_TIME_ID,
-                IronSpellStatScaler.castTimeReductionBonus(next.castingSpeedLevel()));
+                IronSpellStatScaler.castTimeReductionBonus(next.castingSpeedLevel(), next.castingSpeedCoreUnlocked())
+                        + next.castingSpeedAdvancedBonus());
         applyModifier(player, AttributeRegistry.COOLDOWN_REDUCTION, COOLDOWN_ID,
-                IronSpellStatScaler.cooldownReductionBonus(next.eruditionLevel()));
+                IronSpellStatScaler.cooldownReductionBonus(next.eruditionLevel(), next.eruditionCoreUnlocked())
+                        + next.eruditionAdvancedCooldownBonus());
 
         double newMaxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
         syncCurrentMana(player, previousMana, previousMaxMana, newMaxMana);
@@ -95,6 +106,20 @@ final class IronSpellAttributeBridge {
         }
 
         instance.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
+    }
+
+    private static void suppressBaseManaRegen(Player player) {
+        AttributeInstance instance = player.getAttribute(AttributeRegistry.MANA_REGEN);
+        if (instance == null) return;
+
+        instance.removeModifier(BASE_MANA_REGEN_SUPPRESSION_ID);
+        double baseManaRegen = instance.getBaseValue();
+        if (baseManaRegen <= 1.0e-6d) {
+            return;
+        }
+
+        instance.addPermanentModifier(new AttributeModifier(
+                BASE_MANA_REGEN_SUPPRESSION_ID, -baseManaRegen, AttributeModifier.Operation.ADD_VALUE));
     }
 
     private static void syncCurrentMana(ServerPlayer player, float previousMana, double previousMaxMana, double newMaxMana) {
@@ -120,15 +145,61 @@ final class IronSpellAttributeBridge {
             int eruditionLevel,
             int arcanePowerLevel,
             int magicResistanceLevel,
-            int castingSpeedLevel
+            int castingSpeedLevel,
+            boolean manaPoolCoreUnlocked,
+            boolean eruditionCoreUnlocked,
+            boolean arcaneCoreUnlocked,
+            boolean magicResistanceCoreUnlocked,
+            boolean castingSpeedCoreUnlocked,
+            double manaPoolAdvancedManaBonus,
+            double arcaneAdvancedPowerBonus,
+            double magicResistanceAdvancedBonus,
+            double castingSpeedAdvancedBonus,
+            double eruditionAdvancedCooldownBonus
     ) {
         static Snapshot capture(Player player) {
+            PlayerStatData data = player.getData(ModAttachments.STATS);
             return new Snapshot(
                     RaceEffectApplier.getEffectiveLevel(player, StatType.MANA_POOL.index),
                     RaceEffectApplier.getEffectiveLevel(player, StatType.ERUDITION.index),
                     RaceEffectApplier.getEffectiveLevel(player, StatType.ARCANE_POWER.index),
                     RaceEffectApplier.getEffectiveLevel(player, StatType.MAGIC_RESISTANCE.index),
-                    RaceEffectApplier.getEffectiveLevel(player, StatType.CASTING_SPEED.index)
+                    RaceEffectApplier.getEffectiveLevel(player, StatType.CASTING_SPEED.index),
+                    data.isPerkUnlocked(Perk.MANA_POOL_CORE.id),
+                    data.isPerkUnlocked(Perk.ERUDITION_CORE.id),
+                    data.isPerkUnlocked(Perk.ARCANE_CORE.id),
+                    data.isPerkUnlocked(Perk.MAGIC_RESIST_CORE.id),
+                    data.isPerkUnlocked(Perk.CASTING_SPEED_CORE.id),
+                    IronSpellAdvancedPerkScaling.advancedManaBonus(
+                            data.isPerkUnlocked(Perk.MANA_POOL_ACTIVE.id),
+                            data.isPerkUnlocked(Perk.MANA_POOL_SYNERGY.id),
+                            data.isPerkUnlocked(Perk.MANA_POOL_SITUATIONAL.id),
+                            data.isPerkUnlocked(Perk.MANA_POOL_MASTERY.id),
+                            data.isPerkUnlocked(Perk.MANA_POOL_TRANSCENDENCE.id)),
+                    IronSpellAdvancedPerkScaling.advancedPercentAttributeBonus(
+                            data.isPerkUnlocked(Perk.ARCANE_ACTIVE.id),
+                            data.isPerkUnlocked(Perk.ARCANE_SYNERGY.id),
+                            data.isPerkUnlocked(Perk.ARCANE_SITUATIONAL.id),
+                            data.isPerkUnlocked(Perk.ARCANE_MASTERY.id),
+                            data.isPerkUnlocked(Perk.ARCANE_TRANSCENDENCE.id)),
+                    IronSpellAdvancedPerkScaling.advancedPercentAttributeBonus(
+                            data.isPerkUnlocked(Perk.MAGIC_RESIST_ACTIVE.id),
+                            data.isPerkUnlocked(Perk.MAGIC_RESIST_SYNERGY.id),
+                            data.isPerkUnlocked(Perk.MAGIC_RESIST_SITUATIONAL.id),
+                            data.isPerkUnlocked(Perk.MAGIC_RESIST_MASTERY.id),
+                            data.isPerkUnlocked(Perk.MAGIC_RESIST_TRANSCENDENCE.id)),
+                    IronSpellAdvancedPerkScaling.advancedPercentAttributeBonus(
+                            data.isPerkUnlocked(Perk.CASTING_SPEED_ACTIVE.id),
+                            data.isPerkUnlocked(Perk.CASTING_SPEED_SYNERGY.id),
+                            data.isPerkUnlocked(Perk.CASTING_SPEED_SITUATIONAL.id),
+                            data.isPerkUnlocked(Perk.CASTING_SPEED_MASTERY.id),
+                            data.isPerkUnlocked(Perk.CASTING_SPEED_TRANSCENDENCE.id)),
+                    IronSpellAdvancedPerkScaling.advancedPercentAttributeBonus(
+                            data.isPerkUnlocked(Perk.ERUDITION_ACTIVE.id),
+                            data.isPerkUnlocked(Perk.ERUDITION_SYNERGY.id),
+                            data.isPerkUnlocked(Perk.ERUDITION_SITUATIONAL.id),
+                            data.isPerkUnlocked(Perk.ERUDITION_MASTERY.id),
+                            data.isPerkUnlocked(Perk.ERUDITION_TRANSCENDENCE.id))
             );
         }
     }

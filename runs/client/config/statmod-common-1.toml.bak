@@ -1,0 +1,42 @@
+[general]
+	#Multiplier for combat XP gain (0.0 to 10.0)
+	# Default: 1.0
+	# Range: 0.0 ~ 10.0
+	combatXpMultiplier = 1.0
+	#Multiplier for non-combat XP gain (0.0 to 10.0)
+	# Default: 1.0
+	# Range: 0.0 ~ 10.0
+	nonCombatXpMultiplier = 1.0
+	#Maximum stat level (1 to 100)
+	# Default: 100
+	# Range: 1 ~ 100
+	maxStatLevel = 100
+	#Base perk points granted per stat level
+	# Default: 1
+	# Range: 0 ~ 10
+	basePerkPointsPerLevel = 1
+
+[trial_dungeon]
+	#Multiplier de base pour l'XP gagné dans le Trial Dungeon (ajouté à floor*perFloor).
+	# Default: 1.0
+	# Range: 0.0 ~ 10.0
+	xpBaseMultiplier = 1.0
+	#Multiplier XP additionnel par étage — étage 20 donne XP*(base + 20*perFloor).
+	# Default: 0.05
+	# Range: 0.0 ~ 1.0
+	xpPerFloor = 0.05
+	#Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.
+	# Default: 2
+	# Range: 0 ~ 10
+	bossStatGain = 2
+	#Intégration L2 Hostility : niveau de hostilité appliqué aux mobs = floor * ce facteur.
+	#0.0 = désactivé (recommandé pour éviter surdifficulté avec config L2 par défaut).
+	#L2 Hostility a un niveau de base de 20, donc 0.1 = étage 10 = niveau 21 (déjà trop fort).
+	# Default: 0.0
+	# Range: 0.0 ~ 0.5
+	l2HostilityPerFloor = 0.5
+	#Intégration L2 Hostility : plafond du niveau de hostilité appliqué par étage.
+	#Avec l2HostilityPerFloor = 0.0, ce paramètre n'a pas d'effet.
+	# Default: 30
+	# Range: 0 ~ 500
+	l2HostilityCap = 200

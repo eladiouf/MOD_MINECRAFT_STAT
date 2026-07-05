@@ -6,7 +6,22 @@
       "item": "overgeared:copper_sword_blade"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:leather_wrap"
     }
   ],
   "result": {

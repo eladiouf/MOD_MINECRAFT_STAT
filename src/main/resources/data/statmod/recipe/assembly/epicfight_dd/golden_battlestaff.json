@@ -3,10 +3,28 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_staff_core_gold"
+      "item": "statmod:rough_axe_head_gold"
+    },
+    {
+      "item": "statmod:staff_focus"
     },
     {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
     }
   ],
   "result": {

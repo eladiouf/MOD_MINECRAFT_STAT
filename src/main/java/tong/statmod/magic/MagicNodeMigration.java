@@ -5,6 +5,14 @@ import tong.statmod.stats.StatType;
 public final class MagicNodeMigration {
 
     public static Condition defaultCondition(MagicNode node) {
+        // 4 basic elements: T1 nodes require NO conditions
+        if (isT1Free(node)) return null;
+
+        // Root magic node only needs ERUDITION (unlocked by first enchanted book)
+        if ("common/foundation/arcane_focus".equals(node.id())) {
+            return new Condition.StatCondition(StatType.ERUDITION, 1);
+        }
+
         int arcane = universalArcane(node.kind(), node.tier());
         int erudition = universalErudition(node.kind(), node.tier());
         Condition tertiary = tertiaryCondition(node);
@@ -13,8 +21,30 @@ public final class MagicNodeMigration {
                 new Condition.StatCondition(StatType.ARCANE_POWER, arcane),
                 new Condition.StatCondition(StatType.ERUDITION, erudition)
         );
-        if (tertiary == null) return base;
+        if (tertiary == null || isCoveredByUniversalGate(tertiary, arcane, erudition)) return base;
         return Condition.And.of(base, tertiary);
+    }
+
+    private static boolean isCoveredByUniversalGate(Condition condition, int arcane, int erudition) {
+        if (!(condition instanceof Condition.StatCondition stat)) {
+            return false;
+        }
+        return switch (stat.stat()) {
+            case ARCANE_POWER -> stat.minLevel() <= arcane;
+            case ERUDITION -> stat.minLevel() <= erudition;
+            default -> false;
+        };
+    }
+
+    private static boolean isT1Free(MagicNode node) {
+        return switch (node.branch()) {
+            case FIRE, WATER, AIR, EARTH -> switch (node.kind()) {
+                case BRANCH_OPENER -> true;
+                case BRANCH_TIER, SIGNATURE_SPELL -> node.tier() == MagicTier.T1;
+                default -> false;
+            };
+            default -> false;
+        };
     }
 
     private static int universalArcane(MagicNodeKind kind, MagicTier tier) {
@@ -22,11 +52,11 @@ public final class MagicNodeMigration {
             case TRUNK_FOUNDATION -> switch (tier) {
                 case T1 -> 1; case T2 -> 2; case T3, T4 -> 3;
             };
-            case BRANCH_OPENER -> 2;
+            case BRANCH_OPENER -> 3;
             case BRANCH_TIER, SIGNATURE_SPELL -> switch (tier) {
-                case T1 -> 2; case T2 -> 4; case T3 -> 6; case T4 -> 10;
+                case T1 -> 5; case T2 -> 15; case T3 -> 30; case T4 -> 40;
             };
-            case LATEGAME_GATE -> 10;
+            case LATEGAME_GATE -> 50;
         };
     }
 
@@ -35,11 +65,11 @@ public final class MagicNodeMigration {
             case TRUNK_FOUNDATION -> switch (tier) {
                 case T1 -> 1; case T2 -> 2; case T3, T4 -> 3;
             };
-            case BRANCH_OPENER -> 1;
+            case BRANCH_OPENER -> 2;
             case BRANCH_TIER, SIGNATURE_SPELL -> switch (tier) {
-                case T1 -> 2; case T2 -> 3; case T3 -> 5; case T4 -> 7;
+                case T1 -> 3; case T2 -> 10; case T3 -> 20; case T4 -> 25;
             };
-            case LATEGAME_GATE -> 7;
+            case LATEGAME_GATE -> 35;
         };
     }
 

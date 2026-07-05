@@ -6,7 +6,25 @@
       "item": "statmod:rough_spear_tip_tin"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:rough_spear_tip_tin"
+    },
+    {
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

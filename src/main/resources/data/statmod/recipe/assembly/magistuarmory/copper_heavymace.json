@@ -6,7 +6,28 @@
       "item": "overgeared:copper_axe_head"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "overgeared:copper_axe_head"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:chain"
     }
   ],
   "result": {

@@ -10,7 +10,16 @@ public class StaminaData {
     }
 
     public void setCurrentStamina(float value) {
-        currentStamina = Math.max(0.0f, value);
+        currentStamina = sanitizeNonNegative(value);
+    }
+
+    public void copyFrom(StaminaData source) {
+        if (source == null || source == this) {
+            return;
+        }
+        setCurrentStamina(source.currentStamina);
+        setFatigueDebt(source.fatigueDebt);
+        meditating = source.meditating;
     }
 
     public float fatigueDebt() {
@@ -18,7 +27,7 @@ public class StaminaData {
     }
 
     public void setFatigueDebt(float value) {
-        fatigueDebt = Math.max(0.0f, value);
+        fatigueDebt = sanitizeNonNegative(value);
     }
 
     public boolean meditating() {
@@ -27,5 +36,9 @@ public class StaminaData {
 
     public void setMeditating(boolean value) {
         meditating = value;
+    }
+
+    private static float sanitizeNonNegative(float value) {
+        return Float.isFinite(value) ? Math.max(0.0f, value) : 0.0f;
     }
 }

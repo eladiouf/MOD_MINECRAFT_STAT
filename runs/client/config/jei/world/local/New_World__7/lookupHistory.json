@@ -1,0 +1,7 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"slu:rusty_steel_mace","components":{"tensura:max_existence_point":0.0,"minecraft:damage":1268}},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:diamond_knife"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:diamond_messer","components":{"tensura:max_existence_point":0.0,"minecraft:damage":5}},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"statmod:common_agile_shard"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

@@ -9,13 +9,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.magic.MagicRace;
 import tong.statmod.magic.SchoolProgressTracker;
 import tong.statmod.network.SyncHelper;
+import tong.statmod.progression.LevelUpHandler;
 import tong.statmod.progression.WeaponResolver;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -33,7 +33,7 @@ public class StatCommands {
                                     if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
                                         PlayerStatData data = player.getData(ModAttachments.STATS);
                                         for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
-                                            data.addLevels(i, amount);
+                                            RaceEffectApplier.addLevels(player, i, amount, data, false);
                                         }
                                         ctx.getSource().sendSuccess(() ->
                                                 Component.literal("All stats → +" + amount + " levels"), true);
@@ -41,14 +41,14 @@ public class StatCommands {
                                     }
                                     return 1;
                                 })))
-                .then(Commands.argument("index", IntegerArgumentType.integer(0, 22))
+                .then(Commands.argument("index", IntegerArgumentType.integer(0, PlayerStatData.STAT_COUNT - 1))
                         .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
                                 .executes(ctx -> {
                                     int index = IntegerArgumentType.getInteger(ctx, "index");
                                     int amount = IntegerArgumentType.getInteger(ctx, "amount");
                                     if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
                                         PlayerStatData data = player.getData(ModAttachments.STATS);
-                                        data.addLevels(index, amount);
+                                        RaceEffectApplier.addLevels(player, index, amount, data, false);
                                         StatType stat = StatType.byIndex(index);
                                         String name = stat != null ? stat.displayName : ("#" + index);
                                         int effective = RaceEffectApplier.getEffectiveLevel(player, index);
@@ -61,16 +61,21 @@ public class StatCommands {
 
         dispatcher.register(Commands.literal("statxp")
                 .requires(s -> s.hasPermission(2))
-                .then(Commands.argument("index", IntegerArgumentType.integer(0, 22))
+                .then(Commands.argument("index", IntegerArgumentType.integer(0, PlayerStatData.STAT_COUNT - 1))
                         .then(Commands.argument("amount", IntegerArgumentType.integer(1, 100000))
                                 .executes(ctx -> {
                                     int index = IntegerArgumentType.getInteger(ctx, "index");
                                     int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                    if (ctx.getSource().getEntity() instanceof Player player) {
+                                    if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
                                         PlayerStatData data = player.getData(ModAttachments.STATS);
-                                        boolean leveled = data.addXp(index, amount);
+                                        boolean leveled = RaceEffectApplier.addRawXp(player, index, amount, data);
+                                        int granted = LevelUpHandler.grantPendingPerkTiers(data);
                                         ctx.getSource().sendSuccess(() ->
                                                 Component.literal("+" + amount + " XP" + (leveled ? " (level up!)" : "")), true);
+                                        SyncHelper.syncStats(player);
+                                        if (granted > 0) {
+                                            SyncHelper.syncPerks(player);
+                                        }
                                     }
                                     return 1;
                                 }))));
@@ -105,6 +110,7 @@ public class StatCommands {
                                 }
                                 ctx.getSource().sendSuccess(() ->
                                         Component.literal("+ " + amount + " perk points to all families"), true);
+                                SyncHelper.syncPerks(player);
                             }
                             return 1;
                         })));
@@ -258,7 +264,12 @@ public class StatCommands {
                                                 PlayerStatData data = player.getData(ModAttachments.STATS);
                                                 data.setMagicRace(race);
                                                 data.setChosenStartBranch(start);
+                                                int granted = LevelUpHandler.grantPendingPerkTiers(data);
                                                 SyncHelper.syncMagic(player);
+                                                SyncHelper.syncStats(player);
+                                                if (granted > 0) {
+                                                    SyncHelper.syncPerks(player);
+                                                }
                                                 ctx.getSource().sendSuccess(() ->
                                                         Component.literal("Race set to " + raceId + " with " + branchId + " affinity"), true);
                                             }

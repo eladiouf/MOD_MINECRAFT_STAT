@@ -87,12 +87,17 @@ public class PerkManager {
     }
 
     public boolean revoke(Perk perk, boolean refundPoints) {
+        return revoke(perk, refundPoints, null);
+    }
+
+    public boolean revoke(Perk perk, boolean refundPoints, Player player) {
         if (perk == null || !isUnlocked(perk)) return false;
         boolean freeGranted = statData.isPerkFreeGranted(perk.id);
         statData.removeUnlockedPerk(perk.id);
         if (refundPoints && !freeGranted) {
             statData.addPerkPointsForStat(perk.stat.index, perk.tier.cost);
         }
+        revokeRewards(player, perk);
         return true;
     }
 
@@ -106,6 +111,33 @@ public class PerkManager {
                 EpicFightPerkGate.grantReward(player, perk);
             }
         }
+    }
+
+    private void revokeRewards(Player player, Perk perk) {
+        if (player != null) {
+            TensuraSpellGate.revokeReward(player, perk);
+            if (ModList.get().isLoaded("tensura")) {
+                PerkToSkillMapper.revokeReward(player, perk);
+            }
+            if (ModList.get().isLoaded("epicfight")) {
+                EpicFightPerkGate.revokeReward(player, perk);
+            }
+        }
+    }
+
+    public int resetAll(Player player, boolean refundPoints) {
+        int refunded = 0;
+        for (int perkId : statData.getUnlockedPerks()) {
+            Perk perk = Perk.byId(perkId);
+            if (perk == null) {
+                continue;
+            }
+            boolean refundable = refundPoints && !statData.isPerkFreeGranted(perk.id);
+            if (revoke(perk, refundPoints, player) && refundable) {
+                refunded += perk.tier.cost;
+            }
+        }
+        return refunded;
     }
 
     public void resetAll() {

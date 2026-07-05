@@ -2,10 +2,9 @@ package tong.statmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -16,7 +15,6 @@ import tong.statmod.client.gui.InfusionForgeScreen;
 import tong.statmod.integration.epicfight.EpicFightClientCompat;
 import tong.statmod.menu.ModMenuTypes;
 
-@EventBusSubscriber(modid = STATMod.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class ClientSetup {
     private ClientSetup() {}
 
@@ -59,6 +57,9 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(EpicFightClientCompat::init);
+        event.enqueueWork(() -> {
+            NeoForge.EVENT_BUS.register(ClientCacheLifecycle.class);
+            EpicFightClientCompat.init();
+        });
     }
 }

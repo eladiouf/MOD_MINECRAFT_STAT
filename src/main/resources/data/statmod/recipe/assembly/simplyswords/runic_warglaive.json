@@ -1,4 +1,4 @@
-﻿{
+{
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
@@ -6,7 +6,28 @@
       "item": "statmod:rough_spear_tip_arcane"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
       "item": "statmod:runic_grip"
+    },
+    {
+      "item": "minecraft:bamboo"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "statmod:rough_spear_tip_arcane"
+    },
+    {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:rough_spear_tip_arcane"
+    },
+    {
+      "item": "statmod:rough_spear_tip_arcane"
     }
   ],
   "result": {
@@ -14,4 +35,3 @@
     "id": "simplyswords:runic_warglaive"
   }
 }
-

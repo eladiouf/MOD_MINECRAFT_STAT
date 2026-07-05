@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tong.statmod.STATMod;
@@ -26,7 +25,6 @@ import java.util.Optional;
  * au moment du {@code onRelease}, qui lit directement l'instance du joueur (et donc sa vraie
  * mastery). On ne duplique pas la logique de scaling, juste l'affichage.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
 public final class TensuraSpellLevelModifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(STATMod.class);
 

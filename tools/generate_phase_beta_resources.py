@@ -23,22 +23,31 @@ DATA = REPO / "src" / "main" / "resources" / "data" / "statmod"
 
 WEAPON_CLASSES = ["blade", "axe_head", "spear_tip", "bow_limb", "staff_core", "dagger_blade"]
 
+FORGING_BLUEPRINT_TOOLTYPES = {
+    "blade": "sword",
+    "axe_head": "axe",
+    "spear_tip": "pickaxe",
+    "bow_limb": "hoe",
+    "staff_core": "multitool",
+    "dagger_blade": "shovel",
+}
+
 # (material_id, anvil_tier, hammering_count, source_heated_id, base_color, en_us_name, fr_fr_name)
 MATERIALS = [
     ("gold",            "iron",    5,  "statmod:heated_gold_ingot",            (255, 215, 0),    "Gold",          "Or"),
     ("tin",             "stone",   3,  "statmod:heated_tin_ingot",             (208, 208, 208),  "Tin",           "Étain"),
     ("bronze",          "stone",   4,  "statmod:heated_bronze_ingot",          (205, 127, 50),   "Bronze",        "Bronze"),
-    ("diamond",         "steel",   6,  "statmod:heated_diamond",               (185, 242, 255),  "Diamond",       "Diamant"),
-    ("pyrium",          "steel",   6,  "statmod:heated_pyrium_ingot",          (255, 107, 53),   "Pyrium",        "Pyrium"),
-    ("arcane",          "steel",   7,  "statmod:heated_arcane_ingot",          (157, 78, 221),   "Arcane",        "Arcanique"),
-    ("mithril",         "steel",   7,  "statmod:heated_mithril_ingot",         (192, 192, 224),  "Mithril",       "Mithril"),
-    ("low_magisteel",   "steel",   7,  "statmod:heated_low_magisteel_ingot",   (112, 128, 144),  "Low Magisteel", "Magiacier Bas"),
-    ("magisteel",       "steel",   8,  "statmod:heated_magisteel_ingot",       (70, 130, 180),   "Magisteel",     "Magiacier"),
-    ("pure_magisteel",  "diamond", 9,  "statmod:heated_pure_magisteel_ingot",  (30, 144, 255),   "Pure Magisteel", "Magiacier Pur"),
-    ("high_magisteel",  "diamond", 10, "statmod:heated_high_magisteel_ingot",  (0, 191, 255),    "High Magisteel", "Haut Magiacier"),
-    ("orichalcum",      "diamond", 10, "statmod:heated_orichalcum_ingot",      (255, 193, 7),    "Orichalcum",    "Orichalque"),
-    ("adamantite",      "diamond", 11, "statmod:heated_adamantite_ingot",      (106, 13, 173),   "Adamantite",    "Adamantite"),
-    ("hihiirokane",     "diamond", 12, "statmod:heated_hihiirokane_ingot",     (220, 20, 60),    "Hihi'irokane",  "Hihi'irokane"),
+    ("diamond",         "above_a", 6,  "statmod:heated_diamond",               (185, 242, 255),  "Diamond",       "Diamant"),
+    ("pyrium",          "above_a", 6,  "statmod:heated_pyrium_ingot",          (255, 107, 53),   "Pyrium",        "Pyrium"),
+    ("arcane",          "above_a", 7,  "statmod:heated_arcane_ingot",          (157, 78, 221),   "Arcane",        "Arcanique"),
+    ("mithril",         "above_a", 7,  "statmod:heated_mithril_ingot",         (192, 192, 224),  "Mithril",       "Mithril"),
+    ("low_magisteel",   "above_a", 7,  "statmod:heated_low_magisteel_ingot",   (112, 128, 144),  "Low Magisteel", "Magiacier Bas"),
+    ("magisteel",       "above_a", 8,  "statmod:heated_magisteel_ingot",       (70, 130, 180),   "Magisteel",     "Magiacier"),
+    ("pure_magisteel",  "above_b", 9,  "statmod:heated_pure_magisteel_ingot",  (30, 144, 255),   "Pure Magisteel", "Magiacier Pur"),
+    ("high_magisteel",  "above_b", 10, "statmod:heated_high_magisteel_ingot",  (0, 191, 255),    "High Magisteel", "Haut Magiacier"),
+    ("orichalcum",      "above_b", 10, "statmod:heated_orichalcum_ingot",      (255, 193, 7),    "Orichalcum",    "Orichalque"),
+    ("adamantite",      "above_b", 11, "statmod:heated_adamantite_ingot",      (106, 13, 173),   "Adamantite",    "Adamantite"),
+    ("hihiirokane",     "above_b", 12, "statmod:heated_hihiirokane_ingot",     (220, 20, 60),    "Hihi'irokane",  "Hihi'irokane"),
 ]
 
 # Patterns par classe : (pattern[], ingot_count, en_label, fr_label)
@@ -120,9 +129,7 @@ def write_forging_recipe(rough_name: str, source_heated: str, anvil_tier: str,
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "type": "overgeared:forging",
-        "blueprint": [class_name.replace("_head", "").replace("_tip", "")
-                                .replace("_limb", "").replace("_core", "")
-                                .replace("_blade", "")],
+        "blueprint": [FORGING_BLUEPRINT_TOOLTYPES[class_name]],
         "category": "TOOL_HEADS",
         "hammering": hammering,
         "key": {"#": {"item": source_heated}},

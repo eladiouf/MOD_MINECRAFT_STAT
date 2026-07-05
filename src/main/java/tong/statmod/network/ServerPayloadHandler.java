@@ -1,7 +1,6 @@
 package tong.statmod.network;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tong.statmod.STATMod;
 import tong.statmod.integration.ironspells.IronInscriptionOpenerService;
@@ -28,8 +27,7 @@ public final class ServerPayloadHandler {
             PerkManager manager = new PerkManager(data);
 
             if (manager.unlock(perk, player)) {
-                PacketDistributor.sendToPlayer(player,
-                        new SyncPerksPayload(data.getUnlockedPerks(), data.getPerkPoints()));
+                SyncHelper.syncPerks(player);
                 SoundHelper.playPerkUnlock(player);
                 STATMod.LOGGER.debug("{} unlocked perk {}", player.getName().getString(), perk.name);
             }

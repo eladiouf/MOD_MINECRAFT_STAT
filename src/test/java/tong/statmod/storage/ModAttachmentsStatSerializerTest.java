@@ -43,6 +43,22 @@ class ModAttachmentsStatSerializerTest {
         assertArrayEquals(expected, serialized);
     }
 
+    @Test
+    void readClearsDeadXpWhenSavedLevelIsAtCap() throws Exception {
+        CompoundTag tag = new CompoundTag();
+        int[] levels = new int[PlayerStatData.STAT_COUNT];
+        int[] xp = new int[PlayerStatData.STAT_COUNT];
+        levels[StatType.BRUTE_FORCE.index] = 999;
+        xp[StatType.BRUTE_FORCE.index] = 12345;
+        tag.putIntArray("Levels", levels);
+        tag.putIntArray("Xp", xp);
+
+        PlayerStatData data = read(tag);
+
+        assertEquals(data.maxStatLevel(), data.getLevel(StatType.BRUTE_FORCE.index));
+        assertEquals(0, data.getXp(StatType.BRUTE_FORCE.index));
+    }
+
     private static PlayerStatData read(CompoundTag tag) throws Exception {
         Object serializer = serializerInstance();
         Method read = serializer.getClass().getDeclaredMethod("read",

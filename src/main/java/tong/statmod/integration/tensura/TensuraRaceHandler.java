@@ -23,6 +23,7 @@ import tong.statmod.magic.MagicRace;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkManager;
+import tong.statmod.progression.LevelUpHandler;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
@@ -79,7 +80,7 @@ public final class TensuraRaceHandler {
 
         // Bonuses are evaluated through RaceEffectApplier at read time;
         // refreshing sync here keeps the client aligned after race changes.
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
             RaceEffectApplier.getEffectiveLevel(player, i);
         }
 
@@ -92,7 +93,7 @@ public final class TensuraRaceHandler {
         if (entity instanceof Player player) {
             PlayerStatData data = player.getData(ModAttachments.STATS);
             String newRaceId = newRace != null ? normalizeRaceId(newRace.getRaceId().toString()) : "tensura:human";
-            int refunded = autoRespecRacePerks(data, newRaceId);
+            int refunded = autoRespecRacePerks(player, data, newRaceId);
             Set<String> oldIntrinsicSkills = oldRace == null ? Set.of() : oldRace.getIntrinsicSkills(player).stream()
                     .map(skill -> skill.getRegistryName().toString())
                     .collect(Collectors.toSet());
@@ -100,10 +101,13 @@ public final class TensuraRaceHandler {
                     .map(skill -> skill.getRegistryName().toString())
                     .collect(Collectors.toSet());
 
-            reconcileIntrinsicPerks(data, oldIntrinsicSkills, intrinsicSkills);
+            reconcileIntrinsicPerks(player, data, oldIntrinsicSkills, intrinsicSkills);
             TensuraEventSubscriber.unlockIntrinsicPerks(player, intrinsicSkills, false);
             applyRaceBonuses(player, false);
-            syncMagicRaceFromTensura(data, newRaceId);
+            boolean magicRaceChanged = syncMagicRaceFromTensura(data, newRaceId);
+            if (magicRaceChanged) {
+                LevelUpHandler.grantPendingPerkTiers(data);
+            }
 
             if (player instanceof ServerPlayer serverPlayer) {
                 if (refunded > 0) {
@@ -118,6 +122,10 @@ public final class TensuraRaceHandler {
     }
 
     static int autoRespecRacePerks(PlayerStatData data, String newRaceId) {
+        return autoRespecRacePerks(null, data, newRaceId);
+    }
+
+    static int autoRespecRacePerks(Player player, PlayerStatData data, String newRaceId) {
         if (data == null) {
             return 0;
         }
@@ -135,7 +143,7 @@ public final class TensuraRaceHandler {
             Perk perk = Perk.byId(perkId);
             if (perk != null) {
                 boolean refundable = !data.isPerkFreeGranted(perk.id);
-                if (perks.revoke(perk, true) && refundable) {
+                if (perks.revoke(perk, true, player) && refundable) {
                     refunded += perk.tier.cost;
                 }
             }
@@ -145,6 +153,10 @@ public final class TensuraRaceHandler {
     }
 
     static int reconcileIntrinsicPerks(PlayerStatData data, Set<String> oldIntrinsicSkills, Set<String> newIntrinsicSkills) {
+        return reconcileIntrinsicPerks(null, data, oldIntrinsicSkills, newIntrinsicSkills);
+    }
+
+    static int reconcileIntrinsicPerks(Player player, PlayerStatData data, Set<String> oldIntrinsicSkills, Set<String> newIntrinsicSkills) {
         if (data == null) {
             return 0;
         }
@@ -160,7 +172,7 @@ public final class TensuraRaceHandler {
             }
 
             Perk perk = Perk.byId(perkId);
-            if (perk != null && data.isPerkFreeGranted(perk.id) && perks.revoke(perk, true)) {
+            if (perk != null && data.isPerkFreeGranted(perk.id) && perks.revoke(perk, true, player)) {
                 changed++;
             }
         }
@@ -171,7 +183,7 @@ public final class TensuraRaceHandler {
             }
 
             Perk perk = Perk.byId(perkId);
-            if (perk != null && perks.grant(perk)) {
+            if (perk != null && perks.grant(perk, player)) {
                 changed++;
             }
         }
@@ -179,21 +191,11 @@ public final class TensuraRaceHandler {
         return changed;
     }
     public static int getFlatBonus(Player player, int statIndex) {
-        String raceId = getRaceName(player);
-        return RaceModifierRegistry.get(raceId).modifiers().stream()
-                .filter(modifier -> modifier.statIndex() == statIndex)
-                .mapToInt(modifier -> modifier.flatBonus())
-                .findFirst()
-                .orElse(0);
+        return RaceEffectApplier.getRaceFlatBonus(player, statIndex);
     }
 
     public static double getXpMultiplier(Player player, int statIndex) {
-        String raceId = getRaceName(player);
-        return RaceModifierRegistry.get(raceId).modifiers().stream()
-                .filter(modifier -> modifier.statIndex() == statIndex)
-                .mapToDouble(modifier -> modifier.xpMultiplier())
-                .findFirst()
-                .orElse(1.0d);
+        return RaceEffectApplier.getXpMultiplier(player, statIndex);
     }
 
     @SubscribeEvent
@@ -206,7 +208,12 @@ public final class TensuraRaceHandler {
             // Ne pas remplacer une race magique persistée par le fallback "human" tant que
             // Tensura n'a pas encore résolu de vraie race pour ce joueur.
             if (syncMagicRaceFromTensura(data, rawRaceId)) {
+                int granted = LevelUpHandler.grantPendingPerkTiers(data);
                 SyncHelper.syncMagic(serverPlayer);
+                SyncHelper.syncStats(serverPlayer);
+                if (granted > 0) {
+                    SyncHelper.syncPerks(serverPlayer);
+                }
             }
         }
     }
@@ -219,7 +226,12 @@ public final class TensuraRaceHandler {
             PlayerStatData data = player.getData(ModAttachments.STATS);
             String rawRaceId = PlayerDataBridge.getOptionalRaceId(player).orElse(null);
             if (syncMagicRaceFromTensura(data, rawRaceId)) {
+                int granted = LevelUpHandler.grantPendingPerkTiers(data);
                 SyncHelper.syncMagic(serverPlayer);
+                SyncHelper.syncStats(serverPlayer);
+                if (granted > 0) {
+                    SyncHelper.syncPerks(serverPlayer);
+                }
             }
         }
     }
@@ -243,9 +255,13 @@ public final class TensuraRaceHandler {
         MagicRace expectedMagicRace = TensuraToMagicRaceMapper.fromTensuraRaceId(rawRaceId);
         if (currentMagicRace != expectedMagicRace) {
             if (syncMagicRaceFromTensura(data, rawRaceId)) {
+                int granted = LevelUpHandler.grantPendingPerkTiers(data);
                 applyRaceBonuses(player);
                 SyncHelper.syncMagic(serverPlayer);
                 SyncHelper.syncStats(serverPlayer);
+                if (granted > 0) {
+                    SyncHelper.syncPerks(serverPlayer);
+                }
             }
         }
     }

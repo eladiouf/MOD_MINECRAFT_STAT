@@ -1,49 +1,67 @@
 {
   "minecraft:recipes/decorations/crafting_table": {
     "criteria": {
-      "unlock_right_away": "2026-06-30 20:02:13 +0000"
-    },
-    "done": true
-  },
-  "xbbsroaringknightmod:root_roaring_knight": {
-    "criteria": {
-      "root_roaring_knight": "2026-06-30 20:02:13 +0000"
-    },
-    "done": true
-  },
-  "tensura:fast_learner": {
-    "criteria": {
-      "skill": "2026-06-30 20:02:23 +0000"
+      "unlock_right_away": "2026-07-04 17:20:29 +0000"
     },
     "done": true
   },
   "tensura:real_adventure": {
     "criteria": {
-      "ability": "2026-06-30 20:02:23 +0000"
+      "ability": "2026-07-04 17:20:44 +0000"
+    },
+    "done": true
+  },
+  "parcool:grant_parcool_guide": {
+    "criteria": {
+      "tick": "2026-07-04 17:20:29 +0000"
+    },
+    "done": true
+  },
+  "slu:souls_like_universe": {
+    "criteria": {
+      "souls_like_universe_0": "2026-07-04 17:20:29 +0000"
+    },
+    "done": true
+  },
+  "xbbsroaringknightmod:root_roaring_knight": {
+    "criteria": {
+      "root_roaring_knight": "2026-07-04 17:20:29 +0000"
+    },
+    "done": true
+  },
+  "lootr:root": {
+    "criteria": {
+      "always_true": "2026-07-04 17:20:29 +0000"
+    },
+    "done": true
+  },
+  "tensura:fast_learner": {
+    "criteria": {
+      "skill": "2026-07-04 17:20:44 +0000"
+    },
+    "done": true
+  },
+  "apotheosis:progression/root": {
+    "criteria": {
+      "tick": "2026-07-04 17:20:29 +0000"
     },
     "done": true
   },
   "overgeared:root": {
     "criteria": {
-      "Trigger": "2026-06-30 20:02:13 +0000"
+      "Trigger": "2026-07-04 17:20:29 +0000"
     },
     "done": true
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:dark_forest": "2026-06-30 20:02:14 +0000"
+      "minecraft:forest": "2026-07-04 17:20:30 +0000"
     },
     "done": false
   },
-  "parcool:grant_parcool_guide": {
-    "criteria": {
-      "tick": "2026-06-30 20:02:13 +0000"
-    },
-    "done": true
-  },
   "tensura:reincarnated": {
     "criteria": {
-      "reincarnation": "2026-06-30 20:02:23 +0000"
+      "reincarnation": "2026-07-04 17:20:44 +0000"
     },
     "done": true
   },

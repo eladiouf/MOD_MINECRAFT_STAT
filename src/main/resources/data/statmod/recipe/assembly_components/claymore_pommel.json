@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "statmod:wire_wrap"
+    }
+  },
+  "pattern": [
+    " G ",
+    "WIW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:claymore_pommel"
+  }
+}

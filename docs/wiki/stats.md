@@ -1,10 +1,12 @@
 ---
 title: Stats
-description: "Liste complète des 22 stats"
+description: "Liste complète des 23 stats"
 nav_order: 4
 ---
 
 # Stats
+
+STAT MOD expose 23 stats runtime : 14 stats de base combat/magie et 9 stats de support/progression.
 
 ## Stats Actives (14)
 | Stat | Catégorie | Index |
@@ -36,3 +38,9 @@ nav_order: 4
 | Alchemy | CRAFTING_SUPPORT | 20 |
 | Intimidation | MENTAL_PRESSURE_RESILIENCE | 21 |
 | Willpower | MENTAL_PRESSURE_RESILIENCE | 22 |
+
+## Pools Mana et Stamina
+
+- Stamina STATMod : reserve longue de base 300, +3 par niveau de Physical Endurance. Pas de regeneration passive en idle; sprint draine lentement, Epic Fight recoit un `MAX_STAMINA` aligne sur ce gros pool et ses couts sont consommes par STATMod, les drains maintenus ParCool restent bas, et le sommeil remet la reserve a plein.
+- Mana Iron's Spellbooks : Mana Pool augmente surtout la reserve maximale (+3 par niveau, +50 avec le core perk). STATMod neutralise la regeneration passive de base de l'attribut Iron's `MANA_REGEN`, mais conserve les remboursements de mana apres cast, les restores explicites et les bonus/perks qui ne sont pas de la regen passive. Les sources XP de cast/inscription Iron's sont enregistrees uniquement si Iron's Spellbooks est charge.
+- Respawn : les niveaux, XP, perks, progression magique, progression donjon, stamina et fatigue sont copies explicitement sur `PlayerEvent.Clone`, donc mourir ne remet pas les stats a zero.

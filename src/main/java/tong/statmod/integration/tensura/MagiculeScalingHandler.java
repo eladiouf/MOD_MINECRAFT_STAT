@@ -1,5 +1,6 @@
 package tong.statmod.integration.tensura;
 
+import io.github.manasmods.tensura.util.EnergyHelper;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -14,8 +15,16 @@ public final class MagiculeScalingHandler {
         return Math.max(0, arcanePower) + Math.max(0, manaPool);
     }
 
-    public static double scaledMagicule(double currentMagicule, int arcanePower, int manaPool) {
-        return Math.max(currentMagicule, magiculeFloor(arcanePower, manaPool));
+    public static double requiredMaxMagicule(double currentBaseMaxMagicule, int arcanePower, int manaPool) {
+        return Math.max(Math.max(0.0, currentBaseMaxMagicule), magiculeFloor(arcanePower, manaPool));
+    }
+
+    public static double scaledMagicule(double currentMagicule, double effectiveMaxMagicule, int arcanePower, int manaPool) {
+        double floor = magiculeFloor(arcanePower, manaPool);
+        if (effectiveMaxMagicule <= 0.0) {
+            return currentMagicule;
+        }
+        return Math.max(currentMagicule, Math.min(floor, effectiveMaxMagicule));
     }
 
     @SubscribeEvent
@@ -31,7 +40,13 @@ public final class MagiculeScalingHandler {
 
         int arcanePower = RaceEffectApplier.getEffectiveLevel(player, StatType.ARCANE_POWER.index);
         int manaPool = RaceEffectApplier.getEffectiveLevel(player, StatType.MANA_POOL.index);
-        double scaled = scaledMagicule(existence.getMagicule(), arcanePower, manaPool);
+        double currentBaseMaxMagicule = EnergyHelper.getBaseMaxMagicule(player);
+        double requiredMaxMagicule = requiredMaxMagicule(currentBaseMaxMagicule, arcanePower, manaPool);
+        if (requiredMaxMagicule > currentBaseMaxMagicule) {
+            EnergyHelper.setMaxMagicule(player, requiredMaxMagicule);
+        }
+
+        double scaled = scaledMagicule(existence.getMagicule(), EnergyHelper.getMaxMagicule(player), arcanePower, manaPool);
         if (scaled > existence.getMagicule()) {
             existence.setMagicule(scaled);
             existence.markDirty();

@@ -8,9 +8,7 @@ import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.network.SyncHelper;
@@ -19,7 +17,6 @@ import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
-@EventBusSubscriber(modid = STATMod.MODID)
 public class MagicXpBridge {
 
     @SubscribeEvent

@@ -1,0 +1,18 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"magistuarmoryaddon:golden_cross_necklace_decoration","components":{"tensura:max_existence_point":0.0}},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"slu:hollow_soul"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:netherite_battlestaff"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:bonecutting_saw"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:nailbat"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:iron_light_greatsword"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:diamond_battlestaff"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:milady"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"epicfight_dd:golden_knife"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"slu:noble_sword"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"statmod:heated_hihiirokane_ingot"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"overgeared:tier_a_smithing_anvil"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"statmod:rough_bow_limb_hihiirokane"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"overgeared:tier_b_smithing_anvil"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"statmod:heated_bronze_ingot"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

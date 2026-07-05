@@ -1,7 +1,6 @@
 package tong.statmod.progression;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,8 +51,11 @@ public class NonCombatXPHandler {
     static boolean isIronSpellBook(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return false;
         if (!ModList.get().isLoaded("irons_spellbooks")) return false;
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return "irons_spellbooks".equals(id.getNamespace()) && id.getPath().endsWith("_spell_book");
+        try {
+            return stack.getItem() instanceof io.redspace.ironsspellbooks.item.SpellBook;
+        } catch (NoClassDefFoundError ignored) {
+            return false;
+        }
     }
 
     @SubscribeEvent

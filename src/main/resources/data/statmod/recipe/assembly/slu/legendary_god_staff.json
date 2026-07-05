@@ -6,7 +6,25 @@
       "item": "statmod:rough_staff_core_hihiirokane"
     },
     {
+      "item": "statmod:staff_focus"
+    },
+    {
       "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:staff_focus"
+    },
+    {
+      "item": "statmod:rough_staff_core_hihiirokane"
+    },
+    {
+      "item": "statmod:staff_focus"
     }
   ],
   "result": {

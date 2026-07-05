@@ -163,7 +163,7 @@ public final class ParcoolCompat {
             case "wallrun", "horizontalwallrun", "verticalwallrun",
                  "crawl", "climbpoles", "climbup", "clingtocliff",
                  "hangdown", "wallslide", "fastrun", "fastswim",
-                 "dive", "skydive" -> 2.0f;
+                 "dive", "skydive" -> 0.5f;
             default -> 0.0f;
         };
     }

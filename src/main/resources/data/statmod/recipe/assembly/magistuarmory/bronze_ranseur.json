@@ -6,6 +6,24 @@
       "item": "statmod:rough_spear_tip_bronze"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
       "item": "statmod:wooden_grip"
     }
   ],

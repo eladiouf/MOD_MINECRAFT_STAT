@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "statmod:rough_axe_head_diamond"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tensura:cooked_giant_bat_meat"
+  }
+}

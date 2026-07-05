@@ -6,7 +6,28 @@
       "item": "statmod:rough_axe_head_hihiirokane"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "statmod:warhammer_core"
+    },
+    {
+      "item": "statmod:rough_axe_head_hihiirokane"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "statmod:rough_axe_head_hihiirokane"
     }
   ],
   "result": {

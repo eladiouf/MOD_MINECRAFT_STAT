@@ -1,0 +1,20 @@
+{
+  "type": "overgeared:item_to_tooltype",
+  "item": [
+    { "item": "statmod:rough_axe_head_gold" },
+    { "item": "statmod:rough_axe_head_tin" },
+    { "item": "statmod:rough_axe_head_bronze" },
+    { "item": "statmod:rough_axe_head_diamond" },
+    { "item": "statmod:rough_axe_head_pyrium" },
+    { "item": "statmod:rough_axe_head_arcane" },
+    { "item": "statmod:rough_axe_head_mithril" },
+    { "item": "statmod:rough_axe_head_low_magisteel" },
+    { "item": "statmod:rough_axe_head_magisteel" },
+    { "item": "statmod:rough_axe_head_pure_magisteel" },
+    { "item": "statmod:rough_axe_head_high_magisteel" },
+    { "item": "statmod:rough_axe_head_orichalcum" },
+    { "item": "statmod:rough_axe_head_adamantite" },
+    { "item": "statmod:rough_axe_head_hihiirokane" }
+  ],
+  "tooltype": "axe"
+}

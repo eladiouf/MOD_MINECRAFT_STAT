@@ -39,7 +39,7 @@ public final class ParcoolAttributeHandler {
         applyModifier(player, Attributes.MAX_STAMINA, MAX_STAMINA_ID,
                 RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index), lastMaxStamina, uuid, 0.01);
         applyModifier(player, Attributes.STAMINA_RECOVERY, STAMINA_RECOVERY_ID,
-                RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index), lastStaminaRecovery, uuid, 0.005);
+                RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index), lastStaminaRecovery, uuid, 0.0);
         applyModifier(player, net.minecraft.world.entity.ai.attributes.Attributes.JUMP_STRENGTH, JUMP_STRENGTH_ID,
                 RaceEffectApplier.getEffectiveLevel(player, StatType.AGILITY.index), lastAgility, uuid, 0.002);
 
@@ -60,12 +60,13 @@ public final class ParcoolAttributeHandler {
 
         instance.removeModifier(id);
 
-        if (level > 0) {
+        double amount = level * perLevel;
+        if (level > 0 && Math.abs(amount) > 1.0e-6d) {
             instance.addPermanentModifier(
-                    new AttributeModifier(id, level * perLevel, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                    new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
 
-        if (level == 0) {
+        if (level == 0 || Math.abs(amount) <= 1.0e-6d) {
             cache.remove(uuid);
         } else {
             cache.put(uuid, level);

@@ -6,6 +6,21 @@
       "item": "statmod:rough_spear_tip_diamond"
     },
     {
+      "item": "statmod:halberd_socket"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "statmod:wooden_grip"
+    },
+    {
       "item": "statmod:wooden_grip"
     }
   ],

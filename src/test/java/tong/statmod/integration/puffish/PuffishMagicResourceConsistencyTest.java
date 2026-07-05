@@ -3,6 +3,8 @@ package tong.statmod.integration.puffish;
 import org.junit.jupiter.api.Test;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.magic.MagicNode;
+import tong.statmod.magic.MagicNodeKind;
+import tong.statmod.magic.MagicTier;
 import tong.statmod.magic.MagicTreeCatalog;
 
 import java.io.InputStream;
@@ -225,12 +227,59 @@ class PuffishMagicResourceConsistencyTest {
         assertTrue(tier > signature, "tier nodes must dominate spell nodes");
     }
 
+    @Test
+    void generated_and_static_magic_requirements_omit_redundant_lower_duplicate_stat_gates() throws Exception {
+        String generated = PuffishMagicTreeBuilder.unifiedCategoryFiles().definitionsJson();
+        String staticJson = readMagicDefinitionsResource();
+
+        for (String json : List.of(generated, staticJson)) {
+            assertDefinitionContains(json, "holy.tier.grace_path", "Erudition ≥ 10");
+            assertDefinitionExcludes(json, "holy.tier.grace_path", "Erudition ≥ 3");
+            assertDefinitionContains(json, "evocation.tier.trick_path", "Erudition ≥ 3");
+            assertDefinitionExcludes(json, "evocation.tier.trick_path", "Erudition ≥ 1");
+            assertDefinitionContains(json, "evocation.tier.mastery_path", "Erudition ≥ 20");
+            assertDefinitionExcludes(json, "evocation.tier.mastery_path", "Erudition ≥ 5");
+        }
+    }
+
+    @Test
+    void generated_and_static_basic_element_t1_nodes_stay_free_of_visible_requirements() throws Exception {
+        String generated = PuffishMagicTreeBuilder.unifiedCategoryFiles().definitionsJson();
+        String staticJson = readMagicDefinitionsResource();
+
+        Set<MagicBranch> basicElements = Set.of(
+                MagicBranch.FIRE, MagicBranch.WATER, MagicBranch.AIR, MagicBranch.EARTH
+        );
+        List<String> freeT1Definitions = MagicTreeCatalog.all().stream()
+                .filter(node -> basicElements.contains(node.branch()))
+                .filter(node -> node.kind() == MagicNodeKind.BRANCH_OPENER
+                        || (node.tier() == MagicTier.T1
+                        && (node.kind() == MagicNodeKind.BRANCH_TIER
+                        || node.kind() == MagicNodeKind.SIGNATURE_SPELL)))
+                .map(node -> node.id().replace('/', '.'))
+                .toList();
+
+        for (String json : List.of(generated, staticJson)) {
+            for (String skillId : freeT1Definitions) {
+                assertDefinitionExcludes(json, skillId, "Requirements:");
+            }
+        }
+    }
+
     private static void assertHasResource(ClassLoader loader, String category, String fileName) {
         String path = "data/statmod/puffish_skills/categories/" + category + "/" + fileName;
         try (InputStream stream = loader.getResourceAsStream(path)) {
             assertNotNull(stream, "missing resource " + path);
         } catch (Exception e) {
             throw new AssertionError("failed to read resource " + path, e);
+        }
+    }
+
+    private static String readMagicDefinitionsResource() throws Exception {
+        try (InputStream stream = PuffishMagicResourceConsistencyTest.class.getClassLoader().getResourceAsStream(
+                "data/statmod/puffish_skills/categories/statmod_magic/definitions.json")) {
+            assertNotNull(stream, "missing unified magic definitions");
+            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
 
@@ -350,6 +399,24 @@ class PuffishMagicResourceConsistencyTest {
         Matcher matcher = pattern.matcher(json);
         assertTrue(matcher.find(), "missing size for " + skillId);
         return Float.parseFloat(matcher.group(1));
+    }
+
+    private static void assertDefinitionContains(String json, String skillId, String needle) {
+        assertTrue(definitionBlock(json, skillId).contains(needle),
+                skillId + " should contain requirement " + needle);
+    }
+
+    private static void assertDefinitionExcludes(String json, String skillId, String needle) {
+        assertFalse(definitionBlock(json, skillId).contains(needle),
+                skillId + " should not duplicate weaker requirement " + needle);
+    }
+
+    private static String definitionBlock(String json, String skillId) {
+        String startNeedle = "\"" + skillId + "\": {";
+        int start = json.indexOf(startNeedle);
+        assertTrue(start >= 0, "missing definition for " + skillId);
+        int end = json.indexOf("\n    \"", start + startNeedle.length());
+        return json.substring(start, end < 0 ? json.length() : end);
     }
 
     private static void assertDefinitionUsesTexture(String json, String skillId, String texture) {

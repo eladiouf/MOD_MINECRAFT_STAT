@@ -13,52 +13,38 @@ class MagicNodeMigrationTest {
     private final PlayerStatData data = new PlayerStatData();
     private final ConditionContext ctx = ConditionContext.defaultContext();
 
-    @Test void migrated_firebolt_requires_arcane2_erudition2_affinity1() {
-        Condition c = MagicNodeMigration.defaultCondition(firebolt());
-        data.setLevel(StatType.ARCANE_POWER.index, 2);
-        data.setLevel(StatType.ERUDITION.index, 2);
-        data.setLevel(StatType.FIRE_AFFINITY.index, 1);
-        assertTrue(c.evaluate(data, ctx));
+    @Test void migrated_firebolt_basic_element_t1_no_conditions() {
+        assertNull(MagicNodeMigration.defaultCondition(firebolt()),
+                "Basic element T1 spells should have no conditions");
     }
 
-    @Test void migrated_firebolt_fails_without_affinity() {
-        Condition c = MagicNodeMigration.defaultCondition(firebolt());
-        data.setLevel(StatType.ARCANE_POWER.index, 2);
-        data.setLevel(StatType.ERUDITION.index, 2);
-        data.setLevel(StatType.FIRE_AFFINITY.index, 0);
-        assertFalse(c.evaluate(data, ctx));
+    @Test void migrated_fire_opener_basic_element_t1_no_conditions() {
+        assertNull(MagicNodeMigration.defaultCondition(fireOpener()),
+                "Basic element T1 openers should have no conditions");
     }
 
-    @Test void migrated_fire_opener_requires_arcane2_erudition1_affinity2() {
-        Condition c = MagicNodeMigration.defaultCondition(fireOpener());
-        data.setLevel(StatType.ARCANE_POWER.index, 2);
-        data.setLevel(StatType.ERUDITION.index, 1);
-        data.setLevel(StatType.FIRE_AFFINITY.index, 2);
-        assertTrue(c.evaluate(data, ctx));
-    }
-
-    @Test void migrated_trunk_has_no_tertiary() {
+    @Test void migrated_trunk_root_only_needs_erudition() {
         Condition c = MagicNodeMigration.defaultCondition(trunk());
-        data.setLevel(StatType.ARCANE_POWER.index, 1);
         data.setLevel(StatType.ERUDITION.index, 1);
         assertTrue(c.evaluate(data, ctx));
-        assertInstanceOf(Condition.And.class, c);
-        Condition.And and = (Condition.And) c;
-        assertEquals(2, and.children().size(), "Trunk should only have 2 conditions (no tertiary)");
+        assertInstanceOf(Condition.StatCondition.class, c);
+        Condition.StatCondition sc = (Condition.StatCondition) c;
+        assertEquals(StatType.ERUDITION, sc.stat());
+        assertEquals(1, sc.minLevel());
     }
 
     @Test void migrated_meteor_requires_intimidation5() {
         Condition c = MagicNodeMigration.defaultCondition(meteor());
-        data.setLevel(StatType.ARCANE_POWER.index, 6);
-        data.setLevel(StatType.ERUDITION.index, 5);
+        data.setLevel(StatType.ARCANE_POWER.index, 30);
+        data.setLevel(StatType.ERUDITION.index, 20);
         data.setLevel(StatType.INTIMIDATION.index, 5);
         assertTrue(c.evaluate(data, ctx));
     }
 
     @Test void migrated_burningDash_requires_agility3() {
         Condition c = MagicNodeMigration.defaultCondition(burningDash());
-        data.setLevel(StatType.ARCANE_POWER.index, 4);
-        data.setLevel(StatType.ERUDITION.index, 3);
+        data.setLevel(StatType.ARCANE_POWER.index, 15);
+        data.setLevel(StatType.ERUDITION.index, 10);
         data.setLevel(StatType.AGILITY.index, 3);
         assertTrue(c.evaluate(data, ctx));
     }

@@ -3,6 +3,10 @@ package tong.statmod;
 import org.junit.jupiter.api.Test;
 import tong.statmod.stats.StatFamily;
 import tong.statmod.stats.StatType;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StatTypeTest {
@@ -44,5 +48,16 @@ class StatTypeTest {
     @Test
     void testCount() {
         assertEquals(23, StatType.values().length);
+    }
+
+    @Test
+    void playerStatDataStatCountDerivesFromStatTypeEnum() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java",
+                "tong", "statmod", "storage", "PlayerStatData.java"));
+
+        assertTrue(source.contains("public static final int STAT_COUNT = StatType.values().length;"),
+                "PlayerStatData.STAT_COUNT must follow StatType.values().length instead of duplicating a numeric literal");
+        assertFalse(source.contains("public static final int STAT_COUNT = 23;"),
+                "duplicated stat counts silently desync data arrays when stats are added or removed");
     }
 }

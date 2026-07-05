@@ -59,6 +59,12 @@ public final class DungeonBossHandler {
         int floor = DungeonTeleportHandler.floorAtPos(sp.getBlockX(), sp.getBlockZ());
         if (floor <= 0) return;
 
+        // Système de points : tout mob de donjon (nos mobs autorisés) tué par le joueur rapporte
+        // des points ∝ étage. Remplace le drop de cristaux (les mobs ne dropent plus rien).
+        if (target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) {
+            DungeonPoints.awardMobKill(sp, floor);
+        }
+
         DungeonObjective objective = DungeonObjective.forFloor(floor);
         switch (objective) {
             case SLAY_BOSS -> handleBossFloor(sp, floor, target);

@@ -242,7 +242,8 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `dungeon/ModdedMobPool.java` | Mobs moddés (10 mods : slu, irons_spellbooks, tensura, block_factorys_bosses, cataclysm, born_in_chaos_v1, mutantmonsters, mowziesmobs, alexsmobs) + vanilla (50 %) ; pool 100 % thématique si étage à thème |
 | `dungeon/DungeonThemes.java` | **100 thèmes** (1 par étage, généré par `tools/gen_dungeon_themes.py`) : 10 arcs de 10 étages, difficulté croissante, horde + mini-boss par étage, boucle au-delà de 100. Thème superposé au rôle (×5 trésor / ×10 boss conservés) |
 | `dungeon/DungeonMobSpawner.java` | Une vague de combat par étage (posée à l'entrée, pas de réalimentation) + calage L2 différé |
-| `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : retire tout drop non-`statmod:` dans le donjon (les mobs SLU MCreator droppent leur équipement hors loot table → le GLM ne les voyait pas) |
+| `dungeon/DungeonDropGuard.java` | `LivingDropsEvent` : **zéro drop** de mob dans le donjon (système de points remplace le loot en cristaux) |
+| `dungeon/DungeonPoints.java` | Système de points : mob tué / boss / conquête → points ∝ étage ; mort → perte punitive (25 %, min 20). Stockés dans `PlayerStatData.dungeonPoints` (persistés + sync HUD) |
 | `dungeon/DungeonObjective.java` | Objectif d'un étage selon son rôle : `CLEAR_WAVE` / `LOOT_VAULT` / `SLAY_BOSS` |
 | `dungeon/DungeonProgress.java` | Autorité unique de conquête : unlock étage suivant + célébration (son/particules/message) + jalons |
 | `dungeon/DungeonBossHandler.java` | Handler de conquête unifié (combat = vague nettoyée, boss = roster mort) → `DungeonProgress` |

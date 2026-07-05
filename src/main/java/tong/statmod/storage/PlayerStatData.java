@@ -5,7 +5,7 @@ import tong.statmod.stats.StatFamily;
 import tong.statmod.stats.StatType;
 
 public class PlayerStatData {
-    public static final int STAT_COUNT = 23;
+    public static final int STAT_COUNT = StatType.values().length;
     public static final int PERK_FAMILY_COUNT = StatFamily.values().length;
     private final int[] levels = new int[STAT_COUNT];
     private final int[] xp = new int[STAT_COUNT];
@@ -20,7 +20,7 @@ public class PlayerStatData {
      * déverrouiller des nœuds. Migration depuis les anciens champs {@code arcanePoints} +
      * {@code schoolPoints} est gérée par {@link MagicStateSerializer} (capped à 100).
      */
-    private int magicPoints;
+    private int magicPoints = 5; // 5 points de départ pour débloquer les premiers nœuds
     /**
      * @deprecated Ne plus écrire — conservé en lecture pour la migration depuis les saves
      *             pré-Mission-δ. La somme est draînée vers {@link #magicPoints} au load.
@@ -68,12 +68,45 @@ public class PlayerStatData {
      */
     private long lastOverworldPosPacked;
     private boolean hasLastOverworldPos;
+    /**
+     * Points de donjon accumulés (Mission M6 — système de points, 2026-07-05). Gagnés en tuant
+     * mobs/boss et en conquérant des étages ; perdus à la mort (mort punitive). Échangeables à la
+     * sortie (feature à venir). Ne descend jamais sous 0.
+     */
+    private int dungeonPoints = 0;
 
     public int[] getLevels() { return levels.clone(); }
     public int[] getXp() { return xp.clone(); }
     public int[] getPerkPoints() { return perkPoints.clone(); }
     public int[] getUnlockedPerks() { return unlockedPerks.clone(); }
     public int[] getFreeGrantedPerks() { return freeGrantedPerks.clone(); }
+
+    public void copyFrom(PlayerStatData source) {
+        if (source == null || source == this) {
+            return;
+        }
+
+        System.arraycopy(source.levels, 0, levels, 0, levels.length);
+        System.arraycopy(source.xp, 0, xp, 0, xp.length);
+        System.arraycopy(source.perkPoints, 0, perkPoints, 0, perkPoints.length);
+        unlockedPerks = normalizePerkIds(source.unlockedPerks);
+        freeGrantedPerks = retainUnlockedPerks(source.freeGrantedPerks);
+        soulLevel = source.soulLevel;
+        magicPoints = source.magicPoints;
+        arcanePoints = source.arcanePoints;
+        System.arraycopy(source.schoolPoints, 0, schoolPoints, 0, schoolPoints.length);
+        System.arraycopy(source.schoolMasteryProgress, 0, schoolMasteryProgress, 0, schoolMasteryProgress.length);
+        lastPerkGrantTier = source.lastPerkGrantTier;
+        magicNodes = normalizeStringIds(source.magicNodes);
+        learnedSpells = normalizeStringIds(source.learnedSpells);
+        magicRace = source.magicRace;
+        chosenStartBranch = source.chosenStartBranch;
+        dungeonFloorReached = source.dungeonFloorReached;
+        lastOverworldDimensionId = source.lastOverworldDimensionId;
+        lastOverworldPosPacked = source.lastOverworldPosPacked;
+        hasLastOverworldPos = source.hasLastOverworldPos;
+        dungeonPoints = source.dungeonPoints;
+    }
 
     public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
     public int getXp(int index) { return index >= 0 && index < STAT_COUNT ? xp[index] : 0; }
@@ -86,8 +119,19 @@ public class PlayerStatData {
         return family != null ? perkPoints[family.ordinal()] : 0;
     }
 
-    public void setLevel(int index, int value) { if (index >= 0 && index < STAT_COUNT) levels[index] = value; }
-    public void setXp(int index, int value) { if (index >= 0 && index < STAT_COUNT) xp[index] = value; }
+    public void setLevel(int index, int value) {
+        if (index >= 0 && index < STAT_COUNT) {
+            levels[index] = clampLevel(value);
+            if (levels[index] >= maxStatLevel()) {
+                xp[index] = 0;
+            }
+        }
+    }
+    public void setXp(int index, int value) {
+        if (index >= 0 && index < STAT_COUNT) {
+            xp[index] = levels[index] >= maxStatLevel() ? 0 : Math.max(0, value);
+        }
+    }
     public void setPerkPoints(int index, int value) {
         StatType stat = StatType.byIndex(index);
         if (stat != null) {
@@ -107,6 +151,7 @@ public class PlayerStatData {
     }
 
     public void addUnlockedPerk(int perkId) {
+        if (perkId < 0) return;
         if (isPerkUnlocked(perkId)) return;
         int[] next = new int[unlockedPerks.length + 1];
         System.arraycopy(unlockedPerks, 0, next, 0, unlockedPerks.length);
@@ -114,8 +159,14 @@ public class PlayerStatData {
         unlockedPerks = next;
     }
 
-    public void setUnlockedPerks(int[] ids) { unlockedPerks = ids.clone(); }
-    public void setFreeGrantedPerks(int[] ids) { freeGrantedPerks = ids.clone(); }
+    public void setUnlockedPerks(int[] ids) {
+        unlockedPerks = normalizePerkIds(ids);
+        freeGrantedPerks = retainUnlockedPerks(freeGrantedPerks);
+    }
+
+    public void setFreeGrantedPerks(int[] ids) {
+        freeGrantedPerks = retainUnlockedPerks(ids);
+    }
 
     public void clearUnlockedPerks() {
         unlockedPerks = new int[0];
@@ -147,6 +198,7 @@ public class PlayerStatData {
     }
 
     public void markPerkFreeGranted(int perkId) {
+        if (perkId < 0) return;
         addUnlockedPerk(perkId);
         if (isPerkFreeGranted(perkId)) return;
         int[] next = new int[freeGrantedPerks.length + 1];
@@ -161,7 +213,10 @@ public class PlayerStatData {
 
     public int getSoulLevel() { return soulLevel; }
 
-    public void setSoulLevel(int level) { soulLevel = Math.max(0, level); }
+    public void setSoulLevel(int level) {
+        soulLevel = Math.max(0, level);
+        clampLevelsToCurrentCap();
+    }
 
     public int getLastPerkGrantTier() { return lastPerkGrantTier; }
     public void setLastPerkGrantTier(int tier) { lastPerkGrantTier = Math.max(0, tier); }
@@ -190,7 +245,7 @@ public class PlayerStatData {
 
     public void setMagicPoints(int v) { magicPoints = Math.max(0, v); }
 
-    public void addMagicPoints(int delta) { magicPoints = Math.max(0, magicPoints + delta); }
+    public void addMagicPoints(int delta) { magicPoints = saturatingAddNonNegative(magicPoints, delta); }
 
     /**
      * Cap absolu pour la migration des saves pré-Mission-δ. Évite qu'un joueur dev avec un
@@ -252,17 +307,18 @@ public class PlayerStatData {
         if (b != null) schoolMasteryProgress[b.ordinal()] = Math.max(0, v);
     }
     public void addSchoolMasteryProgress(tong.statmod.magic.MagicBranch b, int delta) {
-        if (b != null) schoolMasteryProgress[b.ordinal()] = Math.max(0, schoolMasteryProgress[b.ordinal()] + delta);
+        if (b != null) schoolMasteryProgress[b.ordinal()] = saturatingAddNonNegative(schoolMasteryProgress[b.ordinal()], delta);
     }
 
     public String[] getMagicNodes() { return magicNodes.clone(); }
-    public void setMagicNodes(String[] ids) { magicNodes = ids.clone(); }
+    public void setMagicNodes(String[] ids) { magicNodes = normalizeStringIds(ids); }
     public boolean hasMagicNode(String id) {
+        if (!isUsableId(id)) return false;
         for (String s : magicNodes) if (s.equals(id)) return true;
         return false;
     }
     public boolean addMagicNode(String id) {
-        if (id == null || hasMagicNode(id)) return false;
+        if (!isUsableId(id) || hasMagicNode(id)) return false;
         String[] next = new String[magicNodes.length + 1];
         System.arraycopy(magicNodes, 0, next, 0, magicNodes.length);
         next[magicNodes.length] = id;
@@ -271,7 +327,7 @@ public class PlayerStatData {
     }
 
     public boolean removeMagicNode(String id) {
-        if (id == null || magicNodes.length == 0 || !hasMagicNode(id)) return false;
+        if (!isUsableId(id) || magicNodes.length == 0 || !hasMagicNode(id)) return false;
         String[] next = new String[magicNodes.length - 1];
         int index = 0;
         for (String value : magicNodes) {
@@ -283,13 +339,14 @@ public class PlayerStatData {
     }
 
     public String[] getLearnedSpells() { return learnedSpells.clone(); }
-    public void setLearnedSpells(String[] ids) { learnedSpells = ids.clone(); }
+    public void setLearnedSpells(String[] ids) { learnedSpells = normalizeStringIds(ids); }
     public boolean hasLearnedSpell(String id) {
+        if (!isUsableId(id)) return false;
         for (String s : learnedSpells) if (s.equals(id)) return true;
         return false;
     }
     public boolean learnSpell(String id) {
-        if (id == null || hasLearnedSpell(id)) return false;
+        if (!isUsableId(id) || hasLearnedSpell(id)) return false;
         String[] next = new String[learnedSpells.length + 1];
         System.arraycopy(learnedSpells, 0, next, 0, learnedSpells.length);
         next[learnedSpells.length] = id;
@@ -298,7 +355,7 @@ public class PlayerStatData {
     }
 
     public boolean forgetSpell(String id) {
-        if (id == null || learnedSpells.length == 0 || !hasLearnedSpell(id)) return false;
+        if (!isUsableId(id) || learnedSpells.length == 0 || !hasLearnedSpell(id)) return false;
         String[] next = new String[learnedSpells.length - 1];
         int index = 0;
         for (String value : learnedSpells) {
@@ -337,6 +394,15 @@ public class PlayerStatData {
         this.hasLastOverworldPos = true;
     }
 
+    // Dungeon points (Mission M6 — système de points).
+    public int getDungeonPoints() { return dungeonPoints; }
+    public void setDungeonPoints(int points) { dungeonPoints = Math.max(0, points); }
+    /** Ajoute des points (jamais sous 0). Retourne le nouveau total. */
+    public int addDungeonPoints(int delta) {
+        dungeonPoints = Math.max(0, dungeonPoints + delta);
+        return dungeonPoints;
+    }
+
     public int maxStatLevel() {
         int configMax = Config.getMaxStatLevel();
         return soulLevel > 0 ? Math.min(soulLevel, configMax) : configMax;
@@ -357,10 +423,15 @@ public class PlayerStatData {
      */
     public boolean addXpWithEffectiveStartLevel(int index, int amount, int startLevel) {
         if (index < 0 || index >= STAT_COUNT || amount <= 0) return false;
-        xp[index] += amount;
+        int cap = maxStatLevel();
+        if (levels[index] >= cap) {
+            levels[index] = cap;
+            xp[index] = 0;
+            return false;
+        }
+        xp[index] = saturatingAddNonNegative(xp[index], amount);
         int effective = Math.max(0, startLevel) + levels[index];
         int required = requiredXp(effective);
-        int cap = maxStatLevel();
         boolean leveledUp = false;
         while (xp[index] >= required && levels[index] < cap) {
             levels[index]++;
@@ -369,13 +440,20 @@ public class PlayerStatData {
             required = requiredXp(effective);
             leveledUp = true;
         }
+        if (levels[index] >= cap) {
+            levels[index] = cap;
+            xp[index] = 0;
+        }
         return leveledUp;
     }
 
     public void addLevels(int index, int amount) {
         if (index >= 0 && index < STAT_COUNT) {
             int cap = maxStatLevel();
-            levels[index] = Math.min(cap, Math.max(0, levels[index] + amount));
+            levels[index] = Math.min(cap, saturatingAddNonNegative(levels[index], amount));
+            if (levels[index] >= cap) {
+                xp[index] = 0;
+            }
         }
     }
 
@@ -389,7 +467,7 @@ public class PlayerStatData {
     public void addPerkPointsForFamily(StatFamily family, int amount) {
         if (family != null) {
             int familyIndex = family.ordinal();
-            perkPoints[familyIndex] = Math.max(0, perkPoints[familyIndex] + amount);
+            perkPoints[familyIndex] = saturatingAddNonNegative(perkPoints[familyIndex], amount);
         }
     }
 
@@ -429,6 +507,102 @@ public class PlayerStatData {
         return (level + 1) * (level + 1) * 10;
     }
 
+    private static int saturatingAddNonNegative(int current, int delta) {
+        long sum = (long) current + delta;
+        if (sum <= 0L) {
+            return 0;
+        }
+        return sum >= Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) sum;
+    }
+
+    private int[] retainUnlockedPerks(int[] ids) {
+        if (ids == null || ids.length == 0) {
+            return new int[0];
+        }
+
+        int[] next = new int[ids.length];
+        int count = 0;
+        for (int id : ids) {
+            if (id < 0 || !isPerkUnlocked(id) || contains(next, count, id)) {
+                continue;
+            }
+            next[count++] = id;
+        }
+        return copyOfLength(next, count);
+    }
+
+    private static int[] normalizePerkIds(int[] ids) {
+        if (ids == null || ids.length == 0) {
+            return new int[0];
+        }
+
+        int[] next = new int[ids.length];
+        int count = 0;
+        for (int id : ids) {
+            if (id < 0 || contains(next, count, id)) {
+                continue;
+            }
+            next[count++] = id;
+        }
+        return copyOfLength(next, count);
+    }
+
+    private static boolean contains(int[] source, int length, int target) {
+        for (int i = 0; i < length; i++) {
+            if (source[i] == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int[] copyOfLength(int[] source, int length) {
+        if (length == source.length) {
+            return source;
+        }
+        int[] next = new int[length];
+        System.arraycopy(source, 0, next, 0, length);
+        return next;
+    }
+
+    private static String[] normalizeStringIds(String[] ids) {
+        if (ids == null || ids.length == 0) {
+            return new String[0];
+        }
+
+        String[] next = new String[ids.length];
+        int count = 0;
+        for (String id : ids) {
+            if (!isUsableId(id) || contains(next, count, id)) {
+                continue;
+            }
+            next[count++] = id;
+        }
+        return copyOfLength(next, count);
+    }
+
+    private static boolean isUsableId(String id) {
+        return id != null && !id.isBlank();
+    }
+
+    private static boolean contains(String[] source, int length, String target) {
+        for (int i = 0; i < length; i++) {
+            if (source[i].equals(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String[] copyOfLength(String[] source, int length) {
+        if (length == source.length) {
+            return source;
+        }
+        String[] next = new String[length];
+        System.arraycopy(source, 0, next, 0, length);
+        return next;
+    }
+
     private static int[] removeFromArray(int[] source, int target) {
         if (source.length == 0) {
             return source;
@@ -449,5 +623,21 @@ public class PlayerStatData {
             next[index++] = id;
         }
         return next;
+    }
+
+    private int clampLevel(int value) {
+        return Math.min(maxStatLevel(), Math.max(0, value));
+    }
+
+    private void clampLevelsToCurrentCap() {
+        int cap = maxStatLevel();
+        for (int i = 0; i < STAT_COUNT; i++) {
+            if (levels[i] > cap) {
+                levels[i] = cap;
+            }
+            if (levels[i] >= cap) {
+                xp[i] = 0;
+            }
+        }
     }
 }

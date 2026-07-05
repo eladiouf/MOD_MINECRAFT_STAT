@@ -5,20 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import tong.statmod.STATMod;
 import tong.statmod.config.Config;
-import tong.statmod.item.RuneShardIds;
-import tong.statmod.item.RuneShards;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
-
-import java.util.function.Supplier;
 
 /**
  * Mission M6 — « Vraie aventure » (2026-07-04).
@@ -61,14 +55,14 @@ public final class DungeonProgress {
             String statName = stat != null ? stat.displayName : "?";
             player.displayClientMessage(Component.translatable(
                     "block.statmod.dungeon_portal.boss_kill", gain, statName, floor + 1), false);
+            // Gros gain de points pour le boss vaincu.
+            DungeonPoints.awardBoss(player);
         } else {
             player.displayClientMessage(Component.translatable(
                     "dungeon.floor.conquered", floor, floor + 1), false);
+            // Bonus de points pour la conquête d'un étage (remplace la récompense en cristaux).
+            DungeonPoints.awardFloorClear(player);
         }
-
-        // Récompense GARANTIE de conquête : des rune shards dont la quantité/rareté monte avec le
-        // tier. S'ajoute au loot aléatoire des mobs — conquérir un étage vaut toujours le coup.
-        grantConquestReward(player, floor);
 
         SyncHelper.syncStats(player);
         celebrate(player, floor);
@@ -76,46 +70,6 @@ public final class DungeonProgress {
 
         STATMod.LOGGER.info("[TrialDungeon] Étage {} conquis ({}) par {} → étage {} débloqué",
                 floor, objective, player.getGameProfile().getName(), floor + 1);
-    }
-
-    /**
-     * Donne une récompense garantie de rune shards à la conquête d'un étage. Quantité et rareté
-     * croissent avec le tier. Remise directe à l'inventaire (drop aux pieds si plein).
-     */
-    private static void grantConquestReward(ServerPlayer player, int floor) {
-        FloorPalette tier = FloorPalette.forFloor(floor);
-        int count = switch (tier) { case EARLY -> 2; case MID -> 3; case LATE -> 4; case ABYSS -> 5; };
-
-        int granted = 0;
-        for (int i = 0; i < count; i++) {
-            RuneShardIds.Rarity rarity = rewardRarity(tier, player);
-            RuneShardIds.Family family = RuneShardIds.Family.values()[
-                    player.getRandom().nextInt(RuneShardIds.Family.values().length)];
-            Supplier<Item> supplier = RuneShards.SHARDS.get(RuneShardIds.id(rarity, family));
-            if (supplier == null) continue;
-            ItemStack stack = new ItemStack(supplier.get());
-            if (!player.getInventory().add(stack)) {
-                player.drop(stack, false); // inventaire plein → au sol
-            }
-            granted++;
-        }
-        if (granted > 0) {
-            player.displayClientMessage(Component.translatable("dungeon.reward.shards", granted), true);
-        }
-    }
-
-    /** Rareté de récompense pondérée par tier (meilleure en profondeur). */
-    private static RuneShardIds.Rarity rewardRarity(FloorPalette tier, ServerPlayer player) {
-        int roll = player.getRandom().nextInt(100);
-        return switch (tier) {
-            case EARLY -> roll < 80 ? RuneShardIds.Rarity.COMMON : RuneShardIds.Rarity.UNCOMMON;
-            case MID -> roll < 55 ? RuneShardIds.Rarity.COMMON
-                    : roll < 90 ? RuneShardIds.Rarity.UNCOMMON : RuneShardIds.Rarity.RARE;
-            case LATE -> roll < 40 ? RuneShardIds.Rarity.UNCOMMON
-                    : roll < 85 ? RuneShardIds.Rarity.RARE : RuneShardIds.Rarity.EPIC;
-            case ABYSS -> roll < 50 ? RuneShardIds.Rarity.RARE
-                    : roll < 90 ? RuneShardIds.Rarity.EPIC : RuneShardIds.Rarity.LEGENDARY;
-        };
     }
 
     /** Son + gerbe de particules autour du joueur pour marquer la conquête d'un étage. */

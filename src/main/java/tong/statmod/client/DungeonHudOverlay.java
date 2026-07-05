@@ -49,11 +49,12 @@ public final class DungeonHudOverlay {
         String title = "§6☠ §lTrial Dungeon";
         String line1 = "§fFloor " + floor + " §7· " + type;
         String line2 = tier + " §7· Boss §f#" + nextBoss + " §7· Max §f" + maxFloor;
+        String points = "§e✦ §fPoints: §e" + data.getDungeonPoints();
         String line3 = objectiveLine(floor, conquered);
 
         // Nom du thème de l'étage (chaque étage a le sien).
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
-        String[] lines = { title, line1, "§7» " + theme.displayName(), line2, line3 };
+        String[] lines = { title, line1, "§7» " + theme.displayName(), line2, points, line3 };
 
         int screenW = mc.getWindow().getGuiScaledWidth();
         float scale = 0.75f;

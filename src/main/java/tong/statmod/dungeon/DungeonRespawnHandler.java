@@ -42,6 +42,9 @@ public final class DungeonRespawnHandler {
         // Annule la mort → pas d'écran de mort, pas de drop d'inventaire/XP.
         event.setCanceled(true);
 
+        // Mort punitive : le joueur perd une partie de ses points de donjon.
+        DungeonPoints.applyDeathPenalty(player);
+
         // Remet le joueur en état de combattre : PV pleins, feu éteint, malus purgés, faim rétablie.
         player.setHealth(player.getMaxHealth());
         player.clearFire();

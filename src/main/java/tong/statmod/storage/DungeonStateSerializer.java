@@ -16,6 +16,7 @@ public final class DungeonStateSerializer {
     static final String KEY_FLOOR = "DungeonFloorReached";
     static final String KEY_DIM = "DungeonLastOverworldDim";
     static final String KEY_POS = "DungeonLastOverworldPos";
+    static final String KEY_POINTS = "DungeonPoints";
 
     private DungeonStateSerializer() {}
 
@@ -28,6 +29,7 @@ public final class DungeonStateSerializer {
         if (data.hasLastOverworldPos()) {
             tag.putLong(KEY_POS, data.getLastOverworldPosPacked());
         }
+        tag.putInt(KEY_POINTS, data.getDungeonPoints());
         return tag;
     }
 
@@ -40,6 +42,9 @@ public final class DungeonStateSerializer {
         }
         if (tag.contains(KEY_POS)) {
             data.setLastOverworldPos(tag.getLong(KEY_POS));
+        }
+        if (tag.contains(KEY_POINTS)) {
+            data.setDungeonPoints(tag.getInt(KEY_POINTS));
         }
     }
 }

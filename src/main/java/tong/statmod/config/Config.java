@@ -20,6 +20,8 @@ public class Config {
     public static final ModConfigSpec.IntValue DUNGEON_BOSS_STAT_GAIN;
     public static final ModConfigSpec.DoubleValue DUNGEON_HOSTILITY_PER_FLOOR;
     public static final ModConfigSpec.IntValue DUNGEON_HOSTILITY_CAP;
+    public static final ModConfigSpec.ConfigValue<String> SHOP_CURRENCY_NAME;
+    public static final ModConfigSpec.DoubleValue POINT_TO_COIN_RATE;
 
     static {
         BUILDER.push("general");
@@ -64,6 +66,12 @@ public class Config {
         DUNGEON_HOSTILITY_CAP = BUILDER
                 .comment("Intégration L2 Hostility : plafond du niveau appliqué par étage (courbe et mode manuel).")
                 .defineInRange("l2HostilityCap", 100, 0, 500);
+        SHOP_CURRENCY_NAME = BUILDER
+                .comment("Nom de la monnaie SDM créditée à l'échange de points (doit correspondre à la devise du shop SDM).")
+                .define("shopCurrencyName", "dungeon_coins");
+        POINT_TO_COIN_RATE = BUILDER
+                .comment("Taux de conversion : 1 point échangé = ce nombre de coins.")
+                .defineInRange("pointToCoinRate", 1.0, 0.0, 100.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
@@ -158,6 +166,22 @@ public class Config {
             return DUNGEON_HOSTILITY_CAP.get();
         } catch (IllegalStateException e) {
             return 200;
+        }
+    }
+
+    public static String getShopCurrencyName() {
+        try {
+            return SHOP_CURRENCY_NAME.get();
+        } catch (IllegalStateException e) {
+            return "dungeon_coins";
+        }
+    }
+
+    public static double getPointToCoinRate() {
+        try {
+            return POINT_TO_COIN_RATE.get();
+        } catch (IllegalStateException e) {
+            return 1.0;
         }
     }
 }

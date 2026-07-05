@@ -71,6 +71,35 @@ public final class DungeonBossArenaFloor {
         exitGate(lv, sp, t);
     }
 
+    /**
+     * Finalise une arène IMPORTÉE (déjà posée par {@link DungeonBossStructures}) : pose l'autel, un
+     * checkpoint waystone, et le téléporteur scellé, chacun sur un petit pad dégagé (au cas où le sol
+     * de la structure ne tombe pas pile au niveau attendu). {@code c} = centre monde de l'arène.
+     */
+    public static void finishImportedArena(ServerLevel lv, BlockPos c, BlockPos sp, BlockPalette t, int floor) {
+        // Autel légèrement au sud du centre (le centre reste le point de spawn du boss dans l'arène).
+        BlockPos altar = c.offset(0, 0, 6);
+        clearPad(lv, altar, t);
+        S(lv, altar, B(DungeonBlocks.BOSS_ALTAR.get()));
+
+        // Checkpoint waystone à côté de l'autel.
+        tong.statmod.integration.waystones.WaystonesBridge.placeCheckpoint(
+                lv, altar.offset(3, 0, 0), FloorPalette.forFloor(floor), floor);
+
+        // Téléporteur scellé, plus au sud (sortie une fois le boss vaincu).
+        BlockPos gate = c.offset(0, 0, 12);
+        clearPad(lv, gate, t);
+        S(lv, gate, B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
+    }
+
+    /** Dégage un pad 3×3 (sol plein + 3 d'air) autour de {@code p} — garantit une surface praticable. */
+    private static void clearPad(ServerLevel lv, BlockPos p, BlockPalette t) {
+        for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
+            S(lv, p.offset(dx, -1, dz), B(t.base()));
+            for (int dy = 0; dy <= 2; dy++) S(lv, p.offset(dx, dy, dz), B(net.minecraft.world.level.block.Blocks.AIR));
+        }
+    }
+
     /** Couronne de piliers 3×3 le long des 4 bords, retirés du rempart, avec cap lumineux. */
     private static void pillarRing(ServerLevel lv, BlockPos sp, BlockPalette t) {
         int rx = HX - INSET, rz = HZ - INSET;

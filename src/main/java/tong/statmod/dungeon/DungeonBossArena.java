@@ -35,11 +35,11 @@ public final class DungeonBossArena {
     public static Kind kindForFloor(int floor) {
         List<DungeonBossRoster.BossEntry> roster = DungeonBossRoster.forFloor(floor);
         String id = roster.isEmpty() ? "" : roster.get(0).entityId().toLowerCase(Locale.ROOT);
-        if (contains(id, "kraken", "leviathan", "wadjet", "deepling", "coral", "scylla", "sandworm", "poseid")) return Kind.AQUATIC;
+        if (contains(id, "kraken", "leviathan", "wadjet", "deepling", "coral", "scylla", "sandworm", "poseid", "void_blossom")) return Kind.AQUATIC;
         if (contains(id, "dragon", "peacock", "serpent", "phantom", "watcher", "radahn", "malenia_2")) return Kind.FLYING;
-        if (contains(id, "golem", "colossus", "giant", "monstrosity", "ministrosity", "yeti", "smough", "havel", "warden", "elden_beast")) return Kind.COLOSSUS;
+        if (contains(id, "golem", "colossus", "giant", "monstrosity", "ministrosity", "yeti", "smough", "havel", "warden", "elden_beast", "gauntlet", "obsidilith")) return Kind.COLOSSUS;
         if (contains(id, "infernal", "ignited", "revenant", "flame", "hell", "godskin", "soul_of_cinder", "wither")) return Kind.INFERNAL;
-        if (contains(id, "draugr", "dead_king", "bonescaller", "nightmare", "hollow", "skeleton", "notch")) return Kind.UNDEAD;
+        if (contains(id, "draugr", "dead_king", "bonescaller", "nightmare", "hollow", "skeleton", "notch", "lich")) return Kind.UNDEAD;
         return Kind.ARENA;
     }
 

@@ -28,11 +28,11 @@ public final class DungeonBossRoster {
         R(80,  w("slu:boss_radahn","slu:boss_radahn_2"));
         R(90,  s("slu:boss_maliketh"));
         R(100, w("slu:boss_gael","slu:boss_radagon","slu:boss_elden_beast"));
-        // ÉTAGES 110-200
-        R(110, s("slu:boss_mohg"));
-        R(120, s("slu:boss_nameless_king"));
-        R(130, w("slu:boss_godfrey","slu:boss_hoarah_loux"));
-        R(140, s("slu:boss_dragon_slayer_armour"));
+        // ÉTAGES 110-200 — 110-140 : boss « Bosses of Mass Destruction » (avec leur vraie arène importée)
+        R(110, s("bosses_of_mass_destruction:gauntlet"));
+        R(120, s("bosses_of_mass_destruction:obsidilith"));
+        R(130, s("bosses_of_mass_destruction:lich"));
+        R(140, s("bosses_of_mass_destruction:void_blossom"));
         R(150, d("slu:boss_notch","slu:boss_minecraft_lord"));
         R(160, s("slu:boss_soul_of_cinder"));
         R(170, w("slu:boss_gundyr","slu:boss_abyss_watcher"));

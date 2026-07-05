@@ -62,7 +62,10 @@ public final class DungeonTeleportHandler {
     public static BlockPos floorPlayerSpawnPos(int floor) {
         BlockPos island = floorSpawnPos(floor);
         if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
-        return island.offset(0, 1, DungeonArchitect.HZ - 12); // boss : entrée sud, dégagée des piliers
+        // Boss avec arène importée (BMD) : apparaître DANS l'arène (près du centre) — l'arène est plus
+        // petite que l'emprise, le bord sud serait dans le vide.
+        if (DungeonBossStructures.hasArenaDef(floor)) return island.offset(0, 2, 16);
+        return island.offset(0, 1, DungeonArchitect.HZ - 12); // boss générique : entrée sud, dégagée des piliers
     }
 
     /**

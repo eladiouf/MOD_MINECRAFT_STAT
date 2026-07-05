@@ -96,7 +96,14 @@ public final class DungeonArchitect {
             return;
         }
         if (role == Role.BOSS) {
-            DungeonBossArenaFloor.build(lv, sp, t, floor);
+            // Si le boss de l'étage a sa propre arène (ex : Bosses of Mass Destruction), on l'importe
+            // et on la pose centrée ; sinon arène générique façonnée selon le type du boss.
+            java.util.Optional<BlockPos> imported = DungeonBossStructures.tryPlace(lv, sp, floor);
+            if (imported.isPresent()) {
+                DungeonBossArenaFloor.finishImportedArena(lv, imported.get(), sp, t, floor);
+            } else {
+                DungeonBossArenaFloor.build(lv, sp, t, floor);
+            }
             return;
         }
 

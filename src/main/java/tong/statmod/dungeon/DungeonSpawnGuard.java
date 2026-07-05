@@ -147,7 +147,8 @@ public final class DungeonSpawnGuard {
                    "born_in_chaos_v1".equals(namespace) ||
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
-                   "alexsmobs".equals(namespace);
+                   "alexsmobs".equals(namespace) ||
+                   "bosses_of_mass_destruction".equals(namespace);
 
         } catch (Exception e) {
             return false;

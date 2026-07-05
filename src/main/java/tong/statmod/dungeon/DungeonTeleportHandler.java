@@ -67,6 +67,19 @@ public final class DungeonTeleportHandler {
         return island.offset(0, 1, DungeonArchitect.HZ - 12);
     }
 
+    /** Clé NBT persistante : le joueur a déjà vu le tutoriel d'accueil du donjon. */
+    private static final String INTRO_SEEN_TAG = "statmod_dungeon_intro_seen";
+
+    /** Envoie une fois par joueur un court tutoriel expliquant les mécaniques du donjon. */
+    private static void sendIntroIfFirstTime(ServerPlayer player) {
+        if (player.getPersistentData().getBoolean(INTRO_SEEN_TAG)) return;
+        player.getPersistentData().putBoolean(INTRO_SEEN_TAG, true);
+        for (int i = 1; i <= 4; i++) {
+            player.displayClientMessage(
+                    net.minecraft.network.chat.Component.translatable("dungeon.intro." + i), false);
+        }
+    }
+
     /**
      * Corrige la position de spawn pour ne JAMAIS apparaître dans un bloc : scanne la colonne autour
      * du Y voulu et renvoie le 1ᵉʳ emplacement libre (2 blocs d'air sur un sol solide). Filet de
@@ -159,6 +172,9 @@ public final class DungeonTeleportHandler {
                 "dungeon.enter.objective",
                 net.minecraft.network.chat.Component.translatable(
                         DungeonObjective.forFloor(floor).translationKey())), true);
+
+        // Tutoriel d'accueil, une seule fois par joueur (onboarding des mécaniques).
+        sendIntroIfFirstTime(player);
 
         STATMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
                 player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());

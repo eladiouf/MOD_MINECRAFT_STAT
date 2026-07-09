@@ -17,6 +17,8 @@ public final class DungeonStateSerializer {
     static final String KEY_DIM = "DungeonLastOverworldDim";
     static final String KEY_POS = "DungeonLastOverworldPos";
     static final String KEY_POINTS = "DungeonPoints";
+    static final String KEY_BEST_COMBO = "DungeonBestCombo";
+    static final String KEY_BEST_CLEAR = "DungeonBestClearTicks";
 
     private DungeonStateSerializer() {}
 
@@ -30,6 +32,8 @@ public final class DungeonStateSerializer {
             tag.putLong(KEY_POS, data.getLastOverworldPosPacked());
         }
         tag.putInt(KEY_POINTS, data.getDungeonPoints());
+        tag.putInt(KEY_BEST_COMBO, data.getDungeonBestCombo());
+        tag.putInt(KEY_BEST_CLEAR, data.getDungeonBestClearTicks());
         return tag;
     }
 
@@ -45,6 +49,12 @@ public final class DungeonStateSerializer {
         }
         if (tag.contains(KEY_POINTS)) {
             data.setDungeonPoints(tag.getInt(KEY_POINTS));
+        }
+        if (tag.contains(KEY_BEST_COMBO)) {
+            data.setDungeonBestCombo(tag.getInt(KEY_BEST_COMBO));
+        }
+        if (tag.contains(KEY_BEST_CLEAR)) {
+            data.setDungeonBestClearTicks(tag.getInt(KEY_BEST_CLEAR));
         }
     }
 }

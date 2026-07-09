@@ -44,5 +44,6 @@ public final class DungeonRushHandler {
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         DungeonRush.clear(event.getEntity().getUUID());
+        DungeonRecords.clear(event.getEntity().getUUID());
     }
 }

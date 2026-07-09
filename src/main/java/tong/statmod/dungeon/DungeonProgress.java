@@ -93,6 +93,10 @@ public final class DungeonProgress {
         }
 
         SyncHelper.syncStats(player);
+        // Record personnel de vitesse de nettoyage (étages de combat uniquement).
+        if (player.level() instanceof ServerLevel slv) {
+            DungeonRecords.onFloorClear(player, floor, objective, slv.getGameTime());
+        }
         celebrate(player, floor);
         if (flawless) {
             // Titre dédié APRÈS la célébration standard : le sans-faute est le moment de gloire.

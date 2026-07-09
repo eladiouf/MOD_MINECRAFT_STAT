@@ -176,6 +176,8 @@ public final class DungeonTeleportHandler {
         // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
         // la récompense de conquête.
         DungeonRush.beginFloor(player.getUUID());
+        // Records : le chrono de nettoyage de l'étage démarre maintenant.
+        DungeonRecords.onFloorEnter(player, floor, dungeon.getGameTime());
 
         // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
         // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).

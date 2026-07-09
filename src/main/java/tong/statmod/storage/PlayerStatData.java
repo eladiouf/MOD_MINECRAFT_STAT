@@ -78,6 +78,11 @@ public class PlayerStatData {
     /** Iron's mana saved across sessions (persisted NBT). */
     private float storedMana = -1;
 
+    /** Record personnel : meilleur combo de kills du donjon (persisté NBT). */
+    private int dungeonBestCombo = 0;
+    /** Record personnel : meilleur temps de nettoyage d'un étage de combat, en ticks (0 = aucun). */
+    private int dungeonBestClearTicks = 0;
+
     /** Timestamp of last enchanted book right-click (server memory, not persisted). */
     public transient long lastEnchantedBookClickMs = 0;
 
@@ -113,6 +118,8 @@ public class PlayerStatData {
         hasLastOverworldPos = source.hasLastOverworldPos;
         dungeonPoints = source.dungeonPoints;
         storedMana = source.storedMana;
+        dungeonBestCombo = source.dungeonBestCombo;
+        dungeonBestClearTicks = source.dungeonBestClearTicks;
     }
 
     public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
@@ -413,6 +420,14 @@ public class PlayerStatData {
     /** Iron's mana saved across sessions. -1 means no saved value (first login). */
     public float getStoredMana() { return storedMana; }
     public void setStoredMana(float mana) { storedMana = mana; }
+
+    /** Record : meilleur combo de kills du donjon. */
+    public int getDungeonBestCombo() { return dungeonBestCombo; }
+    public void setDungeonBestCombo(int combo) { dungeonBestCombo = Math.max(0, combo); }
+
+    /** Record : meilleur temps de nettoyage d'un étage de combat (ticks, 0 = aucun). */
+    public int getDungeonBestClearTicks() { return dungeonBestClearTicks; }
+    public void setDungeonBestClearTicks(int ticks) { dungeonBestClearTicks = Math.max(0, ticks); }
 
     public int maxStatLevel() {
         int configMax = Config.getMaxStatLevel();

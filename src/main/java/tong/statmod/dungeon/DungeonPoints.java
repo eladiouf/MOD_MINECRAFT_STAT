@@ -111,6 +111,9 @@ public final class DungeonPoints {
             player.displayClientMessage(Component.translatable("dungeon.points.mob", pts, total), true);
         }
 
+        // Record personnel de combo ? (célébré à partir de 5 — battre son fantôme.)
+        DungeonRecords.onCombo(player, combo);
+
         // Fanfare de palier de combo : ping de plus en plus aigu tous les 5 kills — la montée.
         if (DungeonRush.isComboMilestone(combo)) {
             float pitch = Math.min(2.0f, 1.0f + combo * 0.04f);

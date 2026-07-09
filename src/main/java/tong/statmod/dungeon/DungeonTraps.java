@@ -76,18 +76,36 @@ public final class DungeonTraps {
     }
 
     /**
-     * Commandes des pièges, du plus commun au plus vicieux. {@code ~ ~ ~} = position du command
-     * block (1 bloc sous la plaque). Les crocs d'évocateur frappent qui se tient dessus ; les
-     * effets touchent le joueur le plus proche dans un petit rayon.
+     * Marqueur d'autorisation posé via NBT sur les mobs d'embuscade invoqués par les pièges :
+     * NeoForge charge la clé {@code NeoForgeData} dans {@code getPersistentData()} → le mob passe
+     * {@link DungeonSpawnGuard}, devient persistant et ne cible que les joueurs
+     * ({@link DungeonMobDiscipline}).
+     */
+    private static final String AUTHORIZED_NBT = "{NeoForgeData:{" + DungeonSpawnGuard.AUTHORIZED_TAG + ":1b}}";
+
+    /**
+     * Arsenal de base, du plus commun au plus vicieux. {@code ~ ~ ~} = position du command block
+     * (1 bloc sous la plaque). Pas de TNT (détruirait la forteresse) ni de foudre (le feu se
+     * propagerait au mobilier en bois).
      */
     private static final String[] TRAP_COMMANDS = {
-            "summon minecraft:evoker_fangs ~ ~1 ~",
+            "summon minecraft:evoker_fangs ~ ~1 ~",                                     // crocs sous la plaque
+            "execute at @p[distance=..5] run summon minecraft:evoker_fangs ~ ~ ~",      // crocs sous le joueur
             "effect give @p[distance=..4] minecraft:poison 6 1",
             "effect give @p[distance=..4] minecraft:slowness 6 2",
-            "execute at @p[distance=..4] run summon minecraft:evoker_fangs ~ ~ ~",
+            "execute at @p[distance=..4] run fill ~-1 ~ ~-1 ~1 ~1 ~1 minecraft:cobweb keep", // cage de toiles
+            "effect give @p[distance=..4] minecraft:levitation 3 3",                    // soulève… puis lâche
+            "effect give @p[distance=..4] minecraft:blindness 8 0",
+            "execute at @p[distance=..4] run summon minecraft:cave_spider ~ ~ ~ " + AUTHORIZED_NBT, // embuscade
     };
-    /** Variante profondeur (étage ≥ 40) qui remplace la lenteur : wither court. */
-    private static final String DEEP_TRAP_COMMAND = "effect give @p[distance=..4] minecraft:wither 4 0";
+
+    /** Pièges supplémentaires des profondeurs (étage ≥ 40) — s'ajoutent à l'arsenal de base. */
+    private static final String[] DEEP_TRAP_COMMANDS = {
+            "effect give @p[distance=..4] minecraft:wither 5 1",
+            "execute at @p[distance=..4] run summon minecraft:falling_block ~ ~4 ~ {BlockState:{Name:\"minecraft:anvil\"},Time:1}", // enclume
+            "spreadplayers ~ ~ 3 8 false @p[distance=..3]",                             // téléportation désorientante
+            "execute at @p[distance=..4] run summon minecraft:vex ~ ~1 ~ " + AUTHORIZED_NBT, // vexes d'embuscade
+    };
 
     /**
      * Pièges à command block : plaque de pression visible (esquivable — c'est le jeu), command
@@ -109,8 +127,12 @@ public final class DungeonTraps {
             if (Math.abs(x - cx) <= 2 && Math.abs(z - cz) <= 2) continue;
             if (x == cx || z == cz) continue;
 
-            String command = TRAP_COMMANDS[hash(floor, r.index(), 200 + i) % TRAP_COMMANDS.length];
-            if (floor >= 40 && command.contains("slowness")) command = DEEP_TRAP_COMMAND;
+            // Arsenal : base partout, pièges des profondeurs ajoutés dès l'étage 40.
+            int pool = TRAP_COMMANDS.length + (floor >= 40 ? DEEP_TRAP_COMMANDS.length : 0);
+            int pick = hash(floor, r.index(), 200 + i) % pool;
+            String command = pick < TRAP_COMMANDS.length
+                    ? TRAP_COMMANDS[pick]
+                    : DEEP_TRAP_COMMANDS[pick - TRAP_COMMANDS.length];
 
             placeCommandTrap(lv, O(sp, x, 0, z), command);
         }

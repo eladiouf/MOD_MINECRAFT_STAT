@@ -1169,12 +1169,16 @@ public final class DungeonRoomChain {
     }
 
     /**
-     * Porte de passage entre deux pièces : porte Macaw's si présente, sinon porte en bois vanilla.
-     * <b>Jamais de porte en fer ni de levier</b> (feedback playtest 2026-07-09 : les mécanismes
-     * redstone cassaient le flow) — toutes les portes du donjon s'ouvrent à la main.
+     * Porte de passage entre deux pièces : porte Macaw's <b>assortie au thème de l'étage</b> si
+     * présente, sinon porte en bois vanilla. <b>Jamais de porte en fer ni de levier</b> (feedback
+     * playtest 2026-07-09 : les mécanismes redstone cassaient le flow) — toutes les portes du
+     * donjon s'ouvrent à la main.
      */
     private static void placeDoorWayDoor(ServerLevel lv, BlockPos doorPos, BlockPos bars1, BlockPos bars2, Direction facing, BlockPalette t) {
-        Block macawDoor = MacawDungeonDecorator.whisperOakDoor();
+        Block macawDoor = t instanceof ThemePalette theme
+                ? MacawDungeonDecorator.themedDoor(theme)
+                : MacawDungeonDecorator.whisperOakDoor();
+        if (macawDoor == null) macawDoor = MacawDungeonDecorator.whisperOakDoor();
         Block doorBlock = macawDoor != null ? macawDoor : Blocks.SPRUCE_DOOR;
 
         // Place door blocks
@@ -1223,10 +1227,13 @@ public final class DungeonRoomChain {
             }
         }
 
-        // (3) Porte de l'alcôve : Macaw's si présente, sinon bois vanilla — ouvrable à la MAIN.
-        // (L'ancien puzzle porte de fer + bouton + poudre de redstone sous le sol ne fonctionnait
-        // pas de manière fiable et cassait le flow — feedback playtest 2026-07-09.)
-        Block macawDoor = MacawDungeonDecorator.whisperOakDoor();
+        // (3) Porte de l'alcôve : Macaw's assortie au thème si présente, sinon bois vanilla —
+        // ouvrable à la MAIN. (L'ancien puzzle porte de fer + bouton + poudre de redstone sous le
+        // sol ne fonctionnait pas de manière fiable et cassait le flow — playtest 2026-07-09.)
+        Block macawDoor = t instanceof ThemePalette theme
+                ? MacawDungeonDecorator.themedDoor(theme)
+                : MacawDungeonDecorator.whisperOakDoor();
+        if (macawDoor == null) macawDoor = MacawDungeonDecorator.whisperOakDoor();
         Block vaultDoor = macawDoor != null ? macawDoor : Blocks.SPRUCE_DOOR;
         BlockState doorLower = vaultDoor.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.DoorBlock.FACING, Direction.SOUTH)

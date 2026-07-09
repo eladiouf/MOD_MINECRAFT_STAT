@@ -99,6 +99,14 @@ public final class DungeonSpawnGuard {
             }
         }
 
+        // ANTI-DESPAWN (feedback playtest 2026-07-09) : les étages font ~296 blocs de large — les
+        // mobs des pièces éloignées dépassaient les 128 blocs de distance de despawn hostile et
+        // disparaissaient → vague inclearable ou étage qui se vide tout seul. Toute entité
+        // autorisée du donjon est rendue persistante.
+        if (entity instanceof Mob mob) {
+            mob.setPersistenceRequired();
+        }
+
         // Cale la difficulté L2 sur l'étage pour toute entité autorisée qui reste (vague, boss,
         // invocations). Remplace l'ancien L2HostilityDisabler cassé : empêche un mob d'être niveau
         // 60 à l'étage 1. Différé pour passer après l'init de L2 (dernière écriture = autoritaire).

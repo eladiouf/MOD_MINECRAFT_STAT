@@ -33,6 +33,13 @@ public final class OverworldTimeController {
 
         String key = level.dimension().location().toString();
         double exact = EXACT_TIME.computeIfAbsent(key, ignored -> (double) level.getDayTime());
+        long actual = level.getDayTime();
+
+        // Respect external time changes (sleep, /time set, commands)
+        if (Math.abs((long) exact - actual) > 50L) {
+            exact = actual;
+        }
+
         boolean day = Math.floorMod((long) exact, 24000L) < 12000L;
         exact += (day ? dayTicksPerSecond() : nightTicksPerSecond()) / 20.0d;
         EXACT_TIME.put(key, exact);

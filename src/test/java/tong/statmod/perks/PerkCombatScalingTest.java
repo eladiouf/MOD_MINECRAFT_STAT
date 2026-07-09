@@ -52,7 +52,7 @@ class PerkCombatScalingTest {
 
     @Test
     void bladePostKillMultiplierOnlyAppliesDuringWindowWithBladeWeapons() {
-        assertEquals(1.5f, PerkCombatScaling.bladePostKillDamageMultiplier(
+        assertEquals(1.25f, PerkCombatScaling.bladePostKillDamageMultiplier(
                 StatType.BLADE_TECHNIQUE, true, true), EPSILON);
         assertEquals(1.0f, PerkCombatScaling.bladePostKillDamageMultiplier(
                 StatType.BLADE_TECHNIQUE, true, false), EPSILON);

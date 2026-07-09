@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
@@ -33,7 +34,7 @@ public final class ParcoolCompat {
      * qui suffit largement à passer plusieurs niveaux d'ENDURANCE base 0. Avec throttler à
      * 5 secondes : max 12 XP par minute de parkour, cohérent avec les autres sources.
      */
-    private static final int ENDURANCE_TICK_COOLDOWN = 100; // 5 secondes serveur
+    private static final int ENDURANCE_TICK_COOLDOWN = 200; // 10 secondes serveur
     private static final Map<UUID, Long> lastEnduranceGain = new HashMap<>();
 
     private ParcoolCompat() {}
@@ -47,6 +48,27 @@ public final class ParcoolCompat {
         NeoForge.EVENT_BUS.register(ParcoolCompat.class);
         NeoForge.EVENT_BUS.register(ParcoolAttributeHandler.class);
         STATMod.LOGGER.info("ParCool integration loaded");
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        clearThrottle(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        clearThrottle(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        clearThrottle(event.getOriginal().getUUID());
+        clearThrottle(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        clearThrottle(event.getEntity().getUUID());
     }
 
     @net.neoforged.bus.api.SubscribeEvent
@@ -118,23 +140,23 @@ public final class ParcoolCompat {
         EnumMap<StatType, Integer> rewards = new EnumMap<>(StatType.class);
 
         switch (name) {
-            case "vault" -> rewards.put(StatType.AGILITY, 3);
+            case "vault" -> rewards.put(StatType.AGILITY, 2);
             case "walljump", "chargejump", "catleap" -> {
-                rewards.put(StatType.AGILITY, 3);
-                rewards.put(StatType.BRUTE_FORCE, 2);
+                rewards.put(StatType.AGILITY, 2);
+                rewards.put(StatType.BRUTE_FORCE, 1);
             }
             case "dodge", "roll", "quickturn", "flipping", "slide" -> {
-                rewards.put(StatType.AGILITY, 2);
-                rewards.put(StatType.RAPIDITE, 2);
+                rewards.put(StatType.AGILITY, 1);
+                rewards.put(StatType.RAPIDITE, 1);
             }
             case "wallrun", "horizontalwallrun", "verticalwallrun",
                  "crawl", "climbpoles", "climbup", "clingtocliff",
                  "hangdown", "wallslide" -> {
-                rewards.put(StatType.AGILITY, 3);
-                rewards.put(StatType.PHYSICAL_ENDURANCE, 2);
+                rewards.put(StatType.AGILITY, 2);
+                rewards.put(StatType.PHYSICAL_ENDURANCE, 1);
             }
             case "fastrun", "fastswim", "dive", "skydive" -> {
-                rewards.put(StatType.AGILITY, 2);
+                rewards.put(StatType.AGILITY, 1);
                 rewards.put(StatType.PHYSICAL_ENDURANCE, 1);
             }
             default -> rewards.put(StatType.AGILITY, 1);
@@ -285,5 +307,9 @@ public final class ParcoolCompat {
             }
         }
         return leveled;
+    }
+
+    private static void clearThrottle(UUID uuid) {
+        lastEnduranceGain.remove(uuid);
     }
 }

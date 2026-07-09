@@ -23,15 +23,15 @@ public final class MagicTreeCatalog {
                 MagicCurrency.ARCANE, 1, List.of("common/foundation/arcane_focus"), Set.of()));
         add(new MagicNode("common/foundation/cast_discipline",
                 MagicBranch.COMMON, MagicNodeKind.TRUNK_FOUNDATION, MagicTier.T2,
-                MagicCurrency.ARCANE, 2, List.of("common/foundation/mana_well"), Set.of()));
+                MagicCurrency.ARCANE, 1, List.of("common/foundation/mana_well"), Set.of()));
         add(new MagicNode("common/foundation/multi_school_gate",
                 MagicBranch.COMMON, MagicNodeKind.TRUNK_FOUNDATION, MagicTier.T3,
-                MagicCurrency.ARCANE, 3, List.of("common/foundation/cast_discipline"), Set.of()));
+                MagicCurrency.ARCANE, 1, List.of("common/foundation/cast_discipline"), Set.of()));
 
         // Fire branch - opener, T1 / T2 / T3 tier nodes, 4 signature spells
         add(new MagicNode("fire/opener/ignition",
                 MagicBranch.FIRE, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
-                MagicCurrency.ARCANE, 2,
+                MagicCurrency.ARCANE, 1,
                 List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("fire/tier/ember_path",
@@ -90,7 +90,7 @@ public final class MagicTreeCatalog {
         // Water branch (Ice)
         add(new MagicNode("water/opener/ice_awakening",
                 MagicBranch.WATER, MagicNodeKind.BRANCH_OPENER, MagicTier.T1,
-                MagicCurrency.ARCANE, 2,
+                MagicCurrency.ARCANE, 1,
                 List.of("common/foundation/arcane_focus"),
                 Set.of()));
         add(new MagicNode("water/tier/frost_path",

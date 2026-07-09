@@ -24,8 +24,8 @@ class ActivityXpScalingTest {
     void physicalEnduranceXpScalesWithIncomingDamageWithoutExploding() {
         assertEquals(0, ActivityXpScaling.enduranceXpForPhysicalDamage(0.0f));
         assertEquals(1, ActivityXpScaling.enduranceXpForPhysicalDamage(1.0f));
-        assertEquals(2, ActivityXpScaling.enduranceXpForPhysicalDamage(8.0f));
-        assertEquals(8, ActivityXpScaling.enduranceXpForPhysicalDamage(100.0f));
+        assertEquals(1, ActivityXpScaling.enduranceXpForPhysicalDamage(8.0f));
+        assertEquals(6, ActivityXpScaling.enduranceXpForPhysicalDamage(100.0f));
     }
 
     @Test

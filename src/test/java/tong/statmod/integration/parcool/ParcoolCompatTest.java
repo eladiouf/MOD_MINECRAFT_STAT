@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ParcoolCompatTest {
     @Test
     void actionRewardsAreGranularPerMovementType() {
-        assertEquals(Map.of(StatType.AGILITY, 3), ParcoolCompat.xpRewardsForAction("vault"));
-        assertEquals(Map.of(StatType.AGILITY, 3, StatType.BRUTE_FORCE, 2), ParcoolCompat.xpRewardsForAction("walljump"));
-        assertEquals(Map.of(StatType.AGILITY, 2, StatType.RAPIDITE, 2), ParcoolCompat.xpRewardsForAction("dodge"));
+        assertEquals(Map.of(StatType.AGILITY, 2), ParcoolCompat.xpRewardsForAction("vault"));
+        assertEquals(Map.of(StatType.AGILITY, 2, StatType.BRUTE_FORCE, 1), ParcoolCompat.xpRewardsForAction("walljump"));
+        assertEquals(Map.of(StatType.AGILITY, 1, StatType.RAPIDITE, 1), ParcoolCompat.xpRewardsForAction("dodge"));
     }
 
     @Test

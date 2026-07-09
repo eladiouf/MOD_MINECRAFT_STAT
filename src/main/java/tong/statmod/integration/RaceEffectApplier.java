@@ -114,7 +114,7 @@ public final class RaceEffectApplier {
     public static int scaleXpAmount(Player player, int statIndex, int baseXp, PlayerStatData data, boolean isCombat) {
         double xpMult = player != null ? getXpMultiplier(player, statIndex) : 1.0d;
         double configMult = isCombat ? Config.getCombatXpMultiplier() : Config.getNonCombatXpMultiplier();
-        double soulMult = 1.0d + Math.max(0, data.getSoulLevel()) / 100.0d;
+        double soulMult = 1.0d + Math.max(0, data.getSoulLevel()) / 200.0d;
         if (hasParallelExistence(player)) {
             soulMult *= 2.0d;
         }

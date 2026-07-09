@@ -31,7 +31,7 @@ import tong.statmod.storage.PlayerStatData;
  */
 @EventBusSubscriber(modid = STATMod.MODID)
 public class DefensiveXPHandler {
-    private static final int MOVEMENT_TRAINING_PERIOD_TICKS = 100;
+    private static final int MOVEMENT_TRAINING_PERIOD_TICKS = 200;
 
     @SubscribeEvent
     public static void onMovementTrainingTick(PlayerTickEvent.Post event) {
@@ -77,7 +77,7 @@ public class DefensiveXPHandler {
                 || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL)) return;
 
         PlayerStatData data = player.getData(ModAttachments.STATS);
-        int xp = Math.max(1, Math.round(event.getOriginalDamage() / 2.0f));
+        int xp = Math.max(1, Math.round(event.getOriginalDamage() / 4.0f));
         boolean leveled = RaceEffectApplier.addScaledXp(
                 player, StatType.PHYSICAL_RESISTANCE.index, xp, data, true);
         int enduranceXp = ActivityXpScaling.enduranceXpForPhysicalDamage(event.getOriginalDamage());
@@ -105,7 +105,7 @@ public class DefensiveXPHandler {
         // XP proportionnel à la durée totale du debuff (en secondes), capped pour éviter
         // l'exploit de boire 10 potions de poison longue durée d'affilée.
         int durationSec = Math.min(60, effect.getDuration() / 20);
-        int xp = Math.max(2, durationSec / 3);
+        int xp = Math.max(2, durationSec / 5);
         boolean leveled = RaceEffectApplier.addScaledXp(
                 player, StatType.WILLPOWER.index, xp, data, false);
         if (leveled) SoundHelper.playLevelUp(player);
@@ -122,7 +122,7 @@ public class DefensiveXPHandler {
         if (distance < 8.0) return; // pas d'XP pour les kills à bout portant
 
         PlayerStatData data = serverPlayer.getData(ModAttachments.STATS);
-        int xp = Math.max(1, (int) Math.round(distance / 4.0));
+        int xp = Math.max(1, (int) Math.round(distance / 6.0));
         boolean leveled = RaceEffectApplier.addScaledXp(
                 serverPlayer, StatType.TRACKING.index, xp, data, true);
         if (leveled) SoundHelper.playLevelUp(serverPlayer);

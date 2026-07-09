@@ -21,7 +21,7 @@ final class ActivityXpScaling {
         if (originalDamage <= 0.0f) {
             return 0;
         }
-        return Math.min(8, Math.max(1, Math.round(originalDamage / 4.0f)));
+        return Math.min(6, Math.max(1, Math.round(originalDamage / 6.0f)));
     }
 
     static int intimidationXpForKill(double distanceToTarget, boolean targetWasThreatening, float targetMaxHealth) {

@@ -53,7 +53,7 @@ public class Config {
                 .defineInRange("xpBaseMultiplier", 1.0, 0.0, 10.0);
         DUNGEON_XP_PER_FLOOR = BUILDER
                 .comment("Multiplier XP additionnel par étage — étage 20 donne XP*(base + 20*perFloor).")
-                .defineInRange("xpPerFloor", 0.05, 0.0, 1.0);
+                .defineInRange("xpPerFloor", 0.02, 0.0, 1.0);
         DUNGEON_BOSS_STAT_GAIN = BUILDER
                 .comment("Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.")
                 .defineInRange("bossStatGain", 2, 0, 10);

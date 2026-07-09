@@ -35,12 +35,12 @@ public final class PerkCombatScaling {
     }
 
     public static float bladePostKillDamageMultiplier(StatType weaponStat,
-                                                      boolean bladeTranscendenceUnlocked,
-                                                      boolean postKillWindowActive) {
+                                                       boolean bladeTranscendenceUnlocked,
+                                                       boolean postKillWindowActive) {
         return bladeTranscendenceUnlocked
                 && postKillWindowActive
                 && canUseWeaponFamilyPerk(weaponStat, Perk.BLADE_TRANSCENDENCE)
-                ? 1.5f
+                ? 1.25f
                 : 1.0f;
     }
 

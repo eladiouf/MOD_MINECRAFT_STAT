@@ -32,8 +32,8 @@ class MagicTreeProgressionServiceTest {
 
         assertTrue(r.success(), "expected unlock to succeed, got failure: " + r.failure());
         assertTrue(d.hasMagicNode("fire/opener/ignition"));
-        // Sous la monnaie unifiée, le pool combiné a perdu opener.cost() (=2).
-        assertEquals(3, d.getMagicPoints());
+        // Sous la monnaie unifiée, le pool combiné a perdu opener.cost() (=1).
+        assertEquals(4, d.getMagicPoints());
     }
 
     @Test

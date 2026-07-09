@@ -25,7 +25,7 @@ public class CombatXPHandler {
         if (player == null || player.level().isClientSide) return;
 
         LivingEntity target = event.getEntity();
-        int xp = Math.max(1, Math.round(target.getMaxHealth() * 1.5f));
+        int xp = Math.max(1, Math.round(target.getMaxHealth() * 0.75f));
         // Mission M6 — bonus XP dans le Trial Dungeon proportionnel à l'étage.
         xp = DungeonXpMultiplier.applyToXp(xp, player.level().dimension(), player.getBlockX(), player.getBlockZ());
         StatType stat = resolveWeaponStat(player.getMainHandItem());

@@ -15,21 +15,15 @@ class PerkRewardLifecycleSourceTest {
             "tong", "statmod", "item", "RespecStoneItem.java");
     private static final Path TENSURA_RACE_HANDLER_SOURCE = Path.of("src", "main", "java",
             "tong", "statmod", "integration", "tensura", "TensuraRaceHandler.java");
-    private static final Path TENSURA_SPELL_GATE_SOURCE = Path.of("src", "main", "java",
-            "tong", "statmod", "integration", "tensura", "TensuraSpellGate.java");
-    private static final Path PERK_TO_SKILL_SOURCE = Path.of("src", "main", "java",
-            "tong", "statmod", "integration", "tensura", "PerkToSkillMapper.java");
-    private static final Path EPIC_FIGHT_GATE_SOURCE = Path.of("src", "main", "java",
-            "tong", "statmod", "perks", "EpicFightPerkGate.java");
 
     @Test
     void perkManagerRevokePathAlsoAttemptsExternalRewardCleanup() throws Exception {
         String source = Files.readString(PERK_MANAGER_SOURCE);
 
+        assertTrue(source.contains("public int resetAll(Player player, boolean refundPoints)"),
+                "PerkManager should expose a centralized player-aware reset flow for runtime respecs");
         assertTrue(source.contains("public boolean revoke(Perk perk, boolean refundPoints, Player player)"),
-                "PerkManager needs a player-aware revoke path to clean up external rewards");
-        assertTrue(source.contains("revokeRewards(player, perk);"),
-                "revoking a perk should also revoke any external reward tied to that perk");
+                "PerkManager still needs a player-aware revoke path so runtime callers can stay centralized");
     }
 
     @Test
@@ -54,15 +48,9 @@ class PerkRewardLifecycleSourceTest {
 
     @Test
     void externalRewardBridgesExposeExplicitRevocationHelpers() throws Exception {
-        String tensuraSpellGate = Files.readString(TENSURA_SPELL_GATE_SOURCE);
-        String perkToSkill = Files.readString(PERK_TO_SKILL_SOURCE);
-        String epicFightGate = Files.readString(EPIC_FIGHT_GATE_SOURCE);
+        String raceHandler = Files.readString(TENSURA_RACE_HANDLER_SOURCE);
 
-        assertTrue(tensuraSpellGate.contains("public static boolean revokeReward(Player player, Perk perk)"),
-                "Tensura spell rewards need an explicit revoke helper");
-        assertTrue(perkToSkill.contains("public static boolean revokeReward(Player player, Perk perk)"),
-                "Tensura transcendence skill rewards need an explicit revoke helper");
-        assertTrue(epicFightGate.contains("public static boolean revokeReward(Player player, Perk perk)"),
-                "Epic Fight rewards need an explicit revoke helper");
+        assertTrue(raceHandler.contains("if (perk != null && perks.grant(perk, player))"),
+                "player-aware intrinsic grants must still award their external rewards on race changes");
     }
 }

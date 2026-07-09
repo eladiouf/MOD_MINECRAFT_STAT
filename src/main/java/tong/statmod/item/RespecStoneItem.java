@@ -8,7 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import tong.statmod.network.SyncHelper;
-import tong.statmod.perks.PerkPointAllocator;
 import tong.statmod.perks.PerkManager;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;

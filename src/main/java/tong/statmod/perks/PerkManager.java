@@ -97,30 +97,17 @@ public class PerkManager {
         if (refundPoints && !freeGranted) {
             statData.addPerkPointsForStat(perk.stat.index, perk.tier.cost);
         }
-        revokeRewards(player, perk);
         return true;
     }
 
     private void grantRewards(Player player, Perk perk) {
         if (player != null) {
-            TensuraSpellGate.grantReward(player, perk);
             if (ModList.get().isLoaded("tensura")) {
+                TensuraSpellGate.grantReward(player, perk);
                 PerkToSkillMapper.grantReward(player, perk);
             }
             if (ModList.get().isLoaded("epicfight")) {
                 EpicFightPerkGate.grantReward(player, perk);
-            }
-        }
-    }
-
-    private void revokeRewards(Player player, Perk perk) {
-        if (player != null) {
-            TensuraSpellGate.revokeReward(player, perk);
-            if (ModList.get().isLoaded("tensura")) {
-                PerkToSkillMapper.revokeReward(player, perk);
-            }
-            if (ModList.get().isLoaded("epicfight")) {
-                EpicFightPerkGate.revokeReward(player, perk);
             }
         }
     }

@@ -39,10 +39,11 @@ public final class MagicNodeRuntimeRewards {
             }
             if (spellId.startsWith("tensura:")) {
                 String canonical = TensuraSkillIds.canonicalize(spellId);
-                boolean granted = sink != null && sink.grant(canonical);
-                if (!granted && knownSkill != null) {
-                    granted = knownSkill.test(canonical);
+                if (knownSkill != null && knownSkill.test(canonical)) {
+                    tensuraGranted++;
+                    continue;
                 }
+                boolean granted = sink != null && sink.grant(canonical);
                 if (granted) {
                     tensuraGranted++;
                 }

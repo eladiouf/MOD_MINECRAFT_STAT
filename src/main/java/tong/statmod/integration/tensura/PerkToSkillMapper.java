@@ -1,7 +1,6 @@
 package tong.statmod.integration.tensura;
 
 import io.github.manasmods.manascore.skill.api.SkillAPI;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tong.statmod.perks.Perk;
@@ -47,16 +46,4 @@ public final class PerkToSkillMapper {
         return SkillAPI.getSkillsFrom(player).learnSkill(ResourceLocation.parse(skillId));
     }
 
-    public static boolean revokeReward(Player player, Perk perk) {
-        String skillId = resolveSkillId(perk);
-        if (player == null || skillId == null) {
-            return false;
-        }
-        ResourceLocation id = ResourceLocation.parse(skillId);
-        boolean learned = SkillAPI.getSkillsFrom(player).getSkill(id).isPresent();
-        if (learned) {
-            SkillAPI.getSkillsFrom(player).forgetSkill(id, Component.empty());
-        }
-        return learned;
-    }
 }

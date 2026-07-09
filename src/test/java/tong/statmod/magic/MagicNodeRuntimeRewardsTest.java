@@ -38,7 +38,7 @@ class MagicNodeRuntimeRewardsTest {
                     return false;
                 });
 
-        assertEquals(List.of("tensura:thought_acceleration"), attempted);
+        assertEquals(List.of(), attempted, "Already known skill should not trigger sink");
         assertEquals(1, summary.tensuraGranted());
         assertEquals(0, summary.ignored());
     }

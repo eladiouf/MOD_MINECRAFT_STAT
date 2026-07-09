@@ -243,6 +243,11 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **Co-op réparé** : conquête partagée avec tous les joueurs présents sur l'étage (avant : seul le tueur du dernier mob débloquait, les autres restaient scellés) ; la mort d'un joueur ne purge plus la vague si un coéquipier combat encore ; vagues +50 % de mobs par joueur supplémentaire (cap 72) ; points d'assist 40 % du kill de base pour les coéquipiers présents. Helper central : `DungeonTeleportHandler.playersOnFloor`. Tests : `DungeonCoopTest` (6).
 - **Équipes FTB Teams** (`integration/ftbteams/FTBTeamsBridge`) : la conquête partagée et les assists sont réservées à l'**équipe FTB** du déclencheur (`arePlayersInSameTeam`) ; les rivaux présents voient un message de victoire adverse et gardent leur objectif. Sans FTB Teams (ou erreur) → fallback « tout le monde co-op ». FTB Teams donnant une équipe personnelle par joueur, deux joueurs sans party ne sont PAS co-équipiers (`/ftbteams party create` pour jouer ensemble). Tests : `FTBTeamsBridgeSourceTest` (3).
 
+**Feedback playtest 2026-07-09 (portes/pièges/échelles)** :
+- **IDs Macaw's cassés corrigés** (vérifiés contre les jars) : `whisper_oak_door`→`oak_whispering_door`, `iron_jail_door`→`jail_door`, `chain_lamp`→`chain_lantern`, `wall_lantern`→`covered_wall_lantern`. L'ancien bug faisait échouer TOUTE résolution → fallback porte de fer + levier permanent en jeu.
+- **Zéro redstone dans le donjon** : plus de porte de fer ni levier (portes Macaw's, fallback épicéa, tout s'ouvre à la main) ; pseudo-puzzle du vault (bouton + poudre sous le sol) supprimé ; pièges distributeur+plaque et distributeur-au-dessus-du-coffre remplacés par des **pièges à command block** cachés sous le sol/coffre (crocs d'évocateur, poison, lenteur, wither ≥ 40). ⚠ Serveur dédié : `enable-command-block=true` requis dans server.properties.
+- **Échelles de mezzanine** interdites sur les axes de portes (elles bouchaient parfois le passage de 1 bloc).
+
 ### Fichiers clés
 
 | Fichier | Rôle |

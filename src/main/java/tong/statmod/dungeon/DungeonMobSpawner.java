@@ -40,7 +40,7 @@ public final class DungeonMobSpawner {
     /** Délai avant spawn effectif : le joueur est déjà présent, un court délai suffit. */
     private static final int SPAWN_DELAY_TICKS = 10;
     /** Rayon (blocs) où l'on cherche des mobs déjà vivants sur l'étage. */
-    private static final int FLOOR_SCAN_RADIUS = 85;
+    static final int FLOOR_SCAN_RADIUS = 85;
 
     /**
      * Délai avant d'appliquer le niveau L2 Hostility. Doit passer APRÈS l'init de L2 (qui calcule
@@ -110,11 +110,23 @@ public final class DungeonMobSpawner {
     }
 
     /**
-     * Supprime TOUS les mobs autorisés de l'étage (vague + boss/mini-boss + invocations) et purge
+     * Supprime TOUS les mobs autorisés de l'étage (vague + mini-boss + invocations) et purge
      * la file d'attente de cet étage. À appeler avant de faire réessayer un étage au joueur (mort)
      * pour éviter qu'il réapparaisse au milieu de la horde précédente → mort instantanée en boucle.
+     *
+     * <p><b>No-op sur un combat de boss suivi</b> ({@link DungeonBossTracker#isTracked}) : discard le
+     * boss ici le tuerait sans jamais réactiver l'autel ({@link DungeonBossAltarBlock}), rendant
+     * l'étage définitivement infranchissable après une seule mort du joueur (softlock observé,
+     * 2026-07-09). Le combat continue plutôt tel quel — le joueur (ou ses coéquipiers en multi)
+     * retrouve le boss vivant en retournant dans l'arène.
      */
     public static void clearFloorMobs(ServerLevel lv, int floor) {
+        if (DungeonBossTracker.isTracked(floor)) {
+            STATMod.LOGGER.info(
+                    "[TrialDungeon] Étage {} : combat de boss suivi, purge annulée (le combat continue)",
+                    floor);
+            return;
+        }
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
         int removed = 0;
@@ -146,16 +158,22 @@ public final class DungeonMobSpawner {
         PENDING_FLOORS.add(floor);
         // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
 
-        // Centres des pièces de combat (toutes sauf la pièce d'apparition) : on répartit la horde
-        // dans les pièces à traverser, pour que chaque salle ait ses ennemis à nettoyer.
-        List<BlockPos> roomCenters = DungeonRoomChain.combatRoomCenters(sp);
-        if (roomCenters.isEmpty()) roomCenters = List.of(sp); // garde-fou
+        // Get combat rooms specifically to map locations to room archetypes
+        List<DungeonLayout.Room> combatRooms = new ArrayList<>();
+        for (DungeonLayout.Room r : DungeonLayout.rooms()) {
+            if (r.isFirst()) continue; // pas de mobs dans la pièce d'apparition
+            if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue; // havre de paix
+            combatRooms.add(r);
+        }
+        if (combatRooms.isEmpty()) return 0;
 
         // Mini-boss du thème dans la DERNIÈRE pièce (celle de sortie), en gardien du téléporteur.
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         EntityType<?> miniBoss = firstAvailable(theme.miniBoss());
         if (miniBoss != null) {
-            BlockPos bossPos = roomCenters.get(roomCenters.size() - 1).offset(0, 0, -3);
+            DungeonLayout.Room lastRoom = DungeonLayout.rooms().get(DungeonLayout.ROOM_COUNT - 1);
+            int lastY = DungeonRoomChain.roomYOffset(lastRoom.index(), floor);
+            BlockPos bossPos = sp.offset(lastRoom.centerX(), lastY, lastRoom.centerZ() - 3);
             QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
         }
 
@@ -164,23 +182,78 @@ public final class DungeonMobSpawner {
         while (spawned < want && attempts < want * 6) { // Max 6 essais par mob
             attempts++;
 
-            // Choisit une pièce puis un point dispersé à l'intérieur (rayon ~8 autour du centre).
-            BlockPos room = roomCenters.get(lv.random.nextInt(roomCenters.size()));
-            int dx = lv.random.nextInt(17) - 8;
-            int dz = lv.random.nextInt(17) - 8;
-            BlockPos pos = room.offset(dx, 0, dz);
+            // Choisit une pièce de combat aléatoire
+            DungeonLayout.Room room = combatRooms.get(lv.random.nextInt(combatRooms.size()));
+            int yOffset = DungeonRoomChain.roomYOffset(room.index(), floor);
+            BlockPos roomCenter = sp.offset(room.centerX(), yOffset, room.centerZ());
 
-            if (!isValidSpawnPosition(lv, pos)) continue;
+            // Dispersion augmentée car les pièces font 53x61 blocs (colossales)
+            int dx = lv.random.nextInt(25) - 12;
+            int dz = lv.random.nextInt(25) - 12;
+            BlockPos pos = roomCenter.offset(dx, 0, dz);
+
+            BlockPos targetPos = pos;
+            // 35% de chance de spawner sur la mezzanine si une plateforme y est présente
+            if (lv.random.nextFloat() < 0.35f && isValidSpawnPosition(lv, pos.above(5))) {
+                targetPos = pos.above(5);
+            } else {
+                if (!isValidSpawnPosition(lv, pos)) continue;
+            }
 
             // Dégage une colonne d'air 1×2 au point de spawn
-            lv.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            lv.setBlock(pos.above(), Blocks.AIR.defaultBlockState(), 3);
+            lv.setBlock(targetPos, Blocks.AIR.defaultBlockState(), 3);
+            lv.setBlock(targetPos.above(), Blocks.AIR.defaultBlockState(), 3);
 
-            EntityType<?> type = pool.get(lv.random.nextInt(pool.size()));
-            QUEUE.add(new Pending(lv, pos, type, floor, serverTick + SPAWN_DELAY_TICKS));
+            // Choix du mob typé selon l'archétype de la pièce
+            int archetype = Math.floorMod(floor * 13 + room.index() * 29, 6);
+            EntityType<?> type = chooseMobForArchetype(lv, archetype, floor);
+            if (type == null) {
+                type = pool.get(lv.random.nextInt(pool.size()));
+            }
+
+            QUEUE.add(new Pending(lv, targetPos, type, floor, serverTick + SPAWN_DELAY_TICKS));
             spawned++;
         }
         return spawned;
+    }
+
+    private static EntityType<?> chooseMobForArchetype(ServerLevel lv, int archetype, int floor) {
+        // List of candidate custom mobs per archetype, falling back to standard vanilla choices if mods are absent
+        List<String> candidates;
+        EntityType<?> fallback;
+
+        switch (archetype) {
+            case 0 -> { // Archives / Library (Magic/Evokers)
+                candidates = List.of("irons_spellbooks:necromancer", "irons_spellbooks:cryomancer", "irons_spellbooks:pyromancer", "minecraft:evoker");
+                fallback = EntityType.WITCH;
+            }
+            case 1 -> { // Great Forge (Fire/Industrial)
+                candidates = List.of("born_in_chaos_v1:firelight", "born_in_chaos_v1:withered_corpse", "minecraft:blaze");
+                fallback = EntityType.HUSK;
+            }
+            case 2 -> { // Crypt (Undead/Skeletons)
+                candidates = List.of("born_in_chaos_v1:bonescaller", "born_in_chaos_v1:decaying_zombie", "minecraft:wither_skeleton");
+                fallback = EntityType.SKELETON;
+            }
+            case 3 -> { // Prison (Stray/Stalker)
+                candidates = List.of("born_in_chaos_v1:nightmare_stalker", "born_in_chaos_v1:dark_vortex", "minecraft:stray");
+                fallback = EntityType.ZOMBIE_VILLAGER;
+            }
+            case 4 -> { // Greenhouse (Spiders/Beasts)
+                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:cave_centipede", "minecraft:cave_spider");
+                fallback = EntityType.SPIDER;
+            }
+            default -> { // Treasury (Guards)
+                candidates = List.of("born_in_chaos_v1:lord_of_depths", "minecraft:piglin_brute", "minecraft:vindicator");
+                fallback = EntityType.PILLAGER;
+            }
+        }
+
+        for (String id : candidates) {
+            EntityType<?> t = ModdedMobPool.resolve(id);
+            if (t != null) return t;
+        }
+        return fallback;
     }
 
     /** Premier EntityType présent parmi une liste d'IDs candidats, ou {@code null}. */

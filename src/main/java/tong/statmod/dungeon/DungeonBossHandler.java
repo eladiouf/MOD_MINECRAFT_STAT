@@ -88,8 +88,14 @@ public final class DungeonBossHandler {
                 return; // il reste des boss
             }
             // Tous les boss morts → conquête.
+            DungeonProgress.completeFloor(sp, floor, DungeonObjective.SLAY_BOSS, true);
+            return;
         }
-        // Sinon (restart serveur en plein combat, étage sans altar) → ce kill conquiert directement.
+        // Sinon (restart serveur en plein combat) : secours, mais UNIQUEMENT si la cible est un mob
+        // de donjon autorisé (AUTHORIZED_TAG) — jamais un mob quelconque qui traînerait sur l'étage
+        // (mob apprivoisé amené par le joueur, résidu d'un étage voisin...), sinon n'importe quel kill
+        // hors combat conquiert l'étage sans jamais affronter le boss (exploit trouvé en audit).
+        if (!target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) return;
         DungeonProgress.completeFloor(sp, floor, DungeonObjective.SLAY_BOSS, true);
     }
 
@@ -115,7 +121,7 @@ public final class DungeonBossHandler {
     /** Nombre de mobs autorisés encore vivants sur l'étage, en excluant {@code dying}. */
     private static int livingAuthorizedCount(ServerLevel lv, int floor, LivingEntity dying) {
         var sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        AABB area = new AABB(sp).inflate(55);
+        AABB area = new AABB(sp).inflate(DungeonMobSpawner.FLOOR_SCAN_RADIUS);
         List<Mob> alive = lv.getEntitiesOfClass(Mob.class, area,
                 m -> m != dying && m.isAlive()
                         && m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG));

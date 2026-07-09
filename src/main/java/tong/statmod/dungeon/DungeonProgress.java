@@ -35,14 +35,29 @@ public final class DungeonProgress {
     private DungeonProgress() {}
 
     /**
-     * Marque l'étage {@code floor} comme conquis par {@code player} : débloque l'étage suivant
-     * (jamais au-delà d'un boss non vaincu — les étages boss gardent leur propre logique) et joue
-     * la célébration adaptée à l'objectif. No-op si l'étage est déjà conquis.
+     * Marque l'étage {@code floor} comme conquis : débloque l'étage suivant et joue la célébration
+     * pour <b>tous les joueurs présents sur l'étage</b> (co-op : le groupe conquiert ensemble —
+     * avant 2026-07-09, seul le tueur du dernier mob progressait et ses coéquipiers restaient
+     * scellés derrière le téléporteur). No-op par joueur si son étage est déjà conquis.
      *
+     * @param player     le joueur déclencheur (tueur du dernier mob / ouvreur du coffre).
      * @param bossReward {@code true} pour accorder le gain de stat (réservé aux boss).
      */
     public static void completeFloor(ServerPlayer player, int floor, DungeonObjective objective, boolean bossReward) {
         if (floor <= 0) return;
+        if (player.level() instanceof ServerLevel sl
+                && sl.dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
+            for (ServerPlayer participant : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
+                completeForPlayer(participant, floor, objective, bossReward);
+            }
+        } else {
+            // Filet de sécurité (déclencheur hors donjon — commandes/tests) : au moins lui.
+            completeForPlayer(player, floor, objective, bossReward);
+        }
+    }
+
+    /** Conquête pour UN joueur : unlock + récompense + célébration. Idempotent. */
+    private static void completeForPlayer(ServerPlayer player, int floor, DungeonObjective objective, boolean bossReward) {
         PlayerStatData data = player.getData(ModAttachments.STATS);
         if (data.getDungeonFloorReached() > floor) return; // déjà conquis
 

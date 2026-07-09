@@ -80,19 +80,25 @@ public final class DungeonMobSpawner {
         if (PENDING_FLOORS.contains(floor)) return;
         if (countAlive(lv, floor) > 0) return;
 
-        int full = waveSizeForFloor(floor);
+        int players = Math.max(1, DungeonTeleportHandler.playersOnFloor(lv, floor).size());
+        int full = waveSizeForFloor(floor, players);
         int queued = enqueueWave(lv, floor, full);
-        STATMod.LOGGER.info("[TrialDungeon] Vague étage {} demandée : {} mobs en file", floor, queued);
+        STATMod.LOGGER.info("[TrialDungeon] Vague étage {} demandée : {} mobs en file ({} joueur(s))",
+                floor, queued, players);
     }
 
     /**
      * Taille de la vague de combat selon l'étage — donjon DENSE (2026-07-05, à la demande).
      * Minimum 30 mobs dès l'étage 1, jusqu'à 48 en profondeur, soit ~3-4 mobs par pièce sur les
-     * ~11 pièces. Plafonnée à 48 pour éviter le lag ingérable. (S'y ajoute le mini-boss de thème.)
+     * ~11 pièces. En co-op, +50 % de mobs par joueur supplémentaire présent sur l'étage
+     * (audit multi 2026-07-09), plafond global 72 pour garder le tick serveur sain.
+     * (S'y ajoute le mini-boss de thème.)
      */
-    private static int waveSizeForFloor(int floor) {
+    static int waveSizeForFloor(int floor, int players) {
         int n = 30 + floor / 5;         // base 30, +1 mob tous les 5 étages
-        return Math.min(48, Math.max(30, n));
+        int solo = Math.min(48, Math.max(30, n));
+        double coopMult = 1.0 + 0.5 * Math.max(0, players - 1);
+        return (int) Math.min(72, Math.round(solo * coopMult));
     }
 
     /** {@code true} si l'étage a une vague de combat (ni boss ni trésor). */

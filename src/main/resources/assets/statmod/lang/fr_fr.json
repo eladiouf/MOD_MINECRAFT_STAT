@@ -221,6 +221,7 @@
   "dungeon.rush.combo": "+%1$s pts §6⚡ combo %2$s §7(×%3$s) §8· total %4$s",
   "dungeon.rush.jackpot": "§6✦ JACKPOT ! +%1$s pts §7(total %2$s)",
   "dungeon.rush.combo_broken": "§c✖ Combo ×%s brisé !",
+  "dungeon.rush.assist": "§b+%s pts d'assist §7(total %s)",
   "dungeon.title.flawless": "§6★ SANS FAUTE",
   "dungeon.title.flawless.sub": "§7Aucun coup reçu — récompense de conquête §6×2",
   "dungeon.points.floor": "§aÉtage nettoyé ! +%s pts §7(%s)",

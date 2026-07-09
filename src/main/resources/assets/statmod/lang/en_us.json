@@ -285,6 +285,7 @@
   "dungeon.rush.combo": "+%1$s pts §6⚡ combo %2$s §7(×%3$s) §8· total %4$s",
   "dungeon.rush.jackpot": "§6✦ JACKPOT! +%1$s pts §7(total %2$s)",
   "dungeon.rush.combo_broken": "§c✖ Combo ×%s broken!",
+  "dungeon.rush.assist": "§b+%s assist pts §7(total %s)",
   "dungeon.title.flawless": "§6★ FLAWLESS",
   "dungeon.title.flawless.sub": "§7Untouched — conquest reward §6×2",
   "dungeon.points.floor": "§aFloor cleared! +%s pts §7(%s)",

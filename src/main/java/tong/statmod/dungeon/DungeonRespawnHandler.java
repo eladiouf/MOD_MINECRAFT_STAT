@@ -71,8 +71,14 @@ public final class DungeonRespawnHandler {
         // PURGE l'étage AVANT de réapparaître : sans ça, le joueur renaissait au centre, au milieu
         // de la horde + mini-boss de sa tentative précédente → mort instantanée → boucle infinie
         // (observée à l'étage 3 « thème ORC » avec l'Orc Lord). On repart sur une vague propre.
+        // SAUF en co-op : si un coéquipier vivant est encore sur l'étage, sa vague est SON combat —
+        // on ne la lui vole pas (audit multi 2026-07-09). Le mort réapparaît au pad et le rejoint.
         if (player.level() instanceof ServerLevel sl) {
-            DungeonMobSpawner.clearFloorMobs(sl, floor);
+            boolean teammateStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
+                    .anyMatch(p -> p != player);
+            if (!teammateStillFighting) {
+                DungeonMobSpawner.clearFloorMobs(sl, floor);
+            }
         }
 
         // Réapparition au début du MÊME étage (régénéré, nouvelle vague) — on réessaie l'étage.

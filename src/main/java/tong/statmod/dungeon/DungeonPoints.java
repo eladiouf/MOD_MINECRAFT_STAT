@@ -117,6 +117,26 @@ public final class DungeonPoints {
             player.playNotifySound(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP,
                     net.minecraft.sounds.SoundSource.PLAYERS, 0.9f, pitch);
         }
+
+        // Co-op : les coéquipiers présents sur l'étage touchent une part d'assist (points bruts,
+        // sans combo ni jackpot — le style, c'est personnel). Jouer à plusieurs doit payer.
+        if (player.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+            int share = assistShare(base);
+            if (share > 0) {
+                for (ServerPlayer mate : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
+                    if (mate == player) continue;
+                    int mateTotal = mate.getData(ModAttachments.STATS).addDungeonPoints(share);
+                    SyncHelper.syncStats(mate);
+                    mate.displayClientMessage(Component.translatable(
+                            "dungeon.rush.assist", share, mateTotal), true);
+                }
+            }
+        }
+    }
+
+    /** Part d'assist co-op : 40 % des points de base du kill (0 si le kill ne vaut rien). */
+    static int assistShare(int basePoints) {
+        return (int) Math.floor(basePoints * 0.4);
     }
 
     /** Récompense de conquête d'un étage (combat/trésor), ×{@code multiplier} (sans-faute…). */

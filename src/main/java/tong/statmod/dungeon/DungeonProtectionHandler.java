@@ -62,6 +62,39 @@ public final class DungeonProtectionHandler {
         if (!inDungeon(event.getLevel())) return;
         if (isBuilder(event.getEntity())) return;
 
+        // Interactive Lodestone blessing altars.
+        // ⚠ PAS les sanctuaires de la chambre-forte (lodestone + cristal d'améthyste au-dessus) :
+        // ceux-là téléportent (DungeonUltraVault.onUseLodestone) — on les laisse passer, sinon ce
+        // handler consommait le clic et la chambre-forte devenait inaccessible.
+        if (event.getLevel().getBlockState(event.getPos()).is(net.minecraft.world.level.block.Blocks.LODESTONE)
+                && !event.getLevel().getBlockState(event.getPos().above()).is(net.minecraft.world.level.block.Blocks.AMETHYST_CLUSTER)) {
+            if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer sp) {
+                int floor = DungeonTeleportHandler.floorAtPos(event.getPos().getX(), event.getPos().getZ());
+                if (floor > 0) {
+                    int lastClaimed = sp.getPersistentData().getInt("statmod:blessed_floor");
+                    if (lastClaimed < floor) {
+                        sp.getPersistentData().putInt("statmod:blessed_floor", floor);
+
+                        // Potion effects: Speed II, Resistance I for 3 minutes (3600 ticks)
+                        sp.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 3600, 1));
+                        sp.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 3600, 0));
+
+                        // Play sound & particles
+                        net.minecraft.server.level.ServerLevel sl = sp.serverLevel();
+                        sl.playSound(null, event.getPos(), net.minecraft.sounds.SoundEvents.TOTEM_USE, net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
+                        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.TOTEM_OF_UNDYING, event.getPos().getX() + 0.5, event.getPos().getY() + 1.2, event.getPos().getZ() + 0.5, 30, 0.2, 0.2, 0.2, 0.1);
+
+                        sp.sendSystemMessage(net.minecraft.network.chat.Component.literal("§6§l[Donjon] Bénédiction reçue ! Vitesse II & Résistance I actives."));
+                    } else {
+                        sp.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c[Donjon] Vous avez déjà réclamé la bénédiction de cet étage."));
+                    }
+                }
+            }
+            event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
         net.minecraft.world.item.ItemStack stack = event.getItemStack();
         if (!stack.isEmpty() && isForbiddenItem(stack.getItem())) {
             event.setCanceled(true);

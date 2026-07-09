@@ -85,6 +85,9 @@ public final class DungeonUltraVault {
         if (!(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
         if (!event.getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
         if (!event.getLevel().getBlockState(event.getPos()).is(Blocks.LODESTONE)) return;
+        // Seulement les SANCTUAIRES (lodestone + cristal d'améthyste) — les lodestones nues sont
+        // les autels de bénédiction de DungeonProtectionHandler, on ne se marche pas dessus.
+        if (!event.getLevel().getBlockState(event.getPos().above()).is(Blocks.AMETHYST_CLUSTER)) return;
 
         int floor = DungeonTeleportHandler.floorAtPos(event.getPos().getX(), event.getPos().getZ());
         if (!isVaultFloor(floor)) return;

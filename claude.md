@@ -231,10 +231,18 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - Tests : `DungeonBossTrackerTest` (7, nouveau) verrouille le contrat boss duo/vague (0 test avant malgré l'historique de bugs sur cette classe). Suite dungeon 100 % verte, build complet vérifié.
 - Dette restante non traitée (hors scope de ce fix) : `DungeonBossHandler`, `DungeonSpawnGuard`, `DungeonProgress`, `DungeonMobSpawner`, `DungeonRespawnHandler` n'ont toujours aucun test direct (logique trop liée à `ServerLevel`/`Mob` pour le JUnit pur de ce repo, pas d'infra GameTest) — vérification actuelle = manuelle en jeu (`/statdungeon tp 10`, mourir volontairement en combat, vérifier que le boss est toujours là).
 
+**« Dungeon Rush » 2026-07-09 (mission : le donjon devient ultra addictif)** — couche de renforcement au-dessus du système de points :
+- **Combo de kills** : kills enchaînés dans une fenêtre de 8 s → multiplicateur de points croissant (×2,5 max à 30 kills). Encaisser un coup **brise** le combo (risque/récompense : jouer vite ET propre). Fanfare sonore à pitch croissant tous les 5 kills, action-bar `+N pts ⚡ combo K (×M)`.
+- **Jackpot** : 4 % de chance par kill → points ×4, son + message dédiés (renforcement à ratio variable).
+- **Sans-faute** : conquérir un étage sans un seul coup reçu → récompense de conquête ×2 (combat ET boss), titre « ★ SANS FAUTE » + son de défi. Armé à `enterFloor`, ré-armé à la conquête.
+- Architecture : `DungeonRush` (cœur pur, temps en ticks injecté, état mémoire par UUID — rien n'est persisté, un combo ne survit pas à une session) + `DungeonRushHandler` (`LivingDamageEvent.Post` brise le combo, logout purge) + hooks dans `DungeonPoints.awardMobKill` / `DungeonProgress.completeFloor`. Tests : `DungeonRushTest` (12).
+
 ### Fichiers clés
 
 | Fichier | Rôle |
 |---------|------|
+| `dungeon/DungeonRush.java` | **Dungeon Rush** : combo/jackpot/sans-faute — cœur pur testable (2026-07-09) |
+| `dungeon/DungeonRushHandler.java` | Câblage Rush : coup reçu → combo brisé + sans-faute perdu ; logout → purge |
 | `dungeon/DungeonDimensions.java` | ResourceKeys pour `statmod:trial_dungeon` |
 | `dungeon/DungeonBlocks.java` | DeferredRegister : `dungeon_portal`, `return_beacon`, `next_floor_teleporter`, `boss_altar` |
 | `dungeon/DungeonPortalBlock.java` | Bloc d'entrée : right-click → tp donjon + particules PORTAL |

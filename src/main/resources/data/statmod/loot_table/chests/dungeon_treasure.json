@@ -2,86 +2,82 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "rolls": 2,
-      "bonus_rolls": 1,
+      "rolls": 4,
+      "bonus_rolls": 2,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:diamond",
-          "weight": 15,
+          "weight": 20,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 3 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 2, "max": 8 } }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:emerald",
-          "weight": 20,
+          "weight": 25,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 5 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 3, "max": 12 } }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:gold_ingot",
-          "weight": 25,
+          "weight": 20,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 2, "max": 6 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 3, "max": 10 } }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_ingot",
-          "weight": 30,
+          "weight": 20,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 2, "max": 8 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 4, "max": 12 } }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:experience_bottle",
-          "weight": 10,
+          "name": "minecraft:netherite_scrap",
+          "weight": 5,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 4 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_ingot",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:experience_bottle",
+          "weight": 15,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 3, "max": 12 } }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
-          "weight": 8,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:enchant_randomly",
               "options": [
-                "minecraft:sharpness",
-                "minecraft:smite",
-                "minecraft:bane_of_arthropods",
-                "minecraft:protection",
-                "minecraft:fire_protection",
-                "minecraft:projectile_protection",
-                "minecraft:blast_protection",
-                "minecraft:efficiency",
-                "minecraft:unbreaking",
-                "minecraft:fortune",
-                "minecraft:looting",
-                "minecraft:power",
-                "minecraft:punch",
-                "minecraft:flame"
+                "minecraft:sharpness", "minecraft:smite", "minecraft:bane_of_arthropods",
+                "minecraft:protection", "minecraft:fire_protection", "minecraft:projectile_protection",
+                "minecraft:blast_protection", "minecraft:efficiency", "minecraft:unbreaking",
+                "minecraft:fortune", "minecraft:looting", "minecraft:power", "minecraft:punch",
+                "minecraft:flame", "minecraft:infinity", "minecraft:silk_touch", "minecraft:mending",
+                "minecraft:feather_falling", "minecraft:depth_strider", "minecraft:thorns",
+                "minecraft:aqua_affinity", "minecraft:respiration", "minecraft:lure",
+                "minecraft:luck_of_the_sea", "minecraft:fire_aspect", "minecraft:knockback",
+                "minecraft:sweeping_edge", "minecraft:loyalty", "minecraft:impaling",
+                "minecraft:riptide", "minecraft:channeling", "minecraft:multishot",
+                "minecraft:quick_charge", "minecraft:piercing", "minecraft:density",
+                "minecraft:breach", "minecraft:wind_burst"
               ]
             }
           ]
@@ -89,40 +85,661 @@
         {
           "type": "minecraft:item",
           "name": "statmod:rune_essence_arcane",
-          "weight": 5,
+          "weight": 8,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 2 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "statmod:rune_essence_pyrium",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "statmod:perk_tome",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "statmod:respec_stone",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "statmod:dungeon_beacon",
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:ender_pearl",
           "weight": 12,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 3 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 2, "max": 6 } }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "statmod:rune_essence_pyrium",
+          "name": "irons_spellbooks:common_ink",
+          "weight": 15,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:uncommon_ink",
+          "weight": 10,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:rare_ink",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:epic_ink",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:legendary_ink",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:scroll",
+          "weight": 10,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:arcane_essence",
+          "weight": 12,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:arcane_essence",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:cinder_essence",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:frozen_bone",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:divine_pearl",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:blood_vial",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:eldritch_manuscript",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:lightning_bottle",
+          "weight": 7,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:ice_spider_egg",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:upgrade_orb",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:lesser_spell_slot_upgrade",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:cooldown_upgrade_orb",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:mana_upgrade_orb",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:ancient_knowledge_fragment",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:ruined_book",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:wayward_compass",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tensura:low_magisteel_ingot",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 2, "max": 6 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tensura:low_magisteel_ingot",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tensura:high_magisteel_ingot",
           "weight": 3,
           "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": { "min": 1, "max": 1 }
-            }
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:netherite_scrap",
+          "name": "tensura:pure_magisteel_ingot",
+          "weight": 1,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ancient_debris",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:totem_of_undying",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_golden_apple",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:blaze_rod",
+          "weight": 10,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ghast_tear",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:nether_star",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 8,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:bane_of_arthropods","minecraft:fire_aspect","minecraft:knockback","minecraft:sweeping_edge","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_axe",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:bane_of_arthropods","minecraft:efficiency","minecraft:fortune","minecraft:silk_touch","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_pickaxe",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:efficiency","minecraft:fortune","minecraft:silk_touch","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_sword",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:fire_aspect","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_axe",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:efficiency","minecraft:fortune","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bow",
+          "weight": 7,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:power","minecraft:punch","minecraft:flame","minecraft:infinity","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:crossbow",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:quick_charge","minecraft:multishot","minecraft:piercing","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:trident",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:impaling","minecraft:loyalty","minecraft:channeling","minecraft:riptide","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:mace",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:density","minecraft:breach","minecraft:wind_burst","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:amethyst_rapier",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:claymore",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:fire_aspect","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:fire_aspect","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:keeper_flamberge",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:fire_aspect","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:graybeard_staff",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:blood_staff",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:ice_staff",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:pyrium_staff",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:artificer_cane",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_sword",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:fire_aspect","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:lightning_rod",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:autoloader_crossbow",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:quick_charge","minecraft:multishot","minecraft:piercing","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:staff_of_the_nines",
+          "weight": 1,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:graybeard_staff",
+          "weight": 1,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:hither_thither_wand",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:amethyst_rapier",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:basic_master_katana",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:basic_nightbringer_sword",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:basic_sett_fist",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:basic_chosen_pantheon_spear",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:longsword",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:claymore",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:greatsword",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:greatsword",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:looting","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:basic_master_katana",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:fire_aspect","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:sacred_relic_sword",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:smite","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:moonlight_sword",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:darkmoon_greatsword",
+          "weight": 1,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:dragon_slayer_axe",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:god_staff",
+          "weight": 2,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:master_katana",
+          "weight": 3,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:noble_sword",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:barbarian_club",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:black_katana",
+          "weight": 4,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:sickle",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:saber",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:dagger",
+          "weight": 6,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:spear",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "slu:mace",
+          "weight": 5,
+          "functions": [
+            { "function": "minecraft:enchant_randomly", "options": ["minecraft:sharpness","minecraft:unbreaking","minecraft:mending"] }
+          ]
         }
       ]
     }

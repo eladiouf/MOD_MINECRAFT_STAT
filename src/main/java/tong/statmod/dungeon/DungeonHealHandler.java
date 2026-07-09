@@ -57,6 +57,9 @@ public final class DungeonHealHandler {
                 // Régénération II + Résistance I courtes (renouvelées tant qu'on reste).
                 player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1, false, false));
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60, 0, false, false));
+
+                // Intégration PlayerRevive : réanimation près des feux de camp / fontaines.
+                tong.statmod.integration.playerrevive.PlayerReviveIntegration.tryHealSpotRevive(player);
             }
         }
     }

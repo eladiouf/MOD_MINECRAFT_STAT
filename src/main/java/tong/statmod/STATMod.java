@@ -135,6 +135,9 @@ public class STATMod {
         if (ironSpellsLoaded) {
             IronSpellsCompat.init();
         }
+        if (ModList.get().isLoaded("playerrevive")) {
+            tong.statmod.integration.playerrevive.PlayerReviveIntegration.init();
+        }
         LOGGER.info("STAT Mod initialized on NeoForge 1.21.1");
     }
 }

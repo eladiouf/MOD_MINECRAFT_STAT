@@ -2,14 +2,17 @@ package tong.statmod.progression;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
@@ -25,7 +28,7 @@ public class NonCombatXPHandler {
         if (!(event.getPlayer() instanceof Player player) || player.level().isClientSide) return;
         if (!isOre(event.getState().getBlock())) return;
 
-        award(player, StatType.FORGING, 5);
+        award(player, StatType.FORGING, 2);
     }
 
     @SubscribeEvent
@@ -37,25 +40,55 @@ public class NonCombatXPHandler {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre event) {
-        Player player = event.getPlayer();
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        Player player = event.getEntity();
         if (player.level().isClientSide) return;
+        ItemStack stack = event.getItemStack();
+        if (!stack.is(Items.ENCHANTED_BOOK)) return;
 
-        // First spell book pickup awards Erudition Lv1
-        if (player.getData(ModAttachments.STATS).getLevel(StatType.ERUDITION.index) == 0
-                && isIronSpellBook(event.getItemEntity().getItem())) {
-            award(player, StatType.ERUDITION, 10);
+        // Double-click protection: player must intentionally learn
+        var data = player.getData(ModAttachments.STATS);
+        long now = System.currentTimeMillis();
+        if (data.lastEnchantedBookClickMs > 0 && now - data.lastEnchantedBookClickMs < 1500) {
+            // Second click within 1.5s → confirm and learn
+            data.lastEnchantedBookClickMs = 0;
+            learnEnchantedBook(player, stack);
+            event.setCanceled(true);
+            return;
         }
+
+        // First click → show intent feedback
+        data.lastEnchantedBookClickMs = now;
+        event.setCanceled(true);
+        player.displayClientMessage(
+                net.minecraft.network.chat.Component.literal("§bClick again to learn this book..."), true);
     }
 
-    static boolean isIronSpellBook(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) return false;
-        if (!ModList.get().isLoaded("irons_spellbooks")) return false;
-        try {
-            return stack.getItem() instanceof io.redspace.ironsspellbooks.item.SpellBook;
-        } catch (NoClassDefFoundError ignored) {
-            return false;
+    private static void learnEnchantedBook(Player player, ItemStack stack) {
+        var enchants = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+        if (enchants.isEmpty()) return;
+
+        int xp = 0;
+        for (var entry : enchants.entrySet()) {
+            xp += entry.getIntValue();
         }
+        xp = Math.max(10, xp * 8);
+
+        if (!player.isCreative()) {
+            stack.shrink(1);
+        }
+
+        award(player, StatType.ERUDITION, xp);
+
+        // Totem-like animation with book icon
+        if (player instanceof ServerPlayer sp) {
+            PacketDistributor.sendToPlayer(sp, new tong.statmod.network.LearnBookPayload());
+            sp.playNotifySound(SoundEvents.TOTEM_USE, net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 1.0f);
+        }
+
+        player.displayClientMessage(
+                net.minecraft.network.chat.Component.literal(
+                        "§a✧ Learned! §f+" + xp + " Erudition XP"), true);
     }
 
     @SubscribeEvent

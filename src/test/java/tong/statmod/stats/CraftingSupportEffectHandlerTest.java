@@ -1,5 +1,6 @@
 package tong.statmod.stats;
 
+import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -93,6 +94,32 @@ class CraftingSupportEffectHandlerTest {
     }
 
     @Test
+    void tensuraArcanePotionsMapToStableIronManaRestoreFractions() {
+        assertEquals(0.05f, CraftingSupportEffectHandler.tensuraArcanePotionManaFraction(
+                ResourceLocation.fromNamespaceAndPath("tensura", "low_arcane_potion")), 1.0e-6f);
+        assertEquals(0.10f, CraftingSupportEffectHandler.tensuraArcanePotionManaFraction(
+                ResourceLocation.fromNamespaceAndPath("tensura", "medium_arcane_potion")), 1.0e-6f);
+        assertEquals(0.20f, CraftingSupportEffectHandler.tensuraArcanePotionManaFraction(
+                ResourceLocation.fromNamespaceAndPath("tensura", "high_arcane_potion")), 1.0e-6f);
+        assertEquals(0.0f, CraftingSupportEffectHandler.tensuraArcanePotionManaFraction(
+                ResourceLocation.fromNamespaceAndPath("tensura", "full_potion")), 1.0e-6f);
+    }
+
+    @Test
+    void knownTensuraArcanePotionIdsAreRecognizedWithoutDependingOnlyOnTheTag() {
+        assertTrue(CraftingSupportEffectHandler.isKnownTensuraArcanePotionId(
+                ResourceLocation.fromNamespaceAndPath("tensura", "low_arcane_potion")));
+        assertTrue(CraftingSupportEffectHandler.isKnownTensuraArcanePotionId(
+                ResourceLocation.fromNamespaceAndPath("tensura", "medium_arcane_potion")));
+        assertTrue(CraftingSupportEffectHandler.isKnownTensuraArcanePotionId(
+                ResourceLocation.fromNamespaceAndPath("tensura", "high_arcane_potion")));
+        assertFalse(CraftingSupportEffectHandler.isKnownTensuraArcanePotionId(
+                ResourceLocation.fromNamespaceAndPath("tensura", "full_potion")));
+        assertFalse(CraftingSupportEffectHandler.isKnownTensuraArcanePotionId(
+                ResourceLocation.fromNamespaceAndPath("minecraft", "potion")));
+    }
+
+    @Test
     void craftingSupportEffectsAreRegisteredWithoutTensura() throws IOException {
         String source = Files.readString(Path.of("src/main/java/tong/statmod/STATMod.java"));
         int registerIndex = source.indexOf("NeoForge.EVENT_BUS.register(CraftingSupportEffectHandler.class);");
@@ -154,6 +181,10 @@ class CraftingSupportEffectHandlerTest {
                 "Forge repair output and sharpening windows need the anvil repair event.");
         assertTrue(source.contains("PlayerEvent.ItemCraftedEvent"),
                 "Alchemy transmutation needs the crafted-item event.");
+        assertTrue(source.contains("arcane_potions"),
+                "Tensura arcane potions should be detected via the shared item tag.");
+        assertTrue(source.contains("IronSpellTensuraPotionBridge.restoreManaFromTensuraPotion"),
+                "Arcane potion consumption should bridge into Iron's mana restoration.");
     }
 
     @Test

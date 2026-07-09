@@ -56,6 +56,7 @@ STAT MOD est l'**autorité d'identité** ; les autres mods sont des **surfaces r
 | Lootr | **optional** | `integration/lootr/` | coffres individuels donjon |
 | L2 Hostility | **optional** | `integration/l2hostility/` | scaling difficulté donjon |
 | Waystones | **optional** | `integration/waystones/` | checkpoints donjon (M6, 2026-07-04) |
+| PlayerRevive | **optional** | `integration/playerrevive/` | bleed-out/réanimation donjon (M6, 2026-07-08) — hard dep interne : `CreativeCore` |
 | Elementals | **removed** | (supprimé) | `STAT-DEC-003`, `STAT-PM-001` |
 
 > Toute nouvelle intégration doit déclarer un bloc **Exit Conditions** dans son design spec (politique issue de `STAT-PM-001`).
@@ -198,7 +199,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 
 ### État global
 
-**BUILD OK, boucle MVP fermée.** Le bug `DungeonBossHandler` est **fixé** (2026-07-03) : heuristique robuste — sur un étage boss (multiple de 10), tout mob tué par le joueur unlock l'étage suivant (indépendant du tag et des mods installés, idempotent). Le `DungeonSpawnGuard` (double couche `FinalizeSpawnEvent` + `EntityJoinLevelEvent` avec marker NBT `statmod_dungeon_authorized`) bloque tous les spawns non-autorisés, y compris les spawns custom SLU.
+**BUILD OK.** ⚠️ L'ancienne mention « boucle MVP fermée » (2026-07-03) était **fausse** — voir audit + fix ci-dessous (2026-07-09). L'heuristique naïve « tout mob tué sur un étage boss unlock l'étage suivant » décrite ici a été remplacée par `DungeonBossTracker` (voir §« Vraie aventure » 2026-07-04) puis durcie le 2026-07-09. Le `DungeonSpawnGuard` (double couche `FinalizeSpawnEvent` + `EntityJoinLevelEvent` avec marker NBT `statmod_dungeon_authorized`) bloque tous les spawns non-autorisés, y compris les spawns custom SLU.
 
 **Island Redesign shippé** (spec + plan `2026-07-03-trial-dungeon-island-redesign`) : silhouettes organiques déterministes par étage (`IslandShaper`, bruit harmonique seedé), underside conique rocheux, spawn pad 3×3 dégagé, dais boss surélevé décentré (altar plus jamais sur le point de spawn), vault treasure à piliers, décor par tier (mousse EARLY → améthyste ABYSS), exits calculés sur la silhouette réelle. `/statdungeon regen <floor>` efface et régénère une île (même seed → même île).
 
@@ -223,6 +224,13 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - La passe de **réalimentation** de `DungeonMobSpawner` (respawn toutes les 3 s sur étage occupé) est **retirée**. La dimension est `the_void` (aucun spawn naturel), donc plus aucune source continue.
 - Tests : `DungeonObjectiveTest` (6) verrouille le mapping rôle→objectif. Suite dungeon 100 % verte.
 
+**Audit + fix « softlock boss » 2026-07-09 (Onivo Studio)** — audit du package `dungeon/` révélant que la refonte du 2026-07-04 n'avait pas fermé la boucle :
+- **Critique — softlock permanent d'un étage boss** : `DungeonRespawnHandler` appelait `DungeonMobSpawner.clearFloorMobs` sur **toute** mort de joueur, y compris sur un étage boss → le boss (marqué `AUTHORIZED_TAG`) était discard, `DungeonBossTracker.clear` vidait son suivi, mais `DungeonBossAltarBlock` ne se réactivait jamais (`ACTIVE=false` définitif) et `isCombatFloor` exclut les étages ×10 de toute réalimentation. Une seule mort avant d'achever le boss rendait l'étage **définitivement infranchissable**. **Fix** : `clearFloorMobs` est désormais un no-op tant qu'un combat de boss est suivi (`DungeonBossTracker.isTracked`) — le combat continue au lieu d'être détruit ; corrige aussi le wipe collectif en multijoueur (la mort d'un joueur ne devait pas discard le boss que d'autres combattent encore).
+- **Critique — exploit « un kill quelconque déverrouille »** : le secours de `DungeonBossHandler.handleBossFloor` (tracking perdu, ex. restart serveur) complétait l'étage sur la mort de **n'importe quelle entité**, sans vérifier `AUTHORIZED_TAG` — un mob apprivoisé amené par le joueur suffisait à conquérir un étage boss sans jamais toucher l'autel. **Fix** : le secours exige désormais `AUTHORIZED_TAG`.
+- **Majeur — rayons de scan incohérents** : `DungeonBossHandler.livingAuthorizedCount` scannait sur 55 blocs vs `FLOOR_SCAN_RADIUS=85` utilisé partout ailleurs pour la même notion (pièces en chaîne jusqu'à 53×61 blocs) → conquête de combat prématurée possible. **Fix** : constante partagée.
+- Tests : `DungeonBossTrackerTest` (7, nouveau) verrouille le contrat boss duo/vague (0 test avant malgré l'historique de bugs sur cette classe). Suite dungeon 100 % verte, build complet vérifié.
+- Dette restante non traitée (hors scope de ce fix) : `DungeonBossHandler`, `DungeonSpawnGuard`, `DungeonProgress`, `DungeonMobSpawner`, `DungeonRespawnHandler` n'ont toujours aucun test direct (logique trop liée à `ServerLevel`/`Mob` pour le JUnit pur de ce repo, pas d'infra GameTest) — vérification actuelle = manuelle en jeu (`/statdungeon tp 10`, mourir volontairement en combat, vérifier que le boss est toujours là).
+
 ### Fichiers clés
 
 | Fichier | Rôle |
@@ -233,6 +241,9 @@ Dépendance hard. Présent sous `integration/tensura/` :
 | `item/DungeonBeaconItem.java` | Balise « portail de poche » (`statmod:dungeon_beacon`) : clic-droit n'importe où → entre au plus haut étage ; depuis le donjon → retour overworld. Craftable |
 | `dungeon/DungeonTeleportHandler.java` | TP serveur : `enterFloor()`, `returnToOverworld()`, `floorAtPos()`, `floorSpawnPos()` |
 | `dungeon/IslandGenerator.java` | Pipeline : `DungeonArchitect.buildFloor` (forteresse) + `IslandTerrainShaper.buildIslandGround` (relief pourtour) |
+| `dungeon/DungeonLayout.java` | **Layout serpentin** (2026-07-05) : grille 4×3 de pièces, chemin boustrophedon déterministe, portes entre pièces consécutives. Pur/testable. Spawn = 1ʳᵉ pièce, sortie = dernière |
+| `dungeon/DungeonRoomChain.java` | **Génération en chaîne de pièces** (étages COMBAT & TRÉSOR) : coques (sol/murs/plafond), portes percées, pad de spawn, dernière pièce = téléporteur (combat) ou coffres+aménagement (trésor) |
+| `dungeon/DungeonBossArenaFloor.java` | **Étage BOSS = arène géante à ciel ouvert** : toute l'emprise, couronne de grands piliers 3×3 aux extrémités, centre façonné par `DungeonBossArena`, estrade+autel, aménagement, waystone, téléporteur scellé. Spawn joueur au bord sud |
 | `dungeon/DungeonArchitect.java` | Forteresse « The Descent » : underside, remparts, tours, avenue, ailes (3 styles), faille (4 types), cœur selon rôle (+ dressing). **Bâtie avec `BlockPalette`** (matériaux par thème) |
 | `dungeon/BlockPalette.java` | Interface des 12 blocs d'un étage (base/accent/light/underside/decor×2/wall/stair/slab/ceiling/scar/banner) |
 | `dungeon/DungeonDetailing.java` | Passe « builder pro » : 7 familles de détails thématisés placés intelligemment (torches murales, toiles d'angle, suspensions plafond, salissure murale, clutter au sol le long des murs, gravats, signature de thème). Blocs choisis pour tenir sans support |

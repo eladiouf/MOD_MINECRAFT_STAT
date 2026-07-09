@@ -779,6 +779,10 @@ public final class DungeonRoomChain {
         Direction ladderFacing = null;
         for (int x = x0 + 1; x <= x1 - 1; x++) {
             for (int z = z0 + 1; z <= z1 - 1; z++) {
+                // JAMAIS sur les axes de portes : les ouvertures (largeur 3) sont toujours percées
+                // au centre des murs (cx/cz). Une échelle posée là bouchait le passage d'un bloc
+                // de large (feedback playtest 2026-07-09).
+                if (Math.abs(x - r.centerX()) <= 2 || Math.abs(z - r.centerZ()) <= 2) continue;
                 if (inside(r, x, z, shape) && getWallDistance(r, x, z, shape) == 1) {
                     if (isWall(r, x + 1, z, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.EAST; break; }
                     if (isWall(r, x - 1, z, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.WEST; break; }
@@ -1164,12 +1168,14 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx, 4, cz + 2), B(t.slab()));
     }
 
+    /**
+     * Porte de passage entre deux pièces : porte Macaw's si présente, sinon porte en bois vanilla.
+     * <b>Jamais de porte en fer ni de levier</b> (feedback playtest 2026-07-09 : les mécanismes
+     * redstone cassaient le flow) — toutes les portes du donjon s'ouvrent à la main.
+     */
     private static void placeDoorWayDoor(ServerLevel lv, BlockPos doorPos, BlockPos bars1, BlockPos bars2, Direction facing, BlockPalette t) {
-        Block doorBlock = Blocks.IRON_DOOR;
         Block macawDoor = MacawDungeonDecorator.whisperOakDoor();
-        if (macawDoor != null) {
-            doorBlock = macawDoor;
-        }
+        Block doorBlock = macawDoor != null ? macawDoor : Blocks.SPRUCE_DOOR;
 
         // Place door blocks
         BlockState doorLower = doorBlock.defaultBlockState()
@@ -1187,12 +1193,6 @@ public final class DungeonRoomChain {
         for (int y = 0; y <= 2; y++) {
             S(lv, bars1.above(y), barMat);
             S(lv, bars2.above(y), barMat);
-        }
-
-        // If it's an iron door, place a lever next to it so players can open it
-        if (doorBlock == Blocks.IRON_DOOR) {
-            BlockPos leverPos = bars1.above(1).relative(facing.getCounterClockWise());
-            S(lv, leverPos, Blocks.LEVER.defaultBlockState());
         }
     }
 
@@ -1223,11 +1223,15 @@ public final class DungeonRoomChain {
             }
         }
 
-        // (3) Place Iron Door at the entrance
-        BlockState doorLower = Blocks.IRON_DOOR.defaultBlockState()
+        // (3) Porte de l'alcôve : Macaw's si présente, sinon bois vanilla — ouvrable à la MAIN.
+        // (L'ancien puzzle porte de fer + bouton + poudre de redstone sous le sol ne fonctionnait
+        // pas de manière fiable et cassait le flow — feedback playtest 2026-07-09.)
+        Block macawDoor = MacawDungeonDecorator.whisperOakDoor();
+        Block vaultDoor = macawDoor != null ? macawDoor : Blocks.SPRUCE_DOOR;
+        BlockState doorLower = vaultDoor.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.DoorBlock.FACING, Direction.SOUTH)
                 .setValue(net.minecraft.world.level.block.DoorBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER);
-        BlockState doorUpper = Blocks.IRON_DOOR.defaultBlockState()
+        BlockState doorUpper = vaultDoor.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.DoorBlock.FACING, Direction.SOUTH)
                 .setValue(net.minecraft.world.level.block.DoorBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER);
         S(lv, O(sp, vx, 0, vz), doorLower);
@@ -1240,24 +1244,5 @@ public final class DungeonRoomChain {
 
         // (4) Place valuable chest inside
         DungeonArchitect.placeChest(lv, O(sp, vx, 0, vz - 2));
-
-        // (5) Place a column with the button
-        int bx = vx + 5;
-        int bz = vz + 2;
-        for (int y = 0; y <= 2; y++) {
-            S(lv, O(sp, bx, y, bz), B(t.decorPrimary()));
-        }
-        BlockState buttonState = Blocks.STONE_BUTTON.defaultBlockState()
-                .setValue(net.minecraft.world.level.block.ButtonBlock.FACING, Direction.SOUTH);
-        S(lv, O(sp, bx, 1, bz), buttonState);
-
-        // (6) Lay redstone dust under the floor connecting button to door
-        BlockState redstone = Blocks.REDSTONE_WIRE.defaultBlockState();
-        for (int x = bx; x >= vx; x--) {
-            S(lv, O(sp, x, -1, bz), redstone);
-        }
-        for (int z = bz; z >= vz; z--) {
-            S(lv, O(sp, vx, -1, z), redstone);
-        }
     }
 }

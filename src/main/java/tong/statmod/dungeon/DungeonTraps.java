@@ -1,32 +1,33 @@
 package tong.statmod.dungeon;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.entity.CommandBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static tong.statmod.dungeon.DungeonArchitect.B;
 import static tong.statmod.dungeon.DungeonArchitect.O;
 import static tong.statmod.dungeon.DungeonArchitect.S;
 
 /**
- * Mission M6 — Pièges du donjon via <b>Simply Traps</b> (2026-07-05).
+ * Mission M6 — Pièges du donjon (2026-07-05, refonte 2026-07-09).
  *
- * <p>Dissémine des blocs-pièges (pointes, pieux, barbelés) sur le sol des salles de combat pour
- * rendre le déplacement dangereux. Blocs résolus en douceur : si Simply Traps est absent, aucun
- * piège n'est posé (pas de crash). Placés à l'écart du centre et des portes.
+ * <p>Deux familles :
+ * <ul>
+ *   <li><b>Pièges de sol Simply Traps</b> (pointes, pieux, barbelés) — dégâts au contact,
+ *       résolus en douceur (mod absent → rien, pas de crash).</li>
+ *   <li><b>Pièges à command block</b> — plaque de pression au sol, command block caché dessous
+ *       (crocs d'évocateur, poison, lenteur, wither en profondeur). Remplace les anciens pièges
+ *       redstone distributeur+plaque, peu fiables et sans intérêt (feedback playtest 2026-07-09).
+ *       ⚠ Sur un serveur dédié, {@code enable-command-block=true} est requis dans
+ *       server.properties (activé par défaut en solo).</li>
+ * </ul>
+ * Placés à l'écart du centre et des axes de portes.
  */
 public final class DungeonTraps {
 
@@ -71,44 +72,58 @@ public final class DungeonTraps {
             S(lv, O(sp, x, 0, z), trapState);
         }
 
-        placeRedstoneTraps(lv, sp, r, floor);
+        placeCommandBlockTraps(lv, sp, r, floor);
     }
 
-    /** Places wall dispensers filled with arrows/potions activated by floor pressure plates. */
-    private static void placeRedstoneTraps(ServerLevel lv, BlockPos sp, DungeonLayout.Room r, int floor) {
+    /**
+     * Commandes des pièges, du plus commun au plus vicieux. {@code ~ ~ ~} = position du command
+     * block (1 bloc sous la plaque). Les crocs d'évocateur frappent qui se tient dessus ; les
+     * effets touchent le joueur le plus proche dans un petit rayon.
+     */
+    private static final String[] TRAP_COMMANDS = {
+            "summon minecraft:evoker_fangs ~ ~1 ~",
+            "effect give @p[distance=..4] minecraft:poison 6 1",
+            "effect give @p[distance=..4] minecraft:slowness 6 2",
+            "execute at @p[distance=..4] run summon minecraft:evoker_fangs ~ ~ ~",
+    };
+    /** Variante profondeur (étage ≥ 40) qui remplace la lenteur : wither court. */
+    private static final String DEEP_TRAP_COMMAND = "effect give @p[distance=..4] minecraft:wither 4 0";
+
+    /**
+     * Pièges à command block : plaque de pression visible (esquivable — c'est le jeu), command
+     * block impulsion caché à la place du bloc de sol juste dessous. La plaque alimente
+     * directement le bloc qu'elle chevauche → déclenchement fiable, zéro câblage redstone.
+     */
+    private static void placeCommandBlockTraps(ServerLevel lv, BlockPos sp, DungeonLayout.Room r, int floor) {
         int w = r.maxX() - r.minX(), d = r.maxZ() - r.minZ();
         if (w < 16 || d < 16) return; // Only place in large enough rooms
 
-        // Traps placements on the 4 walls (offset from door centers)
-        // 1. North Wall (facing South)
-        int xN = r.minX() + 8;
-        placeTrapDispenserAndPlate(lv, O(sp, xN, 1, r.minZ()), Direction.SOUTH, O(sp, xN, 0, r.minZ() + 1));
+        int count = 3 + Math.floorMod(floor + r.index() * 7, 3); // 3..5 pièges
+        int cx = r.centerX(), cz = r.centerZ();
+        for (int i = 0; i < count; i++) {
+            int hx = hash(floor, r.index(), 100 + i * 2);
+            int hz = hash(floor, r.index(), 101 + i * 2);
+            int x = r.minX() + 4 + hx % (w - 8);
+            int z = r.minZ() + 4 + hz % (d - 8);
+            // Jamais au centre ni sur les axes de portes (comme les pièges de sol).
+            if (Math.abs(x - cx) <= 2 && Math.abs(z - cz) <= 2) continue;
+            if (x == cx || z == cz) continue;
 
-        // 2. South Wall (facing North)
-        int xS = r.maxX() - 8;
-        placeTrapDispenserAndPlate(lv, O(sp, xS, 1, r.maxZ()), Direction.NORTH, O(sp, xS, 0, r.maxZ() - 1));
+            String command = TRAP_COMMANDS[hash(floor, r.index(), 200 + i) % TRAP_COMMANDS.length];
+            if (floor >= 40 && command.contains("slowness")) command = DEEP_TRAP_COMMAND;
 
-        // 3. West Wall (facing East)
-        int zW = r.minZ() + 8;
-        placeTrapDispenserAndPlate(lv, O(sp, r.minX(), 1, zW), Direction.EAST, O(sp, r.minX() + 1, 0, zW));
-
-        // 4. East Wall (facing West)
-        int zE = r.maxZ() - 8;
-        placeTrapDispenserAndPlate(lv, O(sp, r.maxX(), 1, zE), Direction.WEST, O(sp, r.maxX() - 1, 0, zE));
+            placeCommandTrap(lv, O(sp, x, 0, z), command);
+        }
     }
 
-    private static void placeTrapDispenserAndPlate(ServerLevel lv, BlockPos dispenserPos, Direction facing, BlockPos platePos) {
-        // Place dispenser facing into the room
-        BlockState dispenserState = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, facing);
-        S(lv, dispenserPos, dispenserState);
-
-        // Fill dispenser with chests/dispenser_trap loot table (arrows, charges)
-        BlockEntity be = lv.getBlockEntity(dispenserPos);
-        if (be instanceof DispenserBlockEntity dbe) {
-            dbe.setLootTable(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("chests/dispenser_trap")), lv.getRandom().nextLong());
+    /** Pose un piège : command block impulsion à la place du sol (y-1), plaque de pression dessus. */
+    private static void placeCommandTrap(ServerLevel lv, BlockPos platePos, String command) {
+        BlockPos cbPos = platePos.below();
+        S(lv, cbPos, Blocks.COMMAND_BLOCK.defaultBlockState());
+        if (lv.getBlockEntity(cbPos) instanceof CommandBlockEntity cbe) {
+            cbe.getCommandBlock().setCommand(command);
+            cbe.getCommandBlock().setTrackOutput(false); // pas de spam de log
         }
-
-        // Place stone pressure plate in front of the dispenser
         S(lv, platePos, Blocks.STONE_PRESSURE_PLATE.defaultBlockState());
     }
 

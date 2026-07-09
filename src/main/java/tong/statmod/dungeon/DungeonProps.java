@@ -83,25 +83,23 @@ public final class DungeonProps {
         }
     }
 
-    /** Coffre épars (loot simple_dungeon) posé au sol, contre le décor (30% de chance d'être piégé). */
+    /**
+     * Coffre épars (loot simple_dungeon) posé au sol, contre le décor (30% de chance d'être piégé).
+     * Coffre piégé = command block caché juste dessous (le coffre piégé alimente le bloc qu'il
+     * chevauche à l'ouverture → déclenchement fiable). Remplace l'ancien montage distributeur
+     * flottant + poudre de redstone, peu fiable et moche (feedback playtest 2026-07-09).
+     */
     private static void minorChest(ServerLevel lv, BlockPos sp, int x, int z) {
         BlockPos chestPos = O(sp, x, 0, z);
         boolean trapped = lv.random.nextFloat() < 0.3f;
         if (trapped) {
-            LootrBridge.placeIndividualTrappedChest(lv, chestPos, MINOR_LOOT);
-            BlockPos wallPos = chestPos.north().above();
-            net.minecraft.world.level.block.state.BlockState dispenserState = Blocks.DISPENSER.defaultBlockState()
-                    .setValue(net.minecraft.world.level.block.DispenserBlock.FACING, net.minecraft.core.Direction.SOUTH);
-            S(lv, wallPos, dispenserState);
-
-            net.minecraft.world.level.block.entity.BlockEntity be = lv.getBlockEntity(wallPos);
-            if (be instanceof net.minecraft.world.level.block.entity.DispenserBlockEntity dbe) {
-                dbe.setLootTable(ResourceKey.create(Registries.LOOT_TABLE,
-                        ResourceLocation.withDefaultNamespace("chests/dispenser_trap")), lv.getRandom().nextLong());
+            BlockPos cbPos = chestPos.below();
+            S(lv, cbPos, B(Blocks.COMMAND_BLOCK));
+            if (lv.getBlockEntity(cbPos) instanceof net.minecraft.world.level.block.entity.CommandBlockEntity cbe) {
+                cbe.getCommandBlock().setCommand("effect give @p[distance=..4] minecraft:poison 6 1");
+                cbe.getCommandBlock().setTrackOutput(false);
             }
-
-            S(lv, chestPos.below(), Blocks.REDSTONE_WIRE.defaultBlockState());
-            S(lv, wallPos.below(), Blocks.REDSTONE_WIRE.defaultBlockState());
+            LootrBridge.placeIndividualTrappedChest(lv, chestPos, MINOR_LOOT);
         } else {
             LootrBridge.placeIndividualChest(lv, chestPos, MINOR_LOOT);
         }

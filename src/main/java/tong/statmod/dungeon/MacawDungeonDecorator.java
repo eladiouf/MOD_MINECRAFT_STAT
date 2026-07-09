@@ -30,13 +30,14 @@ public final class MacawDungeonDecorator {
         return resolve("mcwbridges:rope_oak_bridge");
     }
 
-    // Doors
+    // Doors — IDs vérifiés contre le jar mcw-doors 1.1.5 (audit 2026-07-09 : les anciens ids
+    // `iron_jail_door`/`whisper_oak_door` n'existaient pas → fallback fer+levier permanent).
     public static Block ironJailDoor() {
-        return resolve("mcwdoors:iron_jail_door");
+        return resolve("mcwdoors:jail_door");
     }
 
     public static Block whisperOakDoor() {
-        return resolve("mcwdoors:whisper_oak_door");
+        return resolve("mcwdoors:oak_whispering_door");
     }
 
     // Furniture
@@ -52,16 +53,13 @@ public final class MacawDungeonDecorator {
         return resolve("mcwfurnitures:oak_table");
     }
 
-    // Lights
+    // Lights — IDs vérifiés contre le jar mcw-lights 1.1.5 (`chain_lamp`/`wall_lantern`
+    // n'existaient pas → jamais résolus).
     public static Block chainLamp() {
-        return resolve("mcwlights:chain_lamp");
+        return resolve("mcwlights:chain_lantern");
     }
 
     public static Block wallLantern() {
-        return resolve("mcwlights:wall_lantern");
-    }
-
-    public static Block stoneLamp() {
-        return resolve("mcwlights:stone_lamp");
+        return resolve("mcwlights:covered_wall_lantern");
     }
 }

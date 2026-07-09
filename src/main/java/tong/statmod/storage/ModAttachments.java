@@ -21,6 +21,7 @@ public class ModAttachments {
             ATTACHMENTS.register("stats", () ->
                     AttachmentType.builder(PlayerStatData::new)
                             .serialize(StatSerializer.INSTANCE)
+                            .copyOnDeath()
                             .build());
 
     public static final IAttachmentSerializer<CompoundTag, PlayerStatData> STATS_SERIALIZER = StatSerializer.INSTANCE;
@@ -29,6 +30,7 @@ public class ModAttachments {
             ATTACHMENTS.register("stamina", () ->
                     AttachmentType.builder(StaminaData::new)
                             .serialize(StaminaSerializer.INSTANCE)
+                            .copyOnDeath()
                             .build());
 
     public static void register(IEventBus modBus) {
@@ -69,6 +71,7 @@ public class ModAttachments {
 
             MagicStateSerializer.deserialize(tag, data);
             DungeonStateSerializer.deserialize(tag, data);
+            if (tag.contains("StoredMana")) data.setStoredMana(tag.getFloat("StoredMana"));
 
             return data;
         }
@@ -93,6 +96,8 @@ public class ModAttachments {
             for (String key : dungeonTag.getAllKeys()) {
                 tag.put(key, dungeonTag.get(key));
             }
+
+            tag.putFloat("StoredMana", data.getStoredMana());
 
             return tag;
         }

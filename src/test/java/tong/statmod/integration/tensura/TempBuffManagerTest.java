@@ -16,4 +16,14 @@ class TempBuffManagerTest {
         assertEquals(10, TempBuffManager.getAwakeningBonus(playerId, 110));
         assertEquals(0, TempBuffManager.getAwakeningBonus(playerId, 100 + 20 * 30 + 1));
     }
+
+    @Test
+    void clearRemovesAwakeningBuffImmediately() {
+        UUID playerId = UUID.fromString("00000000-0000-0000-0000-000000000002");
+        TempBuffManager.grantAwakeningBuff(playerId, 200);
+
+        TempBuffManager.clear(playerId);
+
+        assertEquals(0, TempBuffManager.getAwakeningBonus(playerId, 201));
+    }
 }

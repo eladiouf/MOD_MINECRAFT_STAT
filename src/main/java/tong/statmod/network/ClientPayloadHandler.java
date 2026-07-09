@@ -11,6 +11,7 @@ import tong.statmod.STATMod;
 import tong.statmod.client.ClientMagicCache;
 import tong.statmod.client.ClientPerkCache;
 import tong.statmod.client.ClientStatCache;
+import tong.statmod.client.ClientManaCache;
 import tong.statmod.client.ClientStaminaCache;
 import tong.statmod.client.gui.PerkFeedbackToast;
 
@@ -47,6 +48,22 @@ public final class ClientPayloadHandler {
         context.enqueueWork(() -> PerkFeedbackToast.show(
                 Component.literal(payload.title()),
                 Component.literal(payload.message())));
+    }
+
+    public static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ClientManaCache.update(
+                payload.currentMana(),
+                payload.maxMana()));
+    }
+
+    public static void handleLearnBook(LearnBookPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.gameRenderer != null && mc.player != null) {
+                mc.gameRenderer.displayItemActivation(
+                        new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENCHANTED_BOOK));
+            }
+        });
     }
 
     public static void handleSyncMagic(SyncMagicPayload payload, IPayloadContext context) {

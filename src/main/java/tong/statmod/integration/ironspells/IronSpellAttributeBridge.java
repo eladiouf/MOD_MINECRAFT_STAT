@@ -2,7 +2,6 @@ package tong.statmod.integration.ironspells;
 
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
-import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.perks.Perk;
@@ -29,10 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 final class IronSpellAttributeBridge {
     private static final ResourceLocation MAX_MANA_ID =
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_max_mana_bridge");
-    private static final ResourceLocation MANA_REGEN_ID =
-            ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_mana_regen_bridge");
-    private static final ResourceLocation BASE_MANA_REGEN_SUPPRESSION_ID =
-            ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_base_mana_regen_suppression");
+    private static final ResourceLocation MANA_REGEN_BONUS_ID =
+            ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_mana_regen_bonus_bridge");
     private static final ResourceLocation SPELL_POWER_ID =
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_spell_power_bridge");
     private static final ResourceLocation SPELL_RESIST_ID =
@@ -43,6 +39,7 @@ final class IronSpellAttributeBridge {
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "iron_cooldown_bridge");
 
     private static final Map<UUID, Snapshot> LAST_APPLIED = new ConcurrentHashMap<>();
+    private static final Map<UUID, Integer> LOGIN_SERVER_TICK = new ConcurrentHashMap<>();
 
     private IronSpellAttributeBridge() {}
 
@@ -53,16 +50,140 @@ final class IronSpellAttributeBridge {
         if (player.tickCount % 20 != 0) return;
         if (player instanceof ServerPlayer serverPlayer) {
             apply(serverPlayer);
+            // Iron's client-side mana (ClientMagicData) starts at 0 and is only updated by SyncManaPacket.
+            // Our single restore packet can be lost if sent before the client is ready, and Iron's
+            // won't resend while server mana is already at max. Force-sync for the first 30s after login.
+            Integer loginTick = LOGIN_SERVER_TICK.get(serverPlayer.getUUID());
+            if (loginTick != null) {
+                int now = serverPlayer.level().getServer().getTickCount();
+                if (now - loginTick < 600) {
+                    MagicData md = MagicData.getPlayerMagicData(serverPlayer);
+                    if (md != null) {
+                        IronSpellManaSyncBridge.syncMana(serverPlayer, md.getMana(), true);
+                    }
+                } else {
+                    LOGIN_SERVER_TICK.remove(serverPlayer.getUUID());
+                }
+            }
+            if (player.tickCount % 100 == 0) {
+                MagicData md = MagicData.getPlayerMagicData(serverPlayer);
+                double mm = player.getAttributeValue(AttributeRegistry.MAX_MANA);
+                float stored = player.getData(ModAttachments.STATS).getStoredMana();
+                STATMod.LOGGER.info("onPlayerTick mana: magicData={}/{} stored={}",
+                        md != null ? md.getMana() : -999, mm, stored);
+                saveManaToAttachment(serverPlayer);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTickRegen(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide()) return;
+        if (player.tickCount % 20 != 0) return;
+        if (player instanceof ServerPlayer serverPlayer) {
+            int manaPool = RaceEffectApplier.getEffectiveLevel(serverPlayer, StatType.MANA_POOL.index);
+            float regen = (float) Math.min(15.0, IronSpellStatScaler.manaRegenBonus(manaPool));
+            float before = MagicData.getPlayerMagicData(serverPlayer).getMana();
+            IronSpellManaSyncBridge.addMana(serverPlayer, regen);
+            float after = MagicData.getPlayerMagicData(serverPlayer).getMana();
+            if (before != after) {
+                STATMod.LOGGER.debug("REGEN: {} → {} (+{})", before, after, after - before);
+            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        saveManaToAttachment(event.getEntity());
+        LAST_APPLIED.remove(event.getEntity().getUUID());
+        LOGIN_SERVER_TICK.remove(event.getEntity().getUUID());
+    }
+
+    private static void saveManaToAttachment(Player player) {
+        if (!(player instanceof ServerPlayer)) return;
+        try {
+            double maxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
+            if (maxMana <= 0) return;
+            MagicData magicData = MagicData.getPlayerMagicData(player);
+            player.getData(ModAttachments.STATS).setStoredMana(magicData.getMana());
+        } catch (Exception ignored) {
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            float storedMana = player.getData(ModAttachments.STATS).getStoredMana();
+            MagicData md = MagicData.getPlayerMagicData(player);
+            float manaAtLogin = md != null ? md.getMana() : -999;
+            double maxAtLogin = player.getAttributeValue(AttributeRegistry.MAX_MANA);
+            STATMod.LOGGER.info("onPlayerLogin: storedMana={} magicData.mana={} maxMana={}",
+                    storedMana, manaAtLogin, maxAtLogin);
+            LAST_APPLIED.remove(event.getEntity().getUUID());
+            LOGIN_SERVER_TICK.put(player.getUUID(), player.level().getServer().getTickCount());
+            apply(player);
+            md = MagicData.getPlayerMagicData(player);
+            float manaAfterApply = md != null ? md.getMana() : -999;
+            double maxAfterApply = player.getAttributeValue(AttributeRegistry.MAX_MANA);
+            STATMod.LOGGER.info("onPlayerLogin after apply: mana={} maxMana={}", manaAfterApply, maxAfterApply);
+            // Iron's Spellbooks overwrites MagicData on login, so delay restore by 1 tick
+            player.getServer().execute(() -> restoreMana(player, storedMana));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        saveManaToAttachment(event.getOriginal());
         LAST_APPLIED.remove(event.getEntity().getUUID());
     }
 
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            float storedMana = player.getData(ModAttachments.STATS).getStoredMana();
+            LAST_APPLIED.remove(event.getEntity().getUUID());
+            apply(player);
+            restoreMana(player, storedMana);
+        }
+    }
+
+    private static void restoreMana(ServerPlayer player, float storedMana) {
+        try {
+            MagicData md = MagicData.getPlayerMagicData(player);
+            float manaBeforeRestore = md != null ? md.getMana() : -999;
+            double maxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
+            STATMod.LOGGER.info("restoreMana: storedMana={} currentMagicDataMana={} maxMana={}",
+                    storedMana, manaBeforeRestore, maxMana);
+            if (maxMana <= 0) {
+                float fallback = resolveRestoredMana(storedMana, 1000.0d);
+                STATMod.LOGGER.warn("restoreMana: maxMana={} <=0, using fallback={}", maxMana, fallback);
+                IronSpellManaSyncBridge.syncMana(player, fallback, true);
+                return;
+            }
+            IronSpellManaSyncBridge.syncMana(player, resolveRestoredMana(storedMana, maxMana), true);
+        } catch (Exception e) {
+            STATMod.LOGGER.error("restoreMana: exception restoring mana for player={} storedMana={}",
+                    player.getName().getString(), storedMana, e);
+        }
+    }
+
+    static float resolveRestoredMana(float storedMana, double maxMana) {
+        float cappedMax = Math.max(0.0f, (float) maxMana);
+        float result;
+        if (storedMana < 0.0f) {
+            result = cappedMax;
+        } else if (storedMana <= 10.0f) {
+            result = cappedMax * 0.2f;
+        } else {
+            result = Mth.clamp(storedMana, 0.0f, cappedMax);
+        }
+        STATMod.LOGGER.info("resolveRestoredMana: stored={} maxMana={} cappedMax={} result={}",
+                storedMana, maxMana, cappedMax, result);
+        return result;
+    }
+
     static void apply(ServerPlayer player) {
-        suppressBaseManaRegen(player);
         Snapshot next = Snapshot.capture(player);
         UUID uuid = player.getUUID();
         Snapshot previous = LAST_APPLIED.get(uuid);
@@ -76,8 +197,9 @@ final class IronSpellAttributeBridge {
         applyModifier(player, AttributeRegistry.MAX_MANA, MAX_MANA_ID,
                 IronSpellStatScaler.maxManaBonus(next.manaPoolLevel(), next.manaPoolCoreUnlocked())
                         + next.manaPoolAdvancedManaBonus());
-        applyModifier(player, AttributeRegistry.MANA_REGEN, MANA_REGEN_ID,
-                IronSpellStatScaler.manaRegenBonus(next.manaPoolLevel(), next.eruditionLevel()));
+        // Cancel Iron's native regen (formula: maxMana * regenRate → fills too fast with large maxMana).
+        // Our onPlayerTickRegen provides the real regen, calibrated by IronSpellStatScaler.
+        applyModifier(player, AttributeRegistry.MANA_REGEN, MANA_REGEN_BONUS_ID, -1.0d);
         applyModifier(player, AttributeRegistry.SPELL_POWER, SPELL_POWER_ID,
                 IronSpellStatScaler.spellPowerBonus(next.arcanePowerLevel(), next.arcaneCoreUnlocked())
                         + next.arcaneAdvancedPowerBonus());
@@ -108,36 +230,19 @@ final class IronSpellAttributeBridge {
         instance.addPermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
     }
 
-    private static void suppressBaseManaRegen(Player player) {
-        AttributeInstance instance = player.getAttribute(AttributeRegistry.MANA_REGEN);
-        if (instance == null) return;
-
-        instance.removeModifier(BASE_MANA_REGEN_SUPPRESSION_ID);
-        double baseManaRegen = instance.getBaseValue();
-        if (baseManaRegen <= 1.0e-6d) {
-            return;
-        }
-
-        instance.addPermanentModifier(new AttributeModifier(
-                BASE_MANA_REGEN_SUPPRESSION_ID, -baseManaRegen, AttributeModifier.Operation.ADD_VALUE));
-    }
-
     private static void syncCurrentMana(ServerPlayer player, float previousMana, double previousMaxMana, double newMaxMana) {
-        MagicData magicData = MagicData.getPlayerMagicData(player);
         float desiredMana;
-        if (previousMaxMana > 0.0d) {
+        if (previousMaxMana <= 0.0d) {
+            // First time: fill mana to max
+            desiredMana = (float) newMaxMana;
+        } else if (previousMaxMana > 0.0d) {
             float ratio = previousMana / (float) previousMaxMana;
             desiredMana = Mth.clamp((float) newMaxMana * ratio, 0.0f, (float) newMaxMana);
         } else {
             desiredMana = Mth.clamp(previousMana, 0.0f, (float) newMaxMana);
         }
 
-        if (Math.abs(desiredMana - magicData.getMana()) < 0.01f) {
-            return;
-        }
-
-        magicData.setMana(desiredMana);
-        PacketDistributor.sendToPlayer(player, new SyncManaPacket(magicData));
+        IronSpellManaSyncBridge.syncMana(player, desiredMana);
     }
 
     record Snapshot(

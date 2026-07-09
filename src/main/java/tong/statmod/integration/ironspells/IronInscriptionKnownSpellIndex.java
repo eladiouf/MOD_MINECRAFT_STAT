@@ -27,13 +27,13 @@ import java.util.function.Predicate;
  */
 public final class IronInscriptionKnownSpellIndex {
     public static final int BUTTON_BASE = 1000;
-    public static final int PAGE_SIZE = 5;
+    public static final int PAGE_SIZE = 6;
 
     private IronInscriptionKnownSpellIndex() {}
 
     /**
      * Liste dédoublonnée et triée des spells castables via la flow Iron's
-     * (natifs + wrappers Tensura).
+     * (natifs + addons + wrappers Tensura).
      */
     public static List<String> learnedCastableSpellIds(Iterable<String> learnedSpells) {
         if (learnedSpells == null) {
@@ -43,7 +43,7 @@ public final class IronInscriptionKnownSpellIndex {
         Set<String> unique = new LinkedHashSet<>();
         for (String spellId : learnedSpells) {
             if (spellId == null) continue;
-            if (spellId.startsWith("irons_spellbooks:") || TensuraWrapperIds.isWrapperId(spellId)) {
+            if (isCastableSpellId(spellId)) {
                 unique.add(spellId);
             }
         }
@@ -51,6 +51,16 @@ public final class IronInscriptionKnownSpellIndex {
         List<String> sorted = new ArrayList<>(unique);
         sorted.sort(Comparator.naturalOrder());
         return List.copyOf(sorted);
+    }
+
+    static boolean isCastableSpellId(String spellId) {
+        if (TensuraWrapperIds.isWrapperId(spellId)) return true;
+        if (spellId.startsWith("irons_spellbooks:")) return true;
+        if (spellId.startsWith("gametechbcs_spellbooks:")) return true;
+        if (spellId.startsWith("wind_spellbooks:")) return true;
+        if (spellId.startsWith("legendarymage:")) return true;
+        if (spellId.startsWith("darkdoppelganger:")) return true;
+        return false;
     }
 
     /**

@@ -40,6 +40,36 @@ class TensuraDelegatingSpellManaCostTest {
     }
 
     @Test
+    void treeTierBalanceOverridesTinyNativeMagiculeValuesForLowTierOffense() throws Exception {
+        injectMetadata("tensura:fire_ball", 3.0);
+
+        TensuraDelegatingSpell spell = new TensuraDelegatingSpell(profile("tensura:fire_ball", "offense"));
+
+        assertEquals(26, spell.getManaCost(1));
+    }
+
+    @Test
+    void treeTierBalanceOverridesHugeNativeMagiculeValuesForSupportSpells() throws Exception {
+        injectMetadata("tensura:healing_rain", 250.0);
+
+        TensuraDelegatingSpell spell = new TensuraDelegatingSpell(profile("tensura:healing_rain", "support"));
+
+        assertEquals(34, spell.getManaCost(1));
+    }
+
+    @Test
+    void treeTierBalanceKeepsLateGameMobilityBelowLateGameNukes() throws Exception {
+        injectMetadata("tensura:gate", 999.0);
+        injectMetadata("tensura:maximum_magic_bullet", 1.0);
+
+        TensuraDelegatingSpell gate = new TensuraDelegatingSpell(profile("tensura:gate", "mobility"));
+        TensuraDelegatingSpell bullet = new TensuraDelegatingSpell(profile("tensura:maximum_magic_bullet", "offense"));
+
+        assertEquals(55, gate.getManaCost(1));
+        assertEquals(66, bullet.getManaCost(1));
+    }
+
+    @Test
     void unknown_skill_metadata_defaults_to_unresolved_magicule_cost() {
         String unknownSkillId = "tensura:missing_skill_unit_test";
         TensuraSpellMetadata.invalidate(unknownSkillId);

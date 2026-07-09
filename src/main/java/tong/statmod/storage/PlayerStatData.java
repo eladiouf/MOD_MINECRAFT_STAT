@@ -75,6 +75,12 @@ public class PlayerStatData {
      */
     private int dungeonPoints = 0;
 
+    /** Iron's mana saved across sessions (persisted NBT). */
+    private float storedMana = -1;
+
+    /** Timestamp of last enchanted book right-click (server memory, not persisted). */
+    public transient long lastEnchantedBookClickMs = 0;
+
     public int[] getLevels() { return levels.clone(); }
     public int[] getXp() { return xp.clone(); }
     public int[] getPerkPoints() { return perkPoints.clone(); }
@@ -106,6 +112,7 @@ public class PlayerStatData {
         lastOverworldPosPacked = source.lastOverworldPosPacked;
         hasLastOverworldPos = source.hasLastOverworldPos;
         dungeonPoints = source.dungeonPoints;
+        storedMana = source.storedMana;
     }
 
     public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
@@ -402,6 +409,10 @@ public class PlayerStatData {
         dungeonPoints = saturatingAddNonNegative(dungeonPoints, delta);
         return dungeonPoints;
     }
+
+    /** Iron's mana saved across sessions. -1 means no saved value (first login). */
+    public float getStoredMana() { return storedMana; }
+    public void setStoredMana(float mana) { storedMana = mana; }
 
     public int maxStatLevel() {
         int configMax = Config.getMaxStatLevel();

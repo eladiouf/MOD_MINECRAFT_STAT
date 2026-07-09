@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
@@ -49,6 +50,27 @@ public final class ParcoolAttributeHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        clearCaches(event.getOriginal().getUUID());
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
     private static void applyModifier(Player player, net.minecraft.core.Holder<Attribute> attribute,
                                       ResourceLocation id, int level,
                                       Map<UUID, Integer> cache, UUID uuid, double perLevel) {
@@ -71,5 +93,11 @@ public final class ParcoolAttributeHandler {
         } else {
             cache.put(uuid, level);
         }
+    }
+
+    private static void clearCaches(UUID uuid) {
+        lastMaxStamina.remove(uuid);
+        lastStaminaRecovery.remove(uuid);
+        lastAgility.remove(uuid);
     }
 }

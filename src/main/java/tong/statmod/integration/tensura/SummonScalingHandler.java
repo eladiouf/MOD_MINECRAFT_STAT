@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import tong.statmod.STATMod;
-import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.stats.StatType;
 
@@ -44,7 +43,7 @@ public final class SummonScalingHandler {
     }
 
     private static void applyScale(ServerPlayer summoner, LivingEntity summon, int arcanePower, int willpower) {
-        var existence = PlayerDataBridge.getExistence(summon);
+        var existence = PlayerDataTensuraHook.getExistence(summon);
         if (existence == null || existence.getSummoner() == null || !summoner.getUUID().equals(existence.getSummoner())) {
             return;
         }

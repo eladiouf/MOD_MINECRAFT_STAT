@@ -116,11 +116,7 @@ public final class TensuraEventSubscriber {
     }
 
     public static void unlockIntrinsicPerks(Player player) {
-        unlockIntrinsicPerks(player, PlayerDataBridge.getRaceInstance(player)
-                .map(race -> race.getIntrinsicSkills(player).stream()
-                        .map(skill -> skill.getRegistryName().toString())
-                        .collect(java.util.stream.Collectors.toSet()))
-                .orElse(Set.of()), true);
+        unlockIntrinsicPerks(player, PlayerDataBridge.getIntrinsicSkillIds(player), true);
     }
 
     public static void unlockIntrinsicPerks(Player player, Set<String> intrinsicSkills) {

@@ -32,6 +32,9 @@ public class NetworkHandler {
         registrar.playToClient(PerkFeedbackPayload.TYPE, PerkFeedbackPayload.CODEC,
                 ClientPayloadHandler::handlePerkFeedback);
 
+        registrar.playToClient(LearnBookPayload.TYPE, LearnBookPayload.CODEC,
+                ClientPayloadHandler::handleLearnBook);
+
         registrar.playToClient(SyncMagicPayload.TYPE, SyncMagicPayload.CODEC,
                 ClientPayloadHandler::handleSyncMagic);
 
@@ -40,6 +43,9 @@ public class NetworkHandler {
 
         registrar.playToServer(OpenVirtualInscriptionPayload.TYPE, OpenVirtualInscriptionPayload.CODEC,
                 ServerPayloadHandler::handleOpenVirtualInscription);
+
+        registrar.playToClient(ManaSyncPayload.TYPE, ManaSyncPayload.CODEC,
+                ClientPayloadHandler::handleManaSync);
 
         registrar.playToClient(BridgeTensuraSkillPayload.TYPE, BridgeTensuraSkillPayload.CODEC,
                 ClientPayloadHandler::handleBridgeTensuraSkill);

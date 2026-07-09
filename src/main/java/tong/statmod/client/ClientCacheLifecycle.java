@@ -7,11 +7,6 @@ public final class ClientCacheLifecycle {
     private ClientCacheLifecycle() {}
 
     @SubscribeEvent
-    public static void onLoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
-        resetAll();
-    }
-
-    @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         resetAll();
     }
@@ -21,5 +16,6 @@ public final class ClientCacheLifecycle {
         ClientPerkCache.reset();
         ClientStaminaCache.reset();
         ClientMagicCache.reset();
+        ClientManaCache.reset();
     }
 }

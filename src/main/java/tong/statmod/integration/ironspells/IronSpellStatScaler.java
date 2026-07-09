@@ -3,15 +3,19 @@ package tong.statmod.integration.ironspells;
 import tong.statmod.magic.MagicBranch;
 
 final class IronSpellStatScaler {
-    private static final double MAX_MANA_PER_LEVEL = 3.0d;
-    private static final double SPELL_POWER_PER_ARCANE = 0.003d;
-    private static final double ELEMENTAL_POWER_PER_AFFINITY = 0.0025d;
+    private static final double MAX_MANA_PER_LEVEL = 15.0d;
+    private static final double BASE_MANA_FLAT = 400.0d;
+    // Iron's native regen is cancelled (MANA_REGEN = 0 via -0.1 modifier).
+    // Our onPlayerTickRegen provides absolute regen (mana/sec).
+    private static final double BASE_MANA_REGEN = 1.0000d;
+    private static final double MANA_REGEN_PER_MANA_POOL = 0.1400d;
+    private static final double SPELL_POWER_PER_ARCANE = 0.0015d;
+    private static final double ELEMENTAL_POWER_PER_AFFINITY = 0.0015d;
     private static final double SPELL_RESIST_PER_LEVEL = 0.003d;
     private static final double CAST_TIME_REDUCTION_PER_LEVEL = 0.003d;
     private static final double COOLDOWN_REDUCTION_PER_LEVEL = 0.004d;
     private static final double CORE_PERCENT_BONUS = 0.05d;
     private static final double CORE_MANA_BONUS = 50.0d;
-
     private IronSpellStatScaler() {}
 
     static double maxManaBonus(int manaPoolLevel) {
@@ -19,12 +23,13 @@ final class IronSpellStatScaler {
     }
 
     static double maxManaBonus(int manaPoolLevel, boolean manaPoolCoreUnlocked) {
-        return Math.max(0, manaPoolLevel) * MAX_MANA_PER_LEVEL
+        return BASE_MANA_FLAT + Math.max(0, manaPoolLevel) * MAX_MANA_PER_LEVEL
                 + (manaPoolCoreUnlocked ? CORE_MANA_BONUS : 0.0d);
     }
 
-    static double manaRegenBonus(int manaPoolLevel, int eruditionLevel) {
-        return 0.0d;
+    static double manaRegenBonus(int manaPoolLevel) {
+        return BASE_MANA_REGEN
+                + Math.max(0, manaPoolLevel) * MANA_REGEN_PER_MANA_POOL;
     }
 
     static double spellPowerBonus(int arcanePowerLevel) {

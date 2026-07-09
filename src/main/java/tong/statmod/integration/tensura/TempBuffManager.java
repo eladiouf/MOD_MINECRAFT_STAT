@@ -41,7 +41,13 @@ public final class TempBuffManager {
 
     public static void clear(Player player) {
         if (player != null) {
-            awakeningBuffExpiresAt.remove(player.getUUID());
+            clear(player.getUUID());
+        }
+    }
+
+    public static void clear(UUID playerId) {
+        if (playerId != null) {
+            awakeningBuffExpiresAt.remove(playerId);
         }
     }
 }

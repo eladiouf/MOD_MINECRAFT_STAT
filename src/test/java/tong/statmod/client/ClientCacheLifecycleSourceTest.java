@@ -10,16 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientCacheLifecycleSourceTest {
     @Test
-    void lifecycleClearsClientCachesOnLoginAndLogout() throws IOException {
+    void lifecycleOnlyClearsClientCachesOnLogoutSoLoginSyncCannotBeWiped() throws IOException {
         String source = Files.readString(Path.of(
                 "src", "main", "java", "tong", "statmod", "client", "ClientCacheLifecycle.java"));
 
-        assertTrue(source.contains("ClientPlayerNetworkEvent.LoggingIn"));
         assertTrue(source.contains("ClientPlayerNetworkEvent.LoggingOut"));
+        assertTrue(!source.contains("ClientPlayerNetworkEvent.LoggingIn"),
+                "login-side cache resets can wipe the initial reconnect sync");
         assertTrue(source.contains("ClientStatCache.reset();"));
         assertTrue(source.contains("ClientPerkCache.reset();"));
         assertTrue(source.contains("ClientStaminaCache.reset();"));
         assertTrue(source.contains("ClientMagicCache.reset();"));
+        assertTrue(source.contains("ClientManaCache.reset();"));
     }
 
     @Test

@@ -219,17 +219,20 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
         }
 
         List<String> page = visible;
-        int baseX = this.leftPos + this.imageWidth + 6;
+        int columnWidth = 70;
+        int baseX = this.leftPos - columnWidth - 6;
         int searchBoxHeight = statmod$schoolButtonHeight;
         int schoolRows = (int) Math.ceil(statmod$schoolFilters.length / 3.0);
         int schoolFiltersHeight = schoolRows * statmod$schoolButtonHeight + Math.max(0, schoolRows - 1) * statmod$schoolButtonGap;
         int baseY = this.topPos + 18 + searchBoxHeight + 4 + schoolFiltersHeight + 4;
         int rowStep = KnownSpellIconButton.SIZE + 2;
+        int cols = 2;
+        int colWidth = KnownSpellIconButton.SIZE + 4;
 
         if (this.statmod$searchBox != null) {
             this.statmod$searchBox.setX(baseX);
             this.statmod$searchBox.setY(this.topPos + 18);
-            this.statmod$searchBox.setWidth(statmod$schoolButtonWidth * 3 + statmod$schoolButtonGap * 2);
+            this.statmod$searchBox.setWidth(columnWidth);
         }
 
         for (int i = 0; i < this.statmod$schoolFilterButtons.size(); i++) {
@@ -244,8 +247,10 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
 
         for (int i = 0; i < this.statmod$knownSpellButtons.size(); i++) {
             KnownSpellIconButton button = this.statmod$knownSpellButtons.get(i);
-            button.setX(baseX);
-            button.setY(baseY + i * rowStep);
+            int col = i % cols;
+            int row = i / cols;
+            button.setX(baseX + col * colWidth);
+            button.setY(baseY + row * rowStep);
             if (i < page.size()) {
                 String spellId = page.get(i);
                 int globalIndex = IronInscriptionKnownSpellIndex.optionIndexOf(known, spellId);
@@ -266,7 +271,8 @@ public abstract class IronInscriptionTableScreenMixin extends AbstractContainerS
             }
         }
 
-        int pagerY = baseY + IronInscriptionKnownSpellIndex.PAGE_SIZE * rowStep;
+        int pagerRow = (IronInscriptionKnownSpellIndex.PAGE_SIZE + cols - 1) / cols;
+        int pagerY = baseY + pagerRow * rowStep;
         if (this.statmod$prevKnownSpellPageButton != null) {
             this.statmod$prevKnownSpellPageButton.setX(baseX);
             this.statmod$prevKnownSpellPageButton.setY(pagerY);

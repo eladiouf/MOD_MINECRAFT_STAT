@@ -21,11 +21,14 @@ class PlayerCloneDataHandlerSourceTest {
     }
 
     @Test
-    void cloneHandlerIsRegisteredOnNeoForgeEventBus() throws IOException {
+    void cloneHandlerIsNotRegisteredOnNeoForgeEventBus_pushWasTestedAndReverted() throws IOException {
         String source = Files.readString(Path.of(
                 "src", "main", "java", "tong", "statmod", "STATMod.java"));
 
-        assertTrue(source.contains("NeoForge.EVENT_BUS.register(PlayerCloneDataHandler.class)"));
+        assertTrue(source.contains("NeoForge.EVENT_BUS.register(StaminaEvents.class)"),
+                "StaminaEvents should remain registered");
+        assertTrue(!source.contains("PlayerCloneDataHandler"),
+                "PlayerCloneDataHandler should be removed (NeoForge handles clone automatically)");
     }
 
     @Test

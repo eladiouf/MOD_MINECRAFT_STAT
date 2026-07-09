@@ -43,10 +43,24 @@ public class StatAttributeHandler {
     }
 
     @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        UUID uuid = event.getEntity().getUUID();
-        lastRapidite.remove(uuid);
-        lastAgility.remove(uuid);
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        clearCaches(event.getOriginal().getUUID());
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        clearCaches(event.getEntity().getUUID());
     }
 
     private static void applyModifier(Player player, Holder<Attribute> attribute,
@@ -70,5 +84,10 @@ public class StatAttributeHandler {
         } else {
             cache.put(uuid, level);
         }
+    }
+
+    private static void clearCaches(UUID uuid) {
+        lastRapidite.remove(uuid);
+        lastAgility.remove(uuid);
     }
 }

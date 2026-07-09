@@ -1,5 +1,9 @@
 package tong.statmod.stats;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -10,12 +14,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.AnvilRepairEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import tong.statmod.integration.ironspells.IronSpellTensuraPotionBridge;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkState;
@@ -28,6 +34,9 @@ public final class CraftingSupportEffectHandler {
     private static final float FORGE_REPAIR_DUPLICATE_CHANCE = 0.15f;
     private static final float TRANSMUTATION_CHANCE = 0.10f;
     private static final long SHARPENING_WINDOW_MS = 30_000L;
+    private static final String IRONS_SPELLBOOKS_MODID = "irons_spellbooks";
+    private static final TagKey<net.minecraft.world.item.Item> TENSURA_ARCANE_POTIONS = TagKey.create(
+            Registries.ITEM, ResourceLocation.fromNamespaceAndPath("tensura", "arcane_potions"));
 
     private CraftingSupportEffectHandler() {}
 
@@ -118,6 +127,22 @@ public final class CraftingSupportEffectHandler {
         return transmutationUnlocked && roll < TRANSMUTATION_CHANCE ? 1 : 0;
     }
 
+    static float tensuraArcanePotionManaFraction(ResourceLocation itemId) {
+        if (itemId == null || !"tensura".equals(itemId.getNamespace())) {
+            return 0.0f;
+        }
+        return switch (itemId.getPath()) {
+            case "low_arcane_potion" -> 0.05f;
+            case "medium_arcane_potion" -> 0.10f;
+            case "high_arcane_potion" -> 0.20f;
+            default -> 0.0f;
+        };
+    }
+
+    static boolean isKnownTensuraArcanePotionId(ResourceLocation itemId) {
+        return tensuraArcanePotionManaFraction(itemId) > 0.0f;
+    }
+
     @SubscribeEvent
     public static void onItemStart(LivingEntityUseItemEvent.Start event) {
         LivingEntity entity = event.getEntity();
@@ -142,7 +167,9 @@ public final class CraftingSupportEffectHandler {
         }
 
         ItemStack stack = event.getItem();
-        if (stack.getFoodProperties(player) != null) {
+        if (isTensuraArcanePotion(stack)) {
+            applyTensuraArcanePotionBonus(player, stack);
+        } else if (stack.getFoodProperties(player) != null) {
             applyFoodBonus(player, stack);
         } else if (stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION)) {
             applyPotionBonus(player, stack);
@@ -310,10 +337,29 @@ public final class CraftingSupportEffectHandler {
         }
     }
 
+    private static void applyTensuraArcanePotionBonus(ServerPlayer player, ItemStack stack) {
+        if (!ModList.get().isLoaded(IRONS_SPELLBOOKS_MODID)) {
+            return;
+        }
+        float restoreFraction = tensuraArcanePotionManaFraction(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+        if (restoreFraction <= 0.0f) {
+            return;
+        }
+        IronSpellTensuraPotionBridge.restoreManaFromTensuraPotion(player, restoreFraction);
+    }
+
     private static boolean isPotionStack(ItemStack stack) {
         return stack != null
                 && !stack.isEmpty()
                 && (stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION));
+    }
+
+    private static boolean isTensuraArcanePotion(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+        return stack.is(TENSURA_ARCANE_POTIONS)
+                || isKnownTensuraArcanePotionId(BuiltInRegistries.ITEM.getKey(stack.getItem()));
     }
 
     private static boolean isPoisonEffect(MobEffectInstance effect) {

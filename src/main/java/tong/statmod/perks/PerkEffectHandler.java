@@ -306,7 +306,7 @@ public final class PerkEffectHandler {
                     && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BLADE_ACTIVE)) {
                 PerkState.recordComboHit(uuid, System.currentTimeMillis(), 5000);
                 if (PerkState.getComboCount(uuid, System.currentTimeMillis(), 5000) >= 3) {
-                    dmg *= 2.0f;
+                    dmg *= 1.50f;
                     PerkState.setCooldown(uuid, 7);
                 }
             }
@@ -693,6 +693,20 @@ public final class PerkEffectHandler {
 
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        UUID uuid = event.getEntity().getUUID();
+        PerkState.clearPlayer(uuid);
+        savedArmorBase.remove(uuid);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        UUID uuid = event.getEntity().getUUID();
+        PerkState.clearPlayer(uuid);
+        savedArmorBase.remove(uuid);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         UUID uuid = event.getEntity().getUUID();
         PerkState.clearPlayer(uuid);
         savedArmorBase.remove(uuid);

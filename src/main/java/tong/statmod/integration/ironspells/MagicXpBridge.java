@@ -28,11 +28,11 @@ public class MagicXpBridge {
 
         boolean leveled = false;
 
-        leveled |= RaceEffectApplier.addScaledXp(player, StatType.ARCANE_POWER.index, 5, data, false);
+        leveled |= RaceEffectApplier.addScaledXp(player, StatType.ARCANE_POWER.index, 1, data, false);
 
         String spellId = IronSpellsApiAdapter.spellId(spell);
         if (!data.hasLearnedSpell(spellId)) {
-            leveled |= RaceEffectApplier.addScaledXp(player, StatType.ERUDITION.index, 10, data, false);
+            leveled |= RaceEffectApplier.addScaledXp(player, StatType.ERUDITION.index, 2, data, false);
         }
 
         if (leveled) SoundHelper.playLevelUp(player);
@@ -62,19 +62,19 @@ public class MagicXpBridge {
                 default -> null;
             };
             if (affinityStat != null) {
-                leveled |= RaceEffectApplier.addScaledXp(player, affinityStat.index, 2, data, false);
+                leveled |= RaceEffectApplier.addScaledXp(player, affinityStat.index, 1, data, false);
             }
         }
 
         double manaCost = event.getManaCost();
-        int manaXp = Math.max(1, (int) Math.round(manaCost / 10.0));
+        int manaXp = Math.max(1, (int) Math.round(manaCost / 30.0));
         leveled |= RaceEffectApplier.addScaledXp(player, StatType.MANA_POOL.index, manaXp, data, false);
 
         // CASTING_SPEED gagne sur cast complété (1× par cast), pas sur ModifySpellLevelEvent
         // qui fire en boucle pendant le rendu UI + chaque tick de cast LONG.
         // Amount calé sur la durée du cast pour récompenser les sorts difficiles à canaliser.
         int castTime = spell.getCastTime(event.getSpellLevel());
-        int castingSpeedXp = Math.max(2, castTime / 4);
+        int castingSpeedXp = Math.max(1, castTime / 10);
         leveled |= RaceEffectApplier.addScaledXp(player, StatType.CASTING_SPEED.index, castingSpeedXp, data, false);
 
         if (leveled) SoundHelper.playLevelUp(player);
@@ -98,7 +98,7 @@ public class MagicXpBridge {
 
         PlayerStatData data = player.getData(ModAttachments.STATS);
 
-        int xp = Math.max(1, Math.round(event.getOriginalDamage() / 2.0f));
+        int xp = Math.max(1, Math.round(event.getOriginalDamage() / 6.0f));
         boolean leveled = RaceEffectApplier.addScaledXp(player, StatType.MAGIC_RESISTANCE.index, xp, data, false);
         if (leveled) SoundHelper.playLevelUp(player);
         SyncHelper.syncStats(player);

@@ -47,6 +47,7 @@ public final class ClientSetup {
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         StatHudOverlay.register(event);
         DungeonHudOverlay.register(event);
+        ManaValueHudOverlay.register(event);
     }
 
     @SubscribeEvent

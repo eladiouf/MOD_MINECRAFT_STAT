@@ -49,25 +49,25 @@ class IronSpellAdvancedPerkSourceTest {
 
         assertTrue(compat.contains("NeoForge.EVENT_BUS.register(IronSpellRestRecoveryHandler.class)"));
         assertTrue(recovery.contains("PlayerWakeUpEvent"));
-        assertTrue(recovery.contains("setMana"));
-        assertTrue(recovery.contains("SyncManaPacket"));
+        assertTrue(recovery.contains("IronSpellManaSyncBridge.restoreToMax(player)"));
         assertTrue(eventBridge.contains("IronSpellAdvancedPerkScaling.manaRefund"));
-        assertTrue(eventBridge.contains("magicData.addMana"));
+        assertTrue(eventBridge.contains("IronSpellManaSyncBridge.addMana(player"));
     }
 
     @Test
-    void attributeBridgeSuppressesPassiveManaRegenWithoutRemovingCastRefunds() throws IOException {
+    void attributeBridgeKeepsNativePassiveManaRegenActiveWithoutRemovingCastRefunds() throws IOException {
         String attributeBridge = Files.readString(Path.of(
                 "src/main/java/tong/statmod/integration/ironspells/IronSpellAttributeBridge.java"));
         String eventBridge = Files.readString(Path.of(
                 "src/main/java/tong/statmod/integration/ironspells/IronSpellEventBridge.java"));
 
-        assertTrue(attributeBridge.contains("suppressBaseManaRegen(player)"));
-        assertTrue(attributeBridge.contains("getBaseValue()"));
-        assertTrue(attributeBridge.contains("-baseManaRegen"));
-        assertTrue(attributeBridge.indexOf("suppressBaseManaRegen(player)")
-                < attributeBridge.indexOf("if (next.equals(previous))"));
-        assertFalse(attributeBridge.contains("+ next.manaPoolAdvancedRegenBonus()"));
-        assertTrue(eventBridge.contains("magicData.addMana"));
+        assertTrue(attributeBridge.contains("MANA_REGEN"));
+        assertTrue(attributeBridge.contains("manaRegenBonus"),
+                "STAT scaling should still contribute a mana regen bonus on top of Iron's native regen");
+        assertFalse(attributeBridge.contains("neutralizeBaseManaRegen("),
+                "Iron's native passive mana regen should remain active.");
+        assertFalse(attributeBridge.contains("regenMana(serverPlayer);"),
+                "STAT Mod should not double-regenerate mana once Iron's native regen is reactivated.");
+        assertTrue(eventBridge.contains("IronSpellManaSyncBridge.addMana(player"));
     }
 }

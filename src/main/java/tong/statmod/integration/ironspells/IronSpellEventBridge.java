@@ -9,7 +9,6 @@ import io.redspace.ironsspellbooks.api.events.SpellPreCastEvent;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
-import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,7 +16,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.magic.CastContext;
@@ -42,12 +40,32 @@ public final class IronSpellEventBridge {
     @SubscribeEvent
     public static void onPreCast(SpellPreCastEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        STATMod.LOGGER.info("PreCast FIRED: spellId={} entity={}", event.getSpellId(), player.getName().getString());
         AbstractSpell spell = SpellRegistry.getSpell(event.getSpellId());
+        if (spell == null) {
+            STATMod.LOGGER.warn("PreCast: null spell for id={}", event.getSpellId());
+            return;
+        }
         String spellId = IronSpellsApiAdapter.spellId(spell);
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        boolean learned = data.hasLearnedSpell(spellId);
+        int manaCost = spell.getManaCost(event.getSpellLevel());
+        MagicData md = MagicData.getPlayerMagicData(player);
+        float currentMana = md != null ? md.getMana() : -999;
+        float maxMana = (float) player.getAttributeValue(AttributeRegistry.MAX_MANA);
+        STATMod.LOGGER.info("PreCast: {} learned={} mana={}/{} cost={} cancel={}",
+                spellId, learned, currentMana, maxMana, manaCost, !learned);
         if (shouldCancelPreCast(data, spellId)) {
             event.setCanceled(true);
             player.displayClientMessage(Component.translatable("statmod.magic.locked_spell"), true);
+            return;
+        }
+        if (!player.isCreative() && currentMana < manaCost) {
+            event.setCanceled(true);
+            player.displayClientMessage(
+                    Component.literal("§cNot enough mana: §f" + Math.round(currentMana)
+                            + "§7/§f" + manaCost), true);
+            return;
         }
     }
 
@@ -163,6 +181,16 @@ public final class IronSpellEventBridge {
         IronSpellPerkState.clear(event.getEntity().getUUID());
     }
 
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        IronSpellPerkState.clear(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        IronSpellPerkState.clear(event.getEntity().getUUID());
+    }
+
     public static boolean shouldCancelPreCast(PlayerStatData data, String spellId) {
         if (data == null || spellId == null) return true;
         return !data.hasLearnedSpell(spellId);
@@ -220,9 +248,7 @@ public final class IronSpellEventBridge {
                 data.isPerkUnlocked(Perk.MANA_POOL_MASTERY.id) && branchChain >= 2,
                 data.isPerkUnlocked(Perk.MANA_POOL_TRANSCENDENCE.id) && branchChain >= 3);
         if (refund > 0.0d) {
-            MagicData magicData = MagicData.getPlayerMagicData(player);
-            magicData.addMana((float) refund);
-            PacketDistributor.sendToPlayer(player, new SyncManaPacket(magicData));
+            IronSpellManaSyncBridge.addMana(player, (float) refund);
         }
     }
 

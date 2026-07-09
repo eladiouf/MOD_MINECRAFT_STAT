@@ -3,6 +3,7 @@ package tong.statmod.integration.ironspells.bridge;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.manascore.skill.api.SkillAPI;
 import io.github.manasmods.manascore.skill.impl.SkillStorage;
+import io.github.manasmods.tensura.storage.ep.IExistence;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
@@ -20,10 +21,12 @@ import net.neoforged.fml.ModList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tong.statmod.STATMod;
+import tong.statmod.integration.tensura.PlayerDataTensuraHook;
 import tong.statmod.integration.tensura.TensuraSkillIds;
 import tong.statmod.integration.tensura.TensuraSpellProfile;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 /**
  * Wrapper {@link AbstractSpell} qui délègue son exécution à une compétence Tensura.
@@ -130,6 +133,13 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
      */
     @Override
     public int getManaCost(int spellLevel) {
+        Integer balancedTreeCost = TensuraTreeManaCostResolver.resolve(
+                tensuraSkillId,
+                profile == null ? null : profile.discipline());
+        if (balancedTreeCost != null) {
+            return balancedTreeCost;
+        }
+
         double native_ = TensuraSpellMetadata.forSkill(tensuraSkillId).baselineMagiculeCost();
         if (native_ > 0.0) {
             return Math.max(1, (int) Math.ceil(native_ * MAGICULE_TO_MANA_RATIO));
@@ -161,10 +171,9 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     }
 
     /**
-     * Pre-cast côté serveur — on entre dans le cycle Tensura : {@code onPressed} marque le
-     * début du sort. Pour les sorts à charge, c'est ce qui amorce l'état interne consulté par
-     * {@code onHeld}. Pour les sorts instant, c'est un no-op (le vrai déclenchement est fait
-     * dans {@link #onCast}).
+     * Pre-cast côté serveur — ne touche qu'au rendu du cercle magique Tensura via
+     * {@code instance.onHeld} (pas de {@code startHoldSkill}, on n'utilise pas le système
+     * de {@code heldSkills}).
      */
     @Override
     public void onServerPreCast(Level level, int spellLevel, LivingEntity caster, MagicData data) {
@@ -172,15 +181,13 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
         if (level == null || level.isClientSide || caster == null) return;
         if (!ModList.get().isLoaded("tensura")) return;
         ensureMetadataResolved();
-        if (cachedCastType != CastType.LONG) return; // pour INSTANT, tout se fait dans onCast
-        withSkillInstance(caster, instance -> instance.onPressed(caster, 0, 0));
+        if (cachedCastType != CastType.LONG) return;
     }
 
     /**
-     * Per-tick côté serveur pendant la charge — relaie vers {@code ManasSkillInstance.onHeld}.
-     * Comme Tensura's {@code Magic.onHeld} appelle {@code applyCastingVisual} en interne
-     * (qui spawn la {@code MagicCircle} entity synchronisée vers les clients), le cercle
-     * magique apparaît naturellement sans qu'on touche aux particules.
+     * Per-tick côté serveur pendant la charge — appelle {@code instance.onHeld} pour que
+     * {@code Magic.onHeld} applique les modifieurs de hold (ralentissement) et, via
+     * {@code applyCastingVisual}, fasse apparaître le cercle magique synchronisé aux clients.
      */
     @Override
     public void onServerCastTick(Level level, int spellLevel, LivingEntity caster, MagicData data) {
@@ -189,17 +196,22 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
         if (!ModList.get().isLoaded("tensura")) return;
         ensureMetadataResolved();
         if (cachedCastType != CastType.LONG) return;
-        int total = Math.max(1, data.getCastDuration());
-        int remaining = Math.max(0, data.getCastDurationRemaining());
-        int heldTicks = Math.max(0, total - remaining);
-        withSkillInstance(caster, instance -> instance.onHeld(caster, heldTicks, 0));
+        withStorage(caster, (storage, instance) -> {
+            instance.onHeld(caster, 0, 0);
+        });
     }
 
     /**
-     * Déclenchement final — {@code onCast} est appelé à la complétion du cast par Iron's
-     * (immédiat pour INSTANT, après la charge pour LONG). On simule la release Tensura avec
-     * un {@code heldTicks} correspondant à la durée réelle de cast pour que les sorts qui
-     * gates sur {@code heldTicks >= castingTime} passent.
+     * Déclenchement final — appelle directement {@code ManasSkillInstance.onRelease}
+     * avec {@code slot = cachedCastTimeTicks} (qui vaut {@code getMaxCastTime()} du skill
+     * Tensura) pour BYPASSER le premier garde {@code slot >= getCastingTime()} dans
+     * {@code FireBoltMagic.onRelease}. La magicule Tensura est gonflée à 1M pour bypasser
+     * le second garde {@code EnergyHelper.isOutOfEnergy()}, puis restaurée immédiatement
+     * après (pas de drain — "Iron's mana only").
+     *
+     * <p>On n'utilise PAS {@code SkillStorage.startHoldSkill/handleSkillRelease} ni le
+     * système {@code heldSkills} de Tensura + Iron's Spellbooks gère le cooldown et le coût
+     * mana, il n'y a pas besoin des events {@code SkillEvents.RELEASE_SKILL}.
      */
     @Override
     public void onCast(Level level, int spellLevel, LivingEntity caster, CastSource source, MagicData data) {
@@ -207,14 +219,21 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
         if (level == null || level.isClientSide || caster == null) return;
         if (!ModList.get().isLoaded("tensura")) return;
         ensureMetadataResolved();
-        boolean isInstant = cachedCastType == CastType.INSTANT;
-        int heldTicks = isInstant ? Integer.MAX_VALUE : Math.max(1, cachedCastTimeTicks);
-        withSkillInstance(caster, instance -> {
-            if (isInstant) {
-                // Cycle compressé pour les sorts sans charge — press puis release en 1 frame.
-                instance.onPressed(caster, 0, 0);
+        withStorage(caster, (storage, instance) -> {
+            IExistence existence = PlayerDataTensuraHook.getExistence(caster);
+            double savedMagicule = existence != null ? existence.getMagicule() : 0.0;
+            if (existence != null) {
+                existence.setMagicule(1_000_000.0);
             }
-            instance.onRelease(caster, heldTicks, 0, 0);
+            try {
+                // slot = cachedCastTimeTicks bypasses the cast-time guard in FireBoltMagic.onRelease
+                instance.onRelease(caster, cachedCastTimeTicks, 0, 0);
+            } finally {
+                if (existence != null) {
+                    existence.setMagicule(savedMagicule);
+                    existence.markDirty();
+                }
+            }
         });
     }
 
@@ -249,14 +268,17 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     }
 
     /**
-     * Résout (en l'apprenant silencieusement si nécessaire) le {@code ManasSkillInstance} pour
-     * la compétence ciblée puis exécute l'action. Toutes les erreurs sont absorbées et loguées
-     * en debug pour éviter de casser le cast Iron's si Tensura est dans un état inattendu.
+     * Résout (en l'apprenant silencieusement si nécessaire) le {@code SkillStorage} et le
+     * {@code ManasSkillInstance} pour la compétence ciblée puis exécute l'action avec les
+     * deux. Les échecs sont logués en WARN (visibles dans la console normale).
      */
-    private void withSkillInstance(LivingEntity caster, java.util.function.Consumer<ManasSkillInstance> action) {
+    private void withStorage(LivingEntity caster, BiConsumer<SkillStorage, ManasSkillInstance> action) {
         try {
             SkillStorage storage = SkillAPI.getSkillsFrom(caster);
-            if (storage == null) return;
+            if (storage == null) {
+                LOGGER.warn("TensuraDelegatingSpell {}: SkillStorage null for {}", tensuraSkillId, caster.getName().getString());
+                return;
+            }
             ResourceLocation canonical = ResourceLocation.parse(
                     TensuraSkillIds.canonicalize(tensuraSkillId));
             Optional<ManasSkillInstance> resolved = storage.getSkill(canonical);
@@ -264,9 +286,13 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
                 storage.learnSkill(canonical);
                 resolved = storage.getSkill(canonical);
             }
-            resolved.ifPresent(action);
+            if (resolved.isPresent()) {
+                action.accept(storage, resolved.get());
+            } else {
+                LOGGER.warn("TensuraDelegatingSpell {} still empty after learn", tensuraSkillId);
+            }
         } catch (Throwable t) {
-            LOGGER.debug("TensuraDelegatingSpell {} dispatch failed: {}", tensuraSkillId, t.toString());
+            LOGGER.warn("TensuraDelegatingSpell {} dispatch failed: {}", tensuraSkillId, t.toString());
         }
     }
 

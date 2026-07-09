@@ -39,6 +39,7 @@ import yesman.epicfight.skill.Skill;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public final class EpicFightCompat {
     private static boolean loaded = false;
@@ -173,6 +174,27 @@ public final class EpicFightCompat {
                         RaceEffectApplier.getEffectiveLevel(player, StatType.BRUTE_FORCE.index)));
         applyFlatAttribute(player, Attributes.ENTITY_INTERACTION_RANGE, ResourceIds.REACH,
                 EpicFightWeaponReachHandler.reachBonus(player), lastReach, uuid);
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        clearCaches(event.getOriginal().getUUID());
+        clearCaches(event.getEntity().getUUID());
+    }
+
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        clearCaches(event.getEntity().getUUID());
     }
 
     private static void onDealDamage(DealDamageEvent.Pre event) {
@@ -319,6 +341,11 @@ public final class EpicFightCompat {
                 event.getResourceType());
         if (event.getResourceType() == Skill.Resource.STAMINA) {
             if (player.level().isClientSide) {
+                int endurance = RaceEffectApplier.getEffectiveLevel(player, StatType.PHYSICAL_ENDURANCE.index);
+                float statModMax = StaminaRules.maxStamina(endurance);
+                float adjustedAmount = EpicFightStaminaBridge.sustainableSkillCost(
+                        event.getAmount(), multiplier, statModMax);
+                StaminaManager.consume(player.getData(ModAttachments.STAMINA), adjustedAmount);
                 event.setAmount(0.0f);
                 return;
             }
@@ -455,5 +482,14 @@ public final class EpicFightCompat {
     private static boolean addXp(Player player, StatType stat, int amount) {
         return RaceEffectApplier.addScaledXp(player, stat.index, amount,
                 player.getData(ModAttachments.STATS), true);
+    }
+
+    private static void clearCaches(UUID uuid) {
+        lastWeight.remove(uuid);
+        lastStunArmor.remove(uuid);
+        lastImpact.remove(uuid);
+        lastReach.remove(uuid);
+        lastServerMaxStamina.remove(uuid);
+        lastClientMaxStamina.remove(uuid);
     }
 }

@@ -54,9 +54,9 @@ class IronInscriptionKnownSpellIndexTest {
                 "a", "b", "c", "d", "e", "f", "g"
         ), 1);
 
-        assertEquals(List.of("a", "b", "c", "d", "e"), page0);
-        assertEquals(List.of("f", "g"), page1);
-        assertEquals(1, IronInscriptionKnownSpellIndex.maxPage(List.of("a", "b", "c", "d", "e", "f")));
+        assertEquals(List.of("a", "b", "c", "d", "e", "f"), page0);
+        assertEquals(List.of("g"), page1);
+        assertEquals(0, IronInscriptionKnownSpellIndex.maxPage(List.of("a", "b", "c", "d", "e", "f")));
     }
 
     @Test

@@ -22,6 +22,7 @@ import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.tensura.MagiculeScalingHandler;
 import tong.statmod.integration.tensura.RacePhysicalEffects;
 import tong.statmod.integration.tensura.SummonScalingHandler;
+import tong.statmod.integration.tensura.TempBuffLifecycleHandler;
 import tong.statmod.integration.tensura.TensuraEpHandler;
 import tong.statmod.integration.tensura.TensuraRaceHandler;
 import tong.statmod.integration.overgeared.OvergearedCompat;
@@ -43,6 +44,7 @@ import tong.statmod.item.RuneEssence;
 import tong.statmod.item.RuneShards;
 import tong.statmod.menu.ModMenuTypes;
 import tong.statmod.loot.ModLootModifiers;
+import tong.statmod.network.SyncLifecycleHandler;
 import tong.statmod.progression.CombatXPHandler;
 import tong.statmod.progression.NonCombatXPHandler;
 import tong.statmod.sound.ModSounds;
@@ -51,7 +53,6 @@ import tong.statmod.stats.CraftingSupportEffectHandler;
 import tong.statmod.stats.StatAttributeHandler;
 import tong.statmod.stats.StatCommands;
 import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerCloneDataHandler;
 import tong.statmod.time.OverworldTimeController;
 import tong.statmod.time.SleepRecoveryHandler;
 
@@ -101,7 +102,7 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(StatAttributeHandler.class);
         NeoForge.EVENT_BUS.register(CraftingSupportEffectHandler.class);
         NeoForge.EVENT_BUS.register(StaminaEvents.class);
-        NeoForge.EVENT_BUS.register(PlayerCloneDataHandler.class);
+        NeoForge.EVENT_BUS.register(SyncLifecycleHandler.class);
         NeoForge.EVENT_BUS.register(SoulLevelSyncHandler.class);
         NeoForge.EVENT_BUS.register(OverworldTimeController.class);
         NeoForge.EVENT_BUS.register(SleepRecoveryHandler.class);
@@ -114,6 +115,7 @@ public class STATMod {
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);
             NeoForge.EVENT_BUS.register(SummonScalingHandler.class);
             NeoForge.EVENT_BUS.register(RacePhysicalEffects.class);
+            NeoForge.EVENT_BUS.register(TempBuffLifecycleHandler.class);
             TensuraEpHandler.init();
             TensuraRaceHandler.init();
         }

@@ -237,6 +237,10 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **Sans-faute** : conquérir un étage sans un seul coup reçu → récompense de conquête ×2 (combat ET boss), titre « ★ SANS FAUTE » + son de défi. Armé à `enterFloor`, ré-armé à la conquête.
 - Architecture : `DungeonRush` (cœur pur, temps en ticks injecté, état mémoire par UUID — rien n'est persisté, un combo ne survit pas à une session) + `DungeonRushHandler` (`LivingDamageEvent.Post` brise le combo, logout purge) + hooks dans `DungeonPoints.awardMobKill` / `DungeonProgress.completeFloor`. Tests : `DungeonRushTest` (12).
 
+**Audit architecture + co-op 2026-07-09 (Onivo Studio)** — suite de la mission « ultra addictif » :
+- **Îles agrandies shippées** : grille de pièces 5×4 (was 4×3), forteresse HX/HZ 134×122, rayon d'île R=148, `FLOOR_SPACING=300`. Décorateurs **Macaw's** (`MacawDungeonDecorator`) et **Quark** (`QuarkDungeonDecorator`) soft-resolus avec fallback vanilla. Fixes géométriques : `buildUnderside` couvre désormais toute l'emprise forteresse (le sol au-delà de r=80 flottait sans épaisseur), `floorBoundingBox` de regen élargie (Y −52..+54, ±R+4 — couvrait ni la cage ni la pointe du cône), plancher de cage abaissé à −48.
+- **Co-op réparé** : conquête partagée avec tous les joueurs présents sur l'étage (avant : seul le tueur du dernier mob débloquait, les autres restaient scellés) ; la mort d'un joueur ne purge plus la vague si un coéquipier combat encore ; vagues +50 % de mobs par joueur supplémentaire (cap 72) ; points d'assist 40 % du kill de base pour les coéquipiers présents. Helper central : `DungeonTeleportHandler.playersOnFloor`. Tests : `DungeonCoopTest` (6).
+
 ### Fichiers clés
 
 | Fichier | Rôle |

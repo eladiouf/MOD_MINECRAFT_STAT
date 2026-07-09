@@ -57,6 +57,7 @@ STAT MOD est l'**autorité d'identité** ; les autres mods sont des **surfaces r
 | L2 Hostility | **optional** | `integration/l2hostility/` | scaling difficulté donjon |
 | Waystones | **optional** | `integration/waystones/` | checkpoints donjon (M6, 2026-07-04) |
 | PlayerRevive | **optional** | `integration/playerrevive/` | bleed-out/réanimation donjon (M6, 2026-07-08) — hard dep interne : `CreativeCore` |
+| FTB Teams | **optional** | `integration/ftbteams/` | équipes du donjon : conquête + assists réservées à l'équipe (2026-07-09) |
 | Elementals | **removed** | (supprimé) | `STAT-DEC-003`, `STAT-PM-001` |
 
 > Toute nouvelle intégration doit déclarer un bloc **Exit Conditions** dans son design spec (politique issue de `STAT-PM-001`).
@@ -240,6 +241,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 **Audit architecture + co-op 2026-07-09 (Onivo Studio)** — suite de la mission « ultra addictif » :
 - **Îles agrandies shippées** : grille de pièces 5×4 (was 4×3), forteresse HX/HZ 134×122, rayon d'île R=148, `FLOOR_SPACING=300`. Décorateurs **Macaw's** (`MacawDungeonDecorator`) et **Quark** (`QuarkDungeonDecorator`) soft-resolus avec fallback vanilla. Fixes géométriques : `buildUnderside` couvre désormais toute l'emprise forteresse (le sol au-delà de r=80 flottait sans épaisseur), `floorBoundingBox` de regen élargie (Y −52..+54, ±R+4 — couvrait ni la cage ni la pointe du cône), plancher de cage abaissé à −48.
 - **Co-op réparé** : conquête partagée avec tous les joueurs présents sur l'étage (avant : seul le tueur du dernier mob débloquait, les autres restaient scellés) ; la mort d'un joueur ne purge plus la vague si un coéquipier combat encore ; vagues +50 % de mobs par joueur supplémentaire (cap 72) ; points d'assist 40 % du kill de base pour les coéquipiers présents. Helper central : `DungeonTeleportHandler.playersOnFloor`. Tests : `DungeonCoopTest` (6).
+- **Équipes FTB Teams** (`integration/ftbteams/FTBTeamsBridge`) : la conquête partagée et les assists sont réservées à l'**équipe FTB** du déclencheur (`arePlayersInSameTeam`) ; les rivaux présents voient un message de victoire adverse et gardent leur objectif. Sans FTB Teams (ou erreur) → fallback « tout le monde co-op ». FTB Teams donnant une équipe personnelle par joueur, deux joueurs sans party ne sont PAS co-équipiers (`/ftbteams party create` pour jouer ensemble). Tests : `FTBTeamsBridgeSourceTest` (3).
 
 ### Fichiers clés
 

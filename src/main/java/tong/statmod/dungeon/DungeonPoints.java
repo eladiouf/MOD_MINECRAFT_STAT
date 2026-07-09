@@ -118,13 +118,15 @@ public final class DungeonPoints {
                     net.minecraft.sounds.SoundSource.PLAYERS, 0.9f, pitch);
         }
 
-        // Co-op : les coéquipiers présents sur l'étage touchent une part d'assist (points bruts,
-        // sans combo ni jackpot — le style, c'est personnel). Jouer à plusieurs doit payer.
+        // Co-op : les coéquipiers (même équipe FTB) présents sur l'étage touchent une part
+        // d'assist (points bruts, sans combo ni jackpot — le style, c'est personnel). Les rivaux
+        // d'une autre équipe ne touchent rien. Jouer ensemble doit payer.
         if (player.level() instanceof net.minecraft.server.level.ServerLevel sl) {
             int share = assistShare(base);
             if (share > 0) {
                 for (ServerPlayer mate : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
                     if (mate == player) continue;
+                    if (!tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, mate)) continue;
                     int mateTotal = mate.getData(ModAttachments.STATS).addDungeonPoints(share);
                     SyncHelper.syncStats(mate);
                     mate.displayClientMessage(Component.translatable(

@@ -286,6 +286,7 @@
   "dungeon.rush.jackpot": "§6✦ JACKPOT! +%1$s pts §7(total %2$s)",
   "dungeon.rush.combo_broken": "§c✖ Combo ×%s broken!",
   "dungeon.rush.assist": "§b+%s assist pts §7(total %s)",
+  "dungeon.coop.rival_conquered": "§7Team §c%s§7 conquered floor %s before you — your team still has to complete the objective.",
   "dungeon.title.flawless": "§6★ FLAWLESS",
   "dungeon.title.flawless.sub": "§7Untouched — conquest reward §6×2",
   "dungeon.points.floor": "§aFloor cleared! +%s pts §7(%s)",

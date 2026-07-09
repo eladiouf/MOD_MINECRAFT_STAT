@@ -47,8 +47,17 @@ public final class DungeonProgress {
         if (floor <= 0) return;
         if (player.level() instanceof ServerLevel sl
                 && sl.dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
-            for (ServerPlayer participant : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
-                completeForPlayer(participant, floor, objective, bossReward);
+            // FTB Teams : seule l'ÉQUIPE du déclencheur conquiert (2026-07-09). Les rivaux
+            // présents sur l'étage ne profitent pas du kill — ils voient la victoire adverse.
+            for (ServerPlayer present : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
+                if (tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, present)) {
+                    completeForPlayer(present, floor, objective, bossReward);
+                } else if (present.getData(ModAttachments.STATS).getDungeonFloorReached() <= floor) {
+                    net.minecraft.network.chat.Component team =
+                            tong.statmod.integration.ftbteams.FTBTeamsBridge.teamName(player);
+                    present.displayClientMessage(Component.translatable("dungeon.coop.rival_conquered",
+                            team != null ? team : player.getDisplayName(), floor), false);
+                }
             }
         } else {
             // Filet de sécurité (déclencheur hors donjon — commandes/tests) : au moins lui.

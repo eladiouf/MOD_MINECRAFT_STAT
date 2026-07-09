@@ -48,6 +48,9 @@ public final class DungeonProgress {
 
         data.unlockDungeonFloor(floor + 1);
 
+        // Dungeon Rush : étage conquis sans un coup reçu → récompense de conquête doublée.
+        boolean flawless = DungeonRush.isFlawless(player.getUUID());
+
         if (bossReward) {
             int gain = Config.getDungeonBossStatGain();
             int statIndex = PHYSICAL_STAT_INDICES[player.getRandom().nextInt(PHYSICAL_STAT_INDICES.length)];
@@ -57,16 +60,25 @@ public final class DungeonProgress {
             player.displayClientMessage(Component.translatable(
                     "block.statmod.dungeon_portal.boss_kill", gain, statName, floor + 1), false);
             // Gros gain de points pour le boss vaincu.
-            DungeonPoints.awardBoss(player);
+            DungeonPoints.awardBoss(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         } else {
             player.displayClientMessage(Component.translatable(
                     "dungeon.floor.conquered", floor, floor + 1), false);
             // Bonus de points pour la conquête d'un étage (remplace la récompense en cristaux).
-            DungeonPoints.awardFloorClear(player);
+            DungeonPoints.awardFloorClear(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         }
 
         SyncHelper.syncStats(player);
         celebrate(player, floor);
+        if (flawless) {
+            // Titre dédié APRÈS la célébration standard : le sans-faute est le moment de gloire.
+            title(player, Component.translatable("dungeon.title.flawless"),
+                    Component.translatable("dungeon.title.flawless.sub"));
+            player.playNotifySound(net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+                    net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1.0f);
+        }
+        // Ré-arme le sans-faute : rester jouer sur l'étage conquis ne doit pas fausser le suivant.
+        DungeonRush.beginFloor(player.getUUID());
         milestone(player, floor + 1);
 
         STATMod.LOGGER.info("[TrialDungeon] Étage {} conquis ({}) par {} → étage {} débloqué",

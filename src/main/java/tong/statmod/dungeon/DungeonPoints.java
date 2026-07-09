@@ -79,19 +79,54 @@ public final class DungeonPoints {
         player.displayClientMessage(Component.translatable(reasonKey, amount, total), true);
     }
 
-    /** Récompense de kill de mob (points ∝ difficulté du mob × profondeur). */
+    /**
+     * Récompense de kill de mob (points ∝ difficulté du mob × profondeur), amplifiée par la
+     * couche « Dungeon Rush » : combo de kills (multiplicateur croissant, brisé quand on encaisse
+     * un coup) et jackpot aléatoire (petite chance de ×{@value DungeonRush#JACKPOT_MULTIPLIER}).
+     */
     public static void awardMobKill(ServerPlayer player, LivingEntity mob, int floor) {
-        award(player, mobReward(mob, floor), "dungeon.points.mob");
+        int base = mobReward(mob, floor);
+
+        // Combo : chaque kill dans la fenêtre fait monter le multiplicateur.
+        int combo = DungeonRush.onKill(player.getUUID(), player.level().getGameTime());
+        int pts = (int) Math.round(base * DungeonRush.comboMultiplier(combo));
+
+        // Jackpot : renforcement variable — le kill banal qui explose en pluie de points.
+        boolean jackpot = DungeonRush.isJackpot(player.getRandom().nextDouble());
+        if (jackpot) pts *= DungeonRush.JACKPOT_MULTIPLIER;
+
+        PlayerStatData data = player.getData(ModAttachments.STATS);
+        int total = data.addDungeonPoints(pts);
+        SyncHelper.syncStats(player);
+
+        if (jackpot) {
+            player.playNotifySound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP,
+                    net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 1.4f);
+            player.displayClientMessage(Component.translatable("dungeon.rush.jackpot", pts, total), true);
+        } else if (combo >= 2) {
+            player.displayClientMessage(Component.translatable(
+                    "dungeon.rush.combo", pts, combo,
+                    String.format("%.2f", DungeonRush.comboMultiplier(combo)), total), true);
+        } else {
+            player.displayClientMessage(Component.translatable("dungeon.points.mob", pts, total), true);
+        }
+
+        // Fanfare de palier de combo : ping de plus en plus aigu tous les 5 kills — la montée.
+        if (DungeonRush.isComboMilestone(combo)) {
+            float pitch = Math.min(2.0f, 1.0f + combo * 0.04f);
+            player.playNotifySound(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP,
+                    net.minecraft.sounds.SoundSource.PLAYERS, 0.9f, pitch);
+        }
     }
 
-    /** Récompense de conquête d'un étage (combat/trésor). */
-    public static void awardFloorClear(ServerPlayer player) {
-        award(player, FLOOR_CLEAR_POINTS, "dungeon.points.floor");
+    /** Récompense de conquête d'un étage (combat/trésor), ×{@code multiplier} (sans-faute…). */
+    public static void awardFloorClear(ServerPlayer player, int multiplier) {
+        award(player, FLOOR_CLEAR_POINTS * Math.max(1, multiplier), "dungeon.points.floor");
     }
 
-    /** Récompense de boss vaincu. */
-    public static void awardBoss(ServerPlayer player) {
-        award(player, BOSS_POINTS, "dungeon.points.boss");
+    /** Récompense de boss vaincu, ×{@code multiplier} (sans-faute…). */
+    public static void awardBoss(ServerPlayer player, int multiplier) {
+        award(player, BOSS_POINTS * Math.max(1, multiplier), "dungeon.points.boss");
     }
 
     /**

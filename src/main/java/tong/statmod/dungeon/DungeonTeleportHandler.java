@@ -159,6 +159,10 @@ public final class DungeonTeleportHandler {
         // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
         DungeonMobSpawner.requestWave(dungeon, floor);
 
+        // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
+        // la récompense de conquête.
+        DungeonRush.beginFloor(player.getUUID());
+
         // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
         // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
         tong.statmod.network.SyncHelper.syncStats(player);

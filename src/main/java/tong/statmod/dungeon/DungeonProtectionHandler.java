@@ -8,18 +8,23 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 
 /**
- * Mission M6 — Le Trial Dungeon est <b>indestructible</b>.
+ * Mission M6 — Le Trial Dungeon est <b>indestructible</b>, par les joueurs COMME par les mobs
+ * (durci 2026-07-09 sur feedback playtest).
  *
- * <p>Trois protections dans la dimension {@code statmod:trial_dungeon} :
+ * <p>Protections dans la dimension {@code statmod:trial_dungeon} :
  * <ol>
  *   <li>Casse de bloc annulée (sauf joueur en créatif — admin).</li>
  *   <li>Pose de bloc annulée (sauf créatif).</li>
- *   <li>Explosions : la liste des blocs affectés est vidée → creepers, blazes, TNT, etc. ne
- *       peuvent plus percer le sol ni les murs (les dégâts aux entités restent).</li>
+ *   <li>Explosions : la liste des blocs affectés est vidée → creepers, blazes, TNT, boss moddés
+ *       ne peuvent plus percer le sol ni les murs (les dégâts aux entités restent).</li>
+ *   <li>Griefing de mob interdit ({@code EntityMobGriefingEvent}) : endermen qui volent des
+ *       blocs, zombies qui cassent les portes en bois, ravagers, boules de feu qui allument des
+ *       incendies, silverfish…</li>
+ *   <li>{@code LivingDestroyBlockEvent} annulé : wither qui mange le bâti, zombie qui finit une
+ *       porte, attaques de boss moddés passant par ce chemin.</li>
+ *   <li>Outils de terrain interdits (strip de bûche, chemin à la pelle, labour) et objets
+ *       incendiaires (briquet, boule de feu) bloqués en survie.</li>
  * </ol>
- *
- * <p>Sans ça, un creeper qui explose en plein combat laissait des trous de 2 blocs dans les
- * plateformes.
  */
 public final class DungeonProtectionHandler {
 
@@ -46,6 +51,9 @@ public final class DungeonProtectionHandler {
     public static void onPlace(BlockEvent.EntityPlaceEvent event) {
         if (!inDungeon(event.getLevel())) return;
         if (event.getEntity() instanceof Player p && isBuilder(p)) return;
+        // Les blocs à gravité (enclume du piège, gravier des thèmes) doivent pouvoir atterrir —
+        // sinon ils se cassent en item à la retombée.
+        if (event.getEntity() instanceof net.minecraft.world.entity.item.FallingBlockEntity) return;
         event.setCanceled(true);
     }
 
@@ -77,7 +85,9 @@ public final class DungeonProtectionHandler {
         return id.contains("bucket")
                 || item instanceof net.minecraft.world.item.HangingEntityItem
                 || item instanceof net.minecraft.world.item.ArmorStandItem
-                || item instanceof net.minecraft.world.item.BoatItem;
+                || item instanceof net.minecraft.world.item.BoatItem
+                || item instanceof net.minecraft.world.item.FlintAndSteelItem
+                || item instanceof net.minecraft.world.item.FireChargeItem;
     }
 
     @SubscribeEvent
@@ -85,5 +95,32 @@ public final class DungeonProtectionHandler {
         if (!inDungeon(event.getLevel())) return;
         // Les explosions ne détruisent aucun bloc du donjon (mais blessent encore les entités).
         event.getAffectedBlocks().clear();
+    }
+
+    /**
+     * Griefing de mob interdit : endermen (vol de blocs), zombies (casse des portes en bois —
+     * critique depuis que toutes les portes du donjon sont en bois), ravagers, boules de feu qui
+     * posent du feu, silverfish qui s'incrustent, etc. Le donjon appartient au bâtisseur.
+     */
+    @SubscribeEvent
+    public static void onMobGriefing(net.neoforged.neoforge.event.entity.EntityMobGriefingEvent event) {
+        if (event.getEntity() == null) return;
+        if (!inDungeon(event.getEntity().level())) return;
+        event.setCanGrief(false);
+    }
+
+    /** Destruction directe de bloc par une entité vivante (wither, portes, boss moddés) : non. */
+    @SubscribeEvent
+    public static void onLivingDestroyBlock(net.neoforged.neoforge.event.entity.living.LivingDestroyBlockEvent event) {
+        if (!inDungeon(event.getEntity().level())) return;
+        event.setCanceled(true);
+    }
+
+    /** Outils de terrain (strip de bûche, chemin à la pelle, labour à la houe) : non plus. */
+    @SubscribeEvent
+    public static void onToolModification(BlockEvent.BlockToolModificationEvent event) {
+        if (!inDungeon(event.getLevel())) return;
+        if (event.getPlayer() != null && isBuilder(event.getPlayer())) return;
+        event.setCanceled(true);
     }
 }

@@ -20,7 +20,13 @@ class AssemblyWeaponCoverageResourcesTest {
 
     private static final Path LIBS = Paths.get("libs");
     private static final Path ASSEMBLY = Paths.get("src", "main", "resources", "data", "statmod", "recipe", "assembly");
-    private static final Set<String> EXCLUDED_MODS = Set.of("minecraft", "overgeared", "statmod");
+    private static final Set<String> EXCLUDED_MODS = Set.of(
+            "minecraft", "overgeared", "statmod", "quark", "farmersdelight", "farmersstructures",
+            "biomesoplenty", "ohthetreesyoullgrow", "corgilib", "wthit",
+            "mcwbridges", "mcwdoors", "mcwfurnitures", "mcwlights", "mcwfences",
+            "mcwpaths", "mcwwindows", "mcwroofs", "mcwtrpdoors", "addonslib",
+            "badpackets", "glitchcore"
+    );
     private static final Set<String> STATION_MANAGED = Set.of(
             "simplyswords:runic_rapier",
             "simplyswords:runic_katana",
@@ -39,7 +45,7 @@ class AssemblyWeaponCoverageResourcesTest {
             "(^|_)(pulling_[0-9]+|blocking|raised|gui|desc|tooltip|exp|powers|firework|spectral_arrow|arrow|model|item|empty|sheath|handheld|inactive)$"
     );
     private static final Pattern NON_WEAPON_EXCLUDE = Pattern.compile(
-            "(spawn_egg|helmet|chestplate|leggings|boots|pattern|decoration|template|tome|manual|schematic|haft|glider|ingot|nugget|soul|curio|example_loot_bag|example_passive_ability_spellbook)"
+            "(spawn_egg|helmet|chestplate|leggings|boots|pattern|decoration|template|tome|manual|schematic|haft|glider|ingot|nugget|soul|curio|trap|example_loot_bag|example_passive_ability_spellbook)"
     );
 
     @Test

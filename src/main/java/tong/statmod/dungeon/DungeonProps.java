@@ -29,11 +29,12 @@ public final class DungeonProps {
 
     /** Statues moddées candidates (première présente utilisée) → fallback crâne vanilla sur socle. */
     private static final List<String> STATUES = List.of(
-            "cataclysm:goddess_statue", "irons_spellbooks:tyros_statue", "irons_lib:player_statue");
+            "cataclysm:goddess_statue", "irons_spellbooks:tyros_statue", "irons_lib:player_statue",
+            "quark:myalite_crystal");
     /** Braseros / bougies moddés → fallback lanterne. */
     private static final List<String> BRAZIERS = List.of(
             "irons_spellbooks:brazier", "block_factorys_bosses:underworld_tall_candles",
-            "block_factorys_bosses:tall_candles");
+            "block_factorys_bosses:tall_candles", "quark:paper_lantern", "quark:stone_lamp");
     /** Tas d'os/crânes moddés → fallback bloc d'os vanilla. */
     private static final List<String> SKULL_PILES = List.of(
             "born_in_chaos_v1:pile_of_skulls");
@@ -82,9 +83,28 @@ public final class DungeonProps {
         }
     }
 
-    /** Coffre épars (loot simple_dungeon) posé au sol, contre le décor. */
+    /** Coffre épars (loot simple_dungeon) posé au sol, contre le décor (30% de chance d'être piégé). */
     private static void minorChest(ServerLevel lv, BlockPos sp, int x, int z) {
-        LootrBridge.placeIndividualChest(lv, O(sp, x, 0, z), MINOR_LOOT);
+        BlockPos chestPos = O(sp, x, 0, z);
+        boolean trapped = lv.random.nextFloat() < 0.3f;
+        if (trapped) {
+            LootrBridge.placeIndividualTrappedChest(lv, chestPos, MINOR_LOOT);
+            BlockPos wallPos = chestPos.north().above();
+            net.minecraft.world.level.block.state.BlockState dispenserState = Blocks.DISPENSER.defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.DispenserBlock.FACING, net.minecraft.core.Direction.SOUTH);
+            S(lv, wallPos, dispenserState);
+
+            net.minecraft.world.level.block.entity.BlockEntity be = lv.getBlockEntity(wallPos);
+            if (be instanceof net.minecraft.world.level.block.entity.DispenserBlockEntity dbe) {
+                dbe.setLootTable(ResourceKey.create(Registries.LOOT_TABLE,
+                        ResourceLocation.withDefaultNamespace("chests/dispenser_trap")), lv.getRandom().nextLong());
+            }
+
+            S(lv, chestPos.below(), Blocks.REDSTONE_WIRE.defaultBlockState());
+            S(lv, wallPos.below(), Blocks.REDSTONE_WIRE.defaultBlockState());
+        } else {
+            LootrBridge.placeIndividualChest(lv, chestPos, MINOR_LOOT);
+        }
     }
 
     /** Statue moddée sur socle (dalle) — fallback : crâne vanilla sur colonne. */

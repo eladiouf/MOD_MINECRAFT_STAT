@@ -12,9 +12,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * 4 murs + plafond + plancher. Empêche de <b>voler d'une île à l'autre</b> (par-dessus, par les
  * côtés ou par-dessous). Posée une fois à la génération de l'étage.
  *
- * <p>Dimensions calées sur {@link IslandGenerator#R} (rayon d'île = 80) + une marge, et sur
- * l'emprise verticale de l'île (underside conique ~ −34 → sommet ~ +24). Les îles étant espacées de
- * {@code FLOOR_SPACING}=200, les cages (demi-emprise 82) ne se chevauchent jamais.
+ * <p>Dimensions calées sur {@link IslandGenerator#R} (rayon d'île) + une marge, et sur l'emprise
+ * verticale de l'île (underside conique jusqu'à −43, végétation suspendue −44 → sommets ~ +47).
+ * Avec {@code FLOOR_SPACING}=300 et R=148, les cages adjacentes (demi-emprise 150) se touchent
+ * exactement sans se chevaucher.
  */
 public final class DungeonBarrierCage {
 
@@ -23,16 +24,16 @@ public final class DungeonBarrierCage {
     /**
      * Emprise verticale de la cage, relative au sol de l'île (FLOOR_Y). Plafond assez haut pour ne
      * pas trancher les structures/arènes importées les plus hautes (obsidilith ~+47, remparts/piliers
-     * d'arène ~+24) ; plancher sous la pointe de l'underside conique (~ −34).
+     * d'arène ~+24) ; plancher sous la pointe de l'underside conique (−43) et sa végétation (−44).
      */
-    private static final int Y_LOW = -40;
+    private static final int Y_LOW = -48;
     private static final int Y_HIGH = 50;
 
     private DungeonBarrierCage() {}
 
     /** Pose la cage barrière complète autour de l'île centrée sur {@code sp}. */
     public static void enclose(ServerLevel lv, BlockPos sp) {
-        int h = IslandGenerator.R + MARGIN; // demi-emprise horizontale (82)
+        int h = IslandGenerator.R + MARGIN; // demi-emprise horizontale (R+2)
         BlockState bar = Blocks.BARRIER.defaultBlockState();
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
 

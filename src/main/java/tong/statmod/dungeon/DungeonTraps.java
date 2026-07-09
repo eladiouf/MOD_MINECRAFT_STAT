@@ -1,10 +1,18 @@
 package tong.statmod.dungeon;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +57,59 @@ public final class DungeonTraps {
             // Évite le centre immédiat (2×2) et les axes de portes (milieux de bords).
             if (Math.abs(x - cx) <= 1 && Math.abs(z - cz) <= 1) continue;
             if (x == cx || z == cz) continue;
-            S(lv, O(sp, x, 0, z), traps.get(i % traps.size()));
+            BlockState trapState = traps.get(i % traps.size());
+            if (trapState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.ATTACH_FACE)) {
+                trapState = trapState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.ATTACH_FACE, net.minecraft.world.level.block.state.properties.AttachFace.FLOOR);
+            }
+            if (trapState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING)) {
+                try {
+                    trapState = trapState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING, net.minecraft.core.Direction.UP);
+                } catch (IllegalArgumentException e) {
+                    // Do nothing if UP is not supported for FACING (e.g. horizontal-only blocks)
+                }
+            }
+            S(lv, O(sp, x, 0, z), trapState);
         }
+
+        placeRedstoneTraps(lv, sp, r, floor);
+    }
+
+    /** Places wall dispensers filled with arrows/potions activated by floor pressure plates. */
+    private static void placeRedstoneTraps(ServerLevel lv, BlockPos sp, DungeonLayout.Room r, int floor) {
+        int w = r.maxX() - r.minX(), d = r.maxZ() - r.minZ();
+        if (w < 16 || d < 16) return; // Only place in large enough rooms
+
+        // Traps placements on the 4 walls (offset from door centers)
+        // 1. North Wall (facing South)
+        int xN = r.minX() + 8;
+        placeTrapDispenserAndPlate(lv, O(sp, xN, 1, r.minZ()), Direction.SOUTH, O(sp, xN, 0, r.minZ() + 1));
+
+        // 2. South Wall (facing North)
+        int xS = r.maxX() - 8;
+        placeTrapDispenserAndPlate(lv, O(sp, xS, 1, r.maxZ()), Direction.NORTH, O(sp, xS, 0, r.maxZ() - 1));
+
+        // 3. West Wall (facing East)
+        int zW = r.minZ() + 8;
+        placeTrapDispenserAndPlate(lv, O(sp, r.minX(), 1, zW), Direction.EAST, O(sp, r.minX() + 1, 0, zW));
+
+        // 4. East Wall (facing West)
+        int zE = r.maxZ() - 8;
+        placeTrapDispenserAndPlate(lv, O(sp, r.maxX(), 1, zE), Direction.WEST, O(sp, r.maxX() - 1, 0, zE));
+    }
+
+    private static void placeTrapDispenserAndPlate(ServerLevel lv, BlockPos dispenserPos, Direction facing, BlockPos platePos) {
+        // Place dispenser facing into the room
+        BlockState dispenserState = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, facing);
+        S(lv, dispenserPos, dispenserState);
+
+        // Fill dispenser with chests/dispenser_trap loot table (arrows, charges)
+        BlockEntity be = lv.getBlockEntity(dispenserPos);
+        if (be instanceof DispenserBlockEntity dbe) {
+            dbe.setLootTable(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("chests/dispenser_trap")), lv.getRandom().nextLong());
+        }
+
+        // Place stone pressure plate in front of the dispenser
+        S(lv, platePos, Blocks.STONE_PRESSURE_PLATE.defaultBlockState());
     }
 
     private static int hash(int a, int b, int c) {

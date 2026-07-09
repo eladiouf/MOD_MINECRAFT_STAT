@@ -56,6 +56,12 @@ public final class DungeonBossArena {
      */
     public static void shape(ServerLevel lv, BlockPos anchor, BlockPalette t, int floor) {
         int hz = 0;
+        ThemePalette theme = ThemePalette.forFloor(floor);
+        if (QuarkDungeonDecorator.isQuarkPresent() &&
+            (theme == ThemePalette.QUARK_LIMESTONE || theme == ThemePalette.QUARK_JASPER || theme == ThemePalette.QUARK_MYALITE)) {
+            QuarkDungeonDecorator.crystalBossArena(lv, anchor, floor);
+            return;
+        }
         Kind kind = kindForFloor(floor);
         switch (kind) {
             case AQUATIC -> aquatic(lv, anchor, t, hz);
@@ -74,6 +80,9 @@ public final class DungeonBossArena {
             if (d2 <= 12 * 12 && d2 > 8 * 8) {           // anneau d'eau
                 S(lv, O(sp, dx, -1, hz + dz), B(Blocks.WATER));
                 S(lv, O(sp, dx, -2, hz + dz), B(t.underside()));
+                if ((dx + dz) % 7 == 0) {
+                    S(lv, O(sp, dx, 0, hz + dz), B(Blocks.SEAGRASS));
+                }
             }
         }
         for (int[] c : new int[][]{{-10, 0}, {10, 0}, {0, -8}, {0, 8}}) {
@@ -114,7 +123,8 @@ public final class DungeonBossArena {
             int dx = ((i * 37) % 25) - 12;
             int dz = ((i * 53) % 21) - 10;
             if (Math.abs(dx) < 3 && Math.abs(dz) < 3) continue;
-            S(lv, O(sp, dx, -1, hz + dz), B(Blocks.MAGMA_BLOCK));
+            S(lv, O(sp, dx, -1, hz + dz), B(Blocks.LAVA));
+            S(lv, O(sp, dx, -2, hz + dz), B(Blocks.MAGMA_BLOCK));
         }
         for (int[] c : new int[][]{{-9, -7}, {9, -7}, {-9, 7}, {9, 7}}) {
             S(lv, O(sp, c[0], 0, hz + c[1]), B(t.decorPrimary()));
@@ -128,7 +138,11 @@ public final class DungeonBossArena {
             int dx = ((i * 41) % 23) - 11;
             int dz = ((i * 29) % 19) - 9;
             if (Math.abs(dx) < 3 && Math.abs(dz) < 3) continue;
-            S(lv, O(sp, dx, -1, hz + dz), B(i % 3 == 0 ? Blocks.SOUL_SAND : Blocks.BONE_BLOCK));
+            boolean isSoul = (i % 3 == 0);
+            S(lv, O(sp, dx, -1, hz + dz), B(isSoul ? Blocks.SOUL_SAND : Blocks.BONE_BLOCK));
+            if (isSoul && (dx + dz) % 2 == 0) {
+                S(lv, O(sp, dx, 0, hz + dz), B(Blocks.WITHER_ROSE));
+            }
         }
         for (int[] c : new int[][]{{-8, -6}, {8, -6}, {-8, 6}, {8, 6}}) {
             S(lv, O(sp, c[0], 0, hz + c[1]), B(Blocks.SOUL_LANTERN));

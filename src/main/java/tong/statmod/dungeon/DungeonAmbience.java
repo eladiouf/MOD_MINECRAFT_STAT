@@ -62,6 +62,10 @@ public final class DungeonAmbience {
             case ARCANE -> ParticleTypes.WITCH;             // étincelles magiques
             case INFERNAL -> ParticleTypes.FLAME;           // braises
             case ABYSS -> ParticleTypes.PORTAL;             // motes du End
+            case DEEP_DARK -> ParticleTypes.SCULK_SOUL;     // sculk souls
+            case QUARK_LIMESTONE -> ParticleTypes.WHITE_ASH;  // ancient stone dust
+            case QUARK_JASPER -> ParticleTypes.LAVA;          // forge sparks
+            case QUARK_MYALITE -> ParticleTypes.REVERSE_PORTAL; // alien crystal motes
         };
     }
 }

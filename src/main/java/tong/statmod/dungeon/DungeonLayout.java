@@ -20,8 +20,8 @@ import static tong.statmod.dungeon.DungeonArchitect.HZ;
 public final class DungeonLayout {
 
     /** Colonnes / rangées de la grille de pièces. */
-    public static final int COLS = 4;
-    public static final int ROWS = 3;
+    public static final int COLS = 5;
+    public static final int ROWS = 4;
     /** Nombre total de pièces d'un étage. */
     public static final int ROOM_COUNT = COLS * ROWS;
 

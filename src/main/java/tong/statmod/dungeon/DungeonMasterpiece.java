@@ -43,18 +43,78 @@ public final class DungeonMasterpiece {
     }
 
     // ═══════════════ UNDERSIDE CONE ═══════════════
+ 
+    /** Cône rocheux organique sous l'île (profond au centre, fin au bord, avec supports de forteresse). */
+    static void buildUnderside(ServerLevel lv, BlockPos sp, BlockPalette t, IslandShaper shaper, int floor) {
+        long islandSeed = IslandShaper.seedFor(floor);
+        // La boucle doit couvrir l'emprise de la FORTERESSE (HX/HZ+2), pas seulement le cône
+        // organique (R) : depuis l'agrandissement (HX=134 > R=80), la branche « support bracket »
+        // ci-dessous était inatteignable et le sol de forteresse au-delà de r=80 flottait sur du
+        // vide, sans la moindre épaisseur (audit architecture 2026-07-09).
+        int ext = Math.max(R, Math.max(DungeonArchitect.HX, DungeonArchitect.HZ) + 2);
+        for (int dx = -ext; dx <= ext; dx++) {
+            for (int dz = -ext; dz <= ext; dz++) {
+                int depth = 0;
+                if (shaper.isInside(dx, dz)) {
+                    depth = shaper.depthAt(dx, dz);
+                } else if (Math.abs(dx) <= DungeonArchitect.HX + 2 && Math.abs(dz) <= DungeonArchitect.HZ + 2) {
+                    // Gradual support bracket/pillar for fortress corners overlapping organic bounds
+                    int distToEdgeX = DungeonArchitect.HX + 2 - Math.abs(dx);
+                    int distToEdgeZ = DungeonArchitect.HZ + 2 - Math.abs(dz);
+                    int edgeDist = Math.min(distToEdgeX, distToEdgeZ);
+                    depth = Math.max(2, Math.min(6, edgeDist + 1));
+                }
 
-    /** Cône rocheux décroissant sous l'île (profond au centre, fin au bord). */
-    static void buildUnderside(ServerLevel lv, BlockPos sp, BlockPalette t) {
-        BlockState u1 = t.underside() == STONE ? B(STONE) : B(t.underside());
-        BlockState u2 = t.underside() == STONE ? B(COBBLESTONE) : B(t.decorPrimary());
-        for (int dx = -R; dx <= R; dx++) for (int dz = -R; dz <= R; dz++) {
-            if (!in(dx, dz)) continue;
-            double dist = Math.sqrt(dx*dx + dz*dz);
-            int depth = Math.max(2, (int)((1.0 - dist/R) * (R/3.0)) + 2); // ≥2 même hors du disque
-            for (int dy = 1; dy <= depth; dy++)
-                S(lv, O(sp, dx, -dy, dz), (dy%3==0) ? u2 : u1);
+                if (depth <= 0) continue;
+
+                long cellSeed = islandSeed + dx * 374761393L + dz * 668265263L;
+                java.util.Random rng = new java.util.Random(cellSeed);
+
+                for (int dy = 1; dy <= depth; dy++) {
+                    BlockState s = getUndersideBlock(dx, dy, dz, t, rng);
+                    S(lv, O(sp, dx, -dy, dz), s);
+                }
+
+                // Place hanging vegetation / blocks under the bottom-most rock
+                BlockPos belowPos = O(sp, dx, -depth - 1, dz);
+                if (lv.getBlockState(belowPos).isAir()) {
+                    int hangRoll = rng.nextInt(100);
+                    if (hangRoll < 12) { // 12% chance
+                        BlockState hangState = B(AIR);
+                        if (t.light() == SHROOMLIGHT || t.base() == POLISHED_BLACKSTONE_BRICKS) {
+                            hangState = B(WEEPING_VINES);
+                        } else if (t.base() == OBSIDIAN) {
+                            hangState = B(GLOW_LICHEN);
+                        } else {
+                            hangState = hangRoll < 6 ? B(GLOW_LICHEN) : B(HANGING_ROOTS);
+                        }
+                        if (hangState != B(AIR)) {
+                            S(lv, belowPos, hangState);
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    private static BlockState getUndersideBlock(int dx, int dy, int dz, BlockPalette t, java.util.Random rng) {
+        Block base = t.underside();
+        boolean deepslate = (base == DEEPSLATE || base == POLISHED_DEEPSLATE || base == COBBLED_DEEPSLATE);
+        
+        int r = rng.nextInt(100);
+        if (r < 8) { // 8% chance of ores
+            int oreRoll = rng.nextInt(100);
+            if (oreRoll < 40) return B(deepslate ? DEEPSLATE_COAL_ORE : COAL_ORE);
+            else if (oreRoll < 70) return B(deepslate ? DEEPSLATE_COPPER_ORE : COPPER_ORE);
+            else if (oreRoll < 90) return B(deepslate ? DEEPSLATE_IRON_ORE : IRON_ORE);
+            else if (oreRoll < 97) return B(deepslate ? DEEPSLATE_LAPIS_ORE : LAPIS_ORE);
+            else return B(deepslate ? DEEPSLATE_DIAMOND_ORE : DIAMOND_ORE);
+        } else if (r < 18) {
+            return B(t.decorPrimary());
+        } else if (r < 22) {
+            return B(t.decorSecondary());
+        }
+        return B(base);
     }
 
     // ═══════════════ MOB TABLE (vagues de combat) ═══════════════

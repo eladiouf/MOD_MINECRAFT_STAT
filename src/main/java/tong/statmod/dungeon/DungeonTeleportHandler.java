@@ -26,7 +26,7 @@ import java.util.Set;
 public final class DungeonTeleportHandler {
 
     /** Espacement horizontal entre centres d'îles (assez pour une arène boss 40×40). */
-    public static final int FLOOR_SPACING = 200;
+    public static final int FLOOR_SPACING = 300;
     /** Nombre d'étages par rangée de la grille. */
     public static final int GRID_COLS = 10;
     /** Y constant pour toutes les îles. */
@@ -108,6 +108,20 @@ public final class DungeonTeleportHandler {
         int row = Math.floorDiv(z + FLOOR_SPACING / 2, FLOOR_SPACING);
         int floor = row * GRID_COLS + col + 1;
         return Math.max(1, floor);
+    }
+
+    /**
+     * Tous les joueurs actuellement présents sur l'étage {@code floor} du donjon (co-op).
+     * Base des mécaniques multijoueur : conquête partagée, scaling de vague, points d'assist.
+     */
+    public static java.util.List<ServerPlayer> playersOnFloor(ServerLevel dungeonLevel, int floor) {
+        java.util.List<ServerPlayer> out = new java.util.ArrayList<>();
+        for (ServerPlayer p : dungeonLevel.players()) {
+            if (p.isAlive() && floorAtPos(p.getBlockX(), p.getBlockZ()) == floor) {
+                out.add(p);
+            }
+        }
+        return out;
     }
 
     /**

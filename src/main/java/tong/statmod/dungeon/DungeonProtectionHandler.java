@@ -3,6 +3,7 @@ package tong.statmod.dungeon;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 
@@ -46,6 +47,37 @@ public final class DungeonProtectionHandler {
         if (!inDungeon(event.getLevel())) return;
         if (event.getEntity() instanceof Player p && isBuilder(p)) return;
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (!inDungeon(event.getLevel())) return;
+        if (isBuilder(event.getEntity())) return;
+
+        net.minecraft.world.item.ItemStack stack = event.getItemStack();
+        if (!stack.isEmpty() && isForbiddenItem(stack.getItem())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (!inDungeon(event.getLevel())) return;
+        if (isBuilder(event.getEntity())) return;
+
+        net.minecraft.world.item.ItemStack stack = event.getItemStack();
+        if (!stack.isEmpty() && isForbiddenItem(stack.getItem())) {
+            event.setCanceled(true);
+        }
+    }
+
+    private static boolean isForbiddenItem(net.minecraft.world.item.Item item) {
+        if (item == null) return false;
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).toString();
+        return id.contains("bucket")
+                || item instanceof net.minecraft.world.item.HangingEntityItem
+                || item instanceof net.minecraft.world.item.ArmorStandItem
+                || item instanceof net.minecraft.world.item.BoatItem;
     }
 
     @SubscribeEvent

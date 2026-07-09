@@ -45,6 +45,8 @@ public final class DungeonDetailing {
         groundClutter(lv, sp, theme, rng);     // petits objets au sol le long des murs
         rubblePiles(lv, sp, theme, rng);       // tas de gravats contre les murs
         themeSignature(lv, sp, theme, rng);    // détail signature du thème (flaques, braises, cristaux)
+        crackedWalls(lv, sp, theme, rng);      // fissures et trous dans les murs
+        crumbledPillars(lv, sp, theme, rng);   // colonnes brisées avec débris au sol
     }
 
     // ── 1. Torches/lanternes murales, réparties régulièrement le long des 4 murs ──
@@ -188,6 +190,9 @@ public final class DungeonDetailing {
             case INFERNAL -> S(lv, g, B(rng.nextBoolean() ? Blocks.MAGMA_BLOCK : Blocks.BONE_BLOCK));
             case RESTLESS_DEAD -> S(lv, g, B(Blocks.BONE_BLOCK));
             case ARCANE, ABYSS -> S(lv, g, B(Blocks.AMETHYST_CLUSTER)); // pousse sur le sol (face up)
+            case QUARK_LIMESTONE -> S(lv, g, B(Blocks.COBWEB));
+            case QUARK_JASPER -> S(lv, g, B(Blocks.LANTERN));
+            case QUARK_MYALITE -> S(lv, g, B(QuarkDungeonDecorator.myaliteCrystal()));
             default -> S(lv, g, B(Blocks.COBWEB));
         }
     }
@@ -228,7 +233,52 @@ public final class DungeonDetailing {
                 case HARVEST -> S(lv, floor, B(Blocks.PODZOL));
                 case RESTLESS_DEAD -> S(lv, floor, B(Blocks.SOUL_SAND));
                 case ARCANE, ABYSS -> S(lv, floor, B(Blocks.AMETHYST_BLOCK));
+                case QUARK_LIMESTONE -> S(lv, floor, B(QuarkDungeonDecorator.shale()));
+                case QUARK_JASPER -> S(lv, floor, B(QuarkDungeonDecorator.ironPlate()));
+                case QUARK_MYALITE -> S(lv, floor, B(QuarkDungeonDecorator.duskyMyalite()));
                 default -> { /* rien */ }
+            }
+        }
+    }
+
+    private static void crackedWalls(ServerLevel lv, BlockPos sp, ThemePalette theme, Random rng) {
+        int cracks = 15 + rng.nextInt(15);
+        BlockState stair = B(theme.stair());
+        BlockState slab = B(theme.slab());
+        for (int i = 0; i < cracks; i++) {
+            int y = 1 + rng.nextInt(WALL_H - 2);
+            int x = rng.nextInt(2 * HX - 4) - (HX - 2);
+            int z = rng.nextBoolean() ? -HZ + 1 : HZ - 1;
+            if (rng.nextBoolean()) {
+                int temp = x; x = z; z = temp; // along the other walls
+            }
+            BlockPos p = O(sp, x, y, z);
+            if (lv.getBlockState(p).is(theme.base())) {
+                S(lv, p, rng.nextBoolean() ? stair : slab);
+            }
+        }
+    }
+
+    private static void crumbledPillars(ServerLevel lv, BlockPos sp, ThemePalette theme, Random rng) {
+        // Scan random coordinates in the room for decorPrimary columns
+        for (int i = 0; i < 30; i++) {
+            int x = rng.nextInt(2 * HX - 10) - (HX - 5);
+            int z = rng.nextInt(2 * HZ - 10) - (HZ - 5);
+            BlockPos basePos = O(sp, x, 0, z);
+            if (lv.getBlockState(basePos).is(theme.decorPrimary())) {
+                // We found a column! Let's crumble it at y = 1 or 2
+                int y = 1 + rng.nextInt(3);
+                BlockPos target = O(sp, x, y, z);
+                if (lv.getBlockState(target).is(theme.decorPrimary())) {
+                    S(lv, target, B(theme.stair()));
+                    // Place some rubble on the floor nearby
+                    for (Direction dir : Direction.Plane.HORIZONTAL) {
+                        BlockPos rubble = basePos.relative(dir);
+                        if (isAir(lv, rubble) && rng.nextBoolean()) {
+                            S(lv, rubble, B(theme.slab()));
+                        }
+                    }
+                }
             }
         }
     }

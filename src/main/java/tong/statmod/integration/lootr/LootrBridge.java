@@ -74,4 +74,36 @@ public final class LootrBridge {
             c.setChanged();
         }
     }
+
+    public static void placeIndividualTrappedChest(ServerLevel lv, BlockPos pos, ResourceKey<LootTable> lootTable) {
+        if (!loaded()) {
+            placeVanillaTrappedChest(lv, pos, lootTable);
+            return;
+        }
+
+        try {
+            placeLootrTrappedChest(lv, pos, lootTable);
+        } catch (Exception e) {
+            tong.statmod.STATMod.LOGGER.warn("[TrialDungeon] Lootr trapped chest placement failed, using vanilla: {}", e.getMessage());
+            placeVanillaTrappedChest(lv, pos, lootTable);
+        }
+    }
+
+    private static void placeVanillaTrappedChest(ServerLevel lv, BlockPos pos, ResourceKey<LootTable> lootTable) {
+        lv.setBlock(pos, Blocks.TRAPPED_CHEST.defaultBlockState(), 3);
+        if (lv.getBlockEntity(pos) instanceof RandomizableContainerBlockEntity c) {
+            c.setLootTable(lootTable, lv.random.nextLong());
+        }
+    }
+
+    private static void placeLootrTrappedChest(ServerLevel lv, BlockPos pos, ResourceKey<LootTable> lootTable) throws Exception {
+        lv.setBlock(pos, Blocks.TRAPPED_CHEST.defaultBlockState(), 3);
+        if (lv.getBlockEntity(pos) instanceof RandomizableContainerBlockEntity c) {
+            c.setLootTable(lootTable, lv.random.nextLong());
+            var nbt = c.getPersistentData();
+            nbt.putBoolean("lootr:individual", true);
+            nbt.putString("lootr:table", lootTable.location().toString());
+            c.setChanged();
+        }
+    }
 }

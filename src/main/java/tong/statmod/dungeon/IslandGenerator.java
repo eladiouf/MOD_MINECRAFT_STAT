@@ -21,7 +21,9 @@ import tong.statmod.STATMod;
  */
 public final class IslandGenerator {
 
-    static final int R = 80;
+    static final int R = 148;
+    /** Marge de la bounding box de regen au-delà du rayon d'île (couvre la cage barrière R+2). */
+    static final int CLEAR_MARGIN = 4;
 
     private IslandGenerator() {}
 
@@ -52,9 +54,11 @@ public final class IslandGenerator {
 
     public static BoundingBox floorBoundingBox(int floor) {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        // Y : de l'underside conique (~ -30 avec R=80) jusqu'au sommet des tours (~ +22). Couvre
-        // tout pour que /statdungeon regen efface la structure entière avant reconstruction.
-        return new BoundingBox(sp.getX()-R, sp.getY()-34, sp.getZ()-R, sp.getX()+R, sp.getY()+24, sp.getZ()+R);
+        // Doit couvrir TOUT ce que la génération pose, sinon /statdungeon regen laisse des résidus :
+        // underside conique (jusqu'à ~ -43 avec maxDepth=R/2+2 sur le cône r=80, + végétation
+        // suspendue -44) ET la cage barrière (Y -48..+50, horizontal ±(R+2)). Marges incluses.
+        int h = R + CLEAR_MARGIN;
+        return new BoundingBox(sp.getX()-h, sp.getY()-52, sp.getZ()-h, sp.getX()+h, sp.getY()+54, sp.getZ()+h);
     }
 
     static int radiusFor(int floor) { return R; }

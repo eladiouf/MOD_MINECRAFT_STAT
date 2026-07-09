@@ -34,7 +34,7 @@ import static net.minecraft.world.level.block.Blocks.*;
 public final class DungeonArchitect {
 
     /** Demi-emprise de la forteresse (rectangle ~128×104, tient sur l'île R=80). Agrandie 2026-07-05. */
-    static final int HX = 64, HZ = 52;
+    static final int HX = 134, HZ = 122;
     /** Hauteur intérieure (plafond à {@code y=WALL_H}). Relevée pour des étages plus imposants. */
     static final int WALL_H = 12;
 
@@ -82,7 +82,9 @@ public final class DungeonArchitect {
         Random rng = new Random(floor * 0x9E3779B97F4A7C15L + 0xD1CE);
 
         // Base flottante (underside) uniquement - le terrain naturel est déjà généré par IslandGenerator
-        DungeonMasterpiece.buildUnderside(lv, sp, t);
+        long islandSeed = IslandShaper.seedFor(floor);
+        IslandShaper shaper = new IslandShaper(islandSeed, DungeonMasterpiece.R);
+        DungeonMasterpiece.buildUnderside(lv, sp, t, shaper, floor);
 
         // Dégage tout l'intérieur (headroom pour la structure + le combat).
         air(lv, sp, -HX + 1, 0, -HZ + 1, HX - 1, WALL_H + 2, HZ - 1);

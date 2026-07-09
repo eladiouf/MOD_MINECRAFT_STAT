@@ -19,23 +19,27 @@ import static tong.statmod.dungeon.DungeonArchitect.O;
 import static tong.statmod.dungeon.DungeonArchitect.S;
 
 /**
- * Chambre-forte ULTRA-SECRÈTE (feedback playtest 2026-07-09).
+ * Chambre-forte ULTRA-SECRÈTE (feedback playtest 2026-07-09 ; entrée « sanctuaire » au lieu d'une
+ * plaque générique, 2ᵉ feedback du même jour).
  *
- * <p>~1 étage de combat sur 7 cache, quelque part au sol d'une pièce, une <b>plaque de
- * téléportation</b> (command block {@code tp}) indiscernable d'une plaque de piège. Elle
- * téléporte dans une chambre-forte scellée flottant <b>haut au-dessus de l'île</b> (dans la cage
- * barrière → impossible de s'en échapper autrement que par la plaque de retour) :
+ * <p>~1 étage de combat sur 7 cache, quelque part au sol d'une pièce, un <b>sanctuaire</b> : une
+ * pierre de guidage (lodestone) surmontée d'un cristal d'améthyste — le seul bloc « magnétique »
+ * du donjon, l'anomalie que l'explorateur attentif remarque. <b>Clic droit sur la pierre</b> →
+ * téléportation (son d'enderman + particules de portail) dans une chambre-forte scellée flottant
+ * haut au-dessus de l'île (dans la cage barrière → impossible de s'en échapper autrement) :
  * <ul>
  *   <li>au centre, un <b>piédestal</b> portant un coffre avec une <b>arme unique</b> du modpack
  *       (Simply Swords runic → légendaires → armes de boss SLU selon la profondeur), renommée en
  *       relique ;</li>
  *   <li>4 coffres de trésor riches ({@code dungeon_treasure}) aux coins + blocs précieux ;</li>
- *   <li>une plaque de <b>retour</b> qui ramène au pad d'apparition de l'étage.</li>
+ *   <li>une seconde pierre de guidage pour <b>revenir</b> au pad d'apparition de l'étage.</li>
  * </ul>
  *
- * <p>C'est l'anti-piège : certaines plaques punissent, celle-ci récompense royalement — le joueur
- * ne peut plus ignorer AUCUNE plaque (renforcement à ratio variable, encore).
+ * <p>La téléportation est gérée en Java ({@link #onUseLodestone}) : toute lodestone du donjon est
+ * forcément à nous (la pose de blocs y est interdite aux joueurs). La direction est déduite de
+ * l'altitude : en bas → on entre ; dans la chambre → on ressort.
  */
+@net.neoforged.fml.common.EventBusSubscriber(modid = tong.statmod.STATMod.MODID)
 public final class DungeonUltraVault {
 
     /** Position de la chambre relative au centre d'île : haut dans la cage, décalée du donjon. */
@@ -64,10 +68,42 @@ public final class DungeonUltraVault {
                 && Math.floorMod(floor * 7919 + 11, 7) == 0;
     }
 
-    /** Commande de téléportation VERS la chambre (pour la plaque d'entrée cachée). */
-    static String entryCommand(BlockPos islandSp) {
-        BlockPos in = O(islandSp, VX, VY + 1, VZ - HALF + 2); // bord sud de la chambre
-        return "tp @p[distance=..2] " + in.getX() + " " + in.getY() + " " + in.getZ();
+    /** Pose le sanctuaire d'entrée : pierre de guidage + cristal d'améthyste au sommet. */
+    static void placeShrine(ServerLevel lv, BlockPos pos) {
+        S(lv, pos, B(Blocks.LODESTONE));
+        S(lv, pos.above(), B(Blocks.AMETHYST_CLUSTER));
+    }
+
+    /**
+     * Clic droit sur une pierre de guidage du donjon → téléportation. En bas (étage) → on entre
+     * dans la chambre ; en haut (chambre) → on ressort au pad d'apparition. Toute lodestone du
+     * donjon est à nous : la pose de blocs y est interdite aux joueurs en survie.
+     */
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onUseLodestone(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide) return;
+        if (!(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
+        if (!event.getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
+        if (!event.getLevel().getBlockState(event.getPos()).is(Blocks.LODESTONE)) return;
+
+        int floor = DungeonTeleportHandler.floorAtPos(event.getPos().getX(), event.getPos().getZ());
+        if (!isVaultFloor(floor)) return;
+
+        BlockPos islandSp = DungeonTeleportHandler.floorSpawnPos(floor);
+        boolean inVault = player.getBlockY() >= islandSp.getY() + VY - 2;
+        BlockPos dest = inVault
+                ? DungeonTeleportHandler.floorPlayerSpawnPos(floor)
+                : O(islandSp, VX, VY + 1, VZ - HALF + 2); // bord sud de la chambre
+
+        ServerLevel lv = player.serverLevel();
+        lv.sendParticles(net.minecraft.core.particles.ParticleTypes.PORTAL,
+                player.getX(), player.getY() + 1.0, player.getZ(), 40, 0.4, 0.8, 0.4, 0.1);
+        player.teleportTo(dest.getX() + 0.5, dest.getY(), dest.getZ() + 0.5);
+        player.playNotifySound(net.minecraft.sounds.SoundEvents.ENDERMAN_TELEPORT,
+                net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, inVault ? 1.2f : 0.7f);
+        player.displayClientMessage(Component.translatable(
+                inVault ? "dungeon.ultravault.return" : "dungeon.ultravault.enter"), true);
+        event.setCanceled(true);
     }
 
     /** Construit la chambre-forte au-dessus de l'île (appelé une fois par étage élu). */
@@ -112,10 +148,8 @@ public final class DungeonUltraVault {
         S(lv, c.offset(2, 1, 0), B(Blocks.GOLD_BLOCK));
         S(lv, c.offset(0, 1, 2), B(Blocks.EMERALD_BLOCK));
 
-        // ── Plaque de RETOUR (bord nord) : ramène au pad d'apparition de l'étage ──
-        BlockPos pad = DungeonTeleportHandler.floorPlayerSpawnPos(floor);
-        DungeonTraps.placeCommandTrap(lv, c.offset(0, 1, HALF - 1),
-                "tp @p[distance=..2] " + pad.getX() + " " + pad.getY() + " " + pad.getZ());
+        // ── Pierre de RETOUR (bord nord) : clic droit → ramène au pad d'apparition de l'étage ──
+        placeShrine(lv, c.offset(0, 1, HALF - 1));
     }
 
     /** L'arme-relique de l'étage : pool selon la profondeur, renommée, premier id présent. */

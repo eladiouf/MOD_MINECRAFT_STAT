@@ -528,9 +528,10 @@ public final class DungeonRoomChain {
     }
 
     /**
-     * Plaque de téléportation cachée vers la {@link DungeonUltraVault} : posée au sol d'une pièce
-     * élue, dans un quadrant, indiscernable d'une plaque de piège — c'est le point : on ne peut
-     * plus se permettre d'ignorer les plaques. Construit aussi la chambre-forte elle-même.
+     * Sanctuaire caché vers la {@link DungeonUltraVault} : une pierre de guidage surmontée d'un
+     * cristal d'améthyste, posée au sol d'une pièce élue, dans un quadrant — l'anomalie discrète
+     * que l'explorateur attentif remarque. Clic droit sur la pierre → téléportation vers la
+     * chambre-forte. Construit aussi la chambre-forte elle-même.
      */
     private static void maybePlaceUltraVaultEntry(ServerLevel lv, BlockPos sp, BlockPalette t,
                                                   DungeonLayout.Room r, int floor) {
@@ -539,8 +540,7 @@ public final class DungeonRoomChain {
         // Pièce élue de l'étage (différente en général de celle de la salle secrète).
         if (r.index() != 2 + Math.floorMod(floor * 5 + 3, 7)) return;
 
-        boolean fixed = r.isFirst() || r.isLast();
-        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
+        Shape shape = shapeFor(floor, r.index());
 
         // Cherche une case intérieure valide dans le quadrant sud-est, hors axes de portes.
         int cx = r.centerX(), cz = r.centerZ();
@@ -548,7 +548,7 @@ public final class DungeonRoomChain {
             for (int z = cz + 3; z <= r.maxZ() - 2; z++) {
                 if (x == cx || z == cz) continue;
                 if (!inside(r, x, z, shape) || getWallDistance(r, x, z, shape) < 2) continue;
-                DungeonTraps.placeCommandTrap(lv, O(sp, x, 0, z), DungeonUltraVault.entryCommand(sp));
+                DungeonUltraVault.placeShrine(lv, O(sp, x, 0, z));
                 DungeonUltraVault.build(lv, sp, t, floor);
                 return;
             }

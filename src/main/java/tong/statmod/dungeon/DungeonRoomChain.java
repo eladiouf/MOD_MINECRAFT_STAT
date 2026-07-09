@@ -522,6 +522,37 @@ public final class DungeonRoomChain {
         DungeonTraps.place(lv, sp, r, floor);
         // Salle secrète à récompenses (≈ 1 par étage) — placée EN DERNIER pour ne rien écraser.
         DungeonSecretRoom.maybePlace(lv, sp, t, r, floor);
+        // Chambre-forte ULTRA-secrète (~1 étage de combat sur 7) : plaque de tp cachée ici,
+        // chambre flottante construite au-dessus de l'île.
+        maybePlaceUltraVaultEntry(lv, sp, t, r, floor);
+    }
+
+    /**
+     * Plaque de téléportation cachée vers la {@link DungeonUltraVault} : posée au sol d'une pièce
+     * élue, dans un quadrant, indiscernable d'une plaque de piège — c'est le point : on ne peut
+     * plus se permettre d'ignorer les plaques. Construit aussi la chambre-forte elle-même.
+     */
+    private static void maybePlaceUltraVaultEntry(ServerLevel lv, BlockPos sp, BlockPalette t,
+                                                  DungeonLayout.Room r, int floor) {
+        if (!DungeonUltraVault.isVaultFloor(floor)) return;
+        if (r.isFirst() || r.isLast()) return;
+        // Pièce élue de l'étage (différente en général de celle de la salle secrète).
+        if (r.index() != 2 + Math.floorMod(floor * 5 + 3, 7)) return;
+
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
+
+        // Cherche une case intérieure valide dans le quadrant sud-est, hors axes de portes.
+        int cx = r.centerX(), cz = r.centerZ();
+        for (int x = cx + 3; x <= r.maxX() - 2; x++) {
+            for (int z = cz + 3; z <= r.maxZ() - 2; z++) {
+                if (x == cx || z == cz) continue;
+                if (!inside(r, x, z, shape) || getWallDistance(r, x, z, shape) < 2) continue;
+                DungeonTraps.placeCommandTrap(lv, O(sp, x, 0, z), DungeonUltraVault.entryCommand(sp));
+                DungeonUltraVault.build(lv, sp, t, floor);
+                return;
+            }
+        }
     }
 
     /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */

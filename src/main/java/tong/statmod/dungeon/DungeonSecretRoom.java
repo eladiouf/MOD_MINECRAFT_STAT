@@ -14,12 +14,17 @@ import static tong.statmod.dungeon.DungeonArchitect.O;
 import static tong.statmod.dungeon.DungeonArchitect.S;
 
 /**
- * Mission M6 — Salles secrètes à récompenses (2026-07-05).
+ * Mission M6 — Salles secrètes (2026-07-05, refonte « pari » 2026-07-09).
  *
- * <p>Une salle par étage cache une <b>chambre au trésor</b> creusée SOUS une pièce de combat,
- * accessible par une <b>trappe en bois</b> dissimulée dans le sol (le seul bloc de bois d'une pièce
- * de pierre → l'indice pour l'explorateur attentif) + une échelle. La chambre contient des coffres
- * de trésor riches ({@code dungeon_treasure}), une statue-trophée et de la lumière.
+ * <p>Une salle par étage cache une <b>chambre</b> creusée SOUS une pièce de combat, accessible par
+ * une <b>trappe en bois</b> dissimulée dans le sol (le seul bloc de bois d'une pièce de pierre →
+ * l'indice pour l'explorateur attentif) + une échelle.
+ *
+ * <p><b>Le pari</b> (feedback playtest 2026-07-09) : d'en haut, impossible de savoir — la chambre
+ * est soit <b>bénie</b> (~60 % : 2 coffres de trésor + plaque de bénédiction : absorption,
+ * régénération, chance ou XP), soit <b>maudite</b> (~40 % : 1 seul coffre, et la plaque déclenche
+ * wither, cécité ou une embuscade de vex). La plaque est au centre, entre l'échelle et les
+ * coffres. Déterministe par étage. Renforcement à ratio variable : on descend TOUJOURS.
  *
  * <p>Repère : sol de pièce à y=-1. La chambre est sous l'underside, en {@code y ∈ [-6,-3]}.
  */
@@ -27,6 +32,26 @@ public final class DungeonSecretRoom {
 
     private static final int FLOOR_Y = -6;   // sol de la chambre
     private static final int CEIL_Y = -3;    // plafond de la chambre
+
+    /**
+     * Bénédictions possibles (chambre bénie) — une par étage, déterministe. Uniquement des effets
+     * (re-marcher sur la plaque ne fait que RAFRAÎCHIR l'effet — pas de farm possible, contrairement
+     * à un don d'XP/objets qui serait exploitable à répétition).
+     */
+    private static final String[] BLESSINGS = {
+            "effect give @p[distance=..5] minecraft:absorption 120 2",
+            "effect give @p[distance=..5] minecraft:regeneration 15 1",
+            "effect give @p[distance=..5] minecraft:luck 300 1",
+            "effect give @p[distance=..5] minecraft:strength 300 0",
+    };
+
+    /** Malédictions possibles (chambre maudite) — une par étage, déterministe. */
+    private static final String[] CURSES = {
+            "effect give @p[distance=..5] minecraft:wither 6 1",
+            "effect give @p[distance=..5] minecraft:blindness 10 0",
+            "execute at @p[distance=..5] run summon minecraft:vex ~ ~1 ~ {NeoForgeData:{"
+                    + DungeonSpawnGuard.AUTHORIZED_TAG + ":1b}}",
+    };
 
     private DungeonSecretRoom() {}
 
@@ -72,9 +97,21 @@ public final class DungeonSecretRoom {
                 .setValue(TrapDoorBlock.FACING, Direction.SOUTH);
         S(lv, O(sp, cx, -1, cz - 2), trap);
 
-        // ── Récompenses : 2 coffres de trésor + statue-trophée + lumière ──
-        DungeonArchitect.placeChest(lv, O(sp, cx - 1, FLOOR_Y + 1, cz + 1));
-        DungeonArchitect.placeChest(lv, O(sp, cx + 1, FLOOR_Y + 1, cz + 1));
+        // ── Le pari : chambre bénie (~60 %) ou maudite (~40 %), indiscernable d'en haut ──
+        boolean blessed = Math.floorMod(floor * 92821 + 37, 100) < 60;
+
+        if (blessed) {
+            // 2 coffres de trésor + plaque de bénédiction au centre (sur le chemin des coffres).
+            DungeonArchitect.placeChest(lv, O(sp, cx - 1, FLOOR_Y + 1, cz + 1));
+            DungeonArchitect.placeChest(lv, O(sp, cx + 1, FLOOR_Y + 1, cz + 1));
+            String blessing = BLESSINGS[Math.floorMod(floor * 31, BLESSINGS.length)];
+            DungeonTraps.placeCommandTrap(lv, O(sp, cx, FLOOR_Y + 1, cz), blessing);
+        } else {
+            // 1 seul coffre — et la plaque centrale est un piège (le risque paie moins).
+            DungeonArchitect.placeChest(lv, O(sp, cx + 1, FLOOR_Y + 1, cz + 1));
+            String curse = CURSES[Math.floorMod(floor * 53, CURSES.length)];
+            DungeonTraps.placeCommandTrap(lv, O(sp, cx, FLOOR_Y + 1, cz), curse);
+        }
         S(lv, O(sp, cx, FLOOR_Y + 1, cz + 2), B(t.decorPrimary()));
         S(lv, O(sp, cx, CEIL_Y, cz), B(t.light())); // fanal au plafond
     }

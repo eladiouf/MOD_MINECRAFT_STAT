@@ -138,8 +138,11 @@ public final class DungeonTraps {
         }
     }
 
-    /** Pose un piège : command block impulsion à la place du sol (y-1), plaque de pression dessus. */
-    private static void placeCommandTrap(ServerLevel lv, BlockPos platePos, String command) {
+    /**
+     * Pose un piège : command block impulsion à la place du sol (y-1), plaque de pression dessus.
+     * Package-private : réutilisé par {@link DungeonSecretRoom} (chambres bénies/maudites).
+     */
+    static void placeCommandTrap(ServerLevel lv, BlockPos platePos, String command) {
         BlockPos cbPos = platePos.below();
         S(lv, cbPos, Blocks.COMMAND_BLOCK.defaultBlockState());
         if (lv.getBlockEntity(cbPos) instanceof CommandBlockEntity cbe) {

@@ -247,6 +247,9 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **IDs Macaw's cassés corrigés** (vérifiés contre les jars) : `whisper_oak_door`→`oak_whispering_door`, `iron_jail_door`→`jail_door`, `chain_lamp`→`chain_lantern`, `wall_lantern`→`covered_wall_lantern`. L'ancien bug faisait échouer TOUTE résolution → fallback porte de fer + levier permanent en jeu.
 - **Zéro redstone dans le donjon** : plus de porte de fer ni levier (portes Macaw's, fallback épicéa, tout s'ouvre à la main) ; pseudo-puzzle du vault (bouton + poudre sous le sol) supprimé ; pièges distributeur+plaque et distributeur-au-dessus-du-coffre remplacés par des **pièges à command block** cachés sous le sol/coffre (crocs d'évocateur, poison, lenteur, wither ≥ 40). ⚠ Serveur dédié : `enable-command-block=true` requis dans server.properties.
 - **Échelles de mezzanine** interdites sur les axes de portes (elles bouchaient parfois le passage de 1 bloc).
+- **Mobs disciplinés** : toute entité autorisée est **persistante** (les étages de ~296 blocs dépassaient la distance de despawn de 128 → vague inclearable) et `DungeonMobDiscipline` interdit à un mob autorisé de cibler/blesser un autre mob autorisé (le pool multi-mods s'entretuait : piglins vs wither squelettes, flèches perdues → représailles).
+- **Portes par thème** : `MacawDungeonDecorator.themedDoor` mappe les 14 arcs → 14 portes Macaw's distinctes (ids vérifiés contre le jar).
+- **Arsenal de pièges command block** : 8 de base (crocs ×2, poison, lenteur, cage de toiles, lévitation, cécité, embuscade cave spider) + 4 profondeurs ≥40 (wither, enclume, `spreadplayers`, vexes). Embuscades invoquées avec `{NeoForgeData:{statmod_dungeon_authorized:1b}}` → passent le garde. Jamais de TNT/foudre (protège le bâti).
 
 ### Fichiers clés
 

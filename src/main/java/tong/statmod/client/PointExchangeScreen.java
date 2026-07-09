@@ -65,9 +65,11 @@ public class PointExchangeScreen extends Screen {
         this.renderBackground(g, mouseX, mouseY, partialTick);
         int cx = this.width / 2;
         int cy = this.height / 2;
-        g.drawCenteredString(this.font, this.title, cx, cy - 60, 0xFFFFFF);
-        g.drawCenteredString(this.font, Component.translatable("shop.exchange.points", points), cx, cy - 44, 0xFFE066);
-        g.drawCenteredString(this.font, Component.translatable("shop.exchange.coins", coins), cx, cy - 32, 0x66FF66);
+        g.drawCenteredString(this.font, this.title, cx, cy - 68, 0xFFFFFF);
+        g.drawCenteredString(this.font, Component.translatable("shop.exchange.points", points), cx, cy - 52, 0xFFE066);
+        g.drawCenteredString(this.font, Component.translatable("shop.exchange.coins", coins), cx, cy - 40, 0x66FF66);
+        // Taux de conversion affiché sous les soldes
+        g.drawCenteredString(this.font, Component.translatable("shop.exchange.rate", String.format("%.1f", rate)), cx, cy - 28, 0xBBBBBB);
         // Aperçu en direct du résultat selon le montant saisi (borné, comme le serveur).
         int amount = Math.max(0, Math.min(parseAmount(), points));
         int afterPoints = points - amount;
@@ -75,6 +77,11 @@ public class PointExchangeScreen extends Screen {
         int color = afterPoints == 0 ? 0xFF5555 : 0xAAAAAA; // rouge si ça vide les points (éjection)
         g.drawCenteredString(this.font,
                 Component.translatable("shop.exchange.preview", afterPoints, afterCoins), cx, cy - 20, color);
+        // Avertissement d'éjection si le joueur convertit tous ses points
+        if (amount > 0 && afterPoints == 0) {
+            g.drawCenteredString(this.font,
+                    Component.translatable("shop.exchange.warning_ejection"), cx, cy + 62, 0xFF5555);
+        }
         super.render(g, mouseX, mouseY, partialTick);
     }
 

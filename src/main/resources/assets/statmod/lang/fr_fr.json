@@ -266,6 +266,7 @@
   "shop.exchange.max_safe": "Max sûr",
   "shop.exchanger.name": "Changeur",
   "shop.unavailable": "Le shop est indisponible (SDM non installé).",
+  "shop.exchange.rate": "Taux : 1 point = %s coins",
   "dungeon.ejected.no_points": "Plus de points — éjecté du donjon !",
   "dungeon.revived.resistance": "§a✔ Réanimé ! Résistance V accordée pendant 5s.",
   "dungeon.revived.campfire": "§6🔥 Le feu de camp vous réanime !"

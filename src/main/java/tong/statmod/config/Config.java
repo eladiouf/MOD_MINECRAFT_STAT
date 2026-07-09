@@ -68,7 +68,7 @@ public class Config {
                 .defineInRange("l2HostilityCap", 100, 0, 500);
         SHOP_CURRENCY_NAME = BUILDER
                 .comment("Nom de la monnaie SDM créditée à l'échange de points (doit correspondre à la devise du shop SDM).")
-                .define("shopCurrencyName", "dungeon_coins");
+                .define("shopCurrencyName", "FDP_cfa");
         POINT_TO_COIN_RATE = BUILDER
                 .comment("Taux de conversion : 1 point échangé = ce nombre de coins.")
                 .defineInRange("pointToCoinRate", 1.0, 0.0, 100.0);

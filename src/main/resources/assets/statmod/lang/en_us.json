@@ -330,6 +330,7 @@
   "shop.exchange.max_safe": "Max safe",
   "shop.exchanger.name": "Coin Changer",
   "shop.unavailable": "The shop is unavailable (SDM not installed).",
+  "shop.exchange.rate": "Rate: 1 point = %s coins",
   "dungeon.ejected.no_points": "Out of points — ejected from the dungeon!",
   "dungeon.revived.resistance": "§a✔ Revived! Resistance V granted for 5s.",
   "dungeon.revived.campfire": "§6🔥 The campfire revives you!"

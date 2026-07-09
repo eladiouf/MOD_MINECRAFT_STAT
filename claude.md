@@ -250,6 +250,8 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **Mobs disciplinés** : toute entité autorisée est **persistante** (les étages de ~296 blocs dépassaient la distance de despawn de 128 → vague inclearable) et `DungeonMobDiscipline` interdit à un mob autorisé de cibler/blesser un autre mob autorisé (le pool multi-mods s'entretuait : piglins vs wither squelettes, flèches perdues → représailles).
 - **Portes par thème** : `MacawDungeonDecorator.themedDoor` mappe les 14 arcs → 14 portes Macaw's distinctes (ids vérifiés contre le jar).
 - **Arsenal de pièges command block** : 8 de base (crocs ×2, poison, lenteur, cage de toiles, lévitation, cécité, embuscade cave spider) + 4 profondeurs ≥40 (wither, enclume, `spreadplayers`, vexes). Embuscades invoquées avec `{NeoForgeData:{statmod_dungeon_authorized:1b}}` → passent le garde. Jamais de TNT/foudre (protège le bâti).
+- **Indestructible aussi par les mobs** : `EntityMobGriefingEvent` refusé (endermen, zombies casseurs de portes en bois, ravagers, feu des fireballs), `LivingDestroyBlockEvent` annulé (wither, boss moddés), outils de terrain + briquet bloqués en survie. Exception : `FallingBlockEntity` atterrit (enclume du piège, gravier).
+- **Salles secrètes « pari »** (`DungeonSecretRoom`) : la chambre sous trappe est bénie (~60 % : 2 coffres + plaque de bénédiction — effets uniquement, pas farmable) ou maudite (~40 % : 1 coffre + wither/cécité/vex). Indiscernable d'en haut, déterministe par étage.
 
 ### Fichiers clés
 

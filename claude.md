@@ -252,6 +252,7 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **Arsenal de pièges command block** : 8 de base (crocs ×2, poison, lenteur, cage de toiles, lévitation, cécité, embuscade cave spider) + 4 profondeurs ≥40 (wither, enclume, `spreadplayers`, vexes). Embuscades invoquées avec `{NeoForgeData:{statmod_dungeon_authorized:1b}}` → passent le garde. Jamais de TNT/foudre (protège le bâti).
 - **Indestructible aussi par les mobs** : `EntityMobGriefingEvent` refusé (endermen, zombies casseurs de portes en bois, ravagers, feu des fireballs), `LivingDestroyBlockEvent` annulé (wither, boss moddés), outils de terrain + briquet bloqués en survie. Exception : `FallingBlockEntity` atterrit (enclume du piège, gravier).
 - **Salles secrètes « pari »** (`DungeonSecretRoom`) : la chambre sous trappe est bénie (~60 % : 2 coffres + plaque de bénédiction — effets uniquement, pas farmable) ou maudite (~40 % : 1 coffre + wither/cécité/vex). Indiscernable d'en haut, déterministe par étage.
+- **Chambres-fortes ULTRA-secrètes** (`DungeonUltraVault`, ~1 étage de combat/7) : plaque de tp cachée au sol d'une pièce élue, indiscernable d'une plaque de piège → chambre scellée flottant à +36 dans la cage. Piédestal avec **arme unique** renommée « Relique du Donjon » (pools par profondeur : runic <30, légendaires 30-69, armes de boss SLU ≥70 — ids vérifiés jars), 4 coffres `dungeon_treasure`, blocs précieux, plaque de retour. Tests : `DungeonUltraVaultTest` (3).
 
 ### Fichiers clés
 

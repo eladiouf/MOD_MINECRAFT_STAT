@@ -77,6 +77,17 @@ public final class DungeonBlocks {
     public static final Supplier<Item> BOSS_ALTAR_ITEM = BLOCK_ITEMS.register("boss_altar",
             () -> new BlockItem(BOSS_ALTAR.get(), new Item.Properties().rarity(Rarity.EPIC)));
 
+    public static final Supplier<Block> MAGIC_TELEPORT_CIRCLE = BLOCKS.register("magic_teleport_circle",
+            () -> new MagicTeleportCircleBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_PURPLE)
+                    .instabreak()
+                    .sound(SoundType.AMETHYST)
+                    .lightLevel(state -> 15)
+                    .noOcclusion()));
+
+    public static final Supplier<Item> MAGIC_TELEPORT_CIRCLE_ITEM = BLOCK_ITEMS.register("magic_teleport_circle",
+            () -> new BlockItem(MAGIC_TELEPORT_CIRCLE.get(), new Item.Properties().rarity(Rarity.EPIC)));
+
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ITEMS.register(modBus);

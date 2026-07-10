@@ -186,7 +186,16 @@ public final class DungeonRoomChain {
             case OCTAGON -> ax + az >= 12;         // petits pans coupés élargis
             case CHAMFER -> ax + az >= 22;         // grands pans coupés élargis
             case CROSS -> !(ax < 18 && az < 18);   // coins carrés retirés élargis
-            case DIAMOND -> Math.abs(dx) / cx + Math.abs(dz) / cz <= 1.0;
+            case DIAMOND -> {
+                // Losange pur, MAIS on élargit les pointes cardinales (milieu des bords)
+                // pour que les portes (largeur 2·DOOR_HALF+1 = 3) ne soient jamais bouchées.
+                // Si le bloc est sur l'axe médian horizontal ou vertical (± marge de la porte),
+                // on considère qu'il est « intérieur » tant qu'il reste dans la case de la pièce.
+                int doorMargin = DOOR_HALF + 2; // 3 blocs de marge de chaque côté de l'axe
+                boolean onCardinalAxis = Math.abs(dx) <= doorMargin || Math.abs(dz) <= doorMargin;
+                double dist = Math.abs(dx) / cx + Math.abs(dz) / cz;
+                yield onCardinalAxis ? dist <= 1.15 : dist <= 1.0;
+            }
             case ROUND -> (dx * dx) / (cx * cx) + (dz * dz) / (cz * cz) <= 1.0;
             case STAR -> {
                 double dist = Math.abs(dx) / cx + Math.abs(dz) / cz;
@@ -414,6 +423,23 @@ public final class DungeonRoomChain {
             S(lv, O(sp, cx + dx, 1, cz + dz), AIR());
         }
         S(lv, O(sp, cx, -1, cz), B(Blocks.SEA_LANTERN)); // marqueur de spawn lisible
+
+        // Portal Columns topped with lanterns
+        for (int y = 0; y <= 2; y++) {
+            S(lv, O(sp, cx - 3, y, cz - 3), B(t.decorPrimary()));
+            S(lv, O(sp, cx + 3, y, cz - 3), B(t.decorPrimary()));
+        }
+        S(lv, O(sp, cx - 3, 3, cz - 3), B(t.light()));
+        S(lv, O(sp, cx + 3, 3, cz - 3), B(t.light()));
+
+        // Initial Supply Chest
+        BlockPos chestPos = O(sp, cx, 0, cz - 3);
+        S(lv, chestPos, Blocks.CHEST.defaultBlockState());
+        if (lv.getBlockEntity(chestPos) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c) {
+            c.setLootTable(net.minecraft.resources.ResourceKey.create(
+                net.minecraft.core.registries.Registries.LOOT_TABLE,
+                net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/spawn_bonus_chest")), lv.random.nextLong());
+        }
     }
 
     /** Dernière pièce : socle central + téléporteur vers l'étage suivant, mis en valeur. */
@@ -431,6 +457,19 @@ public final class DungeonRoomChain {
             for (int y = 0; y <= 3; y++) S(lv, O(sp, cx + c[0], y, cz + c[1]), pillar);
             S(lv, O(sp, cx + c[0], 4, cz + c[1]), light);
         }
+        // Majestic stone brick arches linking the columns at y=4
+        for (int dx = -2; dx <= 2; dx++) {
+            S(lv, O(sp, cx + dx, 4, cz - 2), pillar);
+            S(lv, O(sp, cx + dx, 4, cz + 2), pillar);
+        }
+        for (int dz = -2; dz <= 2; dz++) {
+            S(lv, O(sp, cx - 2, 4, cz + dz), pillar);
+            S(lv, O(sp, cx + 2, 4, cz + dz), pillar);
+        }
+        // Hanging chain chandelier above the teleporter
+        S(lv, O(sp, cx, 5, cz), Blocks.CHAIN.defaultBlockState());
+        S(lv, O(sp, cx, 4, cz), Blocks.SOUL_LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
+
         // Escaliers d'accès sur les 4 côtés.
         S(lv, O(sp, cx, 0, cz - 2), stair(t.stair(), Direction.SOUTH));
         S(lv, O(sp, cx, 0, cz + 2), stair(t.stair(), Direction.NORTH));
@@ -438,6 +477,13 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx + 2, 0, cz), stair(t.stair(), Direction.WEST));
         // Le bloc de descente.
         S(lv, O(sp, cx, 0, cz), B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
+    }
+
+    private static void placeSafehouseBarrel(ServerLevel lv, BlockPos pos, net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> lootTable) {
+        S(lv, pos, Blocks.BARREL.defaultBlockState());
+        if (lv.getBlockEntity(pos) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c) {
+            c.setLootTable(lootTable, lv.random.nextLong());
+        }
     }
 
     /**
@@ -470,11 +516,11 @@ public final class DungeonRoomChain {
         // (1) Base architectural layout variation
         int layout = Math.floorMod(floor * 7 + r.index() * 31, 5);
         switch (layout) {
-            case 0 -> pillarHall(lv, sp, t, r, ceilH);
+            case 0 -> pillarHall(lv, sp, t, r, ceilH, floor);
             case 1 -> centralDais(lv, sp, t, r);
-            case 2 -> columnRing(lv, sp, t, r, ceilH);
+            case 2 -> columnRing(lv, sp, t, r, ceilH, floor);
             case 3 -> themedPool(lv, sp, t, r);
-            default -> quadPillars(lv, sp, t, r, ceilH);
+            default -> quadPillars(lv, sp, t, r, ceilH, floor);
         }
 
         // (1.5) Secret Vault Button Puzzle (~25% chance in combat rooms)
@@ -556,10 +602,15 @@ public final class DungeonRoomChain {
     }
 
     /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */
-    private static void pillarHall(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
+    private static void pillarHall(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
         BlockState pillar = B(t.decorPrimary());
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
         for (int x = r.minX() + 4; x <= r.maxX() - 4; x += 6) {
             for (int z = r.minZ() + 4; z <= r.maxZ() - 4; z += 6) {
+                if (ceilH >= 12 && getWallDistance(r, x, z, shape) <= 2) {
+                    continue;
+                }
                 for (int y = 0; y < ceilH - 1; y++) S(lv, O(sp, x, y, z), pillar);
                 S(lv, O(sp, x, ceilH - 1, z), B(t.accent()));
             }
@@ -581,14 +632,21 @@ public final class DungeonRoomChain {
     }
 
     /** Anneau de colonnes autour du centre (8 colonnes montant au plafond) — arène circulaire. */
-    private static void columnRing(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
+    private static void columnRing(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
         int cx = r.centerX(), cz = r.centerZ();
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
         for (int i = 0; i < 8; i++) {
             double a = Math.PI * 2 * i / 8;
             int dx = (int) Math.round(Math.cos(a) * 6);
             int dz = (int) Math.round(Math.sin(a) * 6);
-            for (int y = 0; y < ceilH - 2; y++) S(lv, O(sp, cx + dx, y, cz + dz), B(t.decorPrimary()));
-            S(lv, O(sp, cx + dx, ceilH - 2, cz + dz), B(t.light()));
+            int px = cx + dx;
+            int pz = cz + dz;
+            if (ceilH >= 12 && getWallDistance(r, px, pz, shape) <= 2) {
+                continue;
+            }
+            for (int y = 0; y < ceilH - 2; y++) S(lv, O(sp, px, y, pz), B(t.decorPrimary()));
+            S(lv, O(sp, px, ceilH - 2, pz), B(t.light()));
         }
     }
 
@@ -619,13 +677,18 @@ public final class DungeonRoomChain {
     }
 
     /** Quatre grands piliers d'angle (2×2) montant au plafond — cadre imposant, centre dégagé, avec bases sculptées. */
-    private static void quadPillars(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {
+    private static void quadPillars(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
         int ox = Math.max(3, (r.maxX() - r.minX()) / 3);
         int oz = Math.max(3, (r.maxZ() - r.minZ()) / 3);
         BlockState pillar = B(t.decorPrimary());
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
         for (int[] c : new int[][]{{-ox, -oz}, {ox, -oz}, {-ox, oz}, {ox, oz}}) {
             int px = r.centerX() + c[0];
             int pz = r.centerZ() + c[1];
+            if (ceilH >= 12 && getWallDistance(r, px, pz, shape) <= 2) {
+                continue;
+            }
             for (int dx = 0; dx <= 1; dx++) for (int dz = 0; dz <= 1; dz++) {
                 for (int y = 0; y < ceilH - 1; y++)
                     S(lv, O(sp, px + dx, y, pz + dz), pillar);
@@ -751,10 +814,11 @@ public final class DungeonRoomChain {
         Block cookingPot = QuarkDungeonDecorator.resolve("farmersdelight:cooking_pot");
         S(lv, campfirePos.above(), cookingPot != null ? cookingPot.defaultBlockState() : Blocks.CAULDRON.defaultBlockState());
 
-        BlockState benchN = stair(Blocks.OAK_STAIRS, Direction.SOUTH);
-        BlockState benchS = stair(Blocks.OAK_STAIRS, Direction.NORTH);
-        BlockState benchW = stair(Blocks.OAK_STAIRS, Direction.EAST);
-        BlockState benchE = stair(Blocks.OAK_STAIRS, Direction.WEST);
+        Block macawChair = MacawDungeonDecorator.oakChair();
+        BlockState benchN = macawChair != null ? macawChair.defaultBlockState() : stair(Blocks.OAK_STAIRS, Direction.SOUTH);
+        BlockState benchS = macawChair != null ? macawChair.defaultBlockState() : stair(Blocks.OAK_STAIRS, Direction.NORTH);
+        BlockState benchW = macawChair != null ? macawChair.defaultBlockState() : stair(Blocks.OAK_STAIRS, Direction.EAST);
+        BlockState benchE = macawChair != null ? macawChair.defaultBlockState() : stair(Blocks.OAK_STAIRS, Direction.WEST);
 
         S(lv, O(sp, cx, 0, cz - 2), benchN);
         S(lv, O(sp, cx, 0, cz + 2), benchS);
@@ -766,12 +830,25 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx - 3, 0, cz - 2), Blocks.JUKEBOX.defaultBlockState());
         S(lv, O(sp, cx - 2, 0, cz - 3), Blocks.BOOKSHELF.defaultBlockState());
 
-        S(lv, O(sp, cx + 3, 0, cz + 3), Blocks.BARREL.defaultBlockState());
-        S(lv, O(sp, cx + 3, 0, cz + 2), Blocks.BARREL.defaultBlockState());
+        // Safehouse Food and Tool Barrels
+        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 3), net.minecraft.resources.ResourceKey.create(
+            net.minecraft.core.registries.Registries.LOOT_TABLE,
+            net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/village/village_plains_house")));
+        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 2), net.minecraft.resources.ResourceKey.create(
+            net.minecraft.core.registries.Registries.LOOT_TABLE,
+            net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/village/village_toolsmith")));
+
+        // Altar of Blessing (Lodestone + hanging soul lantern)
+        S(lv, O(sp, cx - 3, 0, cz + 3), Blocks.LODESTONE.defaultBlockState());
+        S(lv, O(sp, cx - 3, 1, cz + 3), Blocks.SOUL_LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
 
         Block cuttingBoard = QuarkDungeonDecorator.resolve("farmersdelight:cutting_board");
         if (cuttingBoard != null) {
             S(lv, O(sp, cx + 3, 0, cz + 1), cuttingBoard.defaultBlockState());
+        }
+        Block basket = QuarkDungeonDecorator.resolve("farmersdelight:basket");
+        if (basket != null) {
+            S(lv, O(sp, cx + 3, 0, cz - 1), basket.defaultBlockState());
         }
 
         DungeonExchanger.spawn(lv, O(sp, cx + 3, 0, cz - 3));
@@ -935,7 +1012,19 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx + 2, 0, cz - 1), seatNorth);
 
         // Lectern
-        S(lv, O(sp, cx, 0, cz), Blocks.LECTERN.defaultBlockState());
+        BlockPos lecternPos = O(sp, cx, 0, cz);
+        S(lv, lecternPos, Blocks.LECTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LecternBlock.HAS_BOOK, true));
+        if (lv.getBlockEntity(lecternPos) instanceof net.minecraft.world.level.block.entity.LecternBlockEntity lecternBE) {
+            net.minecraft.world.item.ItemStack bookStack = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BOOK);
+            bookStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, net.minecraft.network.chat.Component.literal("§6Secrets du Donjon"));
+            bookStack.set(net.minecraft.core.component.DataComponents.LORE, new net.minecraft.world.item.component.ItemLore(java.util.List.of(
+                net.minecraft.network.chat.Component.literal("§7Le seul bloc de bois au sol révèle"),
+                net.minecraft.network.chat.Component.literal("§7un passage secret vers le labyrinthe."),
+                net.minecraft.network.chat.Component.literal("§7Les boutons cachés sur les piliers"),
+                net.minecraft.network.chat.Component.literal("§7ouvrent les grilles scellées.")
+            )));
+            lecternBE.setBook(bookStack);
+        }
     }
 
     private static void forgeRoom(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH) {

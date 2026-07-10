@@ -38,7 +38,8 @@ public final class DungeonAmbience {
         RandomSource rng = lv.random;
         for (ServerPlayer p : lv.players()) {
             int floor = DungeonTeleportHandler.floorAtPos(p.getBlockX(), p.getBlockZ());
-            ParticleOptions particle = particleFor(ThemePalette.forFloor(floor));
+            ThemePalette theme = ThemePalette.forFloor(floor);
+            ParticleOptions particle = particleFor(theme);
             Vec3 base = p.position();
             for (int i = 0; i < PER_BURST; i++) {
                 double x = base.x + (rng.nextDouble() - 0.5) * 2 * RADIUS;
@@ -46,26 +47,39 @@ public final class DungeonAmbience {
                 double z = base.z + (rng.nextDouble() - 0.5) * 2 * RADIUS;
                 lv.sendParticles(particle, x, y, z, 1, 0.0, 0.0, 0.0, 0.0);
             }
+
+            // Periodically play themed ambient sounds (~8% chance per tick pass)
+            if (rng.nextFloat() < 0.08f) {
+                net.minecraft.sounds.SoundEvent sound = soundFor(theme);
+                if (sound != null) {
+                    lv.playSound(null, p.getX(), p.getY(), p.getZ(), sound, net.minecraft.sounds.SoundSource.AMBIENT, 0.5F, 0.8F + rng.nextFloat() * 0.4F);
+                }
+            }
         }
+    }
+
+    private static net.minecraft.sounds.SoundEvent soundFor(ThemePalette t) {
+        return switch (t) {
+            case FOURNAISE, TRIBUS -> net.minecraft.sounds.SoundEvents.LAVA_AMBIENT;
+            case DECHARNES, LEGION -> net.minecraft.sounds.SoundEvents.WITHER_AMBIENT;
+            case MAGES, GESTE, NEANT -> net.minecraft.sounds.SoundEvents.PORTAL_AMBIENT;
+            default -> net.minecraft.sounds.SoundEvents.AMBIENT_CAVE.value();
+        };
     }
 
     /** Particule d'ambiance selon l'arc/thème (identité visuelle cohérente avec la palette). */
     private static ParticleOptions particleFor(ThemePalette t) {
         return switch (t) {
-            case AWAKENING -> ParticleTypes.WHITE_ASH;      // poussière en suspension
-            case RESTLESS_DEAD -> ParticleTypes.SOUL;       // âmes flottantes
-            case WARBAND -> ParticleTypes.SMOKE;            // fumée de forge/torches
-            case HUNT -> ParticleTypes.SPORE_BLOSSOM_AIR;   // spores de jungle
-            case SUNKEN -> ParticleTypes.UNDERWATER;        // bulles en suspension
-            case FROZEN -> ParticleTypes.SNOWFLAKE;         // flocons
-            case HARVEST -> ParticleTypes.ASH;              // cendres d'halloween
-            case ARCANE -> ParticleTypes.WITCH;             // étincelles magiques
-            case INFERNAL -> ParticleTypes.FLAME;           // braises
-            case ABYSS -> ParticleTypes.PORTAL;             // motes du End
-            case DEEP_DARK -> ParticleTypes.SCULK_SOUL;     // sculk souls
-            case QUARK_LIMESTONE -> ParticleTypes.WHITE_ASH;  // ancient stone dust
-            case QUARK_JASPER -> ParticleTypes.LAVA;          // forge sparks
-            case QUARK_MYALITE -> ParticleTypes.REVERSE_PORTAL; // alien crystal motes
+            case DECHARNES -> ParticleTypes.SOUL;              // âmes flottantes
+            case FAUVES -> ParticleTypes.SPORE_BLOSSOM_AIR;   // spores de jungle
+            case TRIBUS -> ParticleTypes.SMOKE;               // fumée de forge/torches
+            case LEGION -> ParticleTypes.WHITE_ASH;            // poussière sépulcrale
+            case ABYSSES -> ParticleTypes.UNDERWATER;          // bulles en suspension
+            case MAGES -> ParticleTypes.WITCH;                 // étincelles magiques
+            case MOISSON -> ParticleTypes.ASH;                 // cendres d'halloween
+            case FOURNAISE -> ParticleTypes.FLAME;             // braises
+            case GESTE -> ParticleTypes.PORTAL;                // motes du End démoniaques
+            case NEANT -> ParticleTypes.SCULK_SOUL;            // âmes du vide
         };
     }
 }

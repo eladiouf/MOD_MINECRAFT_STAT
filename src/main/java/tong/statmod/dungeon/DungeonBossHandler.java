@@ -34,6 +34,9 @@ import java.util.List;
  */
 public final class DungeonBossHandler {
 
+    /** Cooldown d'un boss de palier (×10) : 2 heures de game ticks. */
+    static final long BOSS_COOLDOWN_TICKS = 144_000L; // 2h × 60m × 60s × 20t
+
     public static final TagKey<EntityType<?>> DUNGEON_BOSS_TAG = TagKey.create(
             Registries.ENTITY_TYPE,
             ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "dungeon_boss"));
@@ -65,6 +68,17 @@ public final class DungeonBossHandler {
             DungeonPoints.awardMobKill(sp, target, floor);
         }
 
+        // Boss Qliphoth (secret rooms / ultra-vaults) : combat optionnel → points sans conquête
+        var targetKey = target.getType().builtInRegistryHolder().key();
+        if (targetKey != null && "fdbosses".equals(targetKey.location().getNamespace())) {
+            // Points bonus si le tag n'a pas matché (boss spawné par spawner Qliphoth, pas notre tag)
+            if (!target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) {
+                DungeonPoints.awardMobKill(sp, target, floor);
+            }
+            sp.displayClientMessage(Component.translatable("dungeon.qliphoth.defeated"), true);
+            return; // ne pas compléter l'étage
+        }
+
         DungeonObjective objective = DungeonObjective.forFloor(floor);
         switch (objective) {
             case SLAY_BOSS -> handleBossFloor(sp, floor, target);
@@ -89,6 +103,7 @@ public final class DungeonBossHandler {
             }
             // Tous les boss morts → conquête.
             DungeonProgress.completeFloor(sp, floor, DungeonObjective.SLAY_BOSS, true);
+            setBossCooldown(sp, floor);
             return;
         }
         // Sinon (restart serveur en plein combat) : secours, mais UNIQUEMENT si la cible est un mob
@@ -97,6 +112,7 @@ public final class DungeonBossHandler {
         // hors combat conquiert l'étage sans jamais affronter le boss (exploit trouvé en audit).
         if (!target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) return;
         DungeonProgress.completeFloor(sp, floor, DungeonObjective.SLAY_BOSS, true);
+        setBossCooldown(sp, floor);
     }
 
     /** Étage de combat : conquête quand la dernière vague de mobs autorisés est éliminée. */
@@ -126,6 +142,21 @@ public final class DungeonBossHandler {
                 m -> m != dying && m.isAlive()
                         && m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG));
         return alive.size();
+    }
+
+    /** Applique le cooldown 2h à tous les joueurs présents sur l'étage. */
+    private static void setBossCooldown(ServerPlayer sp, int floor) {
+        long unlockTick = sp.serverLevel().getGameTime() + BOSS_COOLDOWN_TICKS;
+        for (ServerPlayer p : sp.serverLevel().getEntitiesOfClass(
+                ServerPlayer.class,
+                new net.minecraft.world.phys.AABB(
+                        DungeonTeleportHandler.floorSpawnPos(floor))
+                        .inflate(DungeonMobSpawner.FLOOR_SCAN_RADIUS),
+                pl -> pl.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON))) {
+            p.getData(tong.statmod.storage.ModAttachments.STATS).setBossCooldown(floor, unlockTick);
+        }
+        // Fallback : le joueur à l'origine du kill est toujours cooldowné.
+        sp.getData(tong.statmod.storage.ModAttachments.STATS).setBossCooldown(floor, unlockTick);
     }
 
     /**

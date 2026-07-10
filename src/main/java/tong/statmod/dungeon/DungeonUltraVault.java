@@ -6,6 +6,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -131,6 +133,31 @@ public final class DungeonUltraVault {
         for (int[] k : new int[][]{{-HALF + 1, -HALF + 1}, {HALF - 1, -HALF + 1},
                                    {-HALF + 1, HALF - 1}, {HALF - 1, HALF - 1}}) {
             S(lv, c.offset(k[0], 4, k[1]), B(t.light()));
+        }
+
+        // ── Variante Qliphoth : arène vide avec spawner boss ──
+        if (DungeonSecretRoom.isQliphothFloor(floor)) {
+            int arc = java.lang.Math.floorDiv(floor - 1, 10) % 10;
+            String spawnerId = switch (arc) {
+                case 0, 3 -> "fdbosses:geburah_boss_spawner";
+                case 1, 6 -> "fdbosses:netzach_boss_spawner";
+                case 2, 5, 7 -> "fdbosses:malkuth_boss_spawner";
+                default  -> "fdbosses:chesed_boss_spawner";
+            };
+            // Piédestal central + spawner
+            S(lv, c.offset(0, 1, 0), accent);
+            S(lv, c.offset(0, 2, 0), B(Blocks.OBSIDIAN));
+            EntityType<?> spawnerType = ModdedMobPool.resolve(spawnerId);
+            if (spawnerType != null) {
+                Entity entity = spawnerType.create(lv);
+                if (entity != null) {
+                    entity.setPos(c.getX() + 0.5, VY + 3, c.getZ() + 0.5);
+                    lv.addFreshEntity(entity);
+                }
+            }
+            // Pierre de retour uniquement
+            placeShrine(lv, c.offset(0, 1, HALF - 1));
+            return;
         }
 
         // ── Piédestal central : colonne décorée + coffre-relique au sommet ──

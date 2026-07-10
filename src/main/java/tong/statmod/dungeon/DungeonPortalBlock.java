@@ -59,6 +59,80 @@ public class DungeonPortalBlock extends Block {
     }
 
     @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (!level.isClientSide) {
+            checkAndCreateMagicCircle(level, pos);
+        }
+    }
+
+    private void checkAndCreateMagicCircle(Level level, BlockPos pos) {
+        // AXE X (East-West)
+        BlockPos[] lineX1 = { pos.west(), pos, pos.east() };
+        BlockPos[] lineX2 = { pos, pos.east(), pos.east(2) };
+        BlockPos[] lineX3 = { pos.west(2), pos.west(), pos };
+
+        if (isPortalLine(level, lineX1)) {
+            transformToMagicCircle(level, lineX1);
+            return;
+        }
+        if (isPortalLine(level, lineX2)) {
+            transformToMagicCircle(level, lineX2);
+            return;
+        }
+        if (isPortalLine(level, lineX3)) {
+            transformToMagicCircle(level, lineX3);
+            return;
+        }
+
+        // AXE Z (North-South)
+        BlockPos[] lineZ1 = { pos.north(), pos, pos.south() };
+        BlockPos[] lineZ2 = { pos, pos.south(), pos.south(2) };
+        BlockPos[] lineZ3 = { pos.north(2), pos.north(), pos };
+
+        if (isPortalLine(level, lineZ1)) {
+            transformToMagicCircle(level, lineZ1);
+            return;
+        }
+        if (isPortalLine(level, lineZ2)) {
+            transformToMagicCircle(level, lineZ2);
+            return;
+        }
+        if (isPortalLine(level, lineZ3)) {
+            transformToMagicCircle(level, lineZ3);
+            return;
+        }
+    }
+
+    private boolean isPortalLine(Level level, BlockPos[] positions) {
+        for (BlockPos p : positions) {
+            if (!(level.getBlockState(p).getBlock() instanceof DungeonPortalBlock)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void transformToMagicCircle(Level level, BlockPos[] positions) {
+        BlockState circleState = DungeonBlocks.MAGIC_TELEPORT_CIRCLE.get().defaultBlockState();
+        for (BlockPos p : positions) {
+            level.setBlock(p, circleState, 3);
+        }
+
+        double cx = (positions[0].getX() + positions[2].getX()) / 2.0 + 0.5D;
+        double cy = positions[1].getY() + 0.5D;
+        double cz = (positions[0].getZ() + positions[2].getZ()) / 2.0 + 0.5D;
+        level.playSound(null, cx, cy, cz, net.minecraft.sounds.SoundEvents.WITHER_SPAWN, SoundSource.BLOCKS, 1.0F, 1.2F);
+
+        if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            for (BlockPos p : positions) {
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 10, 0.2D, 0.2D, 0.2D, 0.1D);
+                serverLevel.sendParticles(ParticleTypes.PORTAL, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 30, 0.4D, 0.4D, 0.4D, 0.2D);
+            }
+        }
+    }
+
+    @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         for (int i = 0; i < 3; i++) {
             double x = pos.getX() + 0.25D + random.nextDouble() * 0.5D;

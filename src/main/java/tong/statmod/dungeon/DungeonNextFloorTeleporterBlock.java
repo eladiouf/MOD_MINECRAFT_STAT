@@ -49,4 +49,17 @@ public class DungeonNextFloorTeleporterBlock extends Block {
         DungeonTeleportHandler.enterFloor(sp, nextFloor);
         return InteractionResult.CONSUME;
     }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        for (int i = 0; i < 3; i++) {
+            double x = pos.getX() + 0.25D + random.nextDouble() * 0.5D;
+            double y = pos.getY() + 1.0D + random.nextDouble() * 0.5D;
+            double z = pos.getZ() + 0.25D + random.nextDouble() * 0.5D;
+            double dx = (pos.getX() + 0.5D - x) * 0.02D;
+            double dy = 0.03D + random.nextDouble() * 0.03D;
+            double dz = (pos.getZ() + 0.5D - z) * 0.02D;
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.WITCH, x, y, z, dx, dy, dz);
+        }
+    }
 }

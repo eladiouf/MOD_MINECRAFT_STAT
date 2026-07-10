@@ -156,7 +156,10 @@ public final class DungeonSpawnGuard {
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
                    "alexsmobs".equals(namespace) ||
-                   "bosses_of_mass_destruction".equals(namespace);
+                    "bosses_of_mass_destruction".equals(namespace) ||
+                    "fdbosses".equals(namespace) ||
+                    "iceandfire".equals(namespace);
+
 
         } catch (Exception e) {
             return false;

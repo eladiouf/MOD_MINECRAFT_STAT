@@ -3,6 +3,8 @@ package tong.statmod.dungeon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -21,14 +23,36 @@ import static tong.statmod.dungeon.DungeonArchitect.S;
  * de pierre → l'indice pour l'explorateur attentif) + une échelle. La chambre contient des coffres
  * de trésor riches ({@code dungeon_treasure}), une statue-trophée et de la lumière.
  *
- * <p>Repère : sol de pièce à y=-1. La chambre est sous l'underside, en {@code y ∈ [-6,-3]}.
+ * <p>Variante Qliphoth (2026-07-10) : arène 15×15 avec spawner boss à la place du labyrinthe.
  */
 public final class DungeonSecretRoom {
 
     private static final int FLOOR_Y = -6;   // sol de la chambre
     private static final int CEIL_Y = -3;    // plafond de la chambre
+    private static final int QLIPHOTH_Y = -8; // sol arène Qliphoth (plus profond)
+    private static final int QLIPHOTH_CEIL = -2; // plafond arène Qliphoth (plus haut)
 
     private DungeonSecretRoom() {}
+
+    /** ~1 floor/17 a un combat Qliphoth optionnel. */
+    static boolean isQliphothFloor(int floor) {
+        return Math.floorMod(floor * 7919 + 11, 17) == 0;
+    }
+
+    /** Index d'arc (0-9) pour un étage. */
+    private static int arcIndex(int floor) {
+        return Math.floorDiv(floor - 1, 10) % 10;
+    }
+
+    /** ID du spawner Qliphoth pour l'arc donné. */
+    private static String qliphothSpawnerId(int arc) {
+        return switch (arc) {
+            case 0, 3 -> "fdbosses:geburah_boss_spawner";
+            case 1, 6 -> "fdbosses:netzach_boss_spawner";
+            case 2, 5, 7 -> "fdbosses:malkuth_boss_spawner";
+            default  -> "fdbosses:chesed_boss_spawner";
+        };
+    }
 
     /** Place une salle secrète si {@code r} est la pièce élue de l'étage (≈ 1 par étage). */
     public static void maybePlace(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int floor) {
@@ -39,6 +63,12 @@ public final class DungeonSecretRoom {
         int q = Math.max(6, Math.min(r.maxX() - r.minX(), r.maxZ() - r.minZ()) / 4);
         int cx = r.centerX() - q, cz = r.centerZ() - q;
         BlockState wall = B(t.base());
+
+        // ── Variante Qliphoth : arène 15×15 avec spawner boss ──
+        if (isQliphothFloor(floor)) {
+            buildQliphothArena(lv, sp, cx, cz, t, floor, wall);
+            return;
+        }
 
         // ── Coque de la chambre (9×9), sous la pièce ──
         for (int dx = -4; dx <= 4; dx++) {
@@ -120,5 +150,67 @@ public final class DungeonSecretRoom {
         DungeonArchitect.placeChest(lv, O(sp, cx + 1, FLOOR_Y + 1, cz + 3));
         S(lv, O(sp, cx, FLOOR_Y + 1, cz + 3), B(t.decorPrimary()));
         S(lv, O(sp, cx, CEIL_Y, cz), B(t.light())); // fanal central
+    }
+
+    /** Arène Qliphoth 15×15 : pas de labyrinthe, juste un spawner boss au centre. */
+    private static void buildQliphothArena(ServerLevel lv, BlockPos sp, int cx, int cz,
+                                           BlockPalette t, int floor, BlockState wall) {
+        BlockState accent = B(t.accent());
+        BlockState light = B(t.light());
+        int r = 7; // demi-côté
+
+        // ── Coque 15×15 ──
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                S(lv, O(sp, cx + dx, QLIPHOTH_Y, cz + dz), wall);
+                S(lv, O(sp, cx + dx, QLIPHOTH_CEIL, cz + dz), wall);
+                boolean edge = Math.abs(dx) == r || Math.abs(dz) == r;
+                for (int y = QLIPHOTH_Y + 1; y < QLIPHOTH_CEIL; y++) {
+                    S(lv, O(sp, cx + dx, y, cz + dz), edge ? wall : B(Blocks.AIR));
+                }
+            }
+        }
+
+        // ── Puits d'accès (trappe + échelle) ──
+        int ladderX = cx - r + 1, ladderZ = cz - r + 1;
+        for (int y = QLIPHOTH_Y + 1; y <= -1; y++) {
+            S(lv, O(sp, ladderX, y, ladderZ), B(Blocks.AIR));
+        }
+        BlockState ladder = B(Blocks.LADDER).setValue(LadderBlock.FACING, Direction.NORTH);
+        for (int y = QLIPHOTH_Y + 1; y <= -2; y++) {
+            S(lv, O(sp, ladderX, y, ladderZ + 1), wall);
+            S(lv, O(sp, ladderX, y, ladderZ), ladder);
+        }
+        BlockState trap = B(Blocks.SPRUCE_TRAPDOOR)
+                .setValue(TrapDoorBlock.HALF, Half.TOP)
+                .setValue(TrapDoorBlock.OPEN, false)
+                .setValue(TrapDoorBlock.FACING, Direction.NORTH);
+        S(lv, O(sp, ladderX, -1, ladderZ), trap);
+
+        // ── 4 piliers d'angle ──
+        for (int px : new int[]{-r + 2, r - 2}) {
+            for (int pz : new int[]{-r + 2, r - 2}) {
+                for (int y = QLIPHOTH_Y + 1; y < QLIPHOTH_CEIL; y++) {
+                    S(lv, O(sp, cx + px, y, cz + pz), accent);
+                }
+                // Lanterne au sommet de chaque pilier
+                S(lv, O(sp, cx + px, QLIPHOTH_CEIL - 1, cz + pz), light);
+            }
+        }
+
+        // ── Piédestal central + spawner boss Qliphoth ──
+        int arc = arcIndex(floor);
+        String spawnerId = qliphothSpawnerId(arc);
+        S(lv, O(sp, cx, QLIPHOTH_Y + 1, cz), accent);
+        S(lv, O(sp, cx, QLIPHOTH_Y + 2, cz), B(Blocks.OBSIDIAN));
+
+        EntityType<?> spawnerType = ModdedMobPool.resolve(spawnerId);
+        if (spawnerType != null) {
+            Entity entity = spawnerType.create(lv);
+            if (entity != null) {
+                entity.setPos(cx + 0.5, QLIPHOTH_Y + 3, cz + 0.5);
+                lv.addFreshEntity(entity);
+            }
+        }
     }
 }

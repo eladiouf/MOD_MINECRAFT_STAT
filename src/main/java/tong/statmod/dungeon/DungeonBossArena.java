@@ -56,12 +56,6 @@ public final class DungeonBossArena {
      */
     public static void shape(ServerLevel lv, BlockPos anchor, BlockPalette t, int floor) {
         int hz = 0;
-        ThemePalette theme = ThemePalette.forFloor(floor);
-        if (QuarkDungeonDecorator.isQuarkPresent() &&
-            (theme == ThemePalette.QUARK_LIMESTONE || theme == ThemePalette.QUARK_JASPER || theme == ThemePalette.QUARK_MYALITE)) {
-            QuarkDungeonDecorator.crystalBossArena(lv, anchor, floor);
-            return;
-        }
         Kind kind = kindForFloor(floor);
         switch (kind) {
             case AQUATIC -> aquatic(lv, anchor, t, hz);
@@ -70,6 +64,46 @@ public final class DungeonBossArena {
             case INFERNAL -> infernal(lv, anchor, t, hz);
             case UNDEAD -> undead(lv, anchor, t, hz);
             case ARENA -> arena(lv, anchor, t, hz);
+        }
+        spectatorGallery(lv, anchor, t, hz);
+    }
+
+    private static void spectatorGallery(ServerLevel lv, BlockPos sp, BlockPalette t, int hz) {
+        BlockState slab = B(t.slab());
+        BlockState fence = B(Blocks.IRON_BARS);
+        BlockState chain = B(Blocks.CHAIN);
+
+        // North gallery (dz = -12, dx from -14 to 14)
+        for (int dx = -14; dx <= 14; dx++) {
+            S(lv, O(sp, dx, 4, hz - 12), slab); // platform floor
+            S(lv, O(sp, dx, 5, hz - 11), fence); // safety railing
+            if (dx % 4 == 0) {
+                for (int y = 6; y <= 9; y++) {
+                    S(lv, O(sp, dx, y, hz - 12), chain);
+                }
+            }
+        }
+
+        // West gallery (dx = -14, dz from -11 to 11)
+        for (int dz = -11; dz <= 11; dz++) {
+            S(lv, O(sp, -14, 4, hz + dz), slab);
+            S(lv, O(sp, -13, 5, hz + dz), fence);
+            if (dz % 4 == 0) {
+                for (int y = 6; y <= 9; y++) {
+                    S(lv, O(sp, -14, y, hz + dz), chain);
+                }
+            }
+        }
+
+        // East gallery (dx = 14, dz from -11 to 11)
+        for (int dz = -11; dz <= 11; dz++) {
+            S(lv, O(sp, 14, 4, hz + dz), slab);
+            S(lv, O(sp, 13, 5, hz + dz), fence);
+            if (dz % 4 == 0) {
+                for (int y = 6; y <= 9; y++) {
+                    S(lv, O(sp, 14, y, hz + dz), chain);
+                }
+            }
         }
     }
 

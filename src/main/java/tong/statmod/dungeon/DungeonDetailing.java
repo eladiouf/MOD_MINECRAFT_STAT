@@ -108,21 +108,12 @@ public final class DungeonDetailing {
     private static void hang(ServerLevel lv, BlockPos p, ThemePalette theme, Random rng) {
         // On privilégie des blocs qui tiennent sans support (chaîne, dripstone pointe-bas, toile).
         switch (theme) {
-            case FROZEN -> S(lv, p, B(Blocks.POINTED_DRIPSTONE)
-                    .setValue(BlockStateProperties.VERTICAL_DIRECTION, Direction.DOWN)); // stalactite
-            case HUNT, AWAKENING -> {
-                // Lianes suspendues (2-3 blocs) : la vine s'accroche à la face UP via son état.
+            case DECHARNES, MOISSON -> S(lv, p, B(Blocks.COBWEB));
+            case FAUVES -> {
                 BlockState vine = B(Blocks.VINE).setValue(BlockStateProperties.UP, true);
                 S(lv, p, vine);
             }
-            case INFERNAL -> {
-                S(lv, p, B(Blocks.CHAIN));
-                if (isAir(lv, p.below())) S(lv, p.below(),
-                        B(Blocks.LANTERN).setValue(BlockStateProperties.HANGING, true));
-            }
-            case SUNKEN -> S(lv, p, B(Blocks.CHAIN));
-            case RESTLESS_DEAD, HARVEST -> S(lv, p, B(Blocks.COBWEB));
-            case ARCANE, ABYSS -> {
+            case FOURNAISE, MAGES, GESTE, NEANT -> {
                 S(lv, p, B(Blocks.CHAIN));
                 if (isAir(lv, p.below())) S(lv, p.below(),
                         B(Blocks.LANTERN).setValue(BlockStateProperties.HANGING, true));
@@ -149,10 +140,8 @@ public final class DungeonDetailing {
     }
 
     private static void grime(ServerLevel lv, BlockPos p, ThemePalette theme, Random rng) {
-        // Blocs qui tiennent sans support dans l'air d'un mur. La toile est universelle et sûre ;
-        // on varie légèrement avec des torches d'âme murales pour l'ambiance infernale/abyss.
-        if ((theme == ThemePalette.INFERNAL || theme == ThemePalette.ABYSS) && rng.nextInt(3) == 0) {
-            S(lv, p, B(Blocks.SOUL_TORCH)); // touche lumineuse spectrale
+        if ((theme == ThemePalette.FOURNAISE || theme == ThemePalette.GESTE || theme == ThemePalette.NEANT) && rng.nextInt(3) == 0) {
+            S(lv, p, B(Blocks.SOUL_TORCH));
         } else {
             S(lv, p, B(Blocks.COBWEB));
         }
@@ -176,23 +165,18 @@ public final class DungeonDetailing {
     }
 
     private static void clutter(ServerLevel lv, BlockPos g, ThemePalette theme, Random rng) {
-        // Détails communs, pondérés, + touches thématiques.
         int r = rng.nextInt(10);
         if (r == 0) { S(lv, g, B(Blocks.DECORATED_POT)); return; }
         if (r == 1) { S(lv, g, B(Blocks.CANDLE)); return; }
         if (r == 2) { S(lv, g, B(Blocks.SKELETON_SKULL)); return; }
         if (r == 3) { S(lv, g, B(Blocks.FLOWER_POT)); return; }
         switch (theme) {
-            case FROZEN -> S(lv, g, B(Blocks.SNOW));
-            case SUNKEN -> S(lv, g, B(rng.nextBoolean() ? Blocks.DRIED_KELP_BLOCK : Blocks.SEA_LANTERN));
-            case HUNT, AWAKENING -> S(lv, g, B(rng.nextBoolean() ? Blocks.FERN : Blocks.MOSS_CARPET));
-            case HARVEST -> S(lv, g, B(rng.nextBoolean() ? Blocks.PUMPKIN : Blocks.HAY_BLOCK));
-            case INFERNAL -> S(lv, g, B(rng.nextBoolean() ? Blocks.MAGMA_BLOCK : Blocks.BONE_BLOCK));
-            case RESTLESS_DEAD -> S(lv, g, B(Blocks.BONE_BLOCK));
-            case ARCANE, ABYSS -> S(lv, g, B(Blocks.AMETHYST_CLUSTER)); // pousse sur le sol (face up)
-            case QUARK_LIMESTONE -> S(lv, g, B(Blocks.COBWEB));
-            case QUARK_JASPER -> S(lv, g, B(Blocks.LANTERN));
-            case QUARK_MYALITE -> S(lv, g, B(QuarkDungeonDecorator.myaliteCrystal()));
+            case FAUVES -> S(lv, g, B(rng.nextBoolean() ? Blocks.FERN : Blocks.MOSS_CARPET));
+            case ABYSSES -> S(lv, g, B(rng.nextBoolean() ? Blocks.DRIED_KELP_BLOCK : Blocks.SEA_LANTERN));
+            case MOISSON -> S(lv, g, B(rng.nextBoolean() ? Blocks.PUMPKIN : Blocks.HAY_BLOCK));
+            case FOURNAISE -> S(lv, g, B(rng.nextBoolean() ? Blocks.MAGMA_BLOCK : Blocks.BONE_BLOCK));
+            case DECHARNES, LEGION -> S(lv, g, B(Blocks.BONE_BLOCK));
+            case MAGES, GESTE, NEANT -> S(lv, g, B(Blocks.AMETHYST_CLUSTER));
             default -> S(lv, g, B(Blocks.COBWEB));
         }
     }
@@ -226,17 +210,13 @@ public final class DungeonDetailing {
             BlockPos floor = O(sp, x, -1, z);                  // remplace un bloc de sol
             if (isAir(lv, floor)) continue;
             switch (theme) {
-                case SUNKEN -> S(lv, floor, B(Blocks.WATER));           // flaque
-                case FROZEN -> S(lv, floor, B(Blocks.ICE));             // plaque de glace
-                case INFERNAL -> { S(lv, floor, B(Blocks.MAGMA_BLOCK)); } // braises au sol
-                case HUNT, AWAKENING -> S(lv, floor, B(Blocks.MOSS_BLOCK));
-                case HARVEST -> S(lv, floor, B(Blocks.PODZOL));
-                case RESTLESS_DEAD -> S(lv, floor, B(Blocks.SOUL_SAND));
-                case ARCANE, ABYSS -> S(lv, floor, B(Blocks.AMETHYST_BLOCK));
-                case QUARK_LIMESTONE -> S(lv, floor, B(QuarkDungeonDecorator.shale()));
-                case QUARK_JASPER -> S(lv, floor, B(QuarkDungeonDecorator.ironPlate()));
-                case QUARK_MYALITE -> S(lv, floor, B(QuarkDungeonDecorator.duskyMyalite()));
-                default -> { /* rien */ }
+                case ABYSSES -> S(lv, floor, B(Blocks.WATER));
+                case FOURNAISE -> S(lv, floor, B(Blocks.MAGMA_BLOCK));
+                case FAUVES -> S(lv, floor, B(Blocks.MOSS_BLOCK));
+                case MOISSON -> S(lv, floor, B(Blocks.PODZOL));
+                case DECHARNES, LEGION -> S(lv, floor, B(Blocks.SOUL_SAND));
+                case MAGES, GESTE, NEANT -> S(lv, floor, B(Blocks.AMETHYST_BLOCK));
+                default -> { }
             }
         }
     }

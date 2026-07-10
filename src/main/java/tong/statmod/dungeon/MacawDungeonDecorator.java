@@ -41,26 +41,21 @@ public final class MacawDungeonDecorator {
     }
 
     /**
-     * Porte assortie au thème de l'étage (feedback playtest 2026-07-09 : « varie les portes en
-     * fonction des thèmes »). Tous les ids vérifiés contre le jar mcw-doors 1.1.5. Retourne
-     * {@code null} si Macaw's Doors est absent — l'appelant retombe sur une porte vanilla.
+     * Porte assortie au thème de l'étage (refonte 2026-07-10 — 10 arcs). Tous les ids vérifiés
+     * contre le jar mcw-doors 1.1.5. Retourne {@code null} si Macaw's Doors est absent.
      */
     public static Block themedDoor(ThemePalette theme) {
         String id = switch (theme) {
-            case AWAKENING -> "mcwdoors:oak_whispering_door";      // pierre & bois classique
-            case RESTLESS_DEAD -> "mcwdoors:dark_oak_mystic_door"; // crypte, os
-            case WARBAND -> "mcwdoors:spruce_classic_door";        // forteresse militaire
-            case HUNT -> "mcwdoors:jungle_swamp_door";             // jungle, repaire de bêtes
-            case SUNKEN -> "mcwdoors:warped_beach_door";           // prismarine, mer
-            case FROZEN -> "mcwdoors:birch_whispering_door";       // glace, bois pâle
-            case HARVEST -> "mcwdoors:dark_oak_cottage_door";      // halloween, cottage sombre
-            case ARCANE -> "mcwdoors:cherry_mystic_door";          // améthyste, magie
-            case INFERNAL -> "mcwdoors:dark_oak_nether_door";      // nether, feu
-            case ABYSS -> "mcwdoors:warped_nether_door";           // obsidienne, end
-            case DEEP_DARK -> "mcwdoors:mangrove_mystic_door";     // sculk, teinte sombre
-            case QUARK_LIMESTONE -> "mcwdoors:birch_classic_door"; // crypte romaine claire
-            case QUARK_JASPER -> "mcwdoors:mangrove_barn_door";    // mine industrielle rouge
-            case QUARK_MYALITE -> "mcwdoors:cherry_whispering_door"; // cristal alien
+            case DECHARNES -> "mcwdoors:oak_whispering_door";     // pierre rouillée, classique
+            case FAUVES -> "mcwdoors:jungle_swamp_door";          // nature, mousse, lianes
+            case TRIBUS -> "mcwdoors:spruce_classic_door";        // camp de guerre, palissade
+            case LEGION -> "mcwdoors:dark_oak_mystic_door";       // ténèbres, crypte
+            case ABYSSES -> "mcwdoors:warped_beach_door";         // abysses, prismarine
+            case MAGES -> "mcwdoors:cherry_mystic_door";          // magie, améthyste
+            case MOISSON -> "mcwdoors:dark_oak_cottage_door";     // halloween, récoltes
+            case FOURNAISE -> "mcwdoors:dark_oak_nether_door";    // nether, lave
+            case GESTE -> "mcwdoors:warped_nether_door";          // démoniaque, vide
+            case NEANT -> "mcwdoors:cherry_whispering_door";      // end, trône du vide
         };
         return resolve(id);
     }

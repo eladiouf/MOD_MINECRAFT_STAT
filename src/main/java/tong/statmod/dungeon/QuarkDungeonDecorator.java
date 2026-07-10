@@ -370,39 +370,27 @@ public final class QuarkDungeonDecorator {
         ThemePalette theme = (t instanceof ThemePalette) ? (ThemePalette) t : ThemePalette.forFloor(floor);
 
         switch (theme) {
-            case AWAKENING, WARBAND -> {
+            case TRIBUS -> {
                 ironPlateFloor(lv, sp, r, 0);
-                ironPillarAccents(lv, sp, r, ceilH);
             }
-            case RESTLESS_DEAD -> {
+            case LEGION -> {
                 soulSandstoneAccents(lv, sp, r);
             }
-            case HUNT -> {
+            case FAUVES -> {
                 hollowLogPipes(lv, sp, r, floor);
                 hangingRopes(lv, sp, r, ceilH, floor);
                 midoriAccents(lv, sp, r, ceilH);
             }
-            case SUNKEN -> {
+            case ABYSSES -> {
                 midoriAccents(lv, sp, r, ceilH);
             }
-            case FROZEN -> {
-                permafrostAccents(lv, sp, r, floor);
-            }
-            case HARVEST -> {
-                hollowLogPipes(lv, sp, r, floor);
-            }
-            case ARCANE, DEEP_DARK -> {
+            case MAGES, NEANT -> {
                 corundumClusters(lv, sp, r, ceilH, floor);
             }
-            case INFERNAL -> {
-                ironPillarAccents(lv, sp, r, ceilH);
+            case FOURNAISE -> {
                 ironPlateFloor(lv, sp, r, 0);
             }
-            case QUARK_LIMESTONE, QUARK_JASPER, QUARK_MYALITE -> {
-                corundumClusters(lv, sp, r, ceilH, floor);
-                ironPlateFloor(lv, sp, r, 0);
-            }
-            default -> {} // ABYSS, HARVEST — no specific Quark decoration
+            default -> {}
         }
     }
 }

@@ -62,6 +62,12 @@ public final class ModdedMobPool {
         // Alex's Mobs — quelques hostiles (le mod est surtout ambiant)
         addAlexHostiles(modded, tier);
 
+        // Qliphoth Awakening — minions des boss Sephiroth
+        addQliphothMobs(modded, tier);
+
+        // Ice and Fire — dragons, cyclopes, créatures mythiques
+        addIceAndFireMobs(modded, tier);
+
         return modded;
     }
 
@@ -306,6 +312,57 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "alexsmobs:bone_serpent");
             }
             default -> { }
+        }
+    }
+
+    /** Mobs Qliphoth Awakening — minions des boss Sephiroth, apparaissent dans les vagues ABYSS. */
+    private static void addQliphothMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("fdbosses")) return;
+        switch (tier) {
+            case LATE -> addIfAvailable(pool, "fdbosses:judgement_bird");
+            case ABYSS -> {
+                addIfAvailable(pool, "fdbosses:judgement_bird");
+                addIfAvailable(pool, "fdbosses:fire_malkuth_warrior");
+                addIfAvailable(pool, "fdbosses:ice_malkuth_warrior");
+            }
+            default -> { }
+        }
+    }
+
+    /** Ice and Fire — bestiaire colossal réparti par difficulté. */
+    private static void addIceAndFireMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("iceandfire")) return;
+        switch (tier) {
+            case EARLY -> {
+                addIfAvailable(pool, "iceandfire:ghost");
+                addIfAvailable(pool, "iceandfire:dread_thrall");
+                addIfAvailable(pool, "iceandfire:dread_ghoul");
+                addIfAvailable(pool, "iceandfire:myrmex_worker");
+            }
+            case MID -> {
+                addIfAvailable(pool, "iceandfire:troll");
+                addIfAvailable(pool, "iceandfire:hippogryph");
+                addIfAvailable(pool, "iceandfire:myrmex_soldier");
+                addIfAvailable(pool, "iceandfire:death_worm");
+                addIfAvailable(pool, "iceandfire:amphithere");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "iceandfire:cyclops");
+                addIfAvailable(pool, "iceandfire:dread_knight");
+                addIfAvailable(pool, "iceandfire:dread_beast");
+                addIfAvailable(pool, "iceandfire:dread_lich");
+                addIfAvailable(pool, "iceandfire:cockatrice");
+                addIfAvailable(pool, "iceandfire:stymphalian_bird");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "iceandfire:fire_dragon");
+                addIfAvailable(pool, "iceandfire:ice_dragon");
+                addIfAvailable(pool, "iceandfire:lightning_dragon");
+                addIfAvailable(pool, "iceandfire:sea_serpent");
+                addIfAvailable(pool, "iceandfire:hydra");
+                addIfAvailable(pool, "iceandfire:gorgon");
+                addIfAvailable(pool, "iceandfire:siren");
+            }
         }
     }
 

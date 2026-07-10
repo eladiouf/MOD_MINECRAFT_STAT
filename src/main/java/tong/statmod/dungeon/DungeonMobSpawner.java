@@ -246,7 +246,7 @@ public final class DungeonMobSpawner {
                 fallback = EntityType.ZOMBIE_VILLAGER;
             }
             case 4 -> { // Greenhouse (Spiders/Beasts)
-                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:cave_centipede", "minecraft:cave_spider");
+                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:centipede_head", "minecraft:cave_spider");
                 fallback = EntityType.SPIDER;
             }
             default -> { // Treasury (Guards)

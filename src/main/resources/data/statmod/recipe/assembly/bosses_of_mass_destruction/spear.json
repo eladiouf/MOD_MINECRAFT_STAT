@@ -15,13 +15,16 @@
       "item": "minecraft:stick"
     },
     {
-      "item": "minecraft:leather"
+      "item": "minecraft:paper"
     },
     {
       "item": "statmod:wooden_grip"
     },
     {
-      "item": "minecraft:paper"
+      "item": "statmod:wooden_grip"
+    },
+    {
+      "item": "statmod:wooden_grip"
     },
     {
       "item": "statmod:rough_spear_tip_diamond"

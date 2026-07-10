@@ -25,6 +25,9 @@
     },
     {
       "item": "minecraft:stick"
+    },
+    {
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

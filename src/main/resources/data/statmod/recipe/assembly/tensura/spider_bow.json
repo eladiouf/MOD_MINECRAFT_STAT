@@ -28,6 +28,9 @@
     },
     {
       "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:paper"
     }
   ],
   "result": {

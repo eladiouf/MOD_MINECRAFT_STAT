@@ -15,16 +15,16 @@
       "item": "minecraft:stick"
     },
     {
-      "item": "minecraft:clay_ball"
-    },
-    {
       "item": "minecraft:paper"
     },
     {
-      "item": "minecraft:flint"
+      "item": "statmod:wooden_grip"
     },
     {
-      "item": "statmod:wooden_grip"
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

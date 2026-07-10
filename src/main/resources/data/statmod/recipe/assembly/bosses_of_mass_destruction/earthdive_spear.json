@@ -15,19 +15,13 @@
       "item": "minecraft:stick"
     },
     {
-      "item": "minecraft:clay_ball"
-    },
-    {
       "item": "minecraft:paper"
     },
     {
-      "item": "minecraft:cobblestone"
+      "item": "statmod:wooden_grip"
     },
     {
-      "item": "statmod:rough_spear_tip_diamond"
-    },
-    {
-      "item": "minecraft:leather"
+      "item": "statmod:halberd_socket"
     }
   ],
   "result": {

@@ -43,6 +43,9 @@
     },
     {
       "item": "statmod:rapier_guard"
+    },
+    {
+      "item": "statmod:leather_wrap"
     }
   ],
   "result": {

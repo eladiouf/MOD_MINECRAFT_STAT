@@ -1,88 +1,50 @@
 package tong.statmod.network;
 
-import io.github.manasmods.manascore.skill.api.SkillAPI;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import tong.statmod.STATMod;
-import tong.statmod.client.ClientMagicCache;
-import tong.statmod.client.ClientPerkCache;
-import tong.statmod.client.ClientStatCache;
-import tong.statmod.client.ClientManaCache;
-import tong.statmod.client.ClientStaminaCache;
-import tong.statmod.client.gui.PerkFeedbackToast;
 
-@OnlyIn(Dist.CLIENT)
 public final class ClientPayloadHandler {
     private ClientPayloadHandler() {}
 
     public static void handleSyncPerks(SyncPerksPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientPerkCache.update(payload.perkIds(), payload.perStatPoints()));
+        ClientPayloadActions.handleSyncPerks(payload, context);
     }
 
     public static void handleBatchSync(BatchSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            // Le batch ne transporte pas les champs donjon : on préserve les valeurs déjà en cache.
-            ClientStatCache.updateAll(payload.levels(), payload.xp(), payload.soulLevel(),
-                    ClientStatCache.getDungeonPoints(), ClientStatCache.getDungeonFloorReached());
-            ClientPerkCache.update(payload.perkIds(), payload.perStatPoints());
-        });
+        ClientPayloadActions.handleBatchSync(payload, context);
     }
 
     public static void handleStatUpdate(StatUpdatePayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientStatCache.updateAll(payload.levels(), payload.xp(),
-                payload.soulLevel(), payload.dungeonPoints(), payload.dungeonFloorReached()));
+        ClientPayloadActions.handleStatUpdate(payload, context);
     }
 
     public static void handleStaminaSync(StaminaSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientStaminaCache.update(
-                payload.currentStamina(),
-                payload.fatigueDebt(),
-                payload.meditating()));
+        ClientPayloadActions.handleStaminaSync(payload, context);
     }
 
     public static void handlePerkFeedback(PerkFeedbackPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> PerkFeedbackToast.show(
-                Component.literal(payload.title()),
-                Component.literal(payload.message())));
+        ClientPayloadActions.handlePerkFeedback(payload, context);
     }
 
     public static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientManaCache.update(
-                payload.currentMana(),
-                payload.maxMana()));
+        ClientPayloadActions.handleManaSync(payload, context);
     }
 
     public static void handleLearnBook(LearnBookPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
-            if (mc.gameRenderer != null && mc.player != null) {
-                mc.gameRenderer.displayItemActivation(
-                        new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENCHANTED_BOOK));
-            }
-        });
+        ClientPayloadActions.handleLearnBook(payload, context);
     }
 
     public static void handleSyncMagic(SyncMagicPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientMagicCache.update(
-                payload.magicNodes(), payload.learnedSpells(),
-                payload.magicPoints(), payload.masteryProgress(),
-                payload.raceOrdinal(), payload.startBranchOrdinal()));
+        ClientPayloadActions.handleSyncMagic(payload, context);
     }
 
     /** Ouvre le Codex du Mage sur le client (Mission J). */
     public static void handleOpenMageCodex(OpenMageCodexPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> net.minecraft.client.Minecraft.getInstance()
-                .setScreen(new tong.statmod.client.codex.MageCodexScreen()));
+        ClientPayloadActions.handleOpenMageCodex(payload, context);
     }
 
     /** Ouvre/rafraîchit l'écran d'échange points → coins (Mission M6 shop). */
     public static void handleOpenExchange(OpenExchangePayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> tong.statmod.client.PointExchangeScreen.openOrRefresh(
-                payload.points(), payload.coins(), payload.rate()));
+        ClientPayloadActions.handleOpenExchange(payload, context);
     }
 
     /**
@@ -90,19 +52,6 @@ public final class ClientPayloadHandler {
      * client so Tensura's full native flow runs (magic circle, charge, projectile).
      */
     public static void handleBridgeTensuraSkill(BridgeTensuraSkillPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (!ModList.get().isLoaded("tensura")) return;
-            try {
-                ResourceLocation rl = ResourceLocation.parse(payload.tensuraSkillId());
-                if (payload.release()) {
-                    SkillAPI.skillReleasePacket(rl, 0, 0);
-                } else {
-                    SkillAPI.skillActivationPacket(rl, 0, 0);
-                }
-            } catch (Throwable t) {
-                STATMod.LOGGER.warn("Bridge Tensura skill {} ({}) failed: {}",
-                        payload.tensuraSkillId(), payload.release() ? "release" : "press", t.toString());
-            }
-        });
+        ClientPayloadActions.handleBridgeTensuraSkill(payload, context);
     }
 }

@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Available-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/stat-mod-rpg)
 [![Modrinth](https://img.shields.io/badge/Modrinth-Available-green?logo=modrinth)](https://modrinth.com/mod/statmod)
-[![Wiki](https://img.shields.io/badge/Wiki-GitHub%20Pages-blue)](https://eladiouf.github.io/MOD_MINECRAFT_STAT/)
+[![Wiki](https://img.shields.io/badge/Wiki-GitHub%20Pages-blue)](https://eladiouf.github.io/statmod-wiki/)
 
 A deep RPG progression mod for Minecraft **NeoForge 1.21.1**. `STAT Mod` acts as a progression authority for stats, perks, stamina, survival pressure, and optional multi-mod combat or magic integrations.
 

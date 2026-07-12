@@ -1,4 +1,4 @@
-name: Deploy Wiki to Vercel
+name: Deploy Wiki to GitHub Pages
 
 on:
   push:
@@ -8,7 +8,14 @@ on:
       - 'tools/generate_wiki.py'
       - 'docs/wiki/**'
       - 'mkdocs.yml'
+      - '.github/workflows/wiki.yml'
+  workflow_dispatch:
 
+# Le site est publié sur le repo PUBLIC eladiouf/statmod-wiki (ce repo-ci est privé,
+# GitHub Pages gratuit exige un repo public). Le GITHUB_TOKEN par défaut ne peut pas
+# pousser vers un autre repo : ajouter un PAT (scope repo) comme secret WIKI_DEPLOY_TOKEN
+# dans Settings → Secrets and variables → Actions. Sans le secret, déployer en local :
+#   python tools/generate_wiki.py && mkdocs gh-deploy --force --remote-name wiki-public
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,13 +28,11 @@ jobs:
         run: pip install -r requirements-wiki.txt
       - name: Generate wiki pages
         run: python tools/generate_wiki.py
-      - name: Build MkDocs site
-        run: mkdocs build --site-dir site
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
-          vercel-args: '--prod'
+      - name: Deploy to eladiouf/statmod-wiki gh-pages
+        env:
+          WIKI_TOKEN: ${{ secrets.WIKI_DEPLOY_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add wiki-public "https://x-access-token:${WIKI_TOKEN}@github.com/eladiouf/statmod-wiki.git"
+          mkdocs gh-deploy --force --remote-name wiki-public

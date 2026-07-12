@@ -1,5 +1,5 @@
 site_name: STAT Mod Wiki
-site_url: https://stat-mod-wiki.vercel.app/
+site_url: https://eladiouf.github.io/statmod-wiki/
 repo_url: https://github.com/eladiouf/MOD_MINECRAFT_STAT
 repo_name: eladiouf/MOD_MINECRAFT_STAT
 edit_uri: edit/neoforge-1.21.1/docs/wiki/
@@ -53,6 +53,7 @@ nav:
   - Dépendances: dependencies.md
   - Stats: stats.md
   - Perks: perks.md
+  - Trial Dungeon: dungeon.md
   - Intégration Tensura:
     - Présentation: tensura/index.md
     - Races: tensura/races.md

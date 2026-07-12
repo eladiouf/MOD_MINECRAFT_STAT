@@ -3,9 +3,17 @@ package tong.statmod.integration.ironspells;
 import org.junit.jupiter.api.Test;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.storage.PlayerStatData;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IronSpellEventBridgeLogicTest {
+    private static final Path SOURCE = Path.of(
+            "src", "main", "java", "tong", "statmod", "integration", "ironspells", "IronSpellEventBridge.java");
+
     @Test
     void unlearned_spell_pre_cast_is_cancelled() {
         PlayerStatData d = new PlayerStatData();
@@ -43,5 +51,15 @@ class IronSpellEventBridgeLogicTest {
     void unknown_branch_returns_input_unchanged() {
         PlayerStatData d = new PlayerStatData();
         assertEquals(7, IronSpellEventBridge.clampSpellLevel(d, null, 7));
+    }
+
+    @Test
+    void bankable_impact_is_consumed_from_verified_tracker_not_mana_fraction() throws IOException {
+        String source = Files.readString(SOURCE);
+
+        assertTrue(source.contains("CAST_IMPACT_TRACKER.consume"),
+                "post-cast progression must consume server-side impact evidence");
+        assertFalse(source.contains("manaFrac >= 0.25"),
+                "mana fraction must not decide whether a cast had impact");
     }
 }

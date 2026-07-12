@@ -11,12 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SDMShopCatalogTest {
+    private static final int EXPECTED_ITEM_COUNT = 1000;
     private static final Set<String> EXPECTED_TABS = Set.of(
         "Minerais bruts", "Lingots et gemmes", "Matériaux avancés",
         "Forge et amélioration", "Armes légères", "Armes lourdes",
-        "Lances et armes d'hast", "Armes à distance", "Armures classiques",
-        "Armures fantastiques", "Magie et parchemins", "Runes et composants magiques",
-        "Potions et soins", "Composants de monstres", "Nourriture", "Construction",
+        "Lances et armes d'hast", "Armes à distance",
+        "Armes de Tensura", "Armes uniques et légendaires",
+        "Armures classiques", "Armures fantastiques",
+        "Armures historiques", "Armures magiques",
+        "Magie et parchemins", "Runes et composants magiques",
+        "Potions et soins", "Composants de monstres", "Nourriture",
+        "Fleurs, plantes et bois", "Construction",
+        "Mobilité et transport", "Trophées et décoration",
+        "Mécanismes et Redstone",
         "Utilitaires", "Objets rares contrôlés"
     );
 
@@ -24,8 +31,7 @@ class SDMShopCatalogTest {
     void exposesDetailedCategoriesAndControlledVolume() {
         assertEquals(EXPECTED_TABS, SDMShopCatalog.tabs().stream()
             .map(SDMShopCatalog.ShopTab::name).collect(Collectors.toSet()));
-        assertTrue(SDMShopCatalog.items().size() >= 350);
-        assertTrue(SDMShopCatalog.items().size() <= 450);
+        assertEquals(EXPECTED_ITEM_COUNT, SDMShopCatalog.items().size());
     }
 
     @Test
@@ -69,7 +75,7 @@ class SDMShopCatalogTest {
             .map(SDMShopCatalog.ShopTab::name)
             .collect(Collectors.toSet());
 
-        assertTrue(SDMShopCatalog.items().size() >= 350);
+        assertEquals(EXPECTED_ITEM_COUNT, SDMShopCatalog.items().size());
         for (SDMShopCatalog.ShopItem item : SDMShopCatalog.items()) {
             assertTrue(tabs.contains(item.tab()), item.itemId());
             assertTrue(item.itemId().matches("[a-z0-9_.-]+:[a-z0-9_./-]+"), item.itemId());

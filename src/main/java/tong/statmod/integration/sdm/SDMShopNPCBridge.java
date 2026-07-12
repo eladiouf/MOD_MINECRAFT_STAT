@@ -34,6 +34,9 @@ public final class SDMShopNPCBridge {
 
         if (event.getLevel().isClientSide()) {
             ClientShopTabForcer.targetTab = tabName;
+            // Marchand spécialisé (onglet nommé) → shop verrouillé sur son rayon.
+            // PNJ généraliste (tag sdm_tab: vide) → shop complet, pas de verrou.
+            ClientShopTabForcer.lockedTab = tabName.isEmpty() ? null : tabName;
             return;
         }
 

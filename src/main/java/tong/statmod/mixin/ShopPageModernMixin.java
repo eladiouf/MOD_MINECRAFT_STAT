@@ -14,6 +14,9 @@ public class ShopPageModernMixin {
         String target = ClientShopTabForcer.targetTab;
         if (target != null && !target.isEmpty()) {
             net.sixk.sdmshop.shop.Tab.TabPanel.selectedTab = target;
+        } else {
+            // Ouverture sans PNJ spécialisé (commande, PNJ généraliste) → shop complet
+            ClientShopTabForcer.lockedTab = null;
         }
         ClientShopTabForcer.targetTab = null;
     }

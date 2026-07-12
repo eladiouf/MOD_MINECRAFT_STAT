@@ -4,7 +4,7 @@ import java.util.List;
 
 /** Données déclaratives du shop, séparées de la sérialisation NBT de SDM Shop. */
 public final class SDMShopCatalog {
-    public static final int VERSION = 3;
+    public static final int VERSION = 5;
     private static final List<String> FORBIDDEN_ID_PARTS = List.of(
         "spawn_egg", "boss_summoner", "creative", "command_block",
         "structure_block", "debug_stick"
@@ -12,21 +12,29 @@ public final class SDMShopCatalog {
 
     private static final List<ShopTab> TABS = List.of(
         tab("Minerais bruts", "minecraft:raw_iron"),
-        tab("Lingots et gemmes", "minecraft:iron_ingot"),
+        tab("Lingots et gemmes", "minecraft:diamond"),
         tab("Matériaux avancés", "minecraft:netherite_ingot"),
         tab("Forge et amélioration", "minecraft:smithing_table"),
-        tab("Armes légères", "epicfight:dagger"),
-        tab("Armes lourdes", "epicfight:iron_greatsword"),
-        tab("Lances et armes d'hast", "epicfight:iron_spear"),
+        tab("Armes légères", "epicfight:diamond_dagger"),
+        tab("Armes lourdes", "epicfight:netherite_greatsword"),
+        tab("Lances et armes d'hast", "epicfight:netherite_spear"),
         tab("Armes à distance", "minecraft:bow"),
+        tab("Armes de Tensura", "tensura:adamantite_katana"),
+        tab("Armes uniques et légendaires", "simplyswords:runic_katana"),
         tab("Armures classiques", "minecraft:iron_chestplate"),
         tab("Armures fantastiques", "iceandfire:armor_red_chestplate"),
-        tab("Magie et parchemins", "irons_spellbooks:scroll"),
+        tab("Armures historiques", "magistuarmory:maximilian_chestplate"),
+        tab("Armures magiques", "irons_spellbooks:netherite_mage_chestplate"),
+        tab("Magie et parchemins", "irons_spellbooks:diamond_spell_book"),
         tab("Runes et composants magiques", "irons_spellbooks:arcane_rune"),
         tab("Potions et soins", "minecraft:potion"),
         tab("Composants de monstres", "iceandfire:dragonbone"),
         tab("Nourriture", "minecraft:golden_apple"),
+        tab("Fleurs, plantes et bois", "minecraft:cherry_sapling"),
         tab("Construction", "minecraft:bricks"),
+        tab("Mobilité et transport", "minecraft:saddle"),
+        tab("Trophées et décoration", "minecraft:item_frame"),
+        tab("Mécanismes et Redstone", "minecraft:piston"),
         tab("Utilitaires", "minecraft:compass"),
         tab("Objets rares contrôlés", "apotheosis:gem")
     );

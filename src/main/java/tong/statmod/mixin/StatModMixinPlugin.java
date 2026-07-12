@@ -29,6 +29,7 @@ public final class StatModMixinPlugin implements IMixinConfigPlugin {
             Map.entry("ReincarnationMenuRaceFilterMixin", "tensura"),
             Map.entry("ShopPageMixin", "sdmshop"),
             Map.entry("ShopPageModernMixin", "sdmshop"),
+            Map.entry("ShopTabPanelMixin", "sdmshop"),
             Map.entry("IndestructibleServerMixin", "indestructible")
     );
 

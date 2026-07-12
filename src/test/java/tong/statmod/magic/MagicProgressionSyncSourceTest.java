@@ -35,8 +35,12 @@ class MagicProgressionSyncSourceTest {
 
         assertTrue(source.contains("import tong.statmod.network.SyncHelper;"),
                 "Iron spell bridge should use the central magic sync helper");
-        assertTrue(onPostCast.contains("boolean magicChanged = reward.masteryDelta() > 0 || reward.magicPointsDelta() > 0;"),
-                "cast rewards should explicitly track when they mutate magic state");
+        assertTrue(onPostCast.contains("if (reward.practiceMasteryDelta() > 0) SchoolProgressTracker.applyPracticeMastery(data, branch, reward.practiceMasteryDelta());"),
+                "void-cast practice must be routed to the non-bankable mastery channel");
+        assertTrue(onPostCast.contains("if (reward.progressionMasteryDelta() > 0) SchoolProgressTracker.applyMastery(data, branch, reward.progressionMasteryDelta());"),
+                "impact mastery must remain on the bankable progression channel");
+        assertTrue(onPostCast.contains("boolean magicChanged = reward.practiceMasteryDelta() > 0 || reward.progressionMasteryDelta() > 0 || reward.magicPointsDelta() > 0;"),
+                "cast rewards should sync either practice or bankable progression changes");
         assertTrue(onPostCast.contains("if (magicChanged) SyncHelper.syncMagic(player);"),
                 "cast rewards must refresh magic state after mastery or point changes");
     }

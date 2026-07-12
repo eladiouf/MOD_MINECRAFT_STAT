@@ -135,6 +135,22 @@ class PlayerStatDataMagicTest {
     }
 
     @Test
+    void school_practice_mastery_progress_copies_independently() {
+        PlayerStatData source = new PlayerStatData();
+        source.setSchoolPracticeMasteryProgress(MagicBranch.FIRE, 40);
+        source.addSchoolPracticeMasteryProgress(MagicBranch.FIRE, 2);
+
+        PlayerStatData copy = new PlayerStatData();
+        copy.copyFrom(source);
+
+        assertEquals(42, source.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
+        assertEquals(42, copy.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
+        copy.addSchoolPracticeMasteryProgress(MagicBranch.FIRE, 1);
+        assertEquals(42, source.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
+        assertEquals(43, copy.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
+    }
+
+    @Test
     void magic_race_default_unset() {
         PlayerStatData d = new PlayerStatData();
         assertNull(d.getMagicRace());

@@ -5,6 +5,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import tong.statmod.STATMod;
 
 /**
@@ -13,18 +14,20 @@ import tong.statmod.STATMod;
  * remplacent les anciens {@code arcanePoints} + {@code schoolPoints[]} legacy.
  */
 public record SyncMagicPayload(String[] magicNodes, String[] learnedSpells, int magicPoints,
-                               int[] masteryProgress, int raceOrdinal, int startBranchOrdinal)
+                                int[] masteryProgress, int[] practiceMasteryProgress,
+                                int raceOrdinal, int startBranchOrdinal)
         implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SyncMagicPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "sync_magic"));
 
     public static final StreamCodec<ByteBuf, SyncMagicPayload> CODEC =
-            StreamCodec.composite(
+            NeoForgeStreamCodecs.composite(
                     NetCodecs.STRING_ARRAY, SyncMagicPayload::magicNodes,
                     NetCodecs.STRING_ARRAY, SyncMagicPayload::learnedSpells,
                     ByteBufCodecs.VAR_INT, SyncMagicPayload::magicPoints,
                     NetCodecs.INT_ARRAY, SyncMagicPayload::masteryProgress,
+                    NetCodecs.INT_ARRAY, SyncMagicPayload::practiceMasteryProgress,
                     ByteBufCodecs.VAR_INT, SyncMagicPayload::raceOrdinal,
                     ByteBufCodecs.VAR_INT, SyncMagicPayload::startBranchOrdinal,
                     SyncMagicPayload::new

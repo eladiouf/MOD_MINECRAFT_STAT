@@ -297,6 +297,7 @@ class PlayerStatDataTest {
         source.setMagicRace(MagicRace.ELF);
         source.setChosenStartBranch(MagicBranch.FIRE);
         source.setSchoolMasteryProgress(MagicBranch.FIRE, 9);
+        source.setSchoolPracticeMasteryProgress(MagicBranch.FIRE, 11);
         source.setDungeonFloorReached(6);
         source.setLastOverworldDimensionId("minecraft:overworld");
         source.setLastOverworldPos(123456L);
@@ -321,6 +322,8 @@ class PlayerStatDataTest {
         assertEquals(source.getChosenStartBranch(), target.getChosenStartBranch());
         assertEquals(source.getSchoolMasteryProgress(MagicBranch.FIRE),
                 target.getSchoolMasteryProgress(MagicBranch.FIRE));
+        assertEquals(source.getSchoolPracticeMasteryProgress(MagicBranch.FIRE),
+                target.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
         assertEquals(source.getDungeonFloorReached(), target.getDungeonFloorReached());
         assertEquals(source.getLastOverworldDimensionId(), target.getLastOverworldDimensionId());
         assertEquals(source.getLastOverworldPosPacked(), target.getLastOverworldPosPacked());

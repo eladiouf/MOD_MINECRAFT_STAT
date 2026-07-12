@@ -92,12 +92,14 @@ public final class IronSpellEventBridge {
 
         CastContext ctx = new CastContext(canonicalId, branch, manaFrac, hadImpact, wasFreeCast, event.getSpellLevel());
         CastRewardPolicy.Reward reward = CastRewardPolicy.evaluate(ctx);
-        if (reward.masteryDelta() > 0) SchoolProgressTracker.applyMastery(data, branch, reward.masteryDelta());
+        if (reward.practiceMasteryDelta() > 0) SchoolProgressTracker.applyPracticeMastery(data, branch, reward.practiceMasteryDelta());
+        if (reward.progressionMasteryDelta() > 0) SchoolProgressTracker.applyMastery(data, branch, reward.progressionMasteryDelta());
         if (reward.magicPointsDelta() > 0) data.addMagicPoints(reward.magicPointsDelta());
-        boolean magicChanged = reward.masteryDelta() > 0 || reward.magicPointsDelta() > 0;
+        boolean magicChanged = reward.practiceMasteryDelta() > 0 || reward.progressionMasteryDelta() > 0 || reward.magicPointsDelta() > 0;
         if (magicChanged) SyncHelper.syncMagic(player);
-        STATMod.LOGGER.debug("Cast progression: {} branch={} mastery+={} magicPoints+={}",
-                canonicalId, branch, reward.masteryDelta(), reward.magicPointsDelta());
+        STATMod.LOGGER.debug("Cast progression: {} branch={} practice+={} mastery+={} magicPoints+={}",
+                canonicalId, branch, reward.practiceMasteryDelta(), reward.progressionMasteryDelta(),
+                reward.magicPointsDelta());
     }
 
     @SubscribeEvent

@@ -65,6 +65,20 @@ public final class SchoolProgressTracker {
     }
 
     /**
+     * Enregistre de la maîtrise de pratique séparément de la maîtrise bancaire. Cette voie ne
+     * participe jamais aux conversions continues ni aux paliers et ne verse donc aucun magic
+     * point.
+     *
+     * @return toujours zéro
+     */
+    public static int applyPracticeMastery(PlayerStatData data, MagicBranch branch, int amount) {
+        if (data == null || branch == null || amount <= 0) return 0;
+
+        data.addSchoolPracticeMasteryProgress(branch, amount);
+        return 0;
+    }
+
+    /**
      * Calcule le bonus de palier si le mastery cumulé franchit un ou plusieurs seuils en une
      * seule application. Multi-seuil possible si {@code amount} est très grand.
      */

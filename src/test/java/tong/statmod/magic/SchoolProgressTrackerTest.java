@@ -90,4 +90,18 @@ class SchoolProgressTrackerTest {
         assertEquals(0, SchoolProgressTracker.applyMastery(d, MagicBranch.FIRE, -10));
         assertEquals(0, d.getSchoolMasteryProgress(MagicBranch.FIRE));
     }
+
+    @Test
+    void practice_mastery_never_converts_to_magic_points_or_milestones() {
+        PlayerStatData d = new PlayerStatData();
+        d.setSchoolMasteryProgress(MagicBranch.FIRE, 999);
+        int magicPointsBefore = d.getMagicPoints();
+
+        int granted = SchoolProgressTracker.applyPracticeMastery(d, MagicBranch.FIRE, 500);
+
+        assertEquals(0, granted);
+        assertEquals(500, d.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
+        assertEquals(999, d.getSchoolMasteryProgress(MagicBranch.FIRE));
+        assertEquals(magicPointsBefore, d.getMagicPoints());
+    }
 }

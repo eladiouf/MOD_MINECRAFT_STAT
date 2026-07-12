@@ -19,6 +19,7 @@ class ModAttachmentsMagicSerializationTest {
         PlayerStatData d = new PlayerStatData();
         d.setMagicPoints(7);
         d.setSchoolMasteryProgress(MagicBranch.FIRE, 42);
+        d.setSchoolPracticeMasteryProgress(MagicBranch.FIRE, 17);
         d.addMagicNode("common/foundation/arcane_focus");
         d.learnSpell("irons_spellbooks:firebolt");
         d.setMagicRace(MagicRace.ELF);
@@ -30,6 +31,7 @@ class ModAttachmentsMagicSerializationTest {
 
         assertEquals(7, restored.getMagicPoints());
         assertEquals(42, restored.getSchoolMasteryProgress(MagicBranch.FIRE));
+        assertEquals(17, restored.getSchoolPracticeMasteryProgress(MagicBranch.FIRE));
         assertTrue(restored.hasMagicNode("common/foundation/arcane_focus"));
         assertTrue(restored.hasLearnedSpell("irons_spellbooks:firebolt"));
         assertEquals(MagicRace.ELF, restored.getMagicRace());

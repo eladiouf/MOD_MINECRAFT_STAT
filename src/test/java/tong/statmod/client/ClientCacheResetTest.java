@@ -18,6 +18,7 @@ class ClientCacheResetTest {
                 new String[]{"irons_spellbooks:magic_missile"},
                 6,
                 new int[]{4, 3, 2, 1},
+                new int[]{9, 8, 7, 6},
                 2,
                 1);
 
@@ -40,6 +41,7 @@ class ClientCacheResetTest {
         assertEquals(0, ClientMagicCache.getMagicNodeCount());
         assertEquals(0, ClientMagicCache.getLearnedSpellsCount());
         assertEquals(0, ClientMagicCache.getMasteryProgress(MagicBranch.FIRE));
+        assertEquals(0, ClientMagicCache.getPracticeMasteryProgress(MagicBranch.FIRE));
         assertEquals(-1, ClientMagicCache.getRaceOrdinal());
         assertEquals(-1, ClientMagicCache.getStartBranchOrdinal());
     }

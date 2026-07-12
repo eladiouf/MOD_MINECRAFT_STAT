@@ -23,6 +23,12 @@ public final class MagicStateSerializer {
         }
         tag.putIntArray("schoolMastery", sm);
 
+        int[] practice = new int[MagicBranch.values().length];
+        for (MagicBranch b : MagicBranch.values()) {
+            practice[b.ordinal()] = data.getSchoolPracticeMasteryProgress(b);
+        }
+        tag.putIntArray("schoolPracticeMastery", practice);
+
         ListTag nodes = new ListTag();
         for (String s : data.getMagicNodes()) nodes.add(StringTag.valueOf(s));
         tag.put("magicNodes", nodes);
@@ -73,6 +79,12 @@ public final class MagicStateSerializer {
         for (MagicBranch b : MagicBranch.values()) {
             int idx = b.ordinal();
             if (idx < sm.length) data.setSchoolMasteryProgress(b, sm[idx]);
+        }
+
+        int[] practice = tag.getIntArray("schoolPracticeMastery");
+        for (MagicBranch b : MagicBranch.values()) {
+            int idx = b.ordinal();
+            if (idx < practice.length) data.setSchoolPracticeMasteryProgress(b, practice[idx]);
         }
 
         ListTag nodes = tag.getList("magicNodes", Tag.TAG_STRING);

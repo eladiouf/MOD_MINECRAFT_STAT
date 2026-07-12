@@ -34,7 +34,8 @@ if (Test-Path -LiteralPath $localModels) {
 $vanillaIds = @(
     'raw_iron', 'raw_gold', 'raw_copper', 'coal', 'iron_ingot', 'gold_ingot',
     'copper_ingot', 'diamond', 'emerald', 'lapis_lazuli', 'redstone',
-    'amethyst_shard', 'quartz', 'netherite_scrap', 'netherite_ingot'
+    'amethyst_shard', 'quartz', 'netherite_scrap', 'netherite_ingot',
+    'golden_apple', 'enchanted_golden_apple', 'golden_carrot'
 )
 foreach ($path in $vanillaIds) {
     $rows.Add('minecraft' + $tab + 'minecraft:' + $path + $tab + 'vanilla')

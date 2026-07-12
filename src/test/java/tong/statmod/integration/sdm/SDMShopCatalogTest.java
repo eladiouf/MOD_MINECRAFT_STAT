@@ -32,9 +32,20 @@ class SDMShopCatalogTest {
     void containsNoDuplicatesOrForbiddenItems() {
         Set<String> ids = new HashSet<>();
         for (SDMShopCatalog.ShopItem item : SDMShopCatalog.items()) {
-            assertTrue(ids.add(item.itemId()), item.itemId());
+            String identity = item.itemId() + "#" + item.potionId();
+            assertTrue(ids.add(identity), identity);
             assertFalse(SDMShopCatalog.isForbiddenItemId(item.itemId()), item.itemId());
         }
+    }
+
+    @Test
+    void includesStrongHealingAndStrengthPotions() {
+        Set<String> potionIds = SDMShopCatalog.items().stream()
+            .map(SDMShopCatalog.ShopItem::potionId)
+            .filter(java.util.Objects::nonNull)
+            .collect(Collectors.toSet());
+        assertTrue(potionIds.contains("strong_healing"));
+        assertTrue(potionIds.contains("strong_strength"));
     }
 
     @Test
@@ -65,6 +76,18 @@ class SDMShopCatalogTest {
             assertTrue(item.price() > 0, item.itemId());
             assertTrue(item.count() > 0, item.itemId());
         }
+    }
+
+    @Test
+    void coversEveryRequiredContentFamily() {
+        Set<String> namespaces = SDMShopCatalog.items().stream()
+            .map(item -> item.itemId().substring(0, item.itemId().indexOf(':')))
+            .collect(Collectors.toSet());
+        assertTrue(namespaces.containsAll(Set.of(
+            "minecraft", "statmod", "tensura", "irons_spellbooks",
+            "iceandfire", "apotheosis", "epicfight", "simplyswords",
+            "magistuarmory", "overgeared"
+        )), namespaces.toString());
     }
 
     @Test

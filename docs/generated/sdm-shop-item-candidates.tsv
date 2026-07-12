@@ -7556,8 +7556,11 @@ minecraft	minecraft:crossbow_unicorn_horn	tensura.jar
 minecraft	minecraft:crossbow_unicorn_horn	tensura-neoforge-2.0.1.0.jar
 minecraft	minecraft:diamond	vanilla
 minecraft	minecraft:emerald	vanilla
+minecraft	minecraft:enchanted_golden_apple	vanilla
 minecraft	minecraft:glow_item_frame	Quark-4.1-481.jar
 minecraft	minecraft:gold_ingot	vanilla
+minecraft	minecraft:golden_apple	vanilla
+minecraft	minecraft:golden_carrot	vanilla
 minecraft	minecraft:iron_ingot	vanilla
 minecraft	minecraft:item_frame	Quark-4.1-481.jar
 minecraft	minecraft:lapis_lazuli	vanilla

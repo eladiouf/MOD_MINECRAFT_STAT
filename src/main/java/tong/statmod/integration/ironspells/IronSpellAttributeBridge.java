@@ -50,19 +50,16 @@ final class IronSpellAttributeBridge {
         if (player.tickCount % 20 != 0) return;
         if (player instanceof ServerPlayer serverPlayer) {
             apply(serverPlayer);
-            // Iron's client-side mana (ClientMagicData) starts at 0 and is only updated by SyncManaPacket.
-            // Our single restore packet can be lost if sent before the client is ready, and Iron's
-            // won't resend while server mana is already at max. Force-sync for the first 30s after login.
-            Integer loginTick = LOGIN_SERVER_TICK.get(serverPlayer.getUUID());
-            if (loginTick != null) {
-                int now = serverPlayer.level().getServer().getTickCount();
-                if (now - loginTick < 600) {
-                    MagicData md = MagicData.getPlayerMagicData(serverPlayer);
-                    if (md != null) {
-                        IronSpellManaSyncBridge.syncMana(serverPlayer, md.getMana(), true);
-                    }
-                } else {
-                    LOGIN_SERVER_TICK.remove(serverPlayer.getUUID());
+            // Iron's client-side mana (ClientMagicData) starts at 0 and is only updated by
+            // SyncManaPacket. Iron's ne re-synchronise que quand le mana serveur CHANGE : si le
+            // paquet initial se perd (ou mana déjà au max), le client reste à 0 pour toujours →
+            // barre vide ET cast au keybind refusé par le pré-check CLIENT d'Iron's (« not enough
+            // mana ») alors que le serveur a du mana. L'ancienne fenêtre de 30 s après login ne
+            // couvrait pas ce cas. Sync forcée permanente, légère (1 petit paquet / 2 s).
+            if (serverPlayer.tickCount % 40 == 0) {
+                MagicData md = MagicData.getPlayerMagicData(serverPlayer);
+                if (md != null) {
+                    IronSpellManaSyncBridge.syncMana(serverPlayer, md.getMana(), true);
                 }
             }
             if (player.tickCount % 100 == 0) {

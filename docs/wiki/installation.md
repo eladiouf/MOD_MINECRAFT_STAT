@@ -8,28 +8,41 @@ nav_order: 1
 
 ## Prérequis
 
-- Minecraft 1.21.1
-- NeoForge 21.1.228+
-- Java 21
+- Minecraft **1.21.1**
+- [NeoForge](https://neoforged.net/) **21.1+** ([téléchargements](https://projects.neoforged.net/neoforged/neoforge))
+- Java **21** ([Adoptium Temurin](https://adoptium.net/temurin/releases/?version=21))
 
-## Installation
+## Étapes
 
-1. Télécharger NeoForge 1.21.1 et l'installer
-2. Télécharger le JAR de STAT Mod depuis CurseForge ou Modrinth
-3. Placer le JAR dans le dossier `mods/`
-4. Installer les dépendances requises
+1. Installer [NeoForge 1.21.1](https://projects.neoforged.net/neoforged/neoforge) (double-clic sur l'installeur → *Install client*)
+2. Télécharger le JAR de STAT Mod : [**Modrinth**](https://modrinth.com/mod/statmod) ou [**CurseForge**](https://www.curseforge.com/minecraft/mc-mods/stat-mod-rpg)
+3. Placer le JAR dans le dossier `mods/` de votre instance (`%appdata%\.minecraft\mods` par défaut sous Windows)
+4. *(Optionnel)* Installer les mods compagnons pour enrichir l'expérience — voir ci-dessous
 5. Lancer Minecraft avec le profil NeoForge
 
-## Dépendances
+!!! tip "Standalone"
+    STAT Mod fonctionne **sans aucun autre mod** : stats, perks, XP et Trial Dungeon
+    sont disponibles immédiatement. Les intégrations s'activent automatiquement
+    quand le mod compagnon est présent.
 
-### Requises
-- **Tensura Reincarnated** 1.0.2.6+ — système racial et soul level
+## Mods compagnons
 
-### Recommandées
-- **Iron's Spellbooks** 3.16+ — arbre magique unifié
-- **Puffish Skills** — interface utilisateur pour perks et arbre
+La liste complète avec les rôles de chaque mod est sur la page [Dépendances](dependencies.md).
 
-### Optionnelles
-- **Epic Fight** — animations de combat (expérimental)
-- **ParCool** — compétences de mouvement
-- **Overgeared** — équipement personnalisé
+### Recommandés (cœur de l'expérience RPG)
+
+- [**Iron's Spellbooks**](https://modrinth.com/mod/irons-spells-n-spellbooks) 3.16+ — arbre magique unifié (249 nœuds, 9 écoles) et mages du donjon
+- [**Tensura Reincarnated**](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) — races, soul level, gates de compétences
+- [**Pufferfish's Skills**](https://modrinth.com/mod/skills) — interface miroir de l'arbre de perks
+
+### Optionnels
+
+- [**Epic Fight**](https://modrinth.com/mod/epic-fight) — compétences de combat gatées par stats *(expérimental)*
+- [**ParCool**](https://modrinth.com/mod/parcool) — parkour et mobilité
+- [**Overgeared**](https://www.curseforge.com/minecraft/mc-mods/overgeared) — forge d'armes universelle gatée par la stat Forging
+- [**Waystones**](https://modrinth.com/mod/waystones) — checkpoints d'étages dans le donjon
+- [**Lootr**](https://modrinth.com/mod/lootr) — coffres de donjon individuels par joueur
+- [**L2 Hostility**](https://modrinth.com/mod/l2hostility) — scaling de difficulté des mobs
+- [**PlayerRevive**](https://modrinth.com/mod/playerrevive) — réanimation en co-op
+- [**FTB Teams**](https://www.curseforge.com/minecraft/mc-mods/ftb-teams-forge) — équipes pour la conquête partagée du donjon
+- [**SDM Shop**](https://modrinth.com/mod/sdm-shop) — boutique des marchands du donjon

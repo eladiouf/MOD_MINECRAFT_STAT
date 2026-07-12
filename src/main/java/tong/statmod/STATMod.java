@@ -41,7 +41,7 @@ import tong.statmod.item.ForgingMaterials;
 import tong.statmod.item.ForgingTools;
 import tong.statmod.item.ModItems;
 import tong.statmod.item.RuneEssence;
-import tong.statmod.item.RuneShards;
+
 import tong.statmod.menu.ModMenuTypes;
 import tong.statmod.loot.ModLootModifiers;
 import tong.statmod.network.SyncLifecycleHandler;
@@ -79,7 +79,7 @@ public class STATMod {
         ModBlockEntities.register(modBus);
         ModMenuTypes.register(modBus);
         RuneEssence.register(modBus);
-        RuneShards.register(modBus);
+
         ModSounds.register(modBus);
         ModLootModifiers.register(modBus);
         modBus.register(tong.statmod.network.NetworkHandler.class);
@@ -114,6 +114,8 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(DungeonProtectionHandler.class);
         NeoForge.EVENT_BUS.register(tong.statmod.economy.MagicBanker.class);
         NeoForge.EVENT_BUS.register(tong.statmod.economy.VillageBankerSpawner.class);
+        NeoForge.EVENT_BUS.register(tong.statmod.economy.ForgeMaterialShop.class);
+        NeoForge.EVENT_BUS.register(tong.statmod.economy.VillageForgeMerchantSpawner.class);
         if (tensuraLoaded) {
             TensuraEventSubscriber.register();
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);

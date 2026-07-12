@@ -52,6 +52,10 @@ public final class ClientPayloadHandler {
      * Door for the reverse bridge — emulate a Tensura keybind press/release on the
      * client so Tensura's full native flow runs (magic circle, charge, projectile).
      */
+    public static void handleOpenForgeShop(OpenForgeShopPayload payload, IPayloadContext context) {
+        ClientPayloadActions.handleOpenForgeShop(payload, context);
+    }
+
     public static void handleBridgeTensuraSkill(BridgeTensuraSkillPayload payload, IPayloadContext context) {
         ClientPayloadActions.handleBridgeTensuraSkill(payload, context);
     }

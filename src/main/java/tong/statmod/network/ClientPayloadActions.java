@@ -70,6 +70,10 @@ final class ClientPayloadActions {
         context.enqueueWork(() -> MagicBankScreen.openOrRefresh(payload.balance(), payload.physical()));
     }
 
+    static void handleOpenForgeShop(OpenForgeShopPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> tong.statmod.client.ForgeMaterialScreen.openOrRefresh(payload.balance()));
+    }
+
     static void handleBridgeTensuraSkill(BridgeTensuraSkillPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (!ModList.get().isLoaded("tensura")) return;

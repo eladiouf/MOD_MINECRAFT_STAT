@@ -1,9 +1,0 @@
-{
-  "type": "statmod:add_dungeon_shard",
-  "conditions": [
-    {
-      "condition": "neoforge:loot_table_id",
-      "loot_table_id": "statmod:chests/dungeon_treasure"
-    }
-  ]
-}

@@ -131,6 +131,18 @@ public final class ServerPayloadHandler {
         });
     }
 
+    public static void handleBuyForgeItem(BuyForgeItemPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            if (!tong.statmod.economy.ForgeMaterialShop.canUse(player)) {
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                        "forge_shop.invalid_session"), false);
+                return;
+            }
+            tong.statmod.economy.ForgeMaterialShop.buyItem(player, payload.itemId());
+        });
+    }
+
     public static void handleMagicBankAction(MagicBankActionPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer player)) return;

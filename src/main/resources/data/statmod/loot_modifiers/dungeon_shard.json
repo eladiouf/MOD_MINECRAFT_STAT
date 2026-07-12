@@ -1,9 +1,0 @@
-{
-  "type": "statmod:add_dungeon_shard",
-  "conditions": [
-    {
-      "condition": "minecraft:random_chance",
-      "chance": 1.0
-    }
-  ]
-}

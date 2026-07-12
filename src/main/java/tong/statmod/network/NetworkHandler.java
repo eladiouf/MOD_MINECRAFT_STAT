@@ -61,5 +61,10 @@ public class NetworkHandler {
                 (payload, context) -> ClientPayloadHandler.handleOpenMagicBank(payload, context));
         registrar.playToServer(MagicBankActionPayload.TYPE, MagicBankActionPayload.CODEC,
                 ServerPayloadHandler::handleMagicBankAction);
+
+        registrar.playToClient(OpenForgeShopPayload.TYPE, OpenForgeShopPayload.CODEC,
+                (payload, context) -> ClientPayloadHandler.handleOpenForgeShop(payload, context));
+        registrar.playToServer(BuyForgeItemPayload.TYPE, BuyForgeItemPayload.CODEC,
+                ServerPayloadHandler::handleBuyForgeItem);
     }
 }

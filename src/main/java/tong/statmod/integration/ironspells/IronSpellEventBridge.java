@@ -10,6 +10,7 @@ import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -95,11 +96,13 @@ public final class IronSpellEventBridge {
         activateAdvancedCastPerks(player, data, branch, quickCast, branchChain, event.getManaCost());
 
         int spellLevel = event.getSpellLevel();
-        // Récompense différée d'un tour d'executor serveur : les SpellDamageEvent émis
-        // pendant le cast (sorts instantanés) doivent avoir été observés AVANT de décider
-        // si ce cast a réellement porté. La preuve d'impact remplace toute heuristique de
-        // coût de mana (Tâche 3 — magic security hardening).
-        player.server.execute(() -> {
+        // Récompense différée via tell(TickTask) — PAS server.execute : sur le thread
+        // serveur, execute() tourne inline, or Iron's tire SpellOnCastEvent AVANT
+        // spell.onCast (vérifié bytecode 3.16.1) → les dégâts d'un sort instantané
+        // arrivent APRÈS ce handler dans la même pile. tell() met toujours en file,
+        // drainée après la pile courante : les SpellDamageEvent du cast sont observés
+        // avant de décider si ce cast a réellement porté (Tâche 3).
+        player.server.tell(new TickTask(player.server.getTickCount(), () -> {
             if (player.isRemoved() || player.hasDisconnected()) return;
             boolean hadImpact = CAST_IMPACT_TRACKER.consume(uuid, canonicalId,
                     player.serverLevel().getGameTime());
@@ -113,7 +116,7 @@ public final class IronSpellEventBridge {
             STATMod.LOGGER.debug("Cast progression: {} branch={} impact={} practice+={} mastery+={} magicPoints+={}",
                     canonicalId, branch, hadImpact, reward.practiceMasteryDelta(), reward.progressionMasteryDelta(),
                     reward.magicPointsDelta());
-        });
+        }));
     }
 
     @SubscribeEvent

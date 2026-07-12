@@ -5,7 +5,7 @@
 [![NeoForge](https://img.shields.io/badge/NeoForge-21.1.228-orange)](https://neoforged.net/)
 [![Java](https://img.shields.io/badge/Java-21-red)](https://adoptium.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
-[![CurseForge](https://img.shields.io/badge/CurseForge-Available-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/statmod)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Available-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/stat-mod-rpg)
 [![Modrinth](https://img.shields.io/badge/Modrinth-Available-green?logo=modrinth)](https://modrinth.com/mod/statmod)
 [![Wiki](https://img.shields.io/badge/Wiki-GitHub%20Pages-blue)](https://eladiouf.github.io/MOD_MINECRAFT_STAT/)
 

@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.2.0-public] - 2026-07-12 — First public release (Modrinth + CurseForge)
+
+### Added
+- **Trial Dungeon**: endless procedural dungeon dimension — 100 rotating themes
+  across 10 arcs, serpentine room-chain floors, giant open-sky boss arenas with
+  a 40+ boss altar roster, treasure vaults, secret rooms, ultra-secret relic
+  sanctuaries, command-block traps
+- **Dungeon Rush**: kill combos, jackpots, flawless-floor bonuses, personal records
+- **Dungeon points economy**: kills → points → currency exchange; physical FDP
+  currency (coins & notes), magic banker, SDM shop bridge with detailed catalog
+- **Dungeon mage mobs** with real caster AI (modeled on Iron's wizard AI):
+  kiting with player-facing backpedal, spell telegraphs (sound + particles),
+  line-of-sight checks, distance-scaled cast cadence, hit retaliation, squad
+  cohesion — and counterplay: hitting a casting mage interrupts its spell
+- Natural mage squads from floor 3+ (wither mages 15+), always escorted by a
+  tank knight and an archer
+- Team co-op dungeon conquest (FTB Teams): shared unlocks, assist points
+- PlayerRevive, Waystones, Lootr, L2 Hostility dungeon integrations
+
+### Fixed
+- Custom mage spawn eggs: NBT now nested under NeoForgeData + spawn-guard
+  authorization (mobs previously vanished on spawn)
+- Mage AI lost on chunk reload/restart (goal re-attached via in-memory guard)
+- Invalid Iron's Spellbooks spell ids (ice_storm → blizzard, summon_skeleton → raise_dead)
+- Natural mage wave conversion was dead code with a full modpack installed
+
+---
+
 ## [1.2.0] - 2026-06-21
 
 ### Added

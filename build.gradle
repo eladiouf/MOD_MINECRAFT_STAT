@@ -34,6 +34,8 @@ modrinth {
     gameVersions = ['1.21.1']
     loaders = ['neoforge']
     changelog = rootProject.file('CHANGELOG.md').exists() ? rootProject.file('CHANGELOG.md').text : ''
+    // `gradlew modrinthSyncBody` pousse MODRINTH_DESCRIPTION.md comme description de la page
+    syncBodyFrom = rootProject.file('MODRINTH_DESCRIPTION.md').text
     dependencies {
         optional.project 'irons-spells-n-spellbooks'
         optional.project 'skills'                    // Pufferfish's Skills

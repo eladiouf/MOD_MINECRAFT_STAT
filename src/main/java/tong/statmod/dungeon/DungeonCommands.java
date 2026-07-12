@@ -95,7 +95,7 @@ public final class DungeonCommands {
                             return 1;
                         }))
                 .then(Commands.literal("regen")
-                        .then(Commands.argument("floor", IntegerArgumentType.integer(1, 10000))
+                        .then(Commands.argument("floor", IntegerArgumentType.integer(0, 10000))
                                 .executes(ctx -> {
                                     int floor = IntegerArgumentType.getInteger(ctx, "floor");
                                     ServerLevel dungeon = ctx.getSource().getServer()
@@ -104,6 +104,13 @@ public final class DungeonCommands {
                                         ctx.getSource().sendFailure(Component.literal(
                                                 "Dimension statmod:trial_dungeon introuvable"));
                                         return 0;
+                                    }
+                                    // Étage 0 = Cité des Aventuriers : purge + rebuild en tâche de fond.
+                                    if (floor == 0) {
+                                        tong.statmod.dungeon.city.CityGenerator.regen(dungeon);
+                                        ctx.getSource().sendSuccess(() -> Component.literal(
+                                                "Regen de la Cité programmée (progression en tâche de fond)"), true);
+                                        return 1;
                                     }
                                     // Efface toute la bounding box (surface + underside + décor)
                                     // puis régénère — même seed, même île.

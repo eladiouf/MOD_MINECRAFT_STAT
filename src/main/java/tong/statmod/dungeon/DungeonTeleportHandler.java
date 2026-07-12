@@ -39,7 +39,7 @@ public final class DungeonTeleportHandler {
      */
     public static BlockPos floorSpawnPos(int floor) {
         if (floor == 0) {
-            return new BlockPos(0, FLOOR_Y, -FLOOR_SPACING);
+            return tong.statmod.dungeon.city.CityPlan.center();
         }
         int idx = Math.max(0, floor - 1);
         int col = idx % GRID_COLS;
@@ -63,10 +63,10 @@ public final class DungeonTeleportHandler {
      * l'arène géante (l'autel occupe le centre).
      */
     public static BlockPos floorPlayerSpawnPos(int floor) {
-        BlockPos island = floorSpawnPos(floor);
         if (floor == 0) {
-            return island.offset(0, 1, -10); // Près de la balise de retour
+            return tong.statmod.dungeon.city.CityPlan.playerSpawn(); // Grande Place de la cité
         }
+        BlockPos island = floorSpawnPos(floor);
         if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
         // Boss (générique OU arène importée) : apparaître sur la PLATEFORME au bord sud, hors de la
         // structure/arène (qui est centrée et plus petite que l'emprise) → jamais dans un bloc.
@@ -177,30 +177,38 @@ public final class DungeonTeleportHandler {
         player.teleportTo(dungeon, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
                 Set.of(), player.getYRot(), player.getXRot());
 
-        // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
-        // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
-        // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
-        DungeonMobSpawner.requestWave(dungeon, floor);
+        // Les mécaniques de combat n'ont pas de sens dans la cité (étage 0, zone sûre).
+        if (floor > 0) {
+            // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
+            // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
+            // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
+            DungeonMobSpawner.requestWave(dungeon, floor);
 
-        // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
-        // la récompense de conquête.
-        DungeonRush.beginFloor(player.getUUID());
-        // Records : le chrono de nettoyage de l'étage démarre maintenant.
-        DungeonRecords.onFloorEnter(player, floor, dungeon.getGameTime());
+            // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
+            // la récompense de conquête.
+            DungeonRush.beginFloor(player.getUUID());
+            // Records : le chrono de nettoyage de l'étage démarre maintenant.
+            DungeonRecords.onFloorEnter(player, floor, dungeon.getGameTime());
+        }
 
         // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
         // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
         tong.statmod.network.SyncHelper.syncStats(player);
 
-        // Annonce du thème de l'étage (chaque étage a le sien).
-        DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
-        player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                theme.displayName()), false);
-        // Objectif de l'étage en barre d'action (le joueur sait quoi faire dès l'entrée).
-        player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
-                "dungeon.enter.objective",
-                net.minecraft.network.chat.Component.translatable(
-                        DungeonObjective.forFloor(floor).translationKey())), true);
+        if (floor > 0) {
+            // Annonce du thème de l'étage (chaque étage a le sien).
+            DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
+            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                    theme.displayName()), false);
+            // Objectif de l'étage en barre d'action (le joueur sait quoi faire dès l'entrée).
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    "dungeon.enter.objective",
+                    net.minecraft.network.chat.Component.translatable(
+                            DungeonObjective.forFloor(floor).translationKey())), true);
+        } else {
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    "dungeon.city.welcome"), false);
+        }
 
         // Tutoriel d'accueil, une seule fois par joueur (onboarding des mécaniques).
         sendIntroIfFirstTime(player);

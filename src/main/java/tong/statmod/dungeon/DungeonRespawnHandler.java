@@ -37,7 +37,23 @@ public final class DungeonRespawnHandler {
 
         // Étage sur lequel le joueur est tombé — DÉDUIT AVANT le tp (il change après).
         int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
-        if (floor < 1) floor = 1;
+
+        // Mort dans la CITÉ (étage 0) : zone sûre — aucune pénalité de points, aucun wipe de
+        // vague. On annule la mort et on redépose le joueur sur la Grande Place.
+        if (floor == 0) {
+            event.setCanceled(true);
+            player.setHealth(player.getMaxHealth());
+            player.clearFire();
+            player.setAirSupply(player.getMaxAirSupply());
+            player.getFoodData().setFoodLevel(20);
+            var sp = tong.statmod.dungeon.city.CityPlan.playerSpawn();
+            player.teleportTo((ServerLevel) player.level(),
+                    sp.getX() + 0.5, sp.getY(), sp.getZ() + 0.5,
+                    java.util.Set.of(), player.getYRot(), player.getXRot());
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    "dungeon.city.respawn"), false);
+            return;
+        }
 
         // Annule la mort → pas d'écran de mort, pas de drop d'inventaire/XP.
         event.setCanceled(true);

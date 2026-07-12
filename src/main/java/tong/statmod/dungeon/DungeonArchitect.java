@@ -38,8 +38,8 @@ public final class DungeonArchitect {
     /** Hauteur intérieure (plafond à {@code y=WALL_H}). Relevée pour des étages plus imposants. */
     static final int WALL_H = 12;
 
-    /** Rôle de l'étage — détermine le "cœur". */
-    public enum Role { COMBAT, TREASURE, BOSS, HUB }
+    /** Rôle de l'étage — détermine le "cœur". (L'étage 0 est géré par dungeon/city, hors rôle.) */
+    public enum Role { COMBAT, TREASURE, BOSS }
 
     private DungeonArchitect() {}
 
@@ -92,11 +92,7 @@ public final class DungeonArchitect {
         // ── NOUVELLE GÉNÉRATION (2026-07-05) ──
         // COMBAT & TRÉSOR : chaîne de pièces reliées (spawn → … → pièce finale avec téléporteur /
         //   coffres). BOSS : arène géante à ciel ouvert ceinturée de grands piliers.
-        // HUB (Étage 0) : arène pacifique avec marchands, lits, enclumes et waystone.
-        if (role == Role.HUB) {
-            DungeonHubFloor.build(lv, sp, t);
-            return;
-        }
+        // (Étage 0 : Cité des Aventuriers — pipeline dédié dans dungeon/city, jamais ici.)
         if (role == Role.COMBAT || role == Role.TREASURE) {
             DungeonRoomChain.build(lv, sp, t, floor, role, rng);
             return;

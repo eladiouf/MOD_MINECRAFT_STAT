@@ -28,14 +28,18 @@ public final class IslandGenerator {
     private IslandGenerator() {}
 
     public static boolean generateFloor(ServerLevel lv, int floor) {
+        // Étage 0 = Cité des Aventuriers : pipeline dédié, étalé sur les ticks (jamais synchrone).
+        if (floor == 0) {
+            tong.statmod.dungeon.city.CityGenerator.ensureCity(lv);
+            return true;
+        }
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         if (!lv.getBlockState(sp.below()).isAir()) return false;
         FloorPalette tier = FloorPalette.forFloor(floor);
         ThemePalette theme = ThemePalette.forFloor(floor); // identité matérielle par thème/arc
 
         DungeonArchitect.Role role =
-                (floor == 0) ? DungeonArchitect.Role.HUB
-              : (floor % 10 == 0) ? DungeonArchitect.Role.BOSS
+                (floor % 10 == 0) ? DungeonArchitect.Role.BOSS
               : (floor % 5 == 0) ? DungeonArchitect.Role.TREASURE
               : DungeonArchitect.Role.COMBAT;
 

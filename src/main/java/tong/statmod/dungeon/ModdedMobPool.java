@@ -35,6 +35,9 @@ public final class ModdedMobPool {
     public static List<EntityType<?>> getModdedMobs(FloorPalette tier) {
         List<EntityType<?>> modded = new ArrayList<>();
 
+        // Mages du Donjon Custom (exclusifs à nos vagues de donjons)
+        addDungeonMages(modded, tier);
+
         // SLU (Souls-Like Universe, modId="slu") — trash mobs contrôlés par difficulté
         addSLUMobs(modded, tier);
 
@@ -69,6 +72,39 @@ public final class ModdedMobPool {
         addIceAndFireMobs(modded, tier);
 
         return modded;
+    }
+
+    private static void addDungeonMages(List<EntityType<?>> pool, FloorPalette tier) {
+        switch(tier) {
+            case EARLY -> {
+                addIfAvailable(pool, "statmod:pyromancer_mob");
+            }
+            case MID -> {
+                addIfAvailable(pool, "statmod:pyromancer_mob");
+                addIfAvailable(pool, "statmod:cryomancer_mob");
+                addIfAvailable(pool, "statmod:electromancer_mob");
+                addIfAvailable(pool, "statmod:cleric_mob");
+            }
+            case LATE -> {
+                addIfAvailable(pool, "statmod:pyromancer_mob");
+                addIfAvailable(pool, "statmod:cryomancer_mob");
+                addIfAvailable(pool, "statmod:electromancer_mob");
+                addIfAvailable(pool, "statmod:wither_mage_mob");
+                addIfAvailable(pool, "statmod:cleric_mob");
+                addIfAvailable(pool, "statmod:hollow_witch_mob");
+                addIfAvailable(pool, "statmod:mage_knight_mob");
+            }
+            case ABYSS -> {
+                addIfAvailable(pool, "statmod:pyromancer_mob");
+                addIfAvailable(pool, "statmod:cryomancer_mob");
+                addIfAvailable(pool, "statmod:electromancer_mob");
+                addIfAvailable(pool, "statmod:wither_mage_mob");
+                addIfAvailable(pool, "statmod:cleric_mob");
+                addIfAvailable(pool, "statmod:hollow_witch_mob");
+                addIfAvailable(pool, "statmod:mage_knight_mob");
+                addIfAvailable(pool, "statmod:void_knight_mob");
+            }
+        }
     }
 
     private static void addSLUMobs(List<EntityType<?>> pool, FloorPalette tier) {
@@ -229,7 +265,7 @@ public final class ModdedMobPool {
         }
     }
 
-    /** Born in Chaos — hordes de morts-vivants et citrouilles. */
+    /** Born in Chaos — hordes de morts-vivants et citrouilles (vérifié jar 1.7.6). */
     private static void addBornInChaosMobs(List<EntityType<?>> pool, FloorPalette tier) {
         if (!ModList.get().isLoaded("born_in_chaos_v1")) return;
         switch (tier) {
@@ -237,24 +273,42 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "born_in_chaos_v1:decaying_zombie");
                 addIfAvailable(pool, "born_in_chaos_v1:decrepit_skeleton");
                 addIfAvailable(pool, "born_in_chaos_v1:baby_skeleton");
+                addIfAvailable(pool, "born_in_chaos_v1:barrel_zombie");
+                addIfAvailable(pool, "born_in_chaos_v1:pumpkin_dunce");
             }
             case MID -> {
                 addIfAvailable(pool, "born_in_chaos_v1:zombie_bruiser");
                 addIfAvailable(pool, "born_in_chaos_v1:skeleton_thrasher");
                 addIfAvailable(pool, "born_in_chaos_v1:dread_hound");
                 addIfAvailable(pool, "born_in_chaos_v1:pumpkin_bruiser");
+                addIfAvailable(pool, "born_in_chaos_v1:zombie_fisherman");
+                addIfAvailable(pool, "born_in_chaos_v1:zombie_lumberjack");
+                addIfAvailable(pool, "born_in_chaos_v1:mr_pumpkin");
+                addIfAvailable(pool, "born_in_chaos_v1:zombie_clown");
+                addIfAvailable(pool, "born_in_chaos_v1:restless_spirit");
+                addIfAvailable(pool, "born_in_chaos_v1:lifestealer");
             }
             case LATE -> {
                 addIfAvailable(pool, "born_in_chaos_v1:bonescaller");
                 addIfAvailable(pool, "born_in_chaos_v1:seared_spirit");
                 addIfAvailable(pool, "born_in_chaos_v1:skeleton_demoman");
                 addIfAvailable(pool, "born_in_chaos_v1:sir_pumpkinhead");
+                addIfAvailable(pool, "born_in_chaos_v1:supreme_bonescaller");
+                addIfAvailable(pool, "born_in_chaos_v1:pumpkin_spirit");
+                addIfAvailable(pool, "born_in_chaos_v1:senor_pumpkin");
+                addIfAvailable(pool, "born_in_chaos_v1:dark_vortex");
+                addIfAvailable(pool, "born_in_chaos_v1:missionary_raider");
+                addIfAvailable(pool, "born_in_chaos_v1:nightmare_stalker");
             }
             case ABYSS -> {
                 addIfAvailable(pool, "born_in_chaos_v1:fallen_chaos_knight");
                 addIfAvailable(pool, "born_in_chaos_v1:door_knight");
                 addIfAvailable(pool, "born_in_chaos_v1:infernal_spirit");
                 addIfAvailable(pool, "born_in_chaos_v1:dire_hound_leader");
+                addIfAvailable(pool, "born_in_chaos_v1:scarlet_persecutor");
+                addIfAvailable(pool, "born_in_chaos_v1:mother_spider");
+                addIfAvailable(pool, "born_in_chaos_v1:firelight");
+                addIfAvailable(pool, "born_in_chaos_v1:lord_pumpkinhead");
             }
         }
     }
@@ -377,6 +431,32 @@ public final class ModdedMobPool {
 
     /** Résout un EntityType par son ID, ou {@code null} si absent (mod non installé, ID inconnu). */
     public static EntityType<?> resolve(String entityId) {
+        if (entityId == null) return null;
+        if ("statmod:pyromancer_mob".equals(entityId)) {
+            return EntityType.ZOMBIE;
+        }
+        if ("statmod:cryomancer_mob".equals(entityId)) {
+            return EntityType.SKELETON;
+        }
+        if ("statmod:electromancer_mob".equals(entityId)) {
+            return EntityType.SKELETON;
+        }
+        if ("statmod:wither_mage_mob".equals(entityId)) {
+            return EntityType.WITHER_SKELETON;
+        }
+        if ("statmod:cleric_mob".equals(entityId)) {
+            return EntityType.ZOMBIE;
+        }
+        if ("statmod:hollow_witch_mob".equals(entityId)) {
+            return resolve("slu:hollow");
+        }
+        if ("statmod:mage_knight_mob".equals(entityId)) {
+            return resolve("slu:knight");
+        }
+        if ("statmod:void_knight_mob".equals(entityId)) {
+            return resolve("slu:dark_knight");
+        }
+
         try {
             ResourceLocation id = ResourceLocation.tryParse(entityId);
             if (id == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(id)) return null;

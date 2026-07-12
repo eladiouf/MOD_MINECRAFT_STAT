@@ -13,6 +13,7 @@ import tong.statmod.dungeon.DungeonXpMultiplier;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.SoundHelper;
+import tong.statmod.item.ModItems;
 import tong.statmod.stats.StatType;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -34,14 +35,44 @@ public class CombatXPHandler {
         boolean leveled = RaceEffectApplier.addScaledXp(player, stat.index, xp, data, true);
         if (leveled) SoundHelper.playLevelUp((ServerPlayer) player);
         SyncHelper.syncStats((ServerPlayer) player);
+
+        // Aquatic Staff (Water Affinity scaling) healing on kill in water or rain
+        if (player.getMainHandItem().is(ModItems.AQUATIC_STAFF.get())) {
+            int water = RaceEffectApplier.getEffectiveLevel(player, StatType.WATER_AFFINITY.index);
+            if (player.isInWater() || player.level().isRainingAt(player.blockPosition())) {
+                player.heal(2.0f + water * 0.1f);
+            }
+        }
+
         if (wasThreateningTarget(target, player)) {
             int mp = 1;
             data.addMagicPoints(mp);
             SyncHelper.syncMagic((ServerPlayer) player);
         }
 
+        // ── Balance 30j : INTIMIDATION XP (bug fix — la méthode existait mais n'était jamais appelée) ──
+        boolean threatening = wasThreateningTarget(target, player);
+        int intimXp = ActivityXpScaling.intimidationXpForKill(
+                player.distanceTo(target), threatening, target.getMaxHealth());
+        if (intimXp > 0) {
+            boolean intimLvl = RaceEffectApplier.addScaledXp(
+                    player, StatType.INTIMIDATION.index, intimXp, data, true);
+            if (intimLvl) SoundHelper.playLevelUp((ServerPlayer) player);
+            SyncHelper.syncStats((ServerPlayer) player);
+        }
+
+        // ── Balance 30j : RAPIDITÉ XP pour sprint-attack kills (source alternative au kodachi) ──
+        int rapXp = ActivityXpScaling.rapiditeXpForSprintAttack(
+                player.isSprinting(), target.getMaxHealth() * 0.75f);
+        if (rapXp > 0) {
+            boolean rapLvl = RaceEffectApplier.addScaledXp(
+                    player, StatType.RAPIDITE.index, rapXp, data, true);
+            if (rapLvl) SoundHelper.playLevelUp((ServerPlayer) player);
+            SyncHelper.syncStats((ServerPlayer) player);
+        }
+
         // Bonus TRACKING pour les kills longue distance (>= 8 blocs).
-        if (event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile) {
+        if (event.getSource().getDirectEntity() instanceof Projectile) {
             double distance = player.distanceTo(target);
             DefensiveXPHandler.awardTrackingForRangedKill(player, target, distance);
         }

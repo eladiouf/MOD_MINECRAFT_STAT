@@ -53,4 +53,20 @@ public enum StatType {
     public boolean hasPerks() {
         return true;
     }
+
+    public static StatType byName(String name) {
+        if (name == null) return null;
+        String search = name.trim().toUpperCase(java.util.Locale.ROOT);
+        try {
+            return StatType.valueOf(search);
+        } catch (IllegalArgumentException e) {
+            // Recherche insensible à la casse
+            for (StatType s : values()) {
+                if (s.name().equalsIgnoreCase(search) || s.displayName.equalsIgnoreCase(name)) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
 }

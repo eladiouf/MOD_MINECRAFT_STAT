@@ -19,6 +19,7 @@ public final class DungeonStateSerializer {
     static final String KEY_POINTS = "DungeonPoints";
     static final String KEY_BEST_COMBO = "DungeonBestCombo";
     static final String KEY_BEST_CLEAR = "DungeonBestClearTicks";
+    static final String KEY_BOSS_COOLDOWNS = "BossCooldowns";
 
     private DungeonStateSerializer() {}
 
@@ -34,6 +35,13 @@ public final class DungeonStateSerializer {
         tag.putInt(KEY_POINTS, data.getDungeonPoints());
         tag.putInt(KEY_BEST_COMBO, data.getDungeonBestCombo());
         tag.putInt(KEY_BEST_CLEAR, data.getDungeonBestClearTicks());
+        if (!data.getBossCooldowns().isEmpty()) {
+            var cdTag = new net.minecraft.nbt.CompoundTag();
+            for (var e : data.getBossCooldowns().entrySet()) {
+                cdTag.putLong(String.valueOf(e.getKey()), e.getValue());
+            }
+            tag.put(KEY_BOSS_COOLDOWNS, cdTag);
+        }
         return tag;
     }
 
@@ -55,6 +63,16 @@ public final class DungeonStateSerializer {
         }
         if (tag.contains(KEY_BEST_CLEAR)) {
             data.setDungeonBestClearTicks(tag.getInt(KEY_BEST_CLEAR));
+        }
+        if (tag.contains(KEY_BOSS_COOLDOWNS)) {
+            java.util.Map<Integer, Long> map = new java.util.HashMap<>();
+            var cdTag = tag.getCompound(KEY_BOSS_COOLDOWNS);
+            for (var k : cdTag.getAllKeys()) {
+                try {
+                    map.put(Integer.parseInt(k), cdTag.getLong(k));
+                } catch (NumberFormatException ignored) { }
+            }
+            data.setBossCooldowns(map);
         }
     }
 }

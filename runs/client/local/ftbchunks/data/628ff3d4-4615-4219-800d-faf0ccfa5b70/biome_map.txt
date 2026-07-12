@@ -1,0 +1,11 @@
+#6F6 minecraft:badlands
+#4CA minecraft:dripstone_caves
+#7F0 biomesoplenty:dryland
+#614 minecraft:eroded_badlands
+#010 minecraft:forest
+#5FF minecraft:river
+#67B minecraft:savanna
+#274 biomesoplenty:scrubland
+#14C biomesoplenty:spider_nest
+#495 minecraft:the_void
+#7F2 biomesoplenty:woodland

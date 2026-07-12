@@ -38,6 +38,9 @@ public final class DungeonTeleportHandler {
      * Position exacte du spawn pad d'un étage dans la grille XZ.
      */
     public static BlockPos floorSpawnPos(int floor) {
+        if (floor == 0) {
+            return new BlockPos(0, FLOOR_Y, -FLOOR_SPACING);
+        }
         int idx = Math.max(0, floor - 1);
         int col = idx % GRID_COLS;
         int row = idx / GRID_COLS;
@@ -61,6 +64,9 @@ public final class DungeonTeleportHandler {
      */
     public static BlockPos floorPlayerSpawnPos(int floor) {
         BlockPos island = floorSpawnPos(floor);
+        if (floor == 0) {
+            return island.offset(0, 1, -10); // Près de la balise de retour
+        }
         if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
         // Boss (générique OU arène importée) : apparaître sur la PLATEFORME au bord sud, hors de la
         // structure/arène (qui est centrée et plus petite que l'emprise) → jamais dans un bloc.
@@ -104,10 +110,13 @@ public final class DungeonTeleportHandler {
      * Utilisé pour l'XP multiplier, le loot, le HUD.
      */
     public static int floorAtPos(int x, int z) {
+        if (z < -FLOOR_SPACING / 2) {
+            return 0;
+        }
         int col = Math.floorDiv(x + FLOOR_SPACING / 2, FLOOR_SPACING);
         int row = Math.floorDiv(z + FLOOR_SPACING / 2, FLOOR_SPACING);
         int floor = row * GRID_COLS + col + 1;
-        return Math.max(1, floor);
+        return Math.max(0, floor);
     }
 
     /**
@@ -140,7 +149,7 @@ public final class DungeonTeleportHandler {
         if (server == null) return false;
 
         PlayerStatData data = player.getData(ModAttachments.STATS);
-        if (floor < 1 || floor > data.getDungeonFloorReached()) {
+        if (floor < 0 || floor > data.getDungeonFloorReached()) {
             STATMod.LOGGER.info("[TrialDungeon] Refus tp: floor={} reached={}", floor, data.getDungeonFloorReached());
             return false;
         }
@@ -208,6 +217,9 @@ public final class DungeonTeleportHandler {
     public static boolean returnToOverworld(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return false;
+
+        // Évite la boucle de téléportation infinie en appliquant un cooldown immédiat
+        MagicTeleportCircleBlock.applyCooldown(player.getUUID(), player.level().getGameTime());
 
         PlayerStatData data = player.getData(ModAttachments.STATS);
         if (!data.hasLastOverworldPos() || data.getLastOverworldDimensionId() == null) {

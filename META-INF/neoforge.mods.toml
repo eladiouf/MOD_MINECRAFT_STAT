@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="LGPLv3"
+issueTrackerURL="https://github.com/CorgiTaco/CorgiLib/issues"
+[[mods]]
+modId="corgilib"
+version="5.0.0.9" #mandatory
+displayName="CorgiLib" #mandatory
+displayURL="https://github.com/CorgiTaco/CorgiLib" #optional
+logoFile="assets/corgilib/corgilib.png" #optional
+authors="Corgi Taco"
+credits="Joseph T. McQuigg (JT122406)"
+description='''
+Library with handy utilities.
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.corgilib]] #optional
+modId="neoforge" #mandatory
+type="required"#mandatory
+versionRange="[21,)" #mandatory
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.corgilib]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[mixins]]
+config="corgilib-common.mixins.json"

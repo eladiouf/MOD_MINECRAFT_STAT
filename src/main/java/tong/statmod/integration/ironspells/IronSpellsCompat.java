@@ -21,6 +21,7 @@ public final class IronSpellsCompat {
             NeoForge.EVENT_BUS.register(IronSpellAttributeBridge.class);
             NeoForge.EVENT_BUS.register(IronSpellRestRecoveryHandler.class);
             NeoForge.EVENT_BUS.register(MagicXpBridge.class);
+            NeoForge.EVENT_BUS.register(DungeonMagicMobs.class);
             STATMod.LOGGER.info("Iron's Spellbooks integration loaded");
         } catch (Throwable t) {
             loaded = false;

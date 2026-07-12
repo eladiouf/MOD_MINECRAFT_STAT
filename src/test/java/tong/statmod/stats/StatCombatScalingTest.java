@@ -39,7 +39,8 @@ class StatCombatScalingTest {
     @Test
     void intimidationOnlyBoostsMarkedTargets() {
         assertEquals(1.0f, StatCombatScaling.intimidationDamageMultiplier(100, false), EPSILON);
-        assertEquals(1.30f, StatCombatScaling.intimidationDamageMultiplier(100, true), EPSILON);
+        // Balance 30j : +0.5% dmg par level sur cible marquée au lieu de 0.3% (au niveau 100 -> 1.50f)
+        assertEquals(1.50f, StatCombatScaling.intimidationDamageMultiplier(100, true), EPSILON);
     }
 
     @Test

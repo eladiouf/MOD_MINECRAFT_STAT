@@ -125,7 +125,7 @@ public final class TensuraSpellTaxonomy {
     }
 
     public static String skillForTier(StatType stat, PerkTier tier) {
-        if (stat == null) {
+        if (stat == null || tier == PerkTier.HYBRID) {
             return null;
         }
         return switch (stat) {
@@ -136,6 +136,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:curse_bind";
                 case MASTERY -> "tensura:darkness_cannon";
                 case TRANSCENDENCE -> "tensura:true_darkness";
+                default -> null;
             };
             case WATER_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:healing";
@@ -144,6 +145,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:water_jail";
                 case MASTERY -> "tensura:healing_rain";
                 case TRANSCENDENCE -> "tensura:full_recovery";
+                default -> null;
             };
             case MANA_POOL -> switch (tier) {
                 case CORE -> "tensura:magic_aura";
@@ -152,6 +154,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:healthcare";
                 case MASTERY -> "tensura:multilayer_barrier";
                 case TRANSCENDENCE -> "tensura:maximum_magic_bullet";
+                default -> null;
             };
             case EARTH_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:earth_wall";
@@ -160,6 +163,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:earth_jail";
                 case MASTERY -> "tensura:earth_storm";
                 case TRANSCENDENCE -> "tensura:magma_surge";
+                default -> null;
             };
             case FIRE_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:fire_aspectual";
@@ -168,6 +172,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:fire_wall";
                 case MASTERY -> "tensura:fire_storm";
                 case TRANSCENDENCE -> "tensura:hellfire";
+                default -> null;
             };
             case AIR_AFFINITY -> switch (tier) {
                 case CORE -> "tensura:wind_gust";
@@ -176,6 +181,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:tornado_blade";
                 case MASTERY -> "tensura:lightning_lance";
                 case TRANSCENDENCE -> "tensura:aerial_blade";
+                default -> null;
             };
             case MAGIC_RESISTANCE -> switch (tier) {
                 case CORE -> "tensura:magic_wall";
@@ -184,6 +190,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:anti_shock_area";
                 case MASTERY -> "tensura:magic_barrier";
                 case TRANSCENDENCE -> "tensura:anti_magic_area";
+                default -> null;
             };
             case CASTING_SPEED -> switch (tier) {
                 case CORE -> "tensura:lighten";
@@ -192,6 +199,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:warp_portal";
                 case MASTERY -> "tensura:teleport";
                 case TRANSCENDENCE -> "tensura:gate";
+                default -> null;
             };
             case ERUDITION -> switch (tier) {
                 case CORE -> "tensura:analyze";
@@ -200,6 +208,7 @@ public final class TensuraSpellTaxonomy {
                 case SITUATIONAL -> "tensura:doppelganger";
                 case MASTERY -> "tensura:spatial_storage";
                 case TRANSCENDENCE -> "tensura:dimension_cutter";
+                default -> null;
             };
             default -> null;
         };

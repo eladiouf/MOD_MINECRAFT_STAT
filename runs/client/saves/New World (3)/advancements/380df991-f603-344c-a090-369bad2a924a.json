@@ -1,828 +1,145 @@
 {
-  "epicfight:recipes/combat/golden_spear": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "tensura:d_rank": {
-    "criteria": {
-      "ep": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_axe_to_diamond_axe": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_boots_to_diamond_boots": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:hostility/patchouli": {
-    "criteria": {
-      "0": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/golden_dagger": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/golden_tachi": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/building_blocks/mining_station": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/diamond_sword": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/jukebox": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/gold_nugget": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/iron_helmet": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/diamond_chestplate": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/diamond_longsword": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/food/golden_apple": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/golden_boots": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/gold_nugget_from_blasting": {
-    "criteria": {
-      "has_golden_shovel": "2026-07-04 20:55:10 +0000"
-    },
-    "done": true
-  },
-  "tensura:empowerment": {
-    "criteria": {
-      "ep": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/golden_chestplate": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/golden_sword": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/tools/steel_pickaxe_to_diamond_pickaxe": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
   "minecraft:recipes/decorations/crafting_table": {
     "criteria": {
-      "unlock_right_away": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/chest": {
-    "criteria": {
-      "has_lots_of_items": "2026-07-04 20:44:05 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/shears": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/diamond_pickaxe": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:adventure/kill_all_mobs": {
-    "criteria": {
-      "minecraft:pillager": "2026-07-04 20:50:31 +0000",
-      "minecraft:cave_spider": "2026-07-04 20:56:29 +0000",
-      "minecraft:skeleton": "2026-07-04 20:59:47 +0000",
-      "minecraft:witch": "2026-07-04 20:53:14 +0000",
-      "minecraft:spider": "2026-07-04 20:51:07 +0000",
-      "minecraft:wither_skeleton": "2026-07-04 21:01:39 +0000",
-      "minecraft:creeper": "2026-07-04 20:54:00 +0000",
-      "minecraft:husk": "2026-07-04 20:50:03 +0000",
-      "minecraft:slime": "2026-07-04 20:50:35 +0000"
-    },
-    "done": false
-  },
-  "minecraft:recipes/combat/golden_chestplate": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/iron_block": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
+      "unlock_right_away": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "mowziesmobs:root": {
     "criteria": {
-      "custom_test_name": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/misc/heated_iron_ingot_from_blasting_iron_ingot": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/diamond_hoe": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/diamond_shovel": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/light_weighted_pressure_plate": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "tensura:real_adventure": {
-    "criteria": {
-      "ability": "2026-07-04 20:43:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:nether/netherite_armor": {
-    "criteria": {
-      "netherite_armor": "2026-07-04 20:43:28 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/shears": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/hopper": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "lootr:social": {
-    "criteria": {
-      "opened_chest": "2026-07-04 20:55:05 +0000"
-    },
-    "done": false
-  },
-  "block_factorys_bosses:recipes/building_blocks/lighting/small_candles": {
-    "criteria": {
-      "has_item": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:recipes/misc/charm_of_looting_1": {
-    "criteria": {
-      "has_emerald": "2026-07-04 20:55:19 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:recipes/misc/charm_of_looting_2": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/iron_boots": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "tensura:start_smithing": {
-    "criteria": {
-      "schematic": "2026-07-04 20:56:56 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/lantern": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "tensura:gold_rush": {
-    "criteria": {
-      "gold": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/golden_greatsword": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/diamond_helmet": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "tensura:c_rank": {
-    "criteria": {
-      "ep": "2026-07-04 20:51:38 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/golden_sword": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/iron_spear": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/diamond_greatsword": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/gold_block": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/iron_trapdoor": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:adventure/root": {
-    "criteria": {
-      "killed_something": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/iron_tachi": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/crossbow": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:hostility/root": {
-    "criteria": {
-      "0": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/diamond_block": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_leggings_to_diamond_leggings": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
+      "custom_test_name": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "parcool:grant_parcool_guide": {
     "criteria": {
-      "tick": "2026-07-04 20:42:37 +0000"
+      "tick": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "born_in_chaos_v1:bornin_chaos": {
     "criteria": {
-      "bornin_chaos_0": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "minecraft:story/mine_diamond": {
-    "criteria": {
-      "diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "block_factorys_bosses:recipes/building_blocks/lighting/candles_extra": {
-    "criteria": {
-      "has_item": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/tools/iron_sword": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/golden_leggings": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/tools/steel_hoe_to_diamond_hoe": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/heavy_weighted_pressure_plate": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
+      "bornin_chaos_0": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "slu:souls_like_universe": {
     "criteria": {
-      "souls_like_universe_0": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:recipes/misc/chaos_ingot": {
-    "criteria": {
-      "has_hostility_orb": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/iron_helmet": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/iron_boots": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "lootr:1chest": {
-    "criteria": {
-      "opened_chest": "2026-07-04 20:55:05 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/iron_leggings": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/food/golden_apple_from_orichalcum_ingot": {
-    "criteria": {
-      "has_material": "2026-07-04 20:44:05 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:recipes/misc/bottle_of_sanity_craft": {
-    "criteria": {
-      "has_hostility_orb": "2026-07-04 20:49:41 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/diamond_leggings": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/iron_chestplate": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_helmet_to_diamond_helmet": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "block_factorys_bosses:recipes/misc/big_chain": {
-    "criteria": {
-      "has_item": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/iron_chestplate": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/gold_nugget_from_smelting": {
-    "criteria": {
-      "has_golden_shovel": "2026-07-04 20:55:10 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/golden_boots": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/diamond_spear": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "l2complements:recipes/misc/enchantments/durable_armor_1": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "l2complements:recipes/misc/enchantments/durable_armor_2": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "l2complements:recipes/misc/enchantments/durable_armor_3": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/misc/iron_nugget": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/iron_longsword": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/minecart": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/golden_longsword": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/golden_helmet": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/diamond_tachi": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:story/smelt_iron": {
-    "criteria": {
-      "iron": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/emerald_block": {
-    "criteria": {
-      "has_emerald": "2026-07-04 20:55:19 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/fletching/diamond_arrow": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "block_factorys_bosses:recipes/combat/cannonball": {
-    "criteria": {
-      "has_item": "2026-07-04 20:55:07 +0000"
+      "souls_like_universe_0": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "xbbsroaringknightmod:root_roaring_knight": {
     "criteria": {
-      "root_roaring_knight": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/chain": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/iron_leggings": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_chestplate_to_diamond_chestplate": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
+      "root_roaring_knight": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "lootr:root": {
     "criteria": {
-      "always_true": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/smithing_table": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/tools/diamond_sickle": {
-    "criteria": {
-      "has_material_for_diamond_sickle": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/diamond_dagger": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:husbandry/root": {
-    "criteria": {
-      "consumed_item": "2026-07-04 20:51:22 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/tools/golden_sickle": {
-    "criteria": {
-      "has_material_for_golden_sickle": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/tools/iron_sickle": {
-    "criteria": {
-      "has_material_for_iron_sickle": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/tools/steel_shovel_to_diamond_shovel": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "tensura:fast_learner": {
-    "criteria": {
-      "skill": "2026-07-04 20:43:07 +0000"
+      "always_true": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "apotheosis:progression/root": {
     "criteria": {
-      "tick": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/iron_dagger": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "tensura:recipes/building_blocks/woodcutter": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/armors/golden_helmet": {
-    "criteria": {
-      "has_the_recipe": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/diamond_boots": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/iron_sword": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/combat/shield": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "epicfight:recipes/combat/iron_greatsword": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/iron_bars": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
+      "tick": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "overgeared:root": {
     "criteria": {
-      "Trigger": "2026-07-04 20:42:37 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/fletching/iron_arrow": {
-    "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
-    },
-    "done": true
-  },
-  "l2complements:recipes/misc/enchantments/shinny": {
-    "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
-    },
-    "done": true
-  },
-  "overgeared:recipes/combat/steel_sword_to_diamond_sword": {
-    "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
-    },
-    "done": true
-  },
-  "minecraft:adventure/kill_a_mob": {
-    "criteria": {
-      "minecraft:husk": "2026-07-04 20:50:03 +0000"
+      "Trigger": "2026-07-06 00:15:03 +0000"
     },
     "done": true
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:stony_shore": "2026-07-04 20:42:38 +0000",
-      "minecraft:savanna": "2026-07-04 20:45:15 +0000"
+      "minecraft:taiga": "2026-07-06 00:15:04 +0000"
     },
     "done": false
   },
-  "minecraft:husbandry/balanced_diet": {
+  "tensura:real_adventure": {
     "criteria": {
-      "golden_apple": "2026-07-04 20:51:22 +0000",
-      "bread": "2026-07-04 20:52:40 +0000",
-      "cooked_beef": "2026-07-04 21:00:02 +0000"
-    },
-    "done": false
-  },
-  "l2complements:burnt/burnt/emerald": {
-    "criteria": {
-      "has_emerald": "2026-07-04 20:55:19 +0000"
+      "ability": "2026-07-06 00:15:16 +0000"
     },
     "done": true
   },
-  "apotheosis:progression/haven": {
+  "tensura:fast_learner": {
     "criteria": {
-      "affixed": "2026-07-04 20:55:10 +0000"
-    },
-    "done": true
-  },
-  "mowziesmobs:kill_foliaath": {
-    "criteria": {
-      "foliaath": "2026-07-04 20:58:19 +0000"
-    },
-    "done": true
-  },
-  "l2hostility:hostility/kill_first": {
-    "criteria": {
-      "0": "2026-07-04 20:49:42 +0000"
+      "skill": "2026-07-06 00:15:16 +0000"
     },
     "done": true
   },
   "tensura:reincarnated": {
     "criteria": {
-      "reincarnation": "2026-07-04 20:43:07 +0000"
+      "reincarnation": "2026-07-06 00:15:16 +0000"
     },
     "done": true
   },
-  "minecraft:recipes/tools/diamond_axe": {
+  "irons_spellbooks:irons_spellbooks/spell_book_netherite": {
     "criteria": {
-      "has_diamond": "2026-07-04 20:55:12 +0000"
+      "requirement": "2026-07-06 00:20:55 +0000"
     },
     "done": true
   },
-  "minecraft:recipes/redstone/iron_door": {
+  "irons_spellbooks:irons_spellbooks/spell_book_equip": {
     "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
+      "requirement": "2026-07-06 00:20:55 +0000"
     },
     "done": true
   },
-  "overgeared:recipes/tools/iron_tongs": {
+  "irons_spellbooks:irons_spellbooks/staff_artificer": {
     "criteria": {
-      "has_iron_ingot": "2026-07-04 20:55:07 +0000"
+      "requirement": "2026-07-06 00:22:28 +0000"
     },
     "done": true
   },
-  "minecraft:recipes/misc/mojang_banner_pattern": {
+  "irons_spellbooks:irons_spellbooks/staff_root": {
     "criteria": {
-      "has_enchanted_golden_apple": "2026-07-04 20:44:01 +0000"
+      "requirement": "2026-07-06 00:22:28 +0000"
     },
     "done": true
   },
-  "minecraft:recipes/combat/golden_leggings": {
+  "tensura:d_rank": {
     "criteria": {
-      "has_gold_ingot": "2026-07-04 20:55:06 +0000"
+      "ep": "2026-07-06 00:27:30 +0000"
     },
     "done": true
   },
-  "l2complements:burnt/burnt/cooked_beef": {
+  "l2hostility:hostility/patchouli": {
     "criteria": {
-      "has_cooked_beef": "2026-07-04 20:43:57 +0000"
+      "0": "2026-07-08 21:10:24 +0000"
+    },
+    "done": true
+  },
+  "tensura:empowerment": {
+    "criteria": {
+      "ep": "2026-07-08 21:10:24 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_something": "2026-07-08 21:10:24 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:hostility/root": {
+    "criteria": {
+      "0": "2026-07-08 21:10:24 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:recipes/misc/chaos_ingot": {
+    "criteria": {
+      "has_hostility_orb": "2026-07-08 21:10:24 +0000"
+    },
+    "done": true
+  },
+  "l2hostility:recipes/misc/bottle_of_sanity_craft": {
+    "criteria": {
+      "has_hostility_orb": "2026-07-08 21:10:24 +0000"
     },
     "done": true
   },

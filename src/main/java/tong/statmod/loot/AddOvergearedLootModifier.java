@@ -23,7 +23,7 @@ public class AddOvergearedLootModifier extends LootModifier {
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         generatedLoot.add(new ItemStack(ModItems.PERK_TOME.get()));
-        generatedLoot.add(new ItemStack(ModItems.RESEPC_STONE.get(), 1 + context.getRandom().nextInt(2)));
+        generatedLoot.add(new ItemStack(ModItems.RESPEC_STONE.get(), 1 + context.getRandom().nextInt(2)));
         return generatedLoot;
     }
 

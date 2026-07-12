@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "overgeared:iron_sword_blade"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "statmod:claymore_pommel"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "overgeared:iron_sword_blade"
+  }
+}

@@ -12,12 +12,17 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import tong.statmod.STATMod;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.perks.Perk;
 import tong.statmod.perks.PerkState;
 import tong.statmod.progression.WeaponResolver;
 import tong.statmod.storage.ModAttachments;
+import tong.statmod.item.ModItems;
 
 @EventBusSubscriber(modid = STATMod.MODID)
 public class StatEffectApplier {
@@ -49,18 +54,56 @@ public class StatEffectApplier {
                 dmg *= 1.15f;
             }
 
-            if (weaponStat == StatType.RAPIDITE && rapidite > 0 && attacker.getRandom().nextFloat() < rapidite * 0.001f) {
+            if (weaponStat == StatType.RAPIDITE && rapidite > 0 && attacker.getRandom().nextFloat() < rapidite * 0.002f) {
                 dmg *= 1.5f;
             }
 
             int tracking = RaceEffectApplier.getEffectiveLevel(attacker, StatType.TRACKING.index);
             if (tracking > 0 && !attacker.level().isClientSide) {
-                event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, tracking * 2, 0, false, false));
+                event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, tracking * 4, 0, false, false));
             }
 
             int agility = RaceEffectApplier.getEffectiveLevel(attacker, StatType.AGILITY.index);
             if (agility > 0 && attacker.getDeltaMovement().horizontalDistanceSqr() > 0.01) {
                 dmg *= 1.0f + agility * 0.002f;
+            }
+
+            // Aquatic Staff (Water Affinity scaling)
+            ItemStack held = attacker.getMainHandItem();
+            if (held.is(ModItems.AQUATIC_STAFF.get())) {
+                int water = RaceEffectApplier.getEffectiveLevel(attacker, StatType.WATER_AFFINITY.index);
+                dmg += water * 0.15f;
+            }
+
+            // Earthen Hammer (Earth Affinity scaling)
+            if (held.is(ModItems.EARTHEN_HAMMER.get())) {
+                int earth = RaceEffectApplier.getEffectiveLevel(attacker, StatType.EARTH_AFFINITY.index);
+                dmg += earth * 0.2f;
+                if (event.getEntity() instanceof LivingEntity target) {
+                    target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60 + earth * 2, 0, false, false));
+                    Vec3 look = attacker.getLookAngle();
+                    target.push(look.x * (0.2 + earth * 0.01), 0.1 + earth * 0.005, look.z * (0.2 + earth * 0.01));
+                }
+            }
+
+            // Pyro Dagger (Fire Affinity scaling)
+            if (held.is(ModItems.PYRO_DAGGER.get())) {
+                int fire = RaceEffectApplier.getEffectiveLevel(attacker, StatType.FIRE_AFFINITY.index);
+                if (fire > 0 && event.getEntity() instanceof LivingEntity target) {
+                    target.setRemainingFireTicks(fire * 4);
+                    dmg += fire * 0.1f;
+                }
+            }
+
+            // Aero Bow (Air Affinity scaling - projectile source check)
+            if (event.getSource().getDirectEntity() instanceof Projectile proj) {
+                if (proj instanceof AbstractArrow arrow) {
+                    ItemStack weapon = arrow.getWeaponItem();
+                    if (weapon != null && weapon.is(ModItems.AERO_BOW.get())) {
+                        int air = RaceEffectApplier.getEffectiveLevel(attacker, StatType.AIR_AFFINITY.index);
+                        dmg += air * 0.15f;
+                    }
+                }
             }
         }
 
@@ -135,5 +178,18 @@ public class StatEffectApplier {
                 source.is(DamageTypes.MAGIC),
                 source.is(DamageTypes.INDIRECT_MAGIC),
                 source.getMsgId());
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinLevel(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof Player owner) {
+            ItemStack weapon = arrow.getWeaponItem();
+            if (weapon != null && weapon.is(ModItems.AERO_BOW.get())) {
+                int air = RaceEffectApplier.getEffectiveLevel(owner, StatType.AIR_AFFINITY.index);
+                // Augmenter la vélocité de la flèche de 1.0 + air * 0.01
+                double mult = 1.0 + air * 0.01;
+                arrow.setDeltaMovement(arrow.getDeltaMovement().scale(mult));
+            }
+        }
     }
 }

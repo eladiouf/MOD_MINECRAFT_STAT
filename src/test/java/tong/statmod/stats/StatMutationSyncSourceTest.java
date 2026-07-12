@@ -67,9 +67,9 @@ class StatMutationSyncSourceTest {
                 "dispatcher.register(Commands.literal(\"statxp\")",
                 "dispatcher.register(Commands.literal(\"statmod\")");
 
-        assertTrue(statXpCommand.contains("RaceEffectApplier.addRawXp(player, index, amount, data);"),
+        assertTrue(statXpCommand.contains("RaceEffectApplier.addRawXp(player, stat.index, amount, data);"),
                 "/statxp should route through the shared raw-XP progression path");
-        assertFalse(statXpCommand.contains("data.addXp(index, amount)"),
+        assertFalse(statXpCommand.contains("data.addXp(stat.index, amount)"),
                 "/statxp should not bypass level rewards and effective-level XP curve with direct attachment writes");
     }
 
@@ -82,18 +82,18 @@ class StatMutationSyncSourceTest {
 
         assertTrue(statLevelCommand.contains("RaceEffectApplier.addLevels(player, i, amount, data, false);"),
                 "/statlevel all should use the shared direct-level progression path");
-        assertTrue(statLevelCommand.contains("RaceEffectApplier.addLevels(player, index, amount, data, false);"),
-                "/statlevel <index> should use the shared direct-level progression path");
-        assertFalse(statLevelCommand.contains("data.addLevels(index, amount);"),
-                "/statlevel <index> should not bypass shared level rewards with direct attachment writes");
+        assertTrue(statLevelCommand.contains("RaceEffectApplier.addLevels(player, stat.index, amount, data, false);"),
+                "/statlevel <stat> should use the shared direct-level progression path");
+        assertFalse(statLevelCommand.contains("data.addLevels(stat.index, amount);"),
+                "/statlevel <stat> should not bypass shared level rewards with direct attachment writes");
     }
 
     @Test
     void adminStatCommandsDeriveIndexBoundsFromRuntimeStatCount() throws Exception {
         String source = Files.readString(COMMAND_SOURCE);
 
-        assertTrue(source.contains("IntegerArgumentType.integer(0, PlayerStatData.STAT_COUNT - 1)"),
-                "admin stat commands must accept the runtime stat index range");
+        assertTrue(source.contains("java.util.Arrays.stream(StatType.values())"),
+                "admin stat commands must autocomplete on all StatType values");
         assertFalse(source.contains("IntegerArgumentType.integer(0, 22)"),
                 "hardcoded stat index bounds desync when stats are added or removed");
     }

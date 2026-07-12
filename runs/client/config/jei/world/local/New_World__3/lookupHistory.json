@@ -1,5 +1,6 @@
 [
   {"version":1},
+  {"ingredient":{"id":"irons_spellbooks:artificer_cane","components":{"tensura:max_existence_point":2000000.0,"tensura:existence_point":15000.0,"tensura:existence_durability":15000.0,"tensura:existence_gain":0.03,"tensura:unique_evolutions":[{"EP":18000,"attributes":[{"type":"minecraft:generic.attack_damage","amount":7.0,"slot":"mainhand"}]},{"EP":52000,"attributes":[{"type":"minecraft:generic.attack_damage","amount":13.0,"slot":"mainhand"}]},{"EP":225000,"attributes":[{"type":"minecraft:generic.attack_damage","amount":15.0,"slot":"mainhand"}]},{"EP":750000,"attributes":[{"type":"minecraft:generic.attack_damage","amount":29.0,"slot":"mainhand"}]}]}},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"statmod:rough_spear_tip_diamond"},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"cdmoveset:s_netherite_spear"},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"cdmoveset:s_wooden_tachi"},"type":"item_stack","bookmarkType":"INGREDIENT"},
@@ -21,7 +22,7 @@
   {"ingredient":{"id":"statmod:wooden_grip"},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"magistuarmory:iron_katzbalger"},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"slu:prestige_drx_aatrox_sword"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"simplyswords:runic_glaive","components":{"minecraft:enchantments":{"levels":{"minecraft:sharpness":4,"minecraft:fire_aspect":2,"minecraft:unbreaking":2}}}},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"simplyswords:runic_glaive","components":{"minecraft:enchantments":{"levels":{"minecraft:unbreaking":2,"minecraft:fire_aspect":2,"minecraft:sharpness":4}}}},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"statmod:basic_forge_tongs"},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"statmod:rough_spear_tip_mithril","components":{"overgeared:creator":"Dev","overgeared:forging_quality":"well","overgeared:polished":false,"overgeared:heated":true,"overgeared:heated_time":2119}},"type":"item_stack","bookmarkType":"INGREDIENT"},
   {"ingredient":{"id":"statmod:rough_dagger_blade_low_magisteel"},"type":"item_stack","bookmarkType":"INGREDIENT"},

@@ -116,9 +116,9 @@ test {
 // datagen NeoForge — juste un main() qui sérialise PuffishMagicTreeBuilder dans le repo.
 tasks.register('regenPuffishJson', JavaExec) {
     group = 'statmod'
-    description = 'Regenerate src/main/resources/.../statmod_magic/*.json from PuffishMagicTreeBuilder'
+    description = 'Regenerate src/main/resources/.../puffish_skills json configs from builder classes'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'tong.statmod.integration.puffish.PuffishMagicJsonGenerator'
+    mainClass = 'tong.statmod.integration.puffish.PuffishFamilyTreeExporter'
     workingDir = project.projectDir
     dependsOn 'classes'
 }

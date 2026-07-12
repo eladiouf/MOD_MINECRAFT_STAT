@@ -15,6 +15,16 @@
 	# Default: 1
 	# Range: 0 ~ 10
 	basePerkPointsPerLevel = 1
+	#Multiplicateur de dégâts de MÊLÉE de base du joueur (niveau 0 de stat).
+	#1.0 = dégâts d'arme bruts. Monte ce chiffre si TOUTES les armes tapent trop faible.
+	# Default: 1.5
+	# Range: 0.5 ~ 10.0
+	weaponDamageBase = 1.5
+	#Amplitude du bonus de dégâts par la stat de combat, au niveau MAX.
+	#À 3.0, une stat de combat maxée ajoute ×3 par-dessus la base (donc ~×4.5 total).
+	# Default: 3.0
+	# Range: 0.0 ~ 20.0
+	weaponDamageScale = 3.0
 
 [trial_dungeon]
 	#Multiplier de base pour l'XP gagné dans le Trial Dungeon (ajouté à floor*perFloor).
@@ -29,13 +39,14 @@
 	# Default: 2
 	# Range: 0 ~ 10
 	bossStatGain = 2
-	#Intégration L2 Hostility : niveau de hostilité appliqué aux mobs = floor * ce facteur.
-	#0.3 = étage 10 donne des mobs de niveau L2 3. 0 = désactive le scaling par étage.
-	#Fixé à 0.3 pour éviter des mobs de niveau 100+ sur les étages profonds.
-	# Default: 0.3
-	# Range: 0.0 ~ 2.0
-	l2HostilityPerFloor = 1.0
-	#Intégration L2 Hostility : plafond du niveau de hostilité appliqué par étage.
-	# Default: 30
+	#Intégration L2 Hostility : facteur de niveau par étage.
+	#0.0 = utiliser la COURBE D'ÉQUILIBRAGE INTÉGRÉE (recommandé) : douce au début,
+	#  qui accélère en profondeur (étage 10≈niv 7, 50≈38, 100≈78, plafonnée par le cap).
+	#> 0.0 = mode manuel : niveau = floor × ce facteur (écrase la courbe intégrée).
+	# Default: 0.0
+	# Range: 0.0 ~ 0.5
+	l2HostilityPerFloor = 0.5
+	#Intégration L2 Hostility : plafond du niveau appliqué par étage (courbe et mode manuel).
+	# Default: 100
 	# Range: 0 ~ 500
 	l2HostilityCap = 200

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 300,
+  "experience": 1.5,
+  "ingredient": {
+    "tag": "c:raw_materials/pure_magisteel"
+  },
+  "result": {
+    "count": 1,
+    "id": "statmod:heated_pure_magisteel_ingot"
+  }
+}

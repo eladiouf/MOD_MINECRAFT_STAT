@@ -39,7 +39,7 @@ public final class DungeonArchitect {
     static final int WALL_H = 12;
 
     /** Rôle de l'étage — détermine le "cœur". */
-    public enum Role { COMBAT, TREASURE, BOSS }
+    public enum Role { COMBAT, TREASURE, BOSS, HUB }
 
     private DungeonArchitect() {}
 
@@ -92,7 +92,11 @@ public final class DungeonArchitect {
         // ── NOUVELLE GÉNÉRATION (2026-07-05) ──
         // COMBAT & TRÉSOR : chaîne de pièces reliées (spawn → … → pièce finale avec téléporteur /
         //   coffres). BOSS : arène géante à ciel ouvert ceinturée de grands piliers.
-        // (La forteresse « The Descent » ci-dessous n'est plus appelée — conservée pour référence.)
+        // HUB (Étage 0) : arène pacifique avec marchands, lits, enclumes et waystone.
+        if (role == Role.HUB) {
+            DungeonHubFloor.build(lv, sp, t);
+            return;
+        }
         if (role == Role.COMBAT || role == Role.TREASURE) {
             DungeonRoomChain.build(lv, sp, t, floor, role, rng);
             return;

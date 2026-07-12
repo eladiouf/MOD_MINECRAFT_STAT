@@ -1,6 +1,8 @@
 package tong.statmod.perks;
 
 import tong.statmod.stats.StatType;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum Perk {
     BRUTE_CORE(0, StatType.BRUTE_FORCE, PerkTier.CORE, "Heavy Hitter", "+5% damage with axes and clubs"),
@@ -162,7 +164,18 @@ public enum Perk {
     ERUDITION_SYNERGY(134, StatType.ERUDITION, PerkTier.SYNERGY, "Focused Thesis", "Synergy: disciplined minds stabilize complex magic", StatType.WILLPOWER),
     ERUDITION_SITUATIONAL(135, StatType.ERUDITION, PerkTier.SITUATIONAL, "Adaptive Theory", "Flexible casters pivot more efficiently"),
     ERUDITION_MASTERY(136, StatType.ERUDITION, PerkTier.MASTERY, "Grand Synthesis", "Multi-school usage becomes cleaner"),
-    ERUDITION_TRANSCENDENCE(137, StatType.ERUDITION, PerkTier.TRANSCENDENCE, "Omniform Understanding", "Top-end magical mastery");
+    ERUDITION_TRANSCENDENCE(137, StatType.ERUDITION, PerkTier.TRANSCENDENCE, "Omniform Understanding", "Top-end magical mastery"),
+
+    SPELLSWORD(138, StatType.BLADE_TECHNIQUE, PerkTier.HYBRID, "Spellsword", "+15% magic damage and +10% lifesteal absorption with blades", StatType.ARCANE_POWER, 50),
+    PALADIN(139, StatType.PHYSICAL_RESISTANCE, PerkTier.HYBRID, "Paladin", "Blocking heals allies and weakens nearby enemies", StatType.WILLPOWER, 50),
+    NINJA(140, StatType.AGILITY, PerkTier.HYBRID, "Ninja", "Invisibility when sneaking, next attack deals 2x critical damage", StatType.PRECISION, 50),
+    BATTLEMAGE(141, StatType.BRUTE_FORCE, PerkTier.HYBRID, "Battlemage", "Attack/cast gives +20% damage and +1 absorption", StatType.MANA_POOL, 50),
+    ALCHEMICAL_ARCHER(142, StatType.PRECISION, PerkTier.HYBRID, "Alchemical Archer", "Arrows apply random negative potion effects", StatType.ALCHEMY, 50),
+    DEMOLITIONIST(143, StatType.FIRE_AFFINITY, PerkTier.HYBRID, "Demolitionist", "Explosions deal +40% damage, immune to self-explosion damage", StatType.EARTH_AFFINITY, 50),
+    STORM_LORD(144, StatType.AIR_AFFINITY, PerkTier.HYBRID, "Storm Lord", "Under rain, gain Conduit Power and lightning strikes targets", StatType.WATER_AFFINITY, 50),
+    GRAND_ARTISAN(145, StatType.FORGING, PerkTier.HYBRID, "Grand Artisan", "Eating artisan food repairs main hand weapon by 50 durability", StatType.COOKING, 50),
+    LICH_SOUL(146, StatType.ARCANE_POWER, PerkTier.HYBRID, "Lich Soul", "Resurrect on spot with 50% HP and 10 absorption hearts (10m CD)", StatType.WILLPOWER, 80),
+    AVATAR_OF_ELEMENTS(147, StatType.FIRE_AFFINITY, PerkTier.HYBRID, "Avatar of Elements", "Immune to environmental damage, +20% damage globally", StatType.WATER_AFFINITY, 40);
 
     private static final Perk[] BY_ID = new Perk[values().length];
     static { for (Perk p : values()) BY_ID[p.id] = p; }
@@ -173,18 +186,30 @@ public enum Perk {
     public final String name;
     public final String description;
     public final StatType synergyStat;
+    public final StatType secondRequiredStat;
+    public final int secondRequiredStatLevel;
 
     Perk(int id, StatType stat, PerkTier tier, String name, String desc) {
-        this(id, stat, tier, name, desc, null);
+        this(id, stat, tier, name, desc, null, null, 0);
     }
 
     Perk(int id, StatType stat, PerkTier tier, String name, String desc, StatType synergyStat) {
+        this(id, stat, tier, name, desc, synergyStat, null, 0);
+    }
+
+    Perk(int id, StatType stat, PerkTier tier, String name, String desc, StatType secondRequiredStat, int secondRequiredStatLevel) {
+        this(id, stat, tier, name, desc, null, secondRequiredStat, secondRequiredStatLevel);
+    }
+
+    Perk(int id, StatType stat, PerkTier tier, String name, String desc, StatType synergyStat, StatType secondRequiredStat, int secondRequiredStatLevel) {
         this.id = id;
         this.stat = stat;
         this.tier = tier;
         this.name = name;
         this.description = desc;
         this.synergyStat = synergyStat;
+        this.secondRequiredStat = secondRequiredStat;
+        this.secondRequiredStatLevel = secondRequiredStatLevel;
     }
 
     public static Perk byId(int id) {
@@ -196,5 +221,15 @@ public enum Perk {
             if (p.stat == stat && p.tier == tier) return p;
         }
         return null;
+    }
+
+    public static List<Perk> allByStatAndTier(StatType stat, PerkTier tier) {
+        List<Perk> list = new ArrayList<>();
+        for (Perk p : values()) {
+            if (p.stat == stat && p.tier == tier) {
+                list.add(p);
+            }
+        }
+        return list;
     }
 }

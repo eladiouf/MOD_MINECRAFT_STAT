@@ -18,12 +18,14 @@ class CraftingSupportEffectHandlerTest {
         assertEquals(5, CraftingSupportEffectHandler.reducedDurabilityLoss(10, 50));
         assertEquals(0, CraftingSupportEffectHandler.reducedDurabilityLoss(10, 500));
         assertEquals(1.40f, CraftingSupportEffectHandler.potionDurationMultiplier(40), 1.0e-6f);
-        assertEquals(1.50f, CraftingSupportEffectHandler.foodSaturationBonus(30), 1.0e-6f);
+        // Balance 30j : Saturation bonus augmentée de 0.05 à 0.08 par level (30 * 0.08 = 2.40f)
+        assertEquals(2.40f, CraftingSupportEffectHandler.foodSaturationBonus(30), 1.0e-6f);
     }
 
     @Test
     void cookingAndAlchemyCorePerksApplyTheirAdvertisedBonuses() {
-        assertEquals(2.50f, CraftingSupportEffectHandler.foodSaturationBonus(30, true), 1.0e-6f);
+        // Balance 30j : Saturation bonus augmentée de 0.05 à 0.08 par level (30 * 0.08 + 1.0 = 3.40f)
+        assertEquals(3.40f, CraftingSupportEffectHandler.foodSaturationBonus(30, true), 1.0e-6f);
         assertEquals(1.50f, CraftingSupportEffectHandler.potionDurationMultiplier(40, true), 1.0e-6f);
     }
 

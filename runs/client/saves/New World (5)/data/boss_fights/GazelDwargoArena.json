@@ -1,0 +1,37 @@
+{
+  "center": {
+    "x": 42,
+    "y": 87,
+    "z": 25
+  },
+  "dimension": "tensura:boss_area",
+  "radius": 25.0,
+  "entrance": {
+    "x": 2,
+    "y": 83,
+    "z": 25
+  },
+  "bossType": "tensura:gazel_dwargo",
+  "bossPosition": {
+    "x": 56,
+    "y": 88,
+    "z": 25
+  },
+  "timer": -1,
+  "startDelay": 0,
+  "forceExitTimer": 300,
+  "forceExitHandler": {
+    "type": "SpawnPoint"
+  },
+  "forceExitOnLeave": true,
+  "maxPlayer": 1,
+  "playerCountHandler": "normal",
+  "forcedGameMode": "adventure",
+  "banTeleportation": true,
+  "barrierSealed": false,
+  "resetBoss": true,
+  "started": false,
+  "onHold": false,
+  "tickCount": 0,
+  "forceExitTick": 0
+}

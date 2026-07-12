@@ -1,0 +1,5 @@
+[
+  {"version":2},
+  {"ingredient":{"id":"statmod:blueprint_universal_blade"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"statmod:blueprint_universal_pole"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

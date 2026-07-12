@@ -241,6 +241,104 @@ public final class PerkEffectHandler {
         if (perks.isUnlocked(Perk.byId(35)) && player.getAbsorptionAmount() < 40f) {
             player.setAbsorptionAmount(Math.min(40f, player.getAbsorptionAmount() + 1f));
         }
+
+        // ── COMPLÉTION DES PERKS MAGIQUES & ÉLÉMENTAIRES (TICK EFFECTS) ──
+
+        // WATER_CORE (id 90) : Soothing Current — boost regen under water/rain
+        if (perks.isUnlocked(Perk.byId(90))) {
+            if (player.isInWater() || player.level().isRainingAt(player.blockPosition())) {
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false));
+            }
+        }
+
+        // WATER_TRANSCENDENCE (id 95) : Abyssal Grace — resistance in water/rain
+        if (perks.isUnlocked(Perk.byId(95))) {
+            if (player.isInWater() || player.level().isRainingAt(player.blockPosition())) {
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 40, 0, false, false));
+            }
+        }
+
+        // EARTH_CORE (id 96) : Stone Skin — +2 base armor
+        if (perks.isUnlocked(Perk.byId(96))) {
+            applyArmorModifier(player, 2.0);
+        } else {
+            removeArmorModifier(player);
+        }
+
+        // EARTH_MASTERY (id 100) : World Anchor — damage boost and knockback resistance when still
+        if (perks.isUnlocked(Perk.byId(100))) {
+            if (player.getDeltaMovement().horizontalDistanceSqr() < 0.001) {
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 0, false, false));
+                applyEarthKbResistModifier(player, 1.0);
+            } else {
+                removeEarthKbResistModifier(player);
+            }
+        } else {
+            removeEarthKbResistModifier(player);
+        }
+
+        // EARTH_TRANSCENDENCE (id 101) : Mountain Throne — Force I under Y=40
+        if (perks.isUnlocked(Perk.byId(101)) && player.blockPosition().getY() < 40) {
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 0, false, false));
+        }
+
+        // FIRE_SYNERGY (id 104) : Accelerant — speed & dig speed when burning/in lava
+        if (perks.isUnlocked(Perk.byId(104))) {
+            boolean inFire = player.getRemainingFireTicks() > 0 || player.isInLava() || player.level().getBlockState(player.blockPosition()).is(net.minecraft.world.level.block.Blocks.FIRE);
+            if (inFire) {
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 0, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 40, 0, false, false));
+            }
+        }
+
+        // FIRE_TRANSCENDENCE (id 107) : Solar Cataclysm — Fire resistance permanent
+        if (perks.isUnlocked(Perk.byId(107))) {
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, false, false));
+        }
+
+        // AIR_CORE (id 108) : Tailwind — +10% speed
+        if (perks.isUnlocked(Perk.byId(108))) {
+            applyAirSpeedModifier(player, 1.10);
+        } else {
+            removeAirSpeedModifier(player);
+        }
+
+        // AIR_TRANSCENDENCE (id 113) : Tempest Crown — clear levitation, Speed III
+        if (perks.isUnlocked(Perk.byId(113))) {
+            if (player.hasEffect(MobEffects.LEVITATION)) {
+                player.removeEffect(MobEffects.LEVITATION);
+            }
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 2, false, false));
+        }
+
+        // MANA_POOL_CORE (id 126) : Deep Wells — min absorption 8.0 (4 hearts)
+        if (perks.isUnlocked(Perk.byId(126)) && player.getAbsorptionAmount() < 8f) {
+            player.setAbsorptionAmount(8f);
+        }
+
+        // MANA_POOL_SYNERGY (id 128) : Disciplined Reserve — regen if erudition >= 30
+        if (perks.isUnlocked(Perk.byId(128))) {
+            int erudition = tong.statmod.integration.RaceEffectApplier.getEffectiveLevel(player, StatType.ERUDITION.index);
+            if (erudition >= 30) {
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false));
+            }
+        }
+
+        // ── TICK EFFECTS DE PERKS HYBRIDES ──
+
+        // NINJA (id 140) : Invisibility when sneaking
+        if (perks.isUnlocked(Perk.byId(140))) {
+            if (player.isCrouching()) {
+                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 40, 0, false, false));
+            }
+        }
+
+        // STORM_LORD (id 144) : Conduit Power under rain or in water
+        if (perks.isUnlocked(Perk.byId(144))) {
+            if (player.isInWater() || player.level().isRainingAt(player.blockPosition())) {
+                player.addEffect(new MobEffectInstance(MobEffects.CONDUIT_POWER, 40, 0, false, false));
+            }
+        }
     }
 
     @SubscribeEvent
@@ -400,6 +498,98 @@ public final class PerkEffectHandler {
                 if (nearbyAllies > 0) dmg *= 1.0f + nearbyAllies * 0.05f;
             }
 
+            // ── PASSIVES ELEMENTAIRES DE L'ATTAQUANT ──
+
+            // WATER_MASTERY (id 94) : Tidal Control — slow target
+            if (perks.isUnlocked(Perk.byId(94)) && event.getEntity() instanceof LivingEntity target) {
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1, false, false));
+            }
+
+            // FIRE_CORE (id 102) : Kindling — increase burn duration
+            if (perks.isUnlocked(Perk.byId(102)) && event.getEntity() instanceof LivingEntity target) {
+                if (target.getRemainingFireTicks() > 0) {
+                    target.setRemainingFireTicks(target.getRemainingFireTicks() + 40);
+                }
+            }
+
+            // FIRE_ACTIVE (id 103) : Flashburn — ignite non-burning targets and deal +15% damage
+            if (perks.isUnlocked(Perk.byId(103)) && event.getEntity() instanceof LivingEntity target) {
+                if (target.getRemainingFireTicks() <= 0) {
+                    target.setRemainingFireTicks(80);
+                    dmg *= 1.15f;
+                }
+            }
+
+            // FIRE_SITUATIONAL (id 105) : Execution Flame — explosion chance on low health burning targets
+            if (perks.isUnlocked(Perk.byId(105)) && event.getEntity() instanceof LivingEntity target) {
+                if (target.getRemainingFireTicks() > 0 && target.getHealth() < target.getMaxHealth() * 0.4f) {
+                    if (attacker.getRandom().nextFloat() < 0.15f) {
+                        attacker.level().explode(attacker, target.getX(), target.getY(), target.getZ(), 1.0f, false, net.minecraft.world.level.Level.ExplosionInteraction.NONE);
+                        dmg += 5.0f;
+                    }
+                }
+            }
+
+            // FIRE_TRANSCENDENCE (id 107) : Solar Cataclysm — permanent fire damage and ignite
+            if (perks.isUnlocked(Perk.byId(107)) && event.getEntity() instanceof LivingEntity target) {
+                target.setRemainingFireTicks(60);
+                dmg += 2.0f;
+            }
+
+            // AIR_SYNERGY (id 110) : Sky Dancer — bonus damage in mid-air
+            if (perks.isUnlocked(Perk.byId(110)) && !attacker.onGround() && attacker.fallDistance > 0.05f) {
+                dmg *= 1.20f;
+            }
+
+            // ── COMPLÉTION DES PERKS HYBRIDES DE L'ATTAQUANT (DAMAGE EFFECTS) ──
+
+            // SPELLSWORD (id 138) : +15% magic damage and +10% lifesteal absorption with blades
+            if (perks.isUnlocked(Perk.byId(138)) && PerkCombatScaling.canUseWeaponFamilyPerk(weaponStat, Perk.BLADE_CORE)) {
+                dmg *= 1.15f;
+                attacker.setAbsorptionAmount(Math.min(40f, attacker.getAbsorptionAmount() + dmg * 0.10f));
+            }
+
+            // NINJA (id 140) : x2.0 critical damage when sneaking/invisible
+            if (perks.isUnlocked(Perk.byId(140)) && (attacker.isCrouching() || attacker.hasEffect(MobEffects.INVISIBILITY))) {
+                dmg *= 2.0f;
+            }
+
+            // BATTLEMAGE (id 141) : +20% damage and +1 absorption on hit
+            if (perks.isUnlocked(Perk.byId(141))) {
+                dmg *= 1.20f;
+                attacker.setAbsorptionAmount(Math.min(40f, attacker.getAbsorptionAmount() + 1.0f));
+            }
+
+            // ALCHEMICAL_ARCHER (id 142) : apply random debuffs with projectiles
+            if (perks.isUnlocked(Perk.byId(142))
+                    && event.getSource().getDirectEntity() instanceof Projectile
+                    && event.getEntity() instanceof LivingEntity target) {
+                int rand = attacker.getRandom().nextInt(4);
+                net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect = switch (rand) {
+                    case 0 -> MobEffects.POISON;
+                    case 1 -> MobEffects.MOVEMENT_SLOWDOWN;
+                    case 2 -> MobEffects.WEAKNESS;
+                    default -> MobEffects.WITHER;
+                };
+                target.addEffect(new MobEffectInstance(effect, 100, 0, false, false));
+            }
+
+            // DEMOLITIONIST (id 143) : +40% explosion damage
+            if (perks.isUnlocked(Perk.byId(143)) && event.getSource().is(net.minecraft.world.damagesource.DamageTypes.EXPLOSION)) {
+                dmg *= 1.40f;
+            }
+
+            // STORM_LORD (id 144) : +6 lightning damage under rain
+            if (perks.isUnlocked(Perk.byId(144))
+                    && (attacker.isInWater() || attacker.level().isRainingAt(attacker.blockPosition()))) {
+                dmg += 6.0f;
+            }
+
+            // AVATAR_OF_ELEMENTS (id 147) : +20% global damage
+            if (perks.isUnlocked(Perk.byId(147))) {
+                dmg *= 1.20f;
+            }
+
             // COOK_SITUATIONAL id=63: Fast Food effect handled elsewhere (can't modify eat speed in damage)
             // RAPID_FLURRY handled in tick
         }
@@ -532,6 +722,103 @@ public final class PerkEffectHandler {
                 }
             }
 
+            // ── PASSIVES ELEMENTAIRES ET MAGIQUES DE LA VICTIME ──
+
+            // WATER_ACTIVE (id 91) : Healing Surge — chance of Regen II when hit
+            if (perks.isUnlocked(Perk.byId(91)) && victim.getRandom().nextFloat() < 0.15f) {
+                victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 1, false, false));
+            }
+
+            // WATER_SITUATIONAL (id 93) : Cold Veil — Resistance II at low HP
+            if (perks.isUnlocked(Perk.byId(93))
+                    && victim.getHealth() < victim.getMaxHealth() * 0.3f
+                    && !PerkState.isOnCooldown(uuid, 93, 45_000L)) {
+                victim.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 120, 1, false, false));
+                PerkState.setCooldown(uuid, 93, 45_000L);
+            }
+
+            // EARTH_ACTIVE (id 97) : Earthen Rampart — chance of gaining absorption when hit
+            if (perks.isUnlocked(Perk.byId(97)) && victim.getRandom().nextFloat() < 0.10f) {
+                victim.setAbsorptionAmount(Math.min(victim.getAbsorptionAmount() + 4.0f, 40.0f));
+            }
+
+            // EARTH_SYNERGY (id 98) : Runic Bedrock — reduce magic damage when on ground
+            boolean isMagicDmg = event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MAGIC)
+                    || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC);
+            if (perks.isUnlocked(Perk.byId(98)) && victim.onGround() && isMagicDmg) {
+                dmg *= 0.80f;
+            }
+
+            // MAGIC_RESIST_CORE (id 114) : Warding Skin — -10% magic damage
+            if (perks.isUnlocked(Perk.byId(114)) && isMagicDmg) {
+                dmg *= 0.90f;
+            }
+
+            // MAGIC_RESIST_ACTIVE (id 115) : Spell Shear — gain haste when hit by magic
+            if (perks.isUnlocked(Perk.byId(115)) && isMagicDmg) {
+                victim.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 100, 0, false, false));
+            }
+
+            // MAGIC_RESIST_SYNERGY (id 116) : Unbroken Ward — -20% magic damage when blocking
+            if (perks.isUnlocked(Perk.byId(116)) && victim.isBlocking() && isMagicDmg) {
+                dmg *= 0.80f;
+            }
+
+            // MAGIC_RESIST_SITUATIONAL (id 117) : Countercurrent — -20% magic damage when absorption is 0
+            if (perks.isUnlocked(Perk.byId(117)) && victim.getAbsorptionAmount() <= 0.0f && isMagicDmg) {
+                dmg *= 0.80f;
+            }
+
+            // MAGIC_RESIST_TRANSCENDENCE (id 119) : Aegis Absolute — magic damage immunity when low health
+            if (perks.isUnlocked(Perk.byId(119))
+                    && victim.getHealth() < victim.getMaxHealth() * 0.3f
+                    && isMagicDmg
+                    && !PerkState.isOnCooldown(uuid, 119, 60_000L)) {
+                dmg = 0f;
+                victim.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 4, false, false));
+                PerkState.setCooldown(uuid, 119, 60_000L);
+            }
+
+            // MANA_POOL_SITUATIONAL (id 129) : Last Reservoir — speed when absorption drops to 0
+            if (perks.isUnlocked(Perk.byId(129))
+                    && victim.getAbsorptionAmount() <= 0.0f
+                    && !PerkState.isOnCooldown(uuid, 129, 30_000L)) {
+                victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 1, false, false));
+                PerkState.setCooldown(uuid, 129, 30_000L);
+            }
+
+            // ── PASSIVES HYBRIDES DE LA VICTIME ──
+
+            // PALADIN (id 139) : Block heals allies and weakens nearby mobs
+            if (perks.isUnlocked(Perk.byId(139)) && victim.isBlocking()) {
+                victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false));
+                victim.level().getEntitiesOfClass(Player.class,
+                        victim.getBoundingBox().inflate(8),
+                        p -> p != victim && p.isAlive())
+                        .forEach(ally -> ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false)));
+                victim.level().getEntitiesOfClass(Mob.class,
+                        victim.getBoundingBox().inflate(8),
+                        e -> e.isAlive() && e.getTarget() == victim)
+                        .forEach(e -> e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0, false, false)));
+            }
+
+            // DEMOLITIONIST (id 143) : Immune to explosions
+            if (perks.isUnlocked(Perk.byId(143)) && event.getSource().is(net.minecraft.world.damagesource.DamageTypes.EXPLOSION)) {
+                dmg = 0f;
+            }
+
+            // AVATAR_OF_ELEMENTS (id 147) : Immune to environmental damage (fire, fall, drown, suffocate, freeze)
+            if (perks.isUnlocked(Perk.byId(147))) {
+                boolean env = event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FIRE)
+                        || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.FALL)
+                        || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.DROWN)
+                        || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.IN_WALL)
+                        || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.FREEZE);
+                if (env) {
+                    dmg = 0f;
+                }
+            }
+
             // Track the attacker for Intim/Core tracking
             if (event.getSource().getEntity() instanceof LivingEntity source) {
                 PerkState.noteTrackedHit(uuid, source.getId());
@@ -590,6 +877,21 @@ public final class PerkEffectHandler {
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
+        // LICH_SOUL (id 146) : Resurrect player on death (10 min cooldown)
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
+            PerkManager perks = managerFor(player);
+            UUID uuid = player.getUUID();
+            if (perks.isUnlocked(Perk.byId(146)) && !PerkState.isOnCooldown(uuid, 146, 600_000L)) {
+                event.setCanceled(true); // Annuler la mort !
+                player.setHealth(player.getMaxHealth() * 0.5f); // Soigner 50%
+                player.setAbsorptionAmount(Math.min(40f, player.getAbsorptionAmount() + 20f)); // +10 cœurs
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 1, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, false, false));
+                PerkState.setCooldown(uuid, 146, 600_000L); // Mettre en CD 10 minutes
+                return;
+            }
+        }
+
         if (event.getSource().getEntity() instanceof Player player) {
             if (player.level().isClientSide) return;
 
@@ -597,6 +899,14 @@ public final class PerkEffectHandler {
             UUID uuid = player.getUUID();
             StatType killWeaponStat = WeaponResolver.statFor(player.getMainHandItem());
             PerkState.recordKill(uuid);
+
+            // FIRE_MASTERY (id 106) : Burn propagation on kill
+            if (perks.isUnlocked(Perk.byId(106)) && event.getEntity() != null && event.getEntity().getRemainingFireTicks() > 0) {
+                player.level().getEntitiesOfClass(Mob.class,
+                        event.getEntity().getBoundingBox().inflate(5),
+                        e -> e.isAlive() && e != event.getEntity())
+                        .forEach(e -> e.setRemainingFireTicks(60));
+            }
 
             // ENDUR_ACTIVE id=31: Second Wind
             if (perks.isUnlocked(Perk.byId(31))) {
@@ -685,6 +995,24 @@ public final class PerkEffectHandler {
             // SENSE_ACTIVE id=49: Treasure Hunter — double XP
             if (perks.isUnlocked(Perk.byId(49))) {
                 event.setDroppedExperience(event.getDroppedExperience() * 2);
+            }
+
+            // ERUDITION_CORE (id 132) — +25% XP
+            if (perks.isUnlocked(Perk.byId(132))) {
+                event.setDroppedExperience(Math.round(event.getDroppedExperience() * 1.25f));
+            }
+
+            // ERUDITION_TRANSCENDENCE (id 137) — +50% XP
+            if (perks.isUnlocked(Perk.byId(137))) {
+                event.setDroppedExperience(Math.round(event.getDroppedExperience() * 1.50f));
+            }
+
+            // ERUDITION_SITUATIONAL (id 135) — +50% XP if target has active effects
+            if (perks.isUnlocked(Perk.byId(135)) && event.getEntity() != null) {
+                boolean hasEffects = !event.getEntity().getActiveEffects().isEmpty();
+                if (hasEffects) {
+                    event.setDroppedExperience(Math.round(event.getDroppedExperience() * 1.50f));
+                }
             }
         }
     }
@@ -801,6 +1129,52 @@ public final class PerkEffectHandler {
     private static void removeAttackSpeedModifier(Player player) {
         AttributeInstance attr = player.getAttribute(Attributes.ATTACK_SPEED);
         if (attr != null) attr.removeModifier(ATTACK_SPEED_MOD_ID);
+    }
+
+    private static final ResourceLocation EARTH_ARMOR_MOD_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "earth_armor_mod");
+    private static final ResourceLocation EARTH_KB_MOD_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "earth_kb_mod");
+    private static final ResourceLocation AIR_SPEED_MOD_ID = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, "air_speed_mod");
+
+    private static void applyArmorModifier(Player player, double value) {
+        AttributeInstance attr = player.getAttribute(Attributes.ARMOR);
+        if (attr == null) return;
+        attr.removeModifier(EARTH_ARMOR_MOD_ID);
+        attr.addTransientModifier(new AttributeModifier(
+                EARTH_ARMOR_MOD_ID, value,
+                AttributeModifier.Operation.ADD_VALUE));
+    }
+
+    private static void removeArmorModifier(Player player) {
+        AttributeInstance attr = player.getAttribute(Attributes.ARMOR);
+        if (attr != null) attr.removeModifier(EARTH_ARMOR_MOD_ID);
+    }
+
+    private static void applyEarthKbResistModifier(Player player, double value) {
+        AttributeInstance attr = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+        if (attr == null) return;
+        attr.removeModifier(EARTH_KB_MOD_ID);
+        attr.addTransientModifier(new AttributeModifier(
+                EARTH_KB_MOD_ID, value,
+                AttributeModifier.Operation.ADD_VALUE));
+    }
+
+    private static void removeEarthKbResistModifier(Player player) {
+        AttributeInstance attr = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+        if (attr != null) attr.removeModifier(EARTH_KB_MOD_ID);
+    }
+
+    private static void applyAirSpeedModifier(Player player, double multiplier) {
+        AttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attr == null) return;
+        attr.removeModifier(AIR_SPEED_MOD_ID);
+        attr.addTransientModifier(new AttributeModifier(
+                AIR_SPEED_MOD_ID, multiplier - 1.0,
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+    }
+
+    private static void removeAirSpeedModifier(Player player) {
+        AttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attr != null) attr.removeModifier(AIR_SPEED_MOD_ID);
     }
 
     private static LivingEntity findPiercingSecondaryTarget(AbstractArrow arrow,

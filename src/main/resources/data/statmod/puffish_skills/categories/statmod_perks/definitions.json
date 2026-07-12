@@ -1378,5 +1378,105 @@
                 "item": "minecraft:book"
             }
         }
+    },
+    "blade_technique__spellsword": {
+        "title": "Spellsword",
+        "description": "+15% magic damage and +10% lifesteal absorption with blades",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:iron_sword"
+            }
+        }
+    },
+    "physical_resistance__paladin": {
+        "title": "Paladin",
+        "description": "Blocking heals allies and weakens nearby enemies",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:shield"
+            }
+        }
+    },
+    "agility__ninja": {
+        "title": "Ninja",
+        "description": "Invisibility when sneaking, next attack deals 2x critical damage",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "brute_force__battlemage": {
+        "title": "Battlemage",
+        "description": "Attack/cast gives +20% damage and +1 absorption",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:iron_axe"
+            }
+        }
+    },
+    "precision__alchemical_archer": {
+        "title": "Alchemical Archer",
+        "description": "Arrows apply random negative potion effects",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:bow"
+            }
+        }
+    },
+    "fire_affinity__demolitionist": {
+        "title": "Demolitionist",
+        "description": "Explosions deal +40% damage, immune to self-explosion damage",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
+    },
+    "air_affinity__storm_lord": {
+        "title": "Storm Lord",
+        "description": "Under rain, gain Conduit Power and lightning strikes targets",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:feather"
+            }
+        }
+    },
+    "forging__grand_artisan": {
+        "title": "Grand Artisan",
+        "description": "Eating artisan food repairs main hand weapon by 50 durability",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:anvil"
+            }
+        }
+    },
+    "arcane_power__lich_soul": {
+        "title": "Lich Soul",
+        "description": "Resurrect on spot with 50% HP and 10 absorption hearts (10m CD)",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:blaze_rod"
+            }
+        }
+    },
+    "fire_affinity__avatar_of_elements": {
+        "title": "Avatar of Elements",
+        "description": "Immune to environmental damage, +20% damage globally",
+        "icon": {
+            "type": "item",
+            "data": {
+                "item": "minecraft:fire_charge"
+            }
+        }
     }
 }

@@ -25,6 +25,9 @@
     },
     {
       "item": "minecraft:paper"
+    },
+    {
+      "item": "statmod:rough_axe_head_diamond"
     }
   ],
   "result": {

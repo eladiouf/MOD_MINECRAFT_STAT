@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,8 +25,79 @@ public class StatCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         registerMagic(dispatcher);
         tong.statmod.dungeon.DungeonCommands.register(dispatcher);
+        tong.statmod.dungeon.DungeonCommands.registerPlayerCommands(dispatcher);
+        
         dispatcher.register(Commands.literal("statlevel")
                 .requires(s -> s.hasPermission(2))
+                .then(Commands.literal("reset")
+                        .executes(ctx -> {
+                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                // Réinitialiser tous les niveaux à 0
+                                for (int i = 0; i < PlayerStatData.STAT_COUNT; i++) {
+                                    data.setLevel(i, 0);
+                                    data.setXp(i, 0);
+                                }
+                                // Rembourser toutes les perks
+                                int refunded = tong.statmod.perks.PerkPointAllocator.refundPaidUnlockedPerks(data);
+                                // Vider la liste des perks débloquées
+                                data.clearUnlockedPerks();
+
+                                ctx.getSource().sendSuccess(() ->
+                                        Component.literal("§aStatistiques réinitialisées ! §e" + refunded + " points de perks remboursés."), true);
+                                SyncHelper.syncStats(player);
+                                SyncHelper.syncPerks(player);
+                            }
+                            return 1;
+                        }))
+                .then(Commands.literal("set")
+                        .then(Commands.argument("stat", StringArgumentType.word())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        java.util.Arrays.stream(StatType.values()).map(s -> s.name().toLowerCase(java.util.Locale.ROOT)), builder))
+                                .then(Commands.argument("level", IntegerArgumentType.integer(0, 100))
+                                        .executes(ctx -> {
+                                            String statName = StringArgumentType.getString(ctx, "stat");
+                                            int level = IntegerArgumentType.getInteger(ctx, "level");
+                                            StatType stat = StatType.byName(statName);
+                                            if (stat == null) {
+                                                ctx.getSource().sendFailure(Component.literal("Statistique inconnue: " + statName));
+                                                return 0;
+                                            }
+                                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                                data.setLevel(stat.index, level);
+                                                data.setXp(stat.index, 0);
+                                                ctx.getSource().sendSuccess(() ->
+                                                        Component.literal("§a" + stat.displayName + " défini à Lv." + level), true);
+                                                tong.statmod.progression.LevelUpHandler.grantPendingPerkTiers(data);
+                                                SyncHelper.syncStats(player);
+                                                SyncHelper.syncPerks(player);
+                                            }
+                                            return 1;
+                                        }))))
+                .then(Commands.literal("add")
+                        .then(Commands.argument("stat", StringArgumentType.word())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        java.util.Arrays.stream(StatType.values()).map(s -> s.name().toLowerCase(java.util.Locale.ROOT)), builder))
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
+                                        .executes(ctx -> {
+                                            String statName = StringArgumentType.getString(ctx, "stat");
+                                            int amount = IntegerArgumentType.getInteger(ctx, "amount");
+                                            StatType stat = StatType.byName(statName);
+                                            if (stat == null) {
+                                                ctx.getSource().sendFailure(Component.literal("Statistique inconnue: " + statName));
+                                                return 0;
+                                            }
+                                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                                RaceEffectApplier.addLevels(player, stat.index, amount, data, false);
+                                                int effective = RaceEffectApplier.getEffectiveLevel(player, stat.index);
+                                                ctx.getSource().sendSuccess(() ->
+                                                        Component.literal("§a" + stat.displayName + " → Lv." + effective), true);
+                                                SyncHelper.syncStats(player);
+                                            }
+                                            return 1;
+                                        }))))
                 .then(Commands.literal("all")
                         .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
                                 .executes(ctx -> {
@@ -41,44 +113,59 @@ public class StatCommands {
                                     }
                                     return 1;
                                 })))
-                .then(Commands.argument("index", IntegerArgumentType.integer(0, PlayerStatData.STAT_COUNT - 1))
-                        .then(Commands.argument("amount", IntegerArgumentType.integer(-100, 100))
-                                .executes(ctx -> {
-                                    int index = IntegerArgumentType.getInteger(ctx, "index");
-                                    int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                    if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                        PlayerStatData data = player.getData(ModAttachments.STATS);
-                                        RaceEffectApplier.addLevels(player, index, amount, data, false);
-                                        StatType stat = StatType.byIndex(index);
-                                        String name = stat != null ? stat.displayName : ("#" + index);
-                                        int effective = RaceEffectApplier.getEffectiveLevel(player, index);
-                                        ctx.getSource().sendSuccess(() ->
-                                                Component.literal(name + " → Lv." + effective), true);
-                                        SyncHelper.syncStats(player);
-                                    }
-                                    return 1;
-                                }))));
+        );
 
         dispatcher.register(Commands.literal("statxp")
                 .requires(s -> s.hasPermission(2))
-                .then(Commands.argument("index", IntegerArgumentType.integer(0, PlayerStatData.STAT_COUNT - 1))
-                        .then(Commands.argument("amount", IntegerArgumentType.integer(1, 100000))
-                                .executes(ctx -> {
-                                    int index = IntegerArgumentType.getInteger(ctx, "index");
-                                    int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                    if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                        PlayerStatData data = player.getData(ModAttachments.STATS);
-                                        boolean leveled = RaceEffectApplier.addRawXp(player, index, amount, data);
-                                        int granted = LevelUpHandler.grantPendingPerkTiers(data);
-                                        ctx.getSource().sendSuccess(() ->
-                                                Component.literal("+" + amount + " XP" + (leveled ? " (level up!)" : "")), true);
-                                        SyncHelper.syncStats(player);
-                                        if (granted > 0) {
-                                            SyncHelper.syncPerks(player);
-                                        }
-                                    }
-                                    return 1;
-                                }))));
+                .then(Commands.literal("add")
+                        .then(Commands.argument("stat", StringArgumentType.word())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        java.util.Arrays.stream(StatType.values()).map(s -> s.name().toLowerCase(java.util.Locale.ROOT)), builder))
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000000))
+                                        .executes(ctx -> {
+                                            String statName = StringArgumentType.getString(ctx, "stat");
+                                            int amount = IntegerArgumentType.getInteger(ctx, "amount");
+                                            StatType stat = StatType.byName(statName);
+                                            if (stat == null) {
+                                                ctx.getSource().sendFailure(Component.literal("Statistique inconnue: " + statName));
+                                                return 0;
+                                            }
+                                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                                boolean leveled = RaceEffectApplier.addRawXp(player, stat.index, amount, data);
+                                                int granted = LevelUpHandler.grantPendingPerkTiers(data);
+                                                ctx.getSource().sendSuccess(() ->
+                                                        Component.literal("§a+" + amount + " XP pour " + stat.displayName + (leveled ? " (Level up!)" : "")), true);
+                                                SyncHelper.syncStats(player);
+                                                if (granted > 0) {
+                                                    SyncHelper.syncPerks(player);
+                                                }
+                                            }
+                                            return 1;
+                                        }))))
+                .then(Commands.literal("set")
+                        .then(Commands.argument("stat", StringArgumentType.word())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        java.util.Arrays.stream(StatType.values()).map(s -> s.name().toLowerCase(java.util.Locale.ROOT)), builder))
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(0, 1000000))
+                                        .executes(ctx -> {
+                                            String statName = StringArgumentType.getString(ctx, "stat");
+                                            int amount = IntegerArgumentType.getInteger(ctx, "amount");
+                                            StatType stat = StatType.byName(statName);
+                                            if (stat == null) {
+                                                ctx.getSource().sendFailure(Component.literal("Statistique inconnue: " + statName));
+                                                return 0;
+                                            }
+                                            if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
+                                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                                data.setXp(stat.index, amount);
+                                                ctx.getSource().sendSuccess(() ->
+                                                        Component.literal("§aXP de " + stat.displayName + " défini à " + amount), true);
+                                                SyncHelper.syncStats(player);
+                                            }
+                                            return 1;
+                                        }))))
+        );
 
         dispatcher.register(Commands.literal("statmod")
                 .requires(s -> s.hasPermission(2))
@@ -98,6 +185,7 @@ public class StatCommands {
                                             Component.literal("§6" + id + "§r → §b" + stat.displayName + "§r [" + action + "]"), true);
                                     return 1;
                                 }))));
+
         dispatcher.register(Commands.literal("statperk")
                 .requires(s -> s.hasPermission(2))
                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 9999))
@@ -165,8 +253,6 @@ public class StatCommands {
                                 int blockedByPoints = 0;
                                 int blockedByStats = 0;
                                 int blockedByPrereq = 0;
-                                tong.statmod.magic.MagicEligibilityResolver.Failure dominant =
-                                        tong.statmod.magic.MagicEligibilityResolver.Failure.NONE;
                                 for (tong.statmod.magic.MagicNode node : tong.statmod.magic.MagicTreeCatalog.all()) {
                                     if (data.hasMagicNode(node.id())) continue;
                                     var result = tong.statmod.magic.MagicEligibilityResolver.evaluate(data, node);

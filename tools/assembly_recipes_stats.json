@@ -26,6 +26,7 @@
     "mcwroofs": 1,
     "mowziesmobs": 9,
     "mutantmonsters": 2,
+    "overgeared": 26,
     "quark": 15,
     "simply_traps": 1,
     "simplyswords": 53,
@@ -39,6 +40,6 @@
   "skipped_no_material": 0,
   "skipped_no_rough": 0,
   "skipped_whitelist": 0,
-  "skipped_excluded_mod": 26,
-  "generated": 1280
+  "skipped_excluded_mod": 0,
+  "generated": 1306
 }

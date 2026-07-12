@@ -146,8 +146,9 @@ public final class DungeonSpawnGuard {
             String namespace = registryKey.location().getNamespace();
 
             // Autoriser les mods de notre liste blanche (modId réels, cf. ModdedMobPool)
-            return "slu".equals(namespace) ||
-                   "irons_spellbooks".equals(namespace) ||
+            // Note : SLU est exclu ici car ses spawns sauvages envahissent l'arène de boss.
+            // Il reste spawnable via spawnAuthorized() dans les vagues normales.
+            return "irons_spellbooks".equals(namespace) ||
                    "tensura".equals(namespace) ||
                    "block_factorys_bosses".equals(namespace) ||
                    "xbbsroaringknightmod".equals(namespace) ||
@@ -160,9 +161,20 @@ public final class DungeonSpawnGuard {
                     "fdbosses".equals(namespace) ||
                     "iceandfire".equals(namespace);
 
-
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onFinalizeSpawn(net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent event) {
+        if (event.getLevel() != null && event.getLevel().getLevel() != null) {
+            if (event.getLevel().getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
+                if (event.getSpawnType() == net.minecraft.world.entity.MobSpawnType.NATURAL) {
+                    event.setSpawnCancelled(true);
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 }

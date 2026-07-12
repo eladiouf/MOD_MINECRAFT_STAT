@@ -1,12 +1,12 @@
 ---
 title: Perks
-description: "Liste des 138 perks"
+description: "Liste des 148 perks"
 nav_order: 5
 ---
 
 # Perks
 
-STAT MOD expose 138 perks runtime : 6 tiers pour chacune des 23 stats.
+STAT MOD expose 148 perks runtime : 6 tiers pour chacune des 23 stats plus 10 perks hybrides légendaires.
 
 | Perk | Stat | Tier |
 |------|------|------|
@@ -148,3 +148,13 @@ STAT MOD expose 138 perks runtime : 6 tiers pour chacune des 23 stats.
 | Adaptive Theory | ERUDITION | SITUATIONAL |
 | Grand Synthesis | ERUDITION | MASTERY |
 | Omniform Understanding | ERUDITION | TRANSCENDENCE |
+| Spellsword | BLADE_TECHNIQUE | HYBRID |
+| Paladin | PHYSICAL_RESISTANCE | HYBRID |
+| Ninja | AGILITY | HYBRID |
+| Battlemage | BRUTE_FORCE | HYBRID |
+| Alchemical Archer | PRECISION | HYBRID |
+| Demolitionist | FIRE_AFFINITY | HYBRID |
+| Storm Lord | AIR_AFFINITY | HYBRID |
+| Grand Artisan | FORGING | HYBRID |
+| Lich Soul | ARCANE_POWER | HYBRID |
+| Avatar of Elements | FIRE_AFFINITY | HYBRID |

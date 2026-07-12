@@ -22,6 +22,10 @@
                 "brute_force__brute_transcendence"
             ],
             [
+                "brute_force__brute_transcendence",
+                "brute_force__battlemage"
+            ],
+            [
                 "blade_technique__blade_core",
                 "blade_technique__blade_active"
             ],
@@ -40,6 +44,10 @@
             [
                 "blade_technique__blade_mastery",
                 "blade_technique__blade_transcendence"
+            ],
+            [
+                "blade_technique__blade_transcendence",
+                "blade_technique__spellsword"
             ],
             [
                 "rapidite__rapid_core",
@@ -82,6 +90,10 @@
                 "agility__agil_transcendence"
             ],
             [
+                "agility__agil_transcendence",
+                "agility__ninja"
+            ],
+            [
                 "physical_resistance__resist_core",
                 "physical_resistance__resist_active"
             ],
@@ -100,6 +112,10 @@
             [
                 "physical_resistance__resist_mastery",
                 "physical_resistance__resist_transcendence"
+            ],
+            [
+                "physical_resistance__resist_transcendence",
+                "physical_resistance__paladin"
             ],
             [
                 "physical_endurance__endur_core",
@@ -142,6 +158,10 @@
                 "precision__preci_transcendence"
             ],
             [
+                "precision__preci_transcendence",
+                "precision__alchemical_archer"
+            ],
+            [
                 "arcane_power__arcane_core",
                 "arcane_power__arcane_active"
             ],
@@ -160,6 +180,10 @@
             [
                 "arcane_power__arcane_mastery",
                 "arcane_power__arcane_transcendence"
+            ],
+            [
+                "arcane_power__arcane_transcendence",
+                "arcane_power__lich_soul"
             ],
             [
                 "water_affinity__water_core",
@@ -222,6 +246,14 @@
                 "fire_affinity__fire_transcendence"
             ],
             [
+                "fire_affinity__fire_transcendence",
+                "fire_affinity__demolitionist"
+            ],
+            [
+                "fire_affinity__fire_transcendence",
+                "fire_affinity__avatar_of_elements"
+            ],
+            [
                 "air_affinity__air_core",
                 "air_affinity__air_active"
             ],
@@ -240,6 +272,10 @@
             [
                 "air_affinity__air_mastery",
                 "air_affinity__air_transcendence"
+            ],
+            [
+                "air_affinity__air_transcendence",
+                "air_affinity__storm_lord"
             ],
             [
                 "magic_resistance__magic_resist_core",
@@ -380,6 +416,10 @@
             [
                 "forging__forge_mastery",
                 "forging__forge_transcendence"
+            ],
+            [
+                "forging__forge_transcendence",
+                "forging__grand_artisan"
             ],
             [
                 "cooking__cook_core",

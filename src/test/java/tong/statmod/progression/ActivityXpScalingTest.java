@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ActivityXpScalingTest {
     @Test
     void sprintTrainingRewardsAgilityAndEnduranceOnlyWhenActuallyMoving() {
-        assertEquals(1, ActivityXpScaling.agilityXpForMovement(true, true, false, false));
+        // Balance 30j : agility sprint XP doublé de 1→2
+        assertEquals(2, ActivityXpScaling.agilityXpForMovement(true, true, false, false));
         assertEquals(0, ActivityXpScaling.agilityXpForMovement(false, true, false, false));
         assertEquals(0, ActivityXpScaling.agilityXpForMovement(true, false, false, false));
         assertEquals(0, ActivityXpScaling.agilityXpForMovement(true, true, true, false));

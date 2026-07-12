@@ -55,7 +55,8 @@ public final class StatCombatScaling {
     }
 
     public static float intimidationDamageMultiplier(int intimidation, boolean markedTarget) {
-        return markedTarget ? 1.0f + Math.max(0, intimidation) * 0.003f : 1.0f;
+        // Balance 30j : +0.5% dmg par level sur cible marquée au lieu de 0.3%.
+        return markedTarget ? 1.0f + Math.max(0, intimidation) * 0.005f : 1.0f;
     }
 
     public static float physicalDamageTakenMultiplier(int physicalResistance) {

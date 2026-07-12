@@ -32,7 +32,7 @@
 	# Range: 0.0 ~ 10.0
 	xpBaseMultiplier = 1.0
 	#Multiplier XP additionnel par étage — étage 20 donne XP*(base + 20*perFloor).
-	# Default: 0.05
+	# Default: 0.02
 	# Range: 0.0 ~ 1.0
 	xpPerFloor = 0.05
 	#Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.
@@ -50,3 +50,9 @@
 	# Default: 100
 	# Range: 0 ~ 500
 	l2HostilityCap = 200
+	#Nom de la monnaie SDM créditée à l'échange de points (doit correspondre à la devise du shop SDM).
+	shopCurrencyName = "dungeon_coins"
+	#Taux de conversion : 1 point échangé = ce nombre de coins.
+	# Default: 1.0
+	# Range: 0.0 ~ 100.0
+	pointToCoinRate = 1.0

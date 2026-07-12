@@ -34,7 +34,8 @@ public final class IslandGenerator {
         ThemePalette theme = ThemePalette.forFloor(floor); // identité matérielle par thème/arc
 
         DungeonArchitect.Role role =
-                (floor % 10 == 0) ? DungeonArchitect.Role.BOSS
+                (floor == 0) ? DungeonArchitect.Role.HUB
+              : (floor % 10 == 0) ? DungeonArchitect.Role.BOSS
               : (floor % 5 == 0) ? DungeonArchitect.Role.TREASURE
               : DungeonArchitect.Role.COMBAT;
 

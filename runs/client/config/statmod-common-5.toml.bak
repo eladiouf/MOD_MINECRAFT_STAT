@@ -15,3 +15,26 @@
 	# Default: 1
 	# Range: 0 ~ 10
 	basePerkPointsPerLevel = 1
+
+[trial_dungeon]
+	#Multiplier de base pour l'XP gagné dans le Trial Dungeon (ajouté à floor*perFloor).
+	# Default: 1.0
+	# Range: 0.0 ~ 10.0
+	xpBaseMultiplier = 1.0
+	#Multiplier XP additionnel par étage — étage 20 donne XP*(base + 20*perFloor).
+	# Default: 0.05
+	# Range: 0.0 ~ 1.0
+	xpPerFloor = 0.05
+	#Nombre de niveaux de stat gagnés directement à la mort d'un boss d'étage.
+	# Default: 2
+	# Range: 0 ~ 10
+	bossStatGain = 2
+	#Intégration L2 Hostility : niveau de hostilité appliqué aux mobs = floor * ce facteur.
+	#1.0 = étage N donne des mobs de niveau L2 N. 0 = désactive le scaling par étage.
+	# Default: 1.0
+	# Range: 0.0 ~ 10.0
+	l2HostilityPerFloor = 1.0
+	#Intégration L2 Hostility : plafond du niveau de hostilité appliqué par étage.
+	# Default: 200
+	# Range: 0 ~ 5000
+	l2HostilityCap = 200

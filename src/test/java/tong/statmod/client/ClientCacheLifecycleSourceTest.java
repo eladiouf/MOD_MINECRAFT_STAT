@@ -21,7 +21,6 @@ class ClientCacheLifecycleSourceTest {
         assertTrue(source.contains("ClientPerkCache.reset();"));
         assertTrue(source.contains("ClientStaminaCache.reset();"));
         assertTrue(source.contains("ClientMagicCache.reset();"));
-        assertTrue(source.contains("ClientManaCache.reset();"));
     }
 
     @Test

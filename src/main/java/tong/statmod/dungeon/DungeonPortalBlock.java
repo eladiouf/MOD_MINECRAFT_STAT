@@ -41,16 +41,15 @@ public class DungeonPortalBlock extends Block {
         }
 
         PlayerStatData data = serverPlayer.getData(ModAttachments.STATS);
-        int floor = data.getDungeonFloorReached();
 
         data.setLastOverworldDimensionId(level.dimension().location().toString());
         data.setLastOverworldPos(pos.asLong());
 
-        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, floor);
+        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0);
         if (ok) {
             serverPlayer.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.7f, 1.3f);
             serverPlayer.displayClientMessage(
-                    Component.translatable("block.statmod.dungeon_portal.enter", floor), true);
+                    Component.translatable("block.statmod.dungeon_portal.enter_hub"), true);
         } else {
             serverPlayer.displayClientMessage(
                     Component.translatable("block.statmod.dungeon_portal.failed"), true);
@@ -67,67 +66,62 @@ public class DungeonPortalBlock extends Block {
     }
 
     private void checkAndCreateMagicCircle(Level level, BlockPos pos) {
-        // AXE X (East-West)
-        BlockPos[] lineX1 = { pos.west(), pos, pos.east() };
-        BlockPos[] lineX2 = { pos, pos.east(), pos.east(2) };
-        BlockPos[] lineX3 = { pos.west(2), pos.west(), pos };
-
-        if (isPortalLine(level, lineX1)) {
-            transformToMagicCircle(level, lineX1);
-            return;
-        }
-        if (isPortalLine(level, lineX2)) {
-            transformToMagicCircle(level, lineX2);
-            return;
-        }
-        if (isPortalLine(level, lineX3)) {
-            transformToMagicCircle(level, lineX3);
-            return;
-        }
-
-        // AXE Z (North-South)
-        BlockPos[] lineZ1 = { pos.north(), pos, pos.south() };
-        BlockPos[] lineZ2 = { pos, pos.south(), pos.south(2) };
-        BlockPos[] lineZ3 = { pos.north(2), pos.north(), pos };
-
-        if (isPortalLine(level, lineZ1)) {
-            transformToMagicCircle(level, lineZ1);
-            return;
-        }
-        if (isPortalLine(level, lineZ2)) {
-            transformToMagicCircle(level, lineZ2);
-            return;
-        }
-        if (isPortalLine(level, lineZ3)) {
-            transformToMagicCircle(level, lineZ3);
-            return;
+        // Il y a 9 centres possibles pour une grille 3x3 contenant le bloc posé
+        for (int cx = -1; cx <= 1; cx++) {
+            for (int cz = -1; cz <= 1; cz++) {
+                BlockPos center = pos.offset(cx, 0, cz);
+                if (isMagicCircleGrid(level, center)) {
+                    transformToMagicCircleGrid(level, center);
+                    return;
+                }
+            }
         }
     }
 
-    private boolean isPortalLine(Level level, BlockPos[] positions) {
-        for (BlockPos p : positions) {
-            if (!(level.getBlockState(p).getBlock() instanceof DungeonPortalBlock)) {
-                return false;
+    private boolean isMagicCircleGrid(Level level, BlockPos center) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos p = center.offset(x, 0, z);
+                if (!(level.getBlockState(p).getBlock() instanceof DungeonPortalBlock)) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    private void transformToMagicCircle(Level level, BlockPos[] positions) {
+    private void transformToMagicCircleGrid(Level level, BlockPos center) {
         BlockState circleState = DungeonBlocks.MAGIC_TELEPORT_CIRCLE.get().defaultBlockState();
-        for (BlockPos p : positions) {
-            level.setBlock(p, circleState, 3);
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos p = center.offset(x, 0, z);
+                MagicTeleportCircleBlock.CirclePart part;
+                if (x == -1 && z == -1) part = MagicTeleportCircleBlock.CirclePart.NORTH_WEST;
+                else if (x == 0 && z == -1) part = MagicTeleportCircleBlock.CirclePart.NORTH;
+                else if (x == 1 && z == -1) part = MagicTeleportCircleBlock.CirclePart.NORTH_EAST;
+                else if (x == -1 && z == 0) part = MagicTeleportCircleBlock.CirclePart.WEST;
+                else if (x == 0 && z == 0) part = MagicTeleportCircleBlock.CirclePart.CENTER;
+                else if (x == 1 && z == 0) part = MagicTeleportCircleBlock.CirclePart.EAST;
+                else if (x == -1 && z == 1) part = MagicTeleportCircleBlock.CirclePart.SOUTH_WEST;
+                else if (x == 0 && z == 1) part = MagicTeleportCircleBlock.CirclePart.SOUTH;
+                else part = MagicTeleportCircleBlock.CirclePart.SOUTH_EAST;
+
+                level.setBlock(p, circleState.setValue(MagicTeleportCircleBlock.PART, part), 3);
+            }
         }
 
-        double cx = (positions[0].getX() + positions[2].getX()) / 2.0 + 0.5D;
-        double cy = positions[1].getY() + 0.5D;
-        double cz = (positions[0].getZ() + positions[2].getZ()) / 2.0 + 0.5D;
-        level.playSound(null, cx, cy, cz, net.minecraft.sounds.SoundEvents.WITHER_SPAWN, SoundSource.BLOCKS, 1.0F, 1.2F);
+        double cxDouble = center.getX() + 0.5D;
+        double cyDouble = center.getY() + 0.5D;
+        double czDouble = center.getZ() + 0.5D;
+        level.playSound(null, cxDouble, cyDouble, czDouble, net.minecraft.sounds.SoundEvents.WITHER_SPAWN, SoundSource.BLOCKS, 1.0F, 1.2F);
 
         if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
-            for (BlockPos p : positions) {
-                serverLevel.sendParticles(ParticleTypes.EXPLOSION, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 10, 0.2D, 0.2D, 0.2D, 0.1D);
-                serverLevel.sendParticles(ParticleTypes.PORTAL, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 30, 0.4D, 0.4D, 0.4D, 0.2D);
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    BlockPos p = center.offset(x, 0, z);
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 3, 0.2D, 0.2D, 0.2D, 0.1D);
+                    serverLevel.sendParticles(ParticleTypes.PORTAL, p.getX() + 0.5D, p.getY() + 0.5D, p.getZ() + 0.5D, 10, 0.4D, 0.4D, 0.4D, 0.2D);
+                }
             }
         }
     }

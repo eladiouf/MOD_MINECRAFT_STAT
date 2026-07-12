@@ -156,4 +156,20 @@ public final class DungeonProtectionHandler {
         if (event.getPlayer() != null && isBuilder(event.getPlayer())) return;
         event.setCanceled(true);
     }
+
+    /**
+     * PNJ marchands (tag {@code sdm_tab:*}) dans le donjon : invulnérables.
+     * Un joueur ne peut pas les tuer — ce sont des PNJ de shop, pas des monstres.
+     */
+    @SubscribeEvent
+    public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+        var entity = event.getEntity();
+        if (!inDungeon(entity.level())) return;
+        for (String tag : entity.getTags()) {
+            if (tag.startsWith("sdm_tab:")) {
+                event.setCanceled(true);
+                return;
+            }
+        }
+    }
 }

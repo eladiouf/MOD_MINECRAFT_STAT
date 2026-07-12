@@ -8,29 +8,32 @@ import org.slf4j.LoggerFactory;
 import tong.statmod.STATMod;
 import tong.statmod.config.Config;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * Mission M6 — Bridge optionnel vers SDM Economy (2026-07-05).
- *
- * <p>Crédite/lit la monnaie « coins » du shop SDM par réflexion (mod optionnel). Si SDM est absent
- * ou l'API a changé, tout devient un no-op sûr — le donjon reste jouable. Convention identique aux
- * bridges L2/Waystones.
+ * Bridge vers SDM Economy.
  */
 public final class SDMEconomyBridge {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STATMod.class);
-    private static Boolean available;   // null = non résolu
-    private static Object serverData;   // CurrencyPlayerData$Server (SERVER)
-    private static Method addCurrencyValue; // (Player, String, double) -> ErrorCodes
-    private static Method getBalance;       // (Player, String) -> ErrorCodeStruct<Double>
-    private static Method newPlayerMethod;  // (Player) -> void
+    private static Boolean available;   
+    private static Object serverData;   
+    private static Method addCurrencyValue; 
+    private static Method getBalance;       
+    private static Method getPlayerCurrency; 
+
+    private static Object customCurrenciesMap; 
+    private static Method currenciesGet;       
+    private static Method newPlayerMethod;
 
     private SDMEconomyBridge() {}
 
-    /** {@code true} si SDM Economy est chargé et l'API résolue. */
     public static boolean available() {
         if (available != null) return available;
         if (!ModList.get().isLoaded("sdmeconomy")) { available = false; return false; }
@@ -42,90 +45,147 @@ public final class SDMEconomyBridge {
             addCurrencyValue = serverData.getClass().getMethod("addCurrencyValue", playerCls, String.class, double.class);
             getBalance = serverData.getClass().getMethod("getBalance", playerCls, String.class);
             try {
+                getPlayerCurrency = serverData.getClass().getMethod("getPlayerCurrency", playerCls, String.class);
+            } catch (Throwable t) {
+                LOGGER.warn("[Shop] getPlayerCurrency non trouvé: {}", t.toString());
+            }
+            try {
                 newPlayerMethod = serverData.getClass().getMethod("newPlayer", playerCls);
             } catch (Throwable t) {
-                // Ignore si la méthode n'existe pas dans cette version
+                LOGGER.warn("[Shop] newPlayer non trouvé: {}", t.toString());
+            }
+            try {
+                Class<?> customCls = Class.forName("net.sixik.sdmeconomy.api.CustomCurrencies");
+                Field currField = customCls.getField("CURRENCIES");
+                customCurrenciesMap = currField.get(null);
+                currenciesGet = customCurrenciesMap.getClass().getMethod("get", Object.class);
+            } catch (Throwable t) {
+                LOGGER.warn("[Shop] CustomCurrencies non résolu: {}", t.toString());
             }
             available = true;
         } catch (Throwable t) {
-            LOGGER.warn("[Shop] SDM Economy présent mais API non résolue — bridge désactivé : {}", t.toString());
+            LOGGER.warn("[Shop] API non résolue : {}", t.toString());
             available = false;
         }
         return available;
     }
 
-    /** Crée la monnaie du shop si elle n'existe pas (idempotent). À appeler au démarrage serveur. */
-    public static void ensureCurrency(MinecraftServer server) {
-        if (!available()) return;
+    private static void logAllCurrencies(ServerPlayer player, String prefix) {
+        if (serverData == null) return;
         try {
-            String name = Config.getShopCurrencyName();
-            Class<?> currencyCls = Class.forName("net.sixik.sdmeconomy.economy.Currency");
-            Class<?> apiCls = Class.forName("net.sixik.sdmeconomy.api.EconomyAPI");
-
-            // Nettoyage de toutes les autres devises
-            try {
-                Method getAll = apiCls.getMethod("getAllCurrency");
-                Object struct = getAll.invoke(null);
-                if (struct != null) {
-                    Field valField = struct.getClass().getField("value");
-                    Object currencyData = valField.get(struct);
-                    if (currencyData != null) {
-                        Field listField = currencyData.getClass().getField("currencies");
-                        java.util.List<?> currenciesList = (java.util.List<?>) listField.get(currencyData);
-                        if (currenciesList != null) {
-                            java.util.List<Object> toDelete = new java.util.ArrayList<>();
-                            for (Object curr : currenciesList) {
-                                Method getName = curr.getClass().getMethod("getName");
-                                String currName = (String) getName.invoke(curr);
-                                if (currName != null && !currName.equalsIgnoreCase(name)) {
-                                    toDelete.add(curr);
-                                }
-                            }
-                            Method delete = apiCls.getMethod("deleteCurrencyOnServer", currencyCls);
-                            for (Object curr : toDelete) {
-                                delete.invoke(null, curr);
-                                LOGGER.info("[Shop] Deleting unused SDM currency: {}", curr.getClass().getMethod("getName").invoke(curr));
-                            }
-                        }
+            Field mapField = serverData.getClass().getField("playersCurrencyMap");
+            @SuppressWarnings("unchecked")
+            Map<UUID, LinkedList<Object>> pMap = (Map<UUID, LinkedList<Object>>) mapField.get(serverData);
+            LinkedList<Object> list = pMap.get(player.getUUID());
+            LOGGER.info("[Banker-Debug] {} Player {} (UUID={}) has {} currencies in map", prefix, player.getName().getString(), player.getUUID(), list == null ? 0 : list.size());
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    Object pc = list.get(i);
+                    Field currField = pc.getClass().getField("currency");
+                    Field valField = pc.getClass().getField("value");
+                    Object curr = currField.get(pc);
+                    Object val = valField.get(pc);
+                    String name = "unknown";
+                    if (curr != null) {
+                        Field nameField = curr.getClass().getField("name");
+                        name = (String) nameField.get(curr);
                     }
+                    LOGGER.info("[Banker-Debug] {}   [{}] {} = {}", prefix, i, name, val);
                 }
-            } catch (Throwable t) {
-                LOGGER.warn("[Shop] Impossible de nettoyer les autres monnaies SDM : {}", t.toString());
             }
-
-            Constructor<?> ctor = currencyCls.getConstructor(String.class);
-            Object currency = ctor.newInstance(name);
-            Method create = apiCls.getMethod("createCurrencyOnServer", currencyCls);
-            create.invoke(null, currency); // no-op côté SDM si déjà présente
-
-            // Sauvegarder et synchroniser vers les clients
-            try {
-                Method save = apiCls.getMethod("saveCurrencyData");
-                save.invoke(null);
-            } catch (Throwable t) {}
-            try {
-                Method sync = apiCls.getMethod("syncCurrencyData", MinecraftServer.class);
-                sync.invoke(null, server);
-            } catch (Throwable t) {}
-        } catch (Throwable t) {
-            LOGGER.warn("[Shop] Échec création monnaie SDM : {}", t.toString());
+        } catch (Exception e) {
+            LOGGER.error("[Banker-Debug] Error logging currencies", e);
         }
     }
 
-    /** Crédite {@code coins} au joueur. Retourne {@code true} si crédité, {@code false} si indisponible. */
+    private static void deduplicateCurrencies(ServerPlayer player) {
+        if (serverData == null) return;
+        try {
+            Field mapField = serverData.getClass().getField("playersCurrencyMap");
+            @SuppressWarnings("unchecked")
+            Map<UUID, LinkedList<Object>> pMap = (Map<UUID, LinkedList<Object>>) mapField.get(serverData);
+            LinkedList<Object> list = pMap.get(player.getUUID());
+            if (list == null || list.isEmpty()) return;
+
+            java.util.Map<String, Object> bestEntries = new java.util.HashMap<>();
+            java.util.Map<String, Double> maxValues = new java.util.HashMap<>();
+            boolean hasDuplicates = false;
+
+            for (Object pc : list) {
+                Field currField = pc.getClass().getField("currency");
+                Field valField = null;
+                for (Field f : pc.getClass().getFields()) {
+                    if (f.getName().equals("value") || Number.class.isAssignableFrom(f.getType())) {
+                        valField = f;
+                        break;
+                    }
+                }
+                if (valField == null) continue;
+
+                Object curr = currField.get(pc);
+                Object valObj = valField.get(pc);
+                double val = 0.0;
+                if (valObj instanceof Number n) val = n.doubleValue();
+                else if (valObj instanceof String s) {
+                    try { val = Double.parseDouble(s); } catch (Exception ignored) {}
+                }
+                
+                String name = "unknown";
+                if (curr != null) {
+                    Field nameField = curr.getClass().getField("name");
+                    name = (String) nameField.get(curr);
+                }
+
+                if (!bestEntries.containsKey(name)) {
+                    bestEntries.put(name, pc);
+                    maxValues.put(name, val);
+                } else {
+                    hasDuplicates = true;
+                    if (val > maxValues.get(name)) {
+                        bestEntries.put(name, pc);
+                        maxValues.put(name, val);
+                    }
+                }
+            }
+
+            if (hasDuplicates) {
+                list.clear();
+                list.addAll(bestEntries.values());
+                LOGGER.info("[Banker-Debug] Deduplicated currencies for {}. New size: {}", player.getName().getString(), list.size());
+            }
+        } catch (Exception e) {
+            LOGGER.error("[Banker-Debug] Error deduplicating currencies", e);
+        }
+    }
+
+    private static void ensurePlayerHasCurrency(ServerPlayer player) {
+        deduplicateCurrencies(player);
+        if (getPlayerCurrency == null) return;
+        try {
+            String name = Config.getShopCurrencyName();
+            Optional<?> opt = (Optional<?>) getPlayerCurrency.invoke(serverData, player, name);
+            if (opt != null && opt.isPresent()) {
+                return; 
+            }
+            if (newPlayerMethod != null) {
+                newPlayerMethod.invoke(serverData, player);
+                deduplicateCurrencies(player);
+            }
+        } catch (Throwable t) {
+            LOGGER.warn("[Shop] ensurePlayerHasCurrency échoué: {}", t.toString());
+        }
+    }
+
+    public static void ensureCurrency(MinecraftServer server) {}
+
     public static boolean addCoins(ServerPlayer player, long coins) {
         if (!available() || coins <= 0) return false;
         try {
-            if (newPlayerMethod != null) {
-                try {
-                    newPlayerMethod.invoke(serverData, player);
-                } catch (Throwable t) {}
-            }
+            ensurePlayerHasCurrency(player);
             Object result = addCurrencyValue.invoke(serverData, player, Config.getShopCurrencyName(), (double) coins);
             if (result != null) {
                 String status = result.toString();
                 if (status.equals("FAIL") || status.equals("NOT_FOUND") || status.equals("NOT_ACCESS")) {
-                    LOGGER.warn("[Shop] Échec crédit coins (SDM a retourné {})", status);
                     return false;
                 }
             }
@@ -136,25 +196,41 @@ public final class SDMEconomyBridge {
         }
     }
 
-    /** Solde de coins du joueur, ou 0 si indisponible. */
+    public static boolean removeCoins(ServerPlayer player, long coins) {
+        if (!available() || coins <= 0) return false;
+        long current = getCoins(player);
+        if (current < coins) {
+            return false;
+        }
+        try {
+            Object result = addCurrencyValue.invoke(serverData, player, Config.getShopCurrencyName(), -(double) coins);
+            if (result != null) {
+                String status = result.toString();
+                if (status.equals("FAIL") || status.equals("NOT_FOUND") || status.equals("NOT_ACCESS")) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Throwable t) {
+            LOGGER.warn("[Shop] Échec débit coins : {}", t.toString());
+            return false;
+        }
+    }
+
     public static long getCoins(ServerPlayer player) {
         if (!available()) return 0L;
         try {
-            if (newPlayerMethod != null) {
-                try {
-                    newPlayerMethod.invoke(serverData, player);
-                } catch (Throwable t) {}
-            }
-            Object struct = getBalance.invoke(serverData, player, Config.getShopCurrencyName());
+            ensurePlayerHasCurrency(player);
+            String currencyName = Config.getShopCurrencyName();
+            Object struct = getBalance.invoke(serverData, player, currencyName);
             if (struct == null) return 0L;
 
             Field valueField = null;
             try {
                 valueField = struct.getClass().getField("value");
             } catch (NoSuchFieldException e) {
-                // Recherche par type
                 for (Field f : struct.getClass().getFields()) {
-                    if (f.getName().equals("value") || Number.class.isAssignableFrom(f.getType()) || Object.class.equals(f.getType())) {
+                    if (f.getName().equals("value") || Number.class.isAssignableFrom(f.getType())) {
                         valueField = f;
                         break;
                     }
@@ -163,15 +239,12 @@ public final class SDMEconomyBridge {
 
             if (valueField != null) {
                 Object v = valueField.get(struct);
-                if (v instanceof Number n) {
-                    return n.longValue();
-                } else if (v instanceof String s) {
-                    try {
-                        return (long) Double.parseDouble(s);
-                    } catch (NumberFormatException nfe) {
-                        return 0L;
-                    }
+                long val = 0;
+                if (v instanceof Number n) val = n.longValue();
+                else if (v instanceof String s) {
+                    try { val = (long) Double.parseDouble(s); } catch (NumberFormatException ignored) {}
                 }
+                return val;
             }
             return 0L;
         } catch (Throwable t) {

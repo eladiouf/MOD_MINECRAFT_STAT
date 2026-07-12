@@ -49,6 +49,7 @@ import tong.statmod.progression.CombatXPHandler;
 import tong.statmod.progression.NonCombatXPHandler;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stamina.StaminaEvents;
+import tong.statmod.stats.ModAttributes;
 import tong.statmod.stats.CraftingSupportEffectHandler;
 import tong.statmod.stats.StatAttributeHandler;
 import tong.statmod.stats.StatCommands;
@@ -65,6 +66,7 @@ public class STATMod {
         ModContainer container = ModLoadingContext.get().getActiveContainer();
         container.registerConfig(ModConfig.Type.COMMON, Config.getSpec());
         ModAttachments.register(modBus);
+        ModAttributes.register(modBus);
         ModItems.register(modBus);
         ForgingMaterials.register(modBus);
         ForgingIntermediates.register(modBus);
@@ -110,6 +112,8 @@ public class STATMod {
         NeoForge.EVENT_BUS.register(DungeonMobSpawner.class);
         NeoForge.EVENT_BUS.register(DungeonSpawnGuard.class);
         NeoForge.EVENT_BUS.register(DungeonProtectionHandler.class);
+        NeoForge.EVENT_BUS.register(tong.statmod.economy.MagicBanker.class);
+        NeoForge.EVENT_BUS.register(tong.statmod.economy.VillageBankerSpawner.class);
         if (tensuraLoaded) {
             TensuraEventSubscriber.register();
             NeoForge.EVENT_BUS.register(MagiculeScalingHandler.class);
@@ -139,6 +143,10 @@ public class STATMod {
         }
         if (ModList.get().isLoaded("playerrevive")) {
             tong.statmod.integration.playerrevive.PlayerReviveIntegration.init();
+        }
+        if (ModList.get().isLoaded("sdmshop")) {
+            NeoForge.EVENT_BUS.register(tong.statmod.integration.sdm.SDMShopNPCBridge.class);
+            NeoForge.EVENT_BUS.register(tong.statmod.integration.sdm.SDMShopDatabaseInitializer.class);
         }
         LOGGER.info("STAT Mod initialized on NeoForge 1.21.1");
     }

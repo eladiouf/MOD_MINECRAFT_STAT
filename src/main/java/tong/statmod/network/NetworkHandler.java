@@ -12,10 +12,10 @@ public class NetworkHandler {
         PayloadRegistrar registrar = event.registrar("1");
 
         registrar.playToClient(SyncPerksPayload.TYPE, SyncPerksPayload.CODEC,
-                ClientPayloadHandler::handleSyncPerks);
+                (payload, context) -> ClientPayloadHandler.handleSyncPerks(payload, context));
 
         registrar.playToClient(BatchSyncPayload.TYPE, BatchSyncPayload.CODEC,
-                ClientPayloadHandler::handleBatchSync);
+                (payload, context) -> ClientPayloadHandler.handleBatchSync(payload, context));
 
         registrar.playToServer(UnlockPerkPayload.TYPE, UnlockPerkPayload.CODEC,
                 ServerPayloadHandler::handleUnlockPerk);
@@ -24,19 +24,19 @@ public class NetworkHandler {
                 ServerPayloadHandler::handleOpenPerkTree);
 
         registrar.playToClient(StatUpdatePayload.TYPE, StatUpdatePayload.CODEC,
-                ClientPayloadHandler::handleStatUpdate);
+                (payload, context) -> ClientPayloadHandler.handleStatUpdate(payload, context));
 
         registrar.playToClient(StaminaSyncPayload.TYPE, StaminaSyncPayload.CODEC,
-                ClientPayloadHandler::handleStaminaSync);
+                (payload, context) -> ClientPayloadHandler.handleStaminaSync(payload, context));
 
         registrar.playToClient(PerkFeedbackPayload.TYPE, PerkFeedbackPayload.CODEC,
-                ClientPayloadHandler::handlePerkFeedback);
+                (payload, context) -> ClientPayloadHandler.handlePerkFeedback(payload, context));
 
         registrar.playToClient(LearnBookPayload.TYPE, LearnBookPayload.CODEC,
-                ClientPayloadHandler::handleLearnBook);
+                (payload, context) -> ClientPayloadHandler.handleLearnBook(payload, context));
 
         registrar.playToClient(SyncMagicPayload.TYPE, SyncMagicPayload.CODEC,
-                ClientPayloadHandler::handleSyncMagic);
+                (payload, context) -> ClientPayloadHandler.handleSyncMagic(payload, context));
 
         registrar.playToServer(UnlockMagicNodePayload.TYPE, UnlockMagicNodePayload.CODEC,
                 ServerPayloadHandler::handleUnlockMagicNode);
@@ -44,21 +44,22 @@ public class NetworkHandler {
         registrar.playToServer(OpenVirtualInscriptionPayload.TYPE, OpenVirtualInscriptionPayload.CODEC,
                 ServerPayloadHandler::handleOpenVirtualInscription);
 
-        registrar.playToClient(ManaSyncPayload.TYPE, ManaSyncPayload.CODEC,
-                ClientPayloadHandler::handleManaSync);
-
         registrar.playToClient(BridgeTensuraSkillPayload.TYPE, BridgeTensuraSkillPayload.CODEC,
-                ClientPayloadHandler::handleBridgeTensuraSkill);
+                (payload, context) -> ClientPayloadHandler.handleBridgeTensuraSkill(payload, context));
 
         registrar.playToClient(OpenMageCodexPayload.TYPE, OpenMageCodexPayload.CODEC,
-                ClientPayloadHandler::handleOpenMageCodex);
+                (payload, context) -> ClientPayloadHandler.handleOpenMageCodex(payload, context));
 
         registrar.playToServer(ChangeStartBranchPayload.TYPE, ChangeStartBranchPayload.CODEC,
                 ServerPayloadHandler::handleChangeStartBranch);
 
         registrar.playToClient(OpenExchangePayload.TYPE, OpenExchangePayload.CODEC,
-                ClientPayloadHandler::handleOpenExchange);
+                (payload, context) -> ClientPayloadHandler.handleOpenExchange(payload, context));
         registrar.playToServer(ConvertPointsPayload.TYPE, ConvertPointsPayload.CODEC,
                 ServerPayloadHandler::handleConvertPoints);
+        registrar.playToClient(OpenMagicBankPayload.TYPE, OpenMagicBankPayload.CODEC,
+                (payload, context) -> ClientPayloadHandler.handleOpenMagicBank(payload, context));
+        registrar.playToServer(MagicBankActionPayload.TYPE, MagicBankActionPayload.CODEC,
+                ServerPayloadHandler::handleMagicBankAction);
     }
 }

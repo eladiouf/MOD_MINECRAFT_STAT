@@ -32,9 +32,11 @@ public final class OvergearedRecipeGate {
 
     private static Map<ResourceLocation, MaterialGate> buildMaterialGates() {
         Map<ResourceLocation, MaterialGate> m = new LinkedHashMap<>();
-        // Vanilla manquants
-        m.put(ResourceLocation.parse("minecraft:gold_ingot"),                 new MaterialGate(3, 0, 0));
-        m.put(ResourceLocation.parse("minecraft:diamond"),                    new MaterialGate(15, 0, 0));
+        // Vanilla manquants — aligné sur MATERIAL_NAME_GATES (heating = weapon gate)
+        m.put(ResourceLocation.parse("minecraft:gold_ingot"),                 new MaterialGate(8, 0, 0));
+        m.put(ResourceLocation.parse("minecraft:diamond"),                    new MaterialGate(20, 0, 0));
+        // Overgeared natif — gate explicite pour cohérence avec MATERIAL_NAME_GATES
+        m.put(ResourceLocation.parse("minecraft:netherite_ingot"),            new MaterialGate(35, 0, 0));
         // magistuarmory
         m.put(ResourceLocation.parse("magistuarmory:tin_ingot"),              new MaterialGate(3, 0, 0));
         m.put(ResourceLocation.parse("magistuarmory:bronze_ingot"),           new MaterialGate(5, 0, 0));
@@ -56,8 +58,9 @@ public final class OvergearedRecipeGate {
 
     /**
      * Retourne true si {@code player} avec ses stats {@code data} peut chauffer
-     * l'ingot {@code ingotId}. Les ingots non listés (vanilla copper/iron/steel/silver
+     * l'ingot {@code ingotId}. Les ingots non listés (copper/iron/steel/silver
      * gérés par Overgeared natif) ne sont jamais gates côté STAT MOD : on retourne true.
+     * Netherite est listé (gate 35) car Overgeared ne le heat pas nativement.
      */
     public static boolean canHeat(ResourceLocation ingotId, PlayerStatData data) {
         if (ingotId == null) return false;

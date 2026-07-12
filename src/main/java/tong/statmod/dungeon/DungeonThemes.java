@@ -48,7 +48,7 @@ public final class DungeonThemes {
                 List.of("minecraft:slime", "slu:thief", "born_in_chaos_v1:zombie_lumberjack"),
                 List.of("minecraft:witch")), // 8
         new Theme("§7Les Décharnés — La Cour aux Supplices",
-                List.of("slu:hollow_soldier_sword", "born_in_chaos_v1:withered_corpse", "minecraft:husk"),
+                List.of("slu:hollow_soldier_sword", "born_in_chaos_v1:barrel_zombie", "minecraft:husk"),
                 List.of("minecraft:iron_golem")), // 9
         new Theme("§7Les Décharnés — La Porte que Nul ne Garde",
                 List.of("slu:armed_hollow", "block_factorys_bosses:flaming_skeleton_guard_sword",
@@ -305,7 +305,7 @@ public final class DungeonThemes {
                 List.of("born_in_chaos_v1:dire_hound_leader")), // 84
         new Theme("§5La Geste Démoniaque — La Salle de la Perdition",
                 List.of("tensura:arch_daemon", "born_in_chaos_v1:missionary_raider",
-                        "born_in_chaos_v1:lord_of_depths"),
+                        "born_in_chaos_v1:nightmare_stalker"),
                 List.of("mutantmonsters:mutant_creeper")), // 85
         new Theme("§5La Geste Démoniaque — Le Jardin des Âmes",
                 List.of("born_in_chaos_v1:scarlet_persecutor", "tensura:greater_daemon",

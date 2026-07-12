@@ -42,7 +42,11 @@ final class WaystonesHook {
 
         Waystone waystone = placed.get();
         if (waystone instanceof MutableWaystone mutable) {
-            mutable.setName(Component.literal("☠ Trial Dungeon — Floor " + floor));
+            if (floor == 0) {
+                mutable.setName(Component.literal("✦ Trial Dungeon — Hub"));
+            } else {
+                mutable.setName(Component.literal("☠ Trial Dungeon — Floor " + floor));
+            }
         }
         STATMod.LOGGER.info("[TrialDungeon] Checkpoint waystone posé à l'étage {} (@ {})", floor, pos);
     }

@@ -8,6 +8,7 @@ import tong.statmod.progression.LevelUpHandler;
 import tong.statmod.integration.tensura.TempBuffManager;
 import tong.statmod.integration.tensura.StatLevelSkillRewards;
 import tong.statmod.storage.PlayerStatData;
+import tong.statmod.stats.StatType;
 
 public final class RaceEffectApplier {
     private RaceEffectApplier() {}
@@ -118,7 +119,23 @@ public final class RaceEffectApplier {
         if (hasParallelExistence(player)) {
             soulMult *= 2.0d;
         }
-        return Math.max(1, (int) Math.round(baseXp * xpMult * configMult * soulMult));
+
+        // ── BONUS XP ERUDITION PERKS ──
+        double eruditionMult = 1.0d;
+        if (data != null && player != null) {
+            tong.statmod.perks.PerkManager perks = new tong.statmod.perks.PerkManager(data);
+            if (perks.isUnlocked(tong.statmod.perks.Perk.byId(134))) {
+                int willpower = getEffectiveLevel(player, StatType.WILLPOWER.index);
+                if (willpower >= 30) {
+                    eruditionMult += 0.15d;
+                }
+            }
+            if (perks.isUnlocked(tong.statmod.perks.Perk.byId(137))) {
+                eruditionMult += 0.50d;
+            }
+        }
+
+        return Math.max(1, (int) Math.round(baseXp * xpMult * configMult * soulMult * eruditionMult));
     }
 
     public static boolean hasParallelExistence(Player player) {

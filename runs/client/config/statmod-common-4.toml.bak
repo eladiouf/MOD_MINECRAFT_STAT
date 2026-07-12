@@ -29,3 +29,13 @@
 	# Default: 2
 	# Range: 0 ~ 10
 	bossStatGain = 2
+	#Intégration L2 Hostility : niveau de hostilité appliqué aux mobs = floor * ce facteur.
+	#0.3 = étage 10 donne des mobs de niveau L2 3. 0 = désactive le scaling par étage.
+	#Fixé à 0.3 pour éviter des mobs de niveau 100+ sur les étages profonds.
+	# Default: 0.3
+	# Range: 0.0 ~ 2.0
+	l2HostilityPerFloor = 1.0
+	#Intégration L2 Hostility : plafond du niveau de hostilité appliqué par étage.
+	# Default: 30
+	# Range: 0 ~ 500
+	l2HostilityCap = 200

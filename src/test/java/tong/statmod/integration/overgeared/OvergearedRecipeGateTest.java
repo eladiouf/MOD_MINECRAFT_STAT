@@ -101,15 +101,16 @@ class OvergearedRecipeGateTest {
         // Ordre croissant attendu sur la stat FORGING — chaque tier doit demander
         // ≥ au précédent. Si un tier régresse, la table est mal calibrée.
         String[] ordered = {
-                "minecraft:gold_ingot",            // 3
                 "magistuarmory:tin_ingot",         // 3
                 "magistuarmory:bronze_ingot",      // 5
+                "minecraft:gold_ingot",            // 8
                 "irons_spellbooks:pyrium_ingot",   // 12
                 "irons_spellbooks:arcane_ingot",   // 15
-                "minecraft:diamond",               // 15
+                "minecraft:diamond",               // 20
                 "irons_spellbooks:mithril_ingot",  // 20
                 "tensura:low_magisteel_ingot",     // 25
                 "tensura:magisteel_ingot",         // 30
+                "minecraft:netherite_ingot",       // 35
                 "tensura:pure_magisteel_ingot",    // 40
                 "tensura:high_magisteel_ingot",    // 50
                 "tensura:orichalcum_ingot",        // 55

@@ -82,6 +82,8 @@ public class PlayerStatData {
     private int dungeonBestCombo = 0;
     /** Record personnel : meilleur temps de nettoyage d'un étage de combat, en ticks (0 = aucun). */
     private int dungeonBestClearTicks = 0;
+    /** Map floor → game tick auquel le boss ×10 est re-summonable. Absent = pas de cooldown. */
+    private java.util.Map<Integer, Long> bossCooldowns = new java.util.HashMap<>();
 
     /** Timestamp of last enchanted book right-click (server memory, not persisted). */
     public transient long lastEnchantedBookClickMs = 0;
@@ -120,6 +122,7 @@ public class PlayerStatData {
         storedMana = source.storedMana;
         dungeonBestCombo = source.dungeonBestCombo;
         dungeonBestClearTicks = source.dungeonBestClearTicks;
+        bossCooldowns = new java.util.HashMap<>(source.bossCooldowns);
     }
 
     public int getLevel(int index) { return index >= 0 && index < STAT_COUNT ? levels[index] : 0; }
@@ -415,6 +418,27 @@ public class PlayerStatData {
     public int addDungeonPoints(int delta) {
         dungeonPoints = saturatingAddNonNegative(dungeonPoints, delta);
         return dungeonPoints;
+    }
+
+    /** Cooldown boss ×10 : tick serveur auquel le boss est re-summonable, ou 0 si jamais combattu. */
+    public long getBossCooldown(int floor) {
+        return bossCooldowns.getOrDefault(floor, 0L);
+    }
+    /** Définit le cooldown d'un boss ×10. */
+    public void setBossCooldown(int floor, long tick) {
+        bossCooldowns.put(floor, tick);
+    }
+    /** Supprime le cooldown (boss disponible immédiatement). */
+    public void clearBossCooldown(int floor) {
+        bossCooldowns.remove(floor);
+    }
+    /** La map complète des cooldowns pour sérialisation. */
+    public java.util.Map<Integer, Long> getBossCooldowns() {
+        return bossCooldowns;
+    }
+    /** Remplace toute la map de cooldowns (deserialization). */
+    public void setBossCooldowns(java.util.Map<Integer, Long> map) {
+        this.bossCooldowns = new java.util.HashMap<>(map);
     }
 
     /** Iron's mana saved across sessions. -1 means no saved value (first login). */

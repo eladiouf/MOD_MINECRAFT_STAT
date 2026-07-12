@@ -25,10 +25,7 @@ public final class ClientPayloadHandler {
         ClientPayloadActions.handlePerkFeedback(payload, context);
     }
 
-    public static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
-        ClientPayloadActions.handleManaSync(payload, context);
-    }
-
+    
     public static void handleLearnBook(LearnBookPayload payload, IPayloadContext context) {
         ClientPayloadActions.handleLearnBook(payload, context);
     }
@@ -45,6 +42,10 @@ public final class ClientPayloadHandler {
     /** Ouvre/rafraîchit l'écran d'échange points → coins (Mission M6 shop). */
     public static void handleOpenExchange(OpenExchangePayload payload, IPayloadContext context) {
         ClientPayloadActions.handleOpenExchange(payload, context);
+    }
+
+    public static void handleOpenMagicBank(OpenMagicBankPayload payload, IPayloadContext context) {
+        ClientPayloadActions.handleOpenMagicBank(payload, context);
     }
 
     /**

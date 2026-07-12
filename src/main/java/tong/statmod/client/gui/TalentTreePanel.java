@@ -101,8 +101,62 @@ public class TalentTreePanel {
     }
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font) {
-        graphics.fill(x, y, x + panelWidth, y + panelHeight, 0xCC111111);
+        // Fond gris foncé premium
+        graphics.fill(x, y, x + panelWidth, y + panelHeight, 0xDD0D0D15);
+
+        // Dessiner une grille subtile en arrière-plan
+        int gridColor = 0x11888888; // Translucide
+        for (int gx = x + (scrollOffset % 32); gx < x + panelWidth; gx += 32) {
+            graphics.fill(gx, y, gx + 1, y + panelHeight, gridColor);
+        }
+        for (int gy = y + (scrollOffset % 32); gy < y + panelHeight; gy += 32) {
+            graphics.fill(x, gy, x + panelWidth, gy + 1, gridColor);
+        }
+
         graphics.enableScissor(x + 1, y + 1, x + panelWidth - 1, y + panelHeight - 1);
+
+        // ── DESSINER LES LIGNES DE DEPENDANCE / CONNEXION ──
+        for (int i = 0; i < slots.size(); i++) {
+            Slot current = slots.get(i);
+            if (i + 1 < slots.size()) {
+                Slot next = slots.get(i + 1);
+                if (next.perk.stat == current.perk.stat) {
+                    int startX = current.rx + NODE_W / 2;
+                    int startY = current.ry + NODE_H + scrollOffset;
+                    int endY = next.ry + scrollOffset;
+
+                    if (startY > y && endY < y + panelHeight) {
+                        boolean unlocked = ClientPerkCache.isUnlocked(current.perk) && ClientPerkCache.isUnlocked(next.perk);
+                        int lineColor = unlocked ? 0xFFFFAA00 : 0x22888888; // Doré si débloqués, gris foncé sinon
+                        graphics.fill(startX - 1, startY, startX + 1, endY, lineColor);
+                    }
+                }
+            }
+
+            // Lignes de connexion diagonales pour les perks hybrides
+            if (current.perk.secondRequiredStat != null) {
+                for (Slot other : slots) {
+                    if (other.perk.stat == current.perk.secondRequiredStat && other.perk.tier == current.perk.tier) {
+                        int startX = other.rx + NODE_W / 2;
+                        int startY = other.ry + NODE_H / 2 + scrollOffset;
+                        int endX = current.rx + NODE_W / 2;
+                        int endY = current.ry + NODE_H / 2 + scrollOffset;
+
+                        if (startY > y && startY < y + panelHeight && endY > y && endY < y + panelHeight) {
+                            boolean bothUnlocked = ClientPerkCache.isUnlocked(current.perk) && ClientPerkCache.isUnlocked(other.perk);
+                            int linkColor = bothUnlocked ? 0x66FF55FF : 0x22888888; // Rose magique translucide si actif, gris translucide sinon
+                            if (startX < endX) {
+                                graphics.fill(startX, startY - 1, endX, startY + 1, linkColor);
+                                graphics.fill(endX - 1, startY, endX + 1, endY, linkColor);
+                            } else {
+                                graphics.fill(endX, startY - 1, startX, startY + 1, linkColor);
+                                graphics.fill(endX - 1, startY, endX + 1, endY, linkColor);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         int maxScroll = Math.max(0, totalContentH - panelHeight + 20);
         scrollOffset = Math.max(-maxScroll, Math.min(0, scrollOffset));
@@ -170,16 +224,41 @@ public class TalentTreePanel {
 
     private void renderNode(GuiGraphics graphics, Font font, int nx, int ny, Perk perk,
                             PerkNodePresentation presentation, boolean hovered, boolean selected) {
+        // 1. Ombre portée (Shadow effect)
+        graphics.fill(nx + 2, ny + 2, nx + NODE_W + 2, ny + NODE_H + 2, 0x66000000);
+
         int borderColor = PerkNodeWidget.borderColor(perk.tier, selected);
         int fillColor = PerkNodeWidget.fillColor(presentation.state(), hovered, selected);
         int textColor = PerkNodeWidget.textColor(presentation.state());
 
+        // Si le nœud est débloqué, on donne un aspect magique plus brillant
+        boolean unlocked = presentation.state() == PerkNodeVisualState.UNLOCKED;
+        if (unlocked) {
+            fillColor = 0xFF1B3D22; // Émeraude profond et premium
+            borderColor = 0xFF55FF55; // Vert éclatant
+            textColor = 0xFFE0FFE0;
+        }
+
+        // 2. Fond principal du nœud
         graphics.fill(nx, ny, nx + NODE_W, ny + NODE_H, fillColor);
+
+        // 3. Bordure
         graphics.fill(nx, ny, nx + NODE_W, ny + 1, borderColor);
         graphics.fill(nx, ny, nx + 1, ny + NODE_H, borderColor);
         graphics.fill(nx + NODE_W - 1, ny, nx + NODE_W, ny + NODE_H, borderColor);
         graphics.fill(nx, ny + NODE_H - 1, nx + NODE_W, ny + NODE_H, borderColor);
+
+        // Lueur supérieure pour le relief 3D
+        graphics.fill(nx + 1, ny + 1, nx + NODE_W - 1, ny + 2, 0x44FFFFFF);
+
+        // Double lueur animée dorée si sélectionné
         if (selected) {
+            int glowColor = 0xFFFFAA00;
+            graphics.fill(nx - 1, ny - 1, nx + NODE_W + 1, ny, glowColor);
+            graphics.fill(nx - 1, ny + NODE_H, nx + NODE_W + 1, ny + NODE_H + 1, glowColor);
+            graphics.fill(nx - 1, ny - 1, nx, ny + NODE_H + 1, glowColor);
+            graphics.fill(nx + NODE_W, ny - 1, nx + NODE_W + 1, ny + NODE_H + 1, glowColor);
+
             graphics.fill(nx + 2, ny + 2, nx + NODE_W - 2, ny + 3, 0xFFF4E7B3);
         }
 

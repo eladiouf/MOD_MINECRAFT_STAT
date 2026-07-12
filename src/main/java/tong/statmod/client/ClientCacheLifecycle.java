@@ -16,6 +16,5 @@ public final class ClientCacheLifecycle {
         ClientPerkCache.reset();
         ClientStaminaCache.reset();
         ClientMagicCache.reset();
-        ClientManaCache.reset();
     }
 }

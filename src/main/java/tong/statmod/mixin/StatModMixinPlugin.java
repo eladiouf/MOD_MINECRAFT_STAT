@@ -26,7 +26,10 @@ public final class StatModMixinPlugin implements IMixinConfigPlugin {
             Map.entry("IronInscriptionTableMenuMixin", "irons_spellbooks"),
             Map.entry("IronSpellIconResolverMixin", "irons_spellbooks"),
             Map.entry("PuffishSkillsScreenMixin", "puffish_skills"),
-            Map.entry("ReincarnationMenuRaceFilterMixin", "tensura")
+            Map.entry("ReincarnationMenuRaceFilterMixin", "tensura"),
+            Map.entry("ShopPageMixin", "sdmshop"),
+            Map.entry("ShopPageModernMixin", "sdmshop"),
+            Map.entry("IndestructibleServerMixin", "indestructible")
     );
 
     @Override

@@ -30,7 +30,7 @@ OUT = REPO / "src" / "main" / "resources" / "data" / "statmod" / "recipe" / "ass
 WHITELIST_FILE = REPO / "tools" / "tensura_whitelist.txt"
 STATS_OUT = REPO / "tools" / "assembly_recipes_stats.json"
 
-EXCLUDED_NAMESPACES = {"overgeared", "minecraft", "statmod"}
+EXCLUDED_NAMESPACES = {"minecraft", "statmod"}
 
 STATION_MANAGED_RESULTS = {
     "simplyswords:runic_rapier",

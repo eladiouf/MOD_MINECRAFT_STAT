@@ -44,10 +44,6 @@ final class ClientPayloadActions {
         context.enqueueWork(() -> PerkFeedbackToast.show(Component.literal(payload.title()), Component.literal(payload.message())));
     }
 
-    static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> ClientManaCache.update(payload.currentMana(), payload.maxMana()));
-    }
-
     static void handleLearnBook(LearnBookPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Minecraft minecraft = Minecraft.getInstance();
@@ -68,6 +64,10 @@ final class ClientPayloadActions {
 
     static void handleOpenExchange(OpenExchangePayload payload, IPayloadContext context) {
         context.enqueueWork(() -> PointExchangeScreen.openOrRefresh(payload.points(), payload.coins(), payload.rate()));
+    }
+
+    static void handleOpenMagicBank(OpenMagicBankPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> MagicBankScreen.openOrRefresh(payload.balance(), payload.physical()));
     }
 
     static void handleBridgeTensuraSkill(BridgeTensuraSkillPayload payload, IPayloadContext context) {

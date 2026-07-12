@@ -49,7 +49,7 @@ public final class DungeonMobSpawner {
      */
     private static final int L2_APPLY_DELAY_TICKS = 12;
 
-    private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, int floor, long dueTick) {}
+    private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, String originalId, int floor, long dueTick) {}
 
     private record L2Pending(LivingEntity mob, int floor, long dueTick) {}
 
@@ -180,7 +180,7 @@ public final class DungeonMobSpawner {
             DungeonLayout.Room lastRoom = DungeonLayout.rooms().get(DungeonLayout.ROOM_COUNT - 1);
             int lastY = DungeonRoomChain.roomYOffset(lastRoom.index(), floor);
             BlockPos bossPos = sp.offset(lastRoom.centerX(), lastY, lastRoom.centerZ() - 3);
-            QUEUE.add(new Pending(lv, bossPos, miniBoss, floor, serverTick + SPAWN_DELAY_TICKS));
+            QUEUE.add(new Pending(lv, bossPos, miniBoss, null, floor, serverTick + SPAWN_DELAY_TICKS));
         }
 
         int spawned = 0;
@@ -212,13 +212,93 @@ public final class DungeonMobSpawner {
 
             // Choix du mob typé selon l'archétype de la pièce
             int archetype = Math.floorMod(floor * 13 + room.index() * 29, 6);
-            EntityType<?> type = chooseMobForArchetype(lv, archetype, floor);
+
+            // ══ MAGES DU DONJON : spawn direct (fix 2026-07-12) ══
+            // L'ancienne « conversion 20 % des zombies/squelettes » était du code mort avec le
+            // modpack complet : chooseMobForArchetype retourne toujours un mob moddé (nécromancien,
+            // bonescaller…), jamais un zombie/squelette vanilla brut → aucun mage ne spawnait.
+            // Désormais : étage 3+, 15 % par slot (30 % dans les Archives), Mage du Wither étage 15+.
+            // L'escorte (chevalier + archer) plus bas s'applique → ils arrivent TOUJOURS en groupe.
+            EntityType<?> type = null;
+            String originalId = null;
+            float mageChance = floor >= 3 ? (archetype == 0 ? 0.30f : 0.15f) : 0.0f;
+            if (lv.random.nextFloat() < mageChance) {
+                if (floor >= 15 && lv.random.nextFloat() < 0.25f) {
+                    type = EntityType.WITHER_SKELETON;
+                    originalId = "statmod:wither_mage_mob";
+                } else if (lv.random.nextBoolean()) {
+                    type = EntityType.ZOMBIE;
+                    originalId = lv.random.nextFloat() < 0.25f ? "statmod:cleric_mob" : "statmod:pyromancer_mob";
+                } else {
+                    type = EntityType.SKELETON;
+                    originalId = lv.random.nextBoolean() ? "statmod:cryomancer_mob" : "statmod:electromancer_mob";
+                }
+            }
+            if (type == null) {
+                type = chooseMobForArchetype(lv, archetype, floor);
+            }
             if (type == null) {
                 type = pool.get(lv.random.nextInt(pool.size()));
             }
 
-            QUEUE.add(new Pending(lv, targetPos, type, floor, serverTick + SPAWN_DELAY_TICKS));
+            // Conversion de secours (si un zombie/squelette brut sort quand même du pool)
+            if (originalId == null && type == EntityType.ZOMBIE) {
+                if (lv.random.nextFloat() < 0.20f) {
+                    originalId = lv.random.nextFloat() < 0.25f ? "statmod:cleric_mob" : "statmod:pyromancer_mob";
+                }
+            } else if (originalId == null && type == EntityType.SKELETON) {
+                if (lv.random.nextFloat() < 0.20f) {
+                    originalId = lv.random.nextBoolean() ? "statmod:cryomancer_mob" : "statmod:electromancer_mob";
+                }
+            } else if (originalId == null && type == EntityType.WITHER_SKELETON) {
+                if (lv.random.nextFloat() < 0.20f) {
+                    originalId = "statmod:wither_mage_mob";
+                }
+            } else if (originalId == null) {
+                String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
+                if (entityId.startsWith("slu:") && lv.random.nextFloat() < 0.20f) {
+                    if (entityId.equals("slu:hollow") || entityId.equals("slu:armed_hollow") || entityId.equals("slu:thief") || entityId.equals("slu:hollow_soldier_sword") || entityId.equals("slu:hollow_soldier_spear")) {
+                        originalId = "statmod:hollow_witch_mob";
+                    } else if (entityId.equals("slu:knight") || entityId.equals("slu:elite_knight") || entityId.equals("slu:dungeon_knight") || entityId.equals("slu:castle_guard") || entityId.equals("slu:noble_knight")) {
+                        originalId = "statmod:mage_knight_mob";
+                    } else if (entityId.equals("slu:dark_knight") || entityId.equals("slu:wither_skeleton_knight") || entityId.equals("slu:ringed_knight") || entityId.equals("slu:mad_knight")) {
+                        originalId = "statmod:void_knight_mob";
+                    }
+                }
+            }
+
+            QUEUE.add(new Pending(lv, targetPos, type, originalId, floor, serverTick + SPAWN_DELAY_TICKS));
             spawned++;
+
+            // IA DE GROUPE RPG : Si un mage (Clerc, Cryo, Électro, Wither, Pyromancien) spawn,
+            // on ajoute automatiquement son escouade (1 Chevalier tank + 1 Archer à distance)
+            boolean isMage = "statmod:cleric_mob".equals(originalId)
+                          || "statmod:pyromancer_mob".equals(originalId)
+                          || "statmod:cryomancer_mob".equals(originalId)
+                          || "statmod:electromancer_mob".equals(originalId)
+                          || "statmod:wither_mage_mob".equals(originalId);
+
+            if (isMage && spawned < want) {
+                // 1. LE CHEVALIER (Tank)
+                BlockPos pos1 = targetPos.offset(2, 0, 2);
+                if (isValidSpawnPosition(lv, pos1)) {
+                    if (net.neoforged.fml.ModList.get().isLoaded("slu")) {
+                        QUEUE.add(new Pending(lv, pos1, ModdedMobPool.resolve("slu:knight"), null, floor, serverTick + SPAWN_DELAY_TICKS));
+                    } else {
+                        QUEUE.add(new Pending(lv, pos1, EntityType.SKELETON, "statmod:dungeon_knight_fallback", floor, serverTick + SPAWN_DELAY_TICKS));
+                    }
+                    spawned++;
+                }
+
+                // 2. L'ARCHER (Dégâts physiques distance)
+                if (spawned < want) {
+                    BlockPos pos2 = targetPos.offset(-2, 0, -2);
+                    if (isValidSpawnPosition(lv, pos2)) {
+                        QUEUE.add(new Pending(lv, pos2, EntityType.SKELETON, null, floor, serverTick + SPAWN_DELAY_TICKS));
+                        spawned++;
+                    }
+                }
+            }
         }
         return spawned;
     }
@@ -289,8 +369,9 @@ public final class DungeonMobSpawner {
                         () -> p.type.spawn(p.level, p.pos, MobSpawnType.STRUCTURE));
                 if (entity != null) {
                     spawned++;
-                    // La difficulté L2 par étage est calée par DungeonSpawnGuard.onEntityJoinLevel
-                    // (chokepoint unique couvrant vagues, boss et invocations).
+                    if (entity instanceof Mob mob && p.originalId != null) {
+                        mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);
+                    }
                 }
             } catch (RuntimeException e) {
                 STATMod.LOGGER.warn("[TrialDungeon] Spawn différé fail {} @ {}: {}",

@@ -19,6 +19,7 @@ public final class PerkNodeWidget {
             case SITUATIONAL -> 0xFFFFFF55;
             case MASTERY -> 0xFFAA00AA;
             case TRANSCENDENCE -> 0xFFFFAA00;
+            case HYBRID -> 0xFFFF55FF;
         };
     }
 

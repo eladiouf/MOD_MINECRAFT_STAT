@@ -28,7 +28,8 @@ public class NonCombatXPHandler {
         if (!(event.getPlayer() instanceof Player player) || player.level().isClientSide) return;
         if (!isOre(event.getState().getBlock())) return;
 
-        award(player, StatType.FORGING, 2);
+        // Balance 30j : 2→3 XP par minerai pour accélérer la montée.
+        award(player, StatType.FORGING, 3);
     }
 
     @SubscribeEvent
@@ -97,10 +98,11 @@ public class NonCombatXPHandler {
         if (player.level().isClientSide) return;
 
         ItemStack result = event.getSmelting();
-        StatType stat = result.getItem().getFoodProperties(result, player) != null
-                ? StatType.COOKING
-                : StatType.FORGING;
-        award(player, stat, Math.max(1, result.getCount()));
+        boolean isFood = result.getItem().getFoodProperties(result, player) != null;
+        StatType stat = isFood ? StatType.COOKING : StatType.FORGING;
+        // Balance 30j : COOKING monte à 5 XP par food cuit (avant: 1), FORGING inchangé.
+        int amount = isFood ? Math.max(3, result.getCount() * 5) : Math.max(1, result.getCount());
+        award(player, stat, amount);
     }
 
     @SubscribeEvent
@@ -109,7 +111,8 @@ public class NonCombatXPHandler {
         if (player.level().isClientSide) return;
         if (!isAlchemyOutput(event.getStack())) return;
 
-        award(player, StatType.ALCHEMY, 2);
+        // Balance 30j : 2→10 XP par potion brassée pour rendre ALCHEMY atteignable.
+        award(player, StatType.ALCHEMY, 10);
     }
 
     static boolean isOre(Block block) {

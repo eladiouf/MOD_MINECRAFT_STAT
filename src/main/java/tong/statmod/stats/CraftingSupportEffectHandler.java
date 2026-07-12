@@ -38,6 +38,8 @@ public final class CraftingSupportEffectHandler {
     private static final TagKey<net.minecraft.world.item.Item> TENSURA_ARCANE_POTIONS = TagKey.create(
             Registries.ITEM, ResourceLocation.fromNamespaceAndPath("tensura", "arcane_potions"));
 
+    private static final java.util.Map<java.util.UUID, Integer> lastAnvilCost = new java.util.concurrent.ConcurrentHashMap<>();
+
     private CraftingSupportEffectHandler() {}
 
     public static int reducedDurabilityLoss(int baseLoss, int forgingLevel) {
@@ -58,7 +60,8 @@ public final class CraftingSupportEffectHandler {
     }
 
     public static float foodSaturationBonus(int cookingLevel, boolean homeCookUnlocked) {
-        return Math.max(0, cookingLevel) * 0.05f + (homeCookUnlocked ? 1.0f : 0.0f);
+        // Balance 30j : Saturation bonus augmentée de 0.05 à 0.08 par level.
+        return Math.max(0, cookingLevel) * 0.08f + (homeCookUnlocked ? 1.0f : 0.0f);
     }
 
     public static int potionAmplifier(int baseAmplifier, boolean philosopherStoneUnlocked) {
@@ -229,6 +232,16 @@ public final class CraftingSupportEffectHandler {
                 data.isPerkUnlocked(Perk.FORGE_CORE.id),
                 data.isPerkUnlocked(Perk.FORGE_SYNERGY.id)));
 
+        // ERUDITION_MASTERY (id 136) : Ignore prior work penalty on anvil, cap cost to 1
+        if (data.isPerkUnlocked(136)) {
+            ItemStack outputWithNoPenalty = event.getOutput().copy();
+            if (!outputWithNoPenalty.isEmpty()) {
+                outputWithNoPenalty.set(net.minecraft.core.component.DataComponents.REPAIR_COST, 0);
+                event.setOutput(outputWithNoPenalty);
+                event.setCost(Math.min(event.getCost(), 1));
+            }
+        }
+
         ItemStack output = event.getOutput();
         if (!output.isEmpty()
                 && output.isDamageableItem()
@@ -237,6 +250,9 @@ public final class CraftingSupportEffectHandler {
             perfect.setDamageValue(perfectRepairDamageValue(perfect.getDamageValue(), true));
             event.setOutput(perfect);
         }
+
+        // Enregistrer le coût pour remboursement éventuel
+        lastAnvilCost.put(player.getUUID(), (int) event.getCost());
     }
 
     @SubscribeEvent
@@ -246,6 +262,13 @@ public final class CraftingSupportEffectHandler {
             return;
         }
         PlayerStatData data = player.getData(ModAttachments.STATS);
+
+        // ERUDITION_ACTIVE (id 133) : 20% chance to refund experience levels on anvil repair
+        int cost = lastAnvilCost.getOrDefault(player.getUUID(), 0);
+        if (cost > 0 && data.isPerkUnlocked(133) && player.getRandom().nextFloat() < 0.20f) {
+            player.giveExperienceLevels(cost);
+        }
+
         ItemStack output = event.getOutput();
         if (!output.isEmpty()
                 && output.isDamageableItem()
@@ -308,6 +331,14 @@ public final class CraftingSupportEffectHandler {
         }
         if (data.isPerkUnlocked(Perk.COOK_MASTERY.id)) {
             shareFoodEffects(player);
+        }
+
+        // GRAND_ARTISAN (id 145) : repair main hand weapon by 50 durability on eating
+        if (data.isPerkUnlocked(145)) {
+            ItemStack mainHand = player.getMainHandItem();
+            if (!mainHand.isEmpty() && mainHand.isDamageableItem() && mainHand.isDamaged()) {
+                mainHand.setDamageValue(Math.max(0, mainHand.getDamageValue() - 50));
+            }
         }
     }
 

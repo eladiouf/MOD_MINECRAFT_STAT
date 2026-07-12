@@ -58,6 +58,23 @@ public class PerkManager {
                     : statData.getLevel(perk.synergyStat.index);
             if (synergyLevel < PerkTier.SYNERGY.requiredStatLevel) return UnlockFailure.SYNERGY_TOO_LOW;
         }
+
+        if (perk.secondRequiredStat != null) {
+            int secondLevel = player != null
+                    ? RaceEffectApplier.getEffectiveLevel(player, perk.secondRequiredStat.index)
+                    : statData.getLevel(perk.secondRequiredStat.index);
+            if (secondLevel < perk.secondRequiredStatLevel) return UnlockFailure.LEVEL_TOO_LOW;
+        }
+
+        // Cas particulier de AVATAR_OF_ELEMENTS (id 147) qui requiert 40 dans les 4 éléments
+        if (perk.id == 147) {
+            int fire = player != null ? RaceEffectApplier.getEffectiveLevel(player, tong.statmod.stats.StatType.FIRE_AFFINITY.index) : statData.getLevel(tong.statmod.stats.StatType.FIRE_AFFINITY.index);
+            int water = player != null ? RaceEffectApplier.getEffectiveLevel(player, tong.statmod.stats.StatType.WATER_AFFINITY.index) : statData.getLevel(tong.statmod.stats.StatType.WATER_AFFINITY.index);
+            int air = player != null ? RaceEffectApplier.getEffectiveLevel(player, tong.statmod.stats.StatType.AIR_AFFINITY.index) : statData.getLevel(tong.statmod.stats.StatType.AIR_AFFINITY.index);
+            int earth = player != null ? RaceEffectApplier.getEffectiveLevel(player, tong.statmod.stats.StatType.EARTH_AFFINITY.index) : statData.getLevel(tong.statmod.stats.StatType.EARTH_AFFINITY.index);
+            if (fire < 40 || water < 40 || air < 40 || earth < 40) return UnlockFailure.LEVEL_TOO_LOW;
+        }
+
         if (player != null && !SkillPerkGate.canUnlock(player, perk)) return UnlockFailure.EXTERNAL_REQUIREMENT;
         return null;
     }

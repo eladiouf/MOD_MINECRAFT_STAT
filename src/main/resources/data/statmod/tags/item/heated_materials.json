@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "statmod:heated_gold_ingot",
+    "statmod:heated_tin_ingot",
+    "statmod:heated_bronze_ingot",
+    "statmod:heated_diamond",
+    "statmod:heated_pyrium_ingot",
+    "statmod:heated_arcane_ingot",
+    "statmod:heated_mithril_ingot",
+    "statmod:heated_low_magisteel_ingot",
+    "statmod:heated_magisteel_ingot",
+    "statmod:heated_pure_magisteel_ingot",
+    "statmod:heated_high_magisteel_ingot",
+    "statmod:heated_orichalcum_ingot",
+    "statmod:heated_adamantite_ingot",
+    "statmod:heated_hihiirokane_ingot"
+  ]
+}

@@ -23,11 +23,48 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MagicTeleportCircleBlock extends Block {
+    public enum CirclePart implements net.minecraft.util.StringRepresentable {
+        NORTH_WEST("north_west"),
+        NORTH("north"),
+        NORTH_EAST("north_east"),
+        WEST("west"),
+        CENTER("center"),
+        EAST("east"),
+        SOUTH_WEST("south_west"),
+        SOUTH("south"),
+        SOUTH_EAST("south_east");
+
+        private final String name;
+
+        CirclePart(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public static final net.minecraft.world.level.block.state.properties.EnumProperty<CirclePart> PART = net.minecraft.world.level.block.state.properties.EnumProperty.create("part", CirclePart.class);
+
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     private static final Map<UUID, Long> LAST_TELEPORT = new ConcurrentHashMap<>();
 
     public MagicTeleportCircleBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, CirclePart.CENTER));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(PART);
+    }
+
+    public static void applyCooldown(UUID playerUuid, long gameTime) {
+        // Enregistre un cooldown de 3 secondes + 5 secondes bonus (100 ticks)
+        // pour laisser au joueur le temps de s'écarter à son retour dans l'Overworld.
+        LAST_TELEPORT.put(playerUuid, gameTime + 100L);
     }
 
     @Override
@@ -51,16 +88,15 @@ public class MagicTeleportCircleBlock extends Block {
                 LAST_TELEPORT.put(uuid, now);
 
                 PlayerStatData data = serverPlayer.getData(ModAttachments.STATS);
-                int floor = data.getDungeonFloorReached();
 
                 data.setLastOverworldDimensionId(level.dimension().location().toString());
                 data.setLastOverworldPos(pos.asLong());
 
-                boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, floor);
+                boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0);
                 if (ok) {
                     serverPlayer.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.7f, 1.3f);
                     serverPlayer.displayClientMessage(
-                            Component.translatable("block.statmod.dungeon_portal.enter", floor), true);
+                            Component.translatable("block.statmod.dungeon_portal.enter_hub"), true);
                 } else {
                     serverPlayer.displayClientMessage(
                             Component.translatable("block.statmod.dungeon_portal.failed"), true);

@@ -9,6 +9,7 @@
 #087519 minecraft:blue_ice
 #657B45 minecraft:bone_block
 #994DDA statmod:boss_altar
+#207534 minecraft:brown_mushroom
 #9AD2D0 minecraft:budding_amethyst
 #00BE18 minecraft:calcite
 #CB6F00 minecraft:candle
@@ -92,6 +93,7 @@
 #E3975C minecraft:purpur_pillar
 #1F602C minecraft:purpur_slab
 #981A7C minecraft:purpur_stairs
+#025439 minecraft:red_mushroom
 #83B596 minecraft:red_wool
 #D94BC5 statmod:return_beacon
 #991DF8 minecraft:rooted_dirt

@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -19,6 +20,10 @@ import tong.statmod.integration.sdm.SDMEconomyBridge;
 import tong.statmod.network.OpenExchangePayload;
 import tong.statmod.storage.ModAttachments;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Mission M6 — Villageois changeur (points → coins) des étages trésor (2026-07-05).
  *
@@ -30,6 +35,9 @@ public final class DungeonExchanger {
 
     /** Marqueur NBT du changeur (exempté du nettoyage des mobs, comme les marchands). */
     public static final String TAG = "statmod_dungeon_exchanger";
+
+    private static final long SESSION_DURATION_TICKS = 20L * 30L;
+    private static final Map<UUID, ExchangeSession> SESSIONS = new ConcurrentHashMap<>();
 
     private DungeonExchanger() {}
 
@@ -53,7 +61,9 @@ public final class DungeonExchanger {
 
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent event) {
-        SDMEconomyBridge.ensureCurrency(event.getServer());
+        // La devise FDP_cfa est déjà enregistrée via SDMShopDatabaseInitializer.onServerStarting
+        // (CustomCurrencies.putIfAbsent). Appeler aussi EconomyAPI.createCurrencyOnServer ici
+        // crée une entrée dupliquée visible dans le wallet SDM → supprimé.
     }
 
     @SubscribeEvent
@@ -63,9 +73,33 @@ public final class DungeonExchanger {
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
+        authorize(sp, event.getTarget());
         int points = sp.getData(ModAttachments.STATS).getDungeonPoints();
         long coins = SDMEconomyBridge.getCoins(sp);
         PacketDistributor.sendToPlayer(sp, new OpenExchangePayload(points, coins,
                 (float) tong.statmod.config.Config.getPointToCoinRate()));
     }
+
+    private static void authorize(ServerPlayer player, Entity exchanger) {
+        SESSIONS.put(player.getUUID(), new ExchangeSession(
+                player.level().dimension().location().toString(), exchanger.getUUID(),
+                player.level().getGameTime() + SESSION_DURATION_TICKS));
+    }
+
+    /** Vérifie qu'une conversion fait suite à un clic récent sur un vrai changeur resté proche. */
+    public static boolean canConvert(ServerPlayer player) {
+        ExchangeSession session = SESSIONS.get(player.getUUID());
+        if (session == null || !(player.level() instanceof ServerLevel level)) return false;
+
+        boolean sameDimension = player.level().dimension().location().toString().equals(session.dimension());
+        Entity exchanger = sameDimension ? level.getEntity(session.exchangerId()) : null;
+        boolean tagged = exchanger != null && exchanger.getPersistentData().getBoolean(TAG);
+        double distanceSquared = exchanger == null ? Double.POSITIVE_INFINITY : player.distanceToSqr(exchanger);
+        boolean allowed = DungeonExchangeAccess.isAllowed(level.getGameTime(), session.expiresAtTick(),
+                sameDimension, tagged, distanceSquared);
+        if (!allowed) SESSIONS.remove(player.getUUID());
+        return allowed;
+    }
+
+    private record ExchangeSession(String dimension, UUID exchangerId, long expiresAtTick) {}
 }

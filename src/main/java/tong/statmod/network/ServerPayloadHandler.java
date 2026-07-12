@@ -102,10 +102,20 @@ public final class ServerPayloadHandler {
     public static void handleConvertPoints(ConvertPointsPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer sp)) return;
+            if (!tong.statmod.dungeon.DungeonExchanger.canConvert(sp)) {
+                sp.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                        "shop.exchange.invalid_session"), false);
+                return;
+            }
             PlayerStatData data = sp.getData(ModAttachments.STATS);
             tong.statmod.dungeon.PointExchange.Result r = tong.statmod.dungeon.PointExchange.compute(
                     payload.amount(), data.getDungeonPoints(), tong.statmod.config.Config.getPointToCoinRate());
             if (r.converted() <= 0) return;
+            if (r.coins() <= 0) {
+                sp.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                        "shop.exchange.zero_value"), false);
+                return;
+            }
             boolean credited = tong.statmod.integration.sdm.SDMEconomyBridge.addCoins(sp, r.coins());
             if (!credited) {
                 sp.displayClientMessage(net.minecraft.network.chat.Component.translatable("shop.unavailable"), false);
@@ -118,6 +128,25 @@ public final class ServerPayloadHandler {
                     new OpenExchangePayload(data.getDungeonPoints(), coins,
                             (float) tong.statmod.config.Config.getPointToCoinRate())); // rafraîchit l'écran
             tong.statmod.dungeon.DungeonPointsEjection.enforce(sp); // 0 point → overworld
+        });
+    }
+
+    public static void handleMagicBankAction(MagicBankActionPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            if (!tong.statmod.economy.MagicBanker.canUse(player)) {
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable("banker.magic.invalid_session"), false);
+                return;
+            }
+            tong.statmod.economy.MagicBankService.Result result;
+            if (payload.action() == MagicBankActionPayload.DEPOSIT_ALL) {
+                result = tong.statmod.economy.MagicBankService.depositAll(player);
+            } else if (payload.action() == MagicBankActionPayload.WITHDRAW) {
+                result = tong.statmod.economy.MagicBankService.withdraw(player, payload.amount());
+            } else return;
+            String key = "banker.magic.result." + result.status().name().toLowerCase(java.util.Locale.ROOT);
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(key, result.amount()), false);
+            tong.statmod.economy.MagicBanker.sendSnapshot(player);
         });
     }
 }

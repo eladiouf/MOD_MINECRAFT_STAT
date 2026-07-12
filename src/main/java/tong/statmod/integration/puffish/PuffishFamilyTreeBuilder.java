@@ -26,7 +26,8 @@ public final class PuffishFamilyTreeBuilder {
             PerkTier.SYNERGY,
             PerkTier.SITUATIONAL,
             PerkTier.MASTERY,
-            PerkTier.TRANSCENDENCE
+            PerkTier.TRANSCENDENCE,
+            PerkTier.HYBRID
     );
     private static final int VIEWPORT_CENTER_X = 980;
     private static final int VIEWPORT_CENTER_Y = 760;
@@ -127,19 +128,23 @@ public final class PuffishFamilyTreeBuilder {
     private static String buildUnifiedConnectionsJson() {
         List<String> pairs = new ArrayList<>();
         for (StatType stat : StatType.values()) {
-            Perk previous = null;
+            List<Perk> previousPerks = new ArrayList<>();
             for (PerkTier tier : TIER_ORDER) {
-                Perk perk = Perk.byStatAndTier(stat, tier);
-                if (perk == null) {
+                List<Perk> perks = Perk.allByStatAndTier(stat, tier);
+                if (perks.isEmpty()) {
                     continue;
                 }
-                if (previous != null) {
-                    pairs.add("            [\n" +
-                            "                \"" + skillId(previous) + "\",\n" +
-                            "                \"" + skillId(perk) + "\"\n" +
-                            "            ]");
+                if (!previousPerks.isEmpty()) {
+                    for (Perk prev : previousPerks) {
+                        for (Perk perk : perks) {
+                            pairs.add("            [\n" +
+                                    "                \"" + skillId(prev) + "\",\n" +
+                                    "                \"" + skillId(perk) + "\"\n" +
+                                    "            ]");
+                        }
+                    }
                 }
-                previous = perk;
+                previousPerks = perks;
             }
         }
         return "{\n" +
@@ -175,16 +180,16 @@ public final class PuffishFamilyTreeBuilder {
         for (int statIndex = 0; statIndex < stats.size(); statIndex++) {
             StatType stat = stats.get(statIndex);
             double statAngle = angleForStat(layout, statIndex, stats.size());
-
             for (int tierIndex = 0; tierIndex < TIER_ORDER.size(); tierIndex++) {
-                Perk perk = Perk.byStatAndTier(stat, TIER_ORDER.get(tierIndex));
-                if (perk == null) {
-                    continue;
+                List<Perk> perks = Perk.allByStatAndTier(stat, TIER_ORDER.get(tierIndex));
+                for (int perkIndex = 0; perkIndex < perks.size(); perkIndex++) {
+                    Perk perk = perks.get(perkIndex);
+                    double angleOffset = (perkIndex - (perks.size() - 1) / 2.0) * 4.0;
+                    placements.put(skillId(perk), polarPlacement(
+                            statAngle + angleOffset,
+                            layout.rootRadius() + tierIndex * layout.tierStep()
+                    ));
                 }
-                placements.put(skillId(perk), polarPlacement(
-                        statAngle,
-                        layout.rootRadius() + tierIndex * layout.tierStep()
-                ));
             }
         }
     }

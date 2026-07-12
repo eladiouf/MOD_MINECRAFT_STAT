@@ -1,0 +1,6 @@
+#47F minecraft:birch_forest
+#4F9 minecraft:dark_forest
+#010 minecraft:forest
+#3DC minecraft:plains
+#4D3 minecraft:swamp
+#152 minecraft:windswept_forest

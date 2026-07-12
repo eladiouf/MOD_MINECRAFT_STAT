@@ -1,50 +1,50 @@
-/statlevel all 1
-/effect clear
-/statdungeon unlock 100
-/statdungeon tp 10
-/statdungeon tp 20
-/statdungeon tp 30
-/statdungeon tp 40
-/statdungeon tp 10
-/statdungeon regen 10
-/kill
-/statdungeon unlock 100
-/statdungeon tp 10
-/kill @s
-/statdungeon tp 10
-/statdungeon unlock 50
-/statdungeon tp 10
-/gamemode survival
-/gamerule keepInventory true
-/kill
-/kill @e
-/epicfight stamina set 1000
-/epicfight stamina get @a 100
-/epicfight stamina
-/epicfight stamina add @a 100
-/statlevel all 80
-/statdungeon regen 1
-/statdungeon unlock 10
-/statdungeon regen 10
-/statdungeon regen 1
-/statdungeon unlock 10
-/statdungeon unlock 20
-/statdungeon unlock 30
+/statdungeon unlock 150
+/statdungeon tp 115
+/statdungeon tp 120
+/statdungeon tp 130
+/statdungeon tp 131
+/statdungeon tp 15
+/statdungeon unlock 150
+/statdungeon tp 15
+/sdmshop
+/sdmshop open_shop
 /tensura reset Dev race
+/gamerule keepInventory true
+/magic grantarcane 3
+/statlevel all 1
+/magic grantarcane 1
+/statlevel all 1
+/magic grantarcane 50
+/statlevel all 1
+/magic grantarcane 50
+/statlevel all 1
+/magic grantarcane 50
+/statlevel all 1
+/magic grantarcane 50
+/gamerule keepInventory true
+/setworldspawn ~ ~ ~
+/sdmshop
+/sdmshop open_shop
+/statdungeon unlock 100
+/statdungeon tp 25
+/sdmshop open_shop
+/statdungeon unlock 100
+/statdungeon tp 25
+/sdmshop open_shop
+/sdmshop add
+/sdmshop add Dev dungeon_coins 20
+/sdmshop open_shop
+/sdmshop edit_mode
+/sdmshop open_shop
+/statdungeon unlock 10
+/sdmshop open_shop
+/statdungeon unlock 100
+/statdungeon tp 25
+/statdungeon tp 26
+/statdungeon tp 55
+/statdungeon tp 56
 /statdungeon unlock 100
 /statdungeon tp 5
-/statdungeon tp 25
-/statdungeon tp 55
-/statdungeon tp 75
-/statdungeon tp 95
-/statdungeon tp 100
-/statdungeon tp 1
-/statlevel all 1
-/statperk 100
-/magic grantarcane 111
-/mana get Dev 100
-/mana get Dev 30
-/statdungeon tp 20
-/statdungeon tp 30
-/statdungeon tp 40
-/statdungeon tp 41
+/statdungeon tp 10
+/statdungeon tp 11
+/kill @e

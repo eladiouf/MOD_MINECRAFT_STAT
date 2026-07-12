@@ -256,10 +256,36 @@ Dépendance hard. Présent sous `integration/tensura/` :
 - **Salles secrètes « pari »** (`DungeonSecretRoom`) : la chambre sous trappe est bénie (~60 % : 2 coffres + plaque de bénédiction — effets uniquement, pas farmable) ou maudite (~40 % : 1 coffre + wither/cécité/vex). Indiscernable d'en haut, déterministe par étage.
 - **Chambres-fortes ULTRA-secrètes** (`DungeonUltraVault`, ~1 étage de combat/7) : **sanctuaire** caché au sol d'une pièce élue — pierre de guidage (lodestone) + cristal d'améthyste, clic droit → téléportation Java (`RightClickBlock`, son ender + particules) vers une chambre scellée flottant à +36 dans la cage. Piédestal avec **arme unique** renommée « Relique du Donjon » (pools par profondeur : runic <30, légendaires 30-69, armes de boss SLU ≥70 — ids vérifiés jars), 4 coffres `dungeon_treasure`, blocs précieux, pierre de retour. La direction du tp est déduite de l'altitude. Tests : `DungeonUltraVaultTest` (3).
 
+**Cité des Aventuriers — plan A « Fondations » livré (2026-07-12)** : l'étage 0 n'est plus le
+temple 64×64 (`DungeonHubFloor` **supprimé**) mais une **caverne-cité 600×600** centrée en
+`(0,100,-500)` (zone étage 0 = tout `z<-150`), package dédié `dungeon/city/`. Génération 100 %
+code, **étalée sur les ticks** (`CityBuildQueue`, ~2 bandes/tick) lancée au démarrage serveur
+(`ServerStartedEvent`), marqueur versionné `CitySavedData` (`CITY_VERSION`++ → reconstruction),
+purge legacy de l'ancien temple + cage barrière sur mondes existants. Contenu plan A : coque
+(sol/rempart/plafond à 70 cristaux), Grande Place (fontaine, statue, Cristal Gardien, waystone,
+return beacon, `MagicBanker`, 4 étals `DungeonMerchant` provisoires), camp des artisans provisoire
+(enchant 30/forge/dortoir), **Porte du Donjon** monumentale (battants d'obsidienne ouverts à
+l'approche par `CityGateOpener`, 4 statues des peuples, téléporteur étage 1), Cour des Portails
+(1 arche active retour + 4 scellées). Mort étage 0 = **zéro pénalité**, respawn Grande Place.
+`/statdungeon regen 0` = purge+rebuild en tâche de fond. Tests : `CityPlanTest` (8),
+`CityBuildQueueTest` (5). Spec : `docs/superpowers/specs/2026-07-12-adventurer-city-floor0-design.md`.
+**À venir** : plan B (quartiers raciaux + PNJ villageois/Tensura/Guard Villagers + ambiance,
+le camp provisoire et les étals de la place seront redistribués), plan C (Hall des Héros,
+tableau de bord Guilde, Sanctuaire respec, duels d'arène, mannequins).
+
 ### Fichiers clés
 
 | Fichier | Rôle |
 |---------|------|
+| `dungeon/city/CityPlan.java` | **Cité** : géométrie pure (centre, place, porte, avenues) — testable |
+| `dungeon/city/CityBuildQueue.java` | File de jobs à budget par tick (pure, testable) |
+| `dungeon/city/CityGenerator.java` | Orchestrateur : build au démarrage, SavedData versionné, legacy clean, regen |
+| `dungeon/city/CityShell.java` | Coque caverne : sol, rempart, plafond, cristaux |
+| `dungeon/city/PlazaBuilder.java` | Grande Place + services (waystone, beacon, banquier, 4 marchands) |
+| `dungeon/city/ArtisanCampBuilder.java` | Camp provisoire (enchant/forge/dortoir) — supprimé au plan B |
+| `dungeon/city/DungeonGateBuilder.java` | Porte du Donjon + statues + téléporteur étage 1 |
+| `dungeon/city/CityGateOpener.java` | Ouverture/fermeture de la porte à l'approche (tick) |
+| `dungeon/city/PortalCourtBuilder.java` | Cour des Portails (1 active retour, 4 scellées) |
 | `dungeon/DungeonRush.java` | **Dungeon Rush** : combo/jackpot/sans-faute — cœur pur testable (2026-07-09) |
 | `dungeon/DungeonRushHandler.java` | Câblage Rush : coup reçu → combo brisé + sans-faute perdu ; logout → purge |
 | `dungeon/DungeonDimensions.java` | ResourceKeys pour `statmod:trial_dungeon` |

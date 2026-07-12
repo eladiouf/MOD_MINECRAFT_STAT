@@ -8,6 +8,8 @@ docs_dir: docs/wiki
 theme:
   name: material
   language: fr
+  logo: assets/logo.png
+  favicon: assets/favicon.png
   features:
     - navigation.tabs
     - navigation.sections

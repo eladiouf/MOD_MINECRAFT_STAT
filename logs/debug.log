@@ -1,29 +1,29 @@
-[11Jul2026 17:30:44.634] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=-1.0 maxMana=1250.0 cappedMax=1250.0 result=1250.0
-[11Jul2026 17:30:44.641] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=320.0 maxMana=1250.0 cappedMax=1250.0 result=320.0
-[11Jul2026 17:30:44.642] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=1200.0 maxMana=900.0 cappedMax=900.0 result=900.0
-[11Jul2026 17:30:44.711] [Test worker/DEBUG] [tong.statmod.STATMod/]: TensuraSpellMetadata query failed for tensura:missing_skill_unit_test: java.lang.ExceptionInInitializerError
-[11Jul2026 17:30:49.691] [Test worker/DEBUG] [io.netty.util.internal.logging.InternalLoggerFactory/]: Using SLF4J as the default logging framework
-[11Jul2026 17:30:49.694] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetector/]: -Dio.netty.leakDetection.level: simple
-[11Jul2026 17:30:49.694] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetector/]: -Dio.netty.leakDetection.targetRecords: 4
-[11Jul2026 17:30:49.722] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: -Dio.netty.noUnsafe: false
-[11Jul2026 17:30:49.722] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: Java version: 21
-[11Jul2026 17:30:49.724] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.theUnsafe: available
-[11Jul2026 17:30:49.724] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.copyMemory: available
-[11Jul2026 17:30:49.725] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.storeFence: available
-[11Jul2026 17:30:49.725] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.Buffer.address: available
-[11Jul2026 17:30:49.726] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.Bits.unaligned: available, true
-[11Jul2026 17:30:49.728] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.DirectByteBuffer.<init>(long, {int,long}): unavailable
-[11Jul2026 17:30:49.728] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: sun.misc.Unsafe: available
-[11Jul2026 17:30:49.729] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: maxDirectMemory: 536870912 bytes (maybe)
-[11Jul2026 17:30:49.730] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.tmpdir: C:\Users\ELHADJ~1\AppData\Local\Temp (java.io.tmpdir)
-[11Jul2026 17:30:49.730] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.bitMode: 64 (sun.arch.data.model)
-[11Jul2026 17:30:49.730] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: Platform: Windows
-[11Jul2026 17:30:49.732] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.maxDirectMemory: -1 bytes
-[11Jul2026 17:30:49.732] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.uninitializedArrayAllocationThreshold: -1
-[11Jul2026 17:30:49.734] [Test worker/DEBUG] [io.netty.util.internal.CleanerJava9/]: java.nio.ByteBuffer.cleaner(): available
-[11Jul2026 17:30:49.734] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.noPreferDirect: false
-[11Jul2026 17:30:49.742] [Test worker/DEBUG] [io.netty.buffer.AbstractByteBuf/]: -Dio.netty.buffer.checkAccessible: true
-[11Jul2026 17:30:49.743] [Test worker/DEBUG] [io.netty.buffer.AbstractByteBuf/]: -Dio.netty.buffer.checkBounds: true
-[11Jul2026 17:30:49.744] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetectorFactory/]: Loaded default ResourceLeakDetector: io.netty.util.ResourceLeakDetector@101a461c
-[11Jul2026 17:30:49.878] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 18 legacy magic points → unified pool (capped at 100)
-[11Jul2026 17:30:49.885] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 9999 legacy magic points → unified pool (capped at 100)
+[12Jul2026 02:26:40.082] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=-1.0 maxMana=1250.0 cappedMax=1250.0 result=1250.0
+[12Jul2026 02:26:40.132] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=320.0 maxMana=1250.0 cappedMax=1250.0 result=320.0
+[12Jul2026 02:26:40.134] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=1200.0 maxMana=900.0 cappedMax=900.0 result=900.0
+[12Jul2026 02:26:40.199] [Test worker/DEBUG] [tong.statmod.STATMod/]: TensuraSpellMetadata query failed for tensura:missing_skill_unit_test: java.lang.ExceptionInInitializerError
+[12Jul2026 02:26:45.446] [Test worker/DEBUG] [io.netty.util.internal.logging.InternalLoggerFactory/]: Using SLF4J as the default logging framework
+[12Jul2026 02:26:45.449] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetector/]: -Dio.netty.leakDetection.level: simple
+[12Jul2026 02:26:45.449] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetector/]: -Dio.netty.leakDetection.targetRecords: 4
+[12Jul2026 02:26:45.480] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: -Dio.netty.noUnsafe: false
+[12Jul2026 02:26:45.480] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: Java version: 21
+[12Jul2026 02:26:45.481] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.theUnsafe: available
+[12Jul2026 02:26:45.482] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.copyMemory: available
+[12Jul2026 02:26:45.482] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.storeFence: available
+[12Jul2026 02:26:45.483] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.Buffer.address: available
+[12Jul2026 02:26:45.484] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.Bits.unaligned: available, true
+[12Jul2026 02:26:45.489] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.DirectByteBuffer.<init>(long, {int,long}): unavailable
+[12Jul2026 02:26:45.489] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: sun.misc.Unsafe: available
+[12Jul2026 02:26:45.490] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: maxDirectMemory: 536870912 bytes (maybe)
+[12Jul2026 02:26:45.490] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.tmpdir: C:\Users\ELHADJ~1\AppData\Local\Temp (java.io.tmpdir)
+[12Jul2026 02:26:45.490] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[12Jul2026 02:26:45.491] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: Platform: Windows
+[12Jul2026 02:26:45.491] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.maxDirectMemory: -1 bytes
+[12Jul2026 02:26:45.491] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.uninitializedArrayAllocationThreshold: -1
+[12Jul2026 02:26:45.493] [Test worker/DEBUG] [io.netty.util.internal.CleanerJava9/]: java.nio.ByteBuffer.cleaner(): available
+[12Jul2026 02:26:45.493] [Test worker/DEBUG] [io.netty.util.internal.PlatformDependent/]: -Dio.netty.noPreferDirect: false
+[12Jul2026 02:26:45.505] [Test worker/DEBUG] [io.netty.buffer.AbstractByteBuf/]: -Dio.netty.buffer.checkAccessible: true
+[12Jul2026 02:26:45.506] [Test worker/DEBUG] [io.netty.buffer.AbstractByteBuf/]: -Dio.netty.buffer.checkBounds: true
+[12Jul2026 02:26:45.509] [Test worker/DEBUG] [io.netty.util.ResourceLeakDetectorFactory/]: Loaded default ResourceLeakDetector: io.netty.util.ResourceLeakDetector@53c1179a
+[12Jul2026 02:26:45.639] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 18 legacy magic points → unified pool (capped at 100)
+[12Jul2026 02:26:45.641] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 9999 legacy magic points → unified pool (capped at 100)

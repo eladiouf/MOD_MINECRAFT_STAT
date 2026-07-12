@@ -23,7 +23,7 @@ public final class ForgingIntermediateIds {
             "gold", "tin", "bronze", "diamond",
             "pyrium", "arcane", "mithril",
             "low_magisteel", "magisteel", "pure_magisteel", "high_magisteel",
-            "orichalcum", "adamantite", "hihiirokane"
+            "orichalcum", "adamantite", "hihiirokane", "netherite"
     );
 
     private static final List<String> ALL_IDS = buildAllIds();

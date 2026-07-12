@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_blade_diamond"
+      "item": "statmod:rough_blade_netherite"
     },
     {
       "item": "statmod:rapier_guard"
@@ -18,10 +18,13 @@
       "item": "minecraft:rabbit_hide"
     },
     {
+      "item": "statmod:rough_blade_netherite"
+    },
+    {
       "item": "statmod:leather_wrap"
     },
     {
-      "item": "statmod:rough_blade_diamond"
+      "item": "statmod:rough_blade_netherite"
     },
     {
       "item": "statmod:rapier_guard"

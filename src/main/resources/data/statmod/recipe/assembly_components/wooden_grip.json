@@ -1,18 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "L": {
+  "ingredients": [
+    {
       "item": "statmod:leather_wrap"
     },
-    "S": {
+    {
+      "item": "minecraft:stick"
+    },
+    {
       "item": "minecraft:stick"
     }
-  },
-  "pattern": [
-    "L",
-    "S",
-    "S"
   ],
   "result": {
     "count": 1,

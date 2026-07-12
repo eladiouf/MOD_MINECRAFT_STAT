@@ -50,7 +50,7 @@ public final class ClientSetup {
         // Mana HUD maison : la barre native d'Iron's est invisible avec Tensura qui
         // remplace le HUD vanilla. Garde de chargement : la classe référence Iron's.
         if (net.neoforged.fml.ModList.get().isLoaded("irons_spellbooks")) {
-            ManaHudOverlay.register(event);
+            ManaValueHudOverlay.register(event);
         }
     }
 

@@ -1,7 +1,7 @@
 # STAT MOD — CLAUDE.md
 
 > Ce fichier est lu automatiquement par Claude à chaque session dans la branche `neoforge-1.21.1`.
-> Dernière mise à jour gouvernée : 2026-07-04 par Onivo Studio — mission `M6` (refonte de fiabilité du Trial Dungeon). Précédentes : 2026-07-03 (`STAT-DEC-TRIAL-DUNGEON`), `M5` (`STAT-DEC-OVERGEARED-EXPANSION`), `M3` (`STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
+> Dernière mise à jour gouvernée : 2026-07-12 par Onivo Studio — `STAT-DEC-PUBLIC-DISTRIBUTION` (release publique bêta Modrinth + CurseForge). Précédentes : 2026-07-04 `M6` (refonte de fiabilité du Trial Dungeon), 2026-07-03 (`STAT-DEC-TRIAL-DUNGEON`), `M5` (`STAT-DEC-OVERGEARED-EXPANSION`), `M3` (`STAT-DEC-002`, `STAT-DEC-003`, `STAT-DEC-005`).
 
 ---
 
@@ -17,7 +17,7 @@ STAT MOD est un **système de stats et de progression** sur NeoForge 1.21.1, con
 5. 🟡 **Mission M5 — Overgeared Universal Forge** (en cours) : extension structurelle de l'intégration Overgeared pour forger toutes les armes du modpack (~770 cibles) depuis tous les métaux (14 nouveaux `heated_*` + 84 `rough_*` intermediaires + grips + blueprints), dual-gate `FORGING` + `ERUDITION` + `ARCANE_POWER` pour les métaux magiques. Voir `STAT-DEC-OVERGEARED-EXPANSION` et `docs/superpowers/specs/2026-06-30-overgeared-universal-forge-design.md`. **Bloqué** par compile cassé (refacto `MagicNode.role()` → `condition()` inachevée).
 6. 🟡 **Mission M6 — Trial Dungeon** (en cours, 2026-07-03) : dimension `statmod:trial_dungeon` — donjon procédural en grille XZ horizontale avec autels de boss, roster prédéfini SLU (38 boss), HUD scoreboard droite, loot rune shards. **BUILD OK** mais **bug critique** : le `DungeonBossHandler` ne détecte pas les kills de boss → l'étage suivant reste bloqué. Voir §Trial Dungeon.
 7. ⚪ Phase 2 Magic : tuning fin par école + ParCool intégrations magiques
-8. ⚪ Release publique gouvernée
+8. 🟡 **Release publique gouvernée** (2026-07-12) : v1.2.0-**beta** publiée sur **Modrinth** (`statmod`, en modération) et **CurseForge** (`stat-mod-rpg` #1583282, fichier en approbation). Pipeline : `gradlew build modrinth publishCurseForge` (tokens dans le profil utilisateur, hors repo). Voir `STAT-DEC-PUBLIC-DISTRIBUTION` (`docs/superpowers/specs/2026-07-12-public-distribution-release-record.md`). Reste : galeries, relations CurseForge, passage beta→release.
 
 ---
 
@@ -391,6 +391,7 @@ Le projet est piloté par **Onivo Studio** (voir `.tmp-onivo-audit/`). Les déci
 | `STAT-DEC-005` | `docs/superpowers/plans/` canonique | 2026-06-21 |
 | `STAT-DEC-006` | Séquence missions verrouillée (M3 → M10) | 2026-06-21 |
 | `STUDIO-DEC-001` | Studio autonome avec décisions documentées | 2026-06-21 |
+| `STAT-DEC-PUBLIC-DISTRIBUTION` | Release publique bêta : Modrinth (`statmod`) + CurseForge (`stat-mod-rpg` #1583282), pipeline gradle gouverné, mod vérifié standalone | 2026-07-12 |
 
 Toute contradiction observée entre ce `CLAUDE.md` et le code doit être résolue **en faveur du code** (runtime truth), puis ce fichier mis à jour via une décision numérotée.
 

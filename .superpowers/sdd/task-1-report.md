@@ -2,7 +2,7 @@
 
 ## Summary
 
-Updated `src/test/java/tong/statmod/integration/sdm/SDMShopPricingBalanceTest.java` so the pricing-policy checks are test-owned and the third required test now enforces the remaining category price bands instead of only checking positive values.
+Updated `src/test/java/tong/statmod/integration/sdm/SDMShopPricingBalanceTest.java` so the pricing-policy checks are test-owned and the third required test now enforces the remaining category price bands instead of only checking positive values. Also updated `src/test/java/tong/statmod/integration/sdm/SDMShopCatalogTest.java` to lock the exact 26-category set and the 1000-item target.
 
 ## Final implementation
 
@@ -21,6 +21,12 @@ Updated `src/test/java/tong/statmod/integration/sdm/SDMShopPricingBalanceTest.ja
   - tier 3 style bands: `Matériaux avancés`, `Runes et composants magiques`, `Magie et parchemins`, `Armures classiques`, `Armes à distance`, `Lances et armes d'hast`
   - tier 4 style bands: `Armes légères`, `Armes lourdes`, `Armes de Tensura`, `Armures fantastiques`, `Armures historiques`, `Composants de monstres`
 - Left generator/runtime code untouched.
+
+## Files changed
+
+- `src/test/java/tong/statmod/integration/sdm/SDMShopPricingBalanceTest.java`
+- `src/test/java/tong/statmod/integration/sdm/SDMShopCatalogTest.java`
+- `.superpowers/sdd/task-1-report.md`
 
 ## Focused verification
 
@@ -65,11 +71,6 @@ Observed failures:
 ## Notes
 
 - An initial attempt to run both focused Gradle commands in parallel reproduced the existing `build/test-results/test/binary/output.bin` file-lock issue. The sequential reruns above are the authoritative verification results.
-
-## Files changed
-
-- `src/test/java/tong/statmod/integration/sdm/SDMShopPricingBalanceTest.java`
-- `.superpowers/sdd/task-1-report.md`
 
 ## Concerns
 

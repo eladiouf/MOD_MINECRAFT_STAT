@@ -97,6 +97,25 @@ class SDMShopCatalogTest {
     }
 
     @Test
+    void economyProgressionAnchorsAreConsistent() {
+        assertTrue(find("minecraft:coal").price() <= 800,
+            "coal=" + find("minecraft:coal").price() + " should be affordable in early game");
+        assertTrue(find("minecraft:netherite_ingot").price() >= 800,
+            "netherite=" + find("minecraft:netherite_ingot").price() + " should cost more than early mats");
+        assertTrue(find("simplyswords:runic_katana").price() >= 12000,
+            "runic_katana=" + find("simplyswords:runic_katana").price() + " should be endgame tier");
+        assertTrue(find("apotheosis:gems/core/dragonfire_spessartite").price() >= 12000,
+            "dragonfire=" + find("apotheosis:gems/core/dragonfire_spessartite").price() + " should be endgame tier");
+    }
+
+    private SDMShopCatalog.ShopItem find(String itemId) {
+        return SDMShopCatalog.items().stream()
+            .filter(item -> item.itemId().equals(itemId))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("Missing shop item: " + itemId));
+    }
+
+    @Test
     void detectsLegacyShopFilesThatNeedRegeneration() {
         assertTrue(!SDMShopCatalog.isCurrentVersion(1));
         assertTrue(SDMShopCatalog.isCurrentVersion(SDMShopCatalog.VERSION));

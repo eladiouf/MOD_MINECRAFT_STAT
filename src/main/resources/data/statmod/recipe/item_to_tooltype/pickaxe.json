@@ -14,7 +14,8 @@
     { "item": "statmod:rough_spear_tip_high_magisteel" },
     { "item": "statmod:rough_spear_tip_orichalcum" },
     { "item": "statmod:rough_spear_tip_adamantite" },
-    { "item": "statmod:rough_spear_tip_hihiirokane" }
+    { "item": "statmod:rough_spear_tip_hihiirokane" },
+    { "item": "statmod:rough_spear_tip_netherite" }
   ],
   "tooltype": "pickaxe"
 }

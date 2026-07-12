@@ -21,6 +21,23 @@ This page indexes important studio and project decisions.
 | `STAT-DEC-012` | 2026-06-22 | progression | Fix kodachi misclassification |
 | `STAT-DEC-013` | 2026-06-22 | cleanup | Delete dead code (ProgressionRouting, ActionType, Config.register) |
 | `STAT-DEC-014` | 2026-06-22 | performance | Fix memory leaks in static maps |
+| `STAT-DEC-M4-REVERSE` | 2026-06-21 | magic-bridge | Reverse bridge Tensura → Iron's Spellbooks (`decisions/`) |
+| `STAT-DEC-M4-B` | 2026-06-21 | magic-ux | Virtual Inscription : keybind plutôt qu'item craftable (`decisions/`) |
+| `STAT-DEC-M4-CONFORMANCE` | 2026-06-22 | magic-bridge | Conformance Tensura du reverse bridge (`decisions/`) |
+| `STAT-DEC-MAGICULE-MANA-RATIO` | 2026-06-22 | magic-economy | Conversion magicule Tensura → mana Iron's (`decisions/`) |
+| `STAT-DEC-MASTERY-MAPPING` | 2026-06-22 | magic-economy | Mastery Tensura → spell level Iron's (`decisions/`) |
+| `STAT-DEC-CATALOG-AUDIT` | 2026-06-23 | magic-catalog | Audit Mission O des classifications SpellRole (`decisions/`) |
+| `STAT-DEC-MAGE-CODEX` | 2026-06-23 | magic-ux | Écran Codex du Mage (`decisions/`) |
+| `STAT-DEC-START-BRANCH-CHOOSER` | 2026-06-23 | magic-ux | UI de chooser de branche de départ (`decisions/`) |
+| `STAT-DEC-XP-AUDIT` | 2026-06-23 | progression | Audit complet des sources XP par stat (`decisions/`) |
+| `STAT-DEC-MAGIC-UNIFIED-ECONOMY` | 2026-06 | magic-economy | Monnaie unique `magicPoints` + 3 gates de stats par nœud (`decisions/`) |
+| `STAT-DEC-PHASE-GATING` | 2026-06 | magic-scope | 9 écoles structurellement actives, tuning Fire d'abord (`decisions/`) |
+| `STAT-DEC-COMMONNETWORK-SHIM-REMOVAL` | 2026-06-30 | runtime-hotfix | Suppression des shims commonnetwork (`decisions/`) |
+| `STAT-DEC-OVERGEARED-EXPANSION` | 2026-06-30 | integration-overgeared | Mission M5 Universal Forge greenlight (`decisions/`) |
+| `STAT-DEC-TRIAL-DUNGEON` | 2026-07-03 | product-scope | Mission M6 Trial Dungeon greenlight — [[2026-07-03 - STAT Mod Trial Dungeon Greenlight]] |
+| `STAT-DEC-PUBLIC-DISTRIBUTION` | 2026-07-12 | publishing | Release publique bêta Modrinth + CurseForge — [[2026-07-12 - STAT Mod Public Distribution]] |
+
+> Les entrées marquées `decisions/` pointent vers les records canoniques du dossier `decisions/` à la racine du repo studio ; les entrées avec wikilink ont une note vault complète.
 
 ## Dataview (auto)
 

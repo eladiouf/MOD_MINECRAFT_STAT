@@ -14,7 +14,8 @@
     { "item": "statmod:rough_axe_head_high_magisteel" },
     { "item": "statmod:rough_axe_head_orichalcum" },
     { "item": "statmod:rough_axe_head_adamantite" },
-    { "item": "statmod:rough_axe_head_hihiirokane" }
+    { "item": "statmod:rough_axe_head_hihiirokane" },
+    { "item": "statmod:rough_axe_head_netherite" }
   ],
   "tooltype": "axe"
 }

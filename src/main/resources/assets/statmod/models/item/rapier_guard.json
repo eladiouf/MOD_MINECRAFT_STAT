@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "statmod:item/leather_wrap"
+    "layer0": "statmod:item/rapier_guard"
   }
 }

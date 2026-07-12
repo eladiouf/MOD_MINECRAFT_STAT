@@ -141,10 +141,21 @@ MATERIAL_PREFIXES = [
 # ─── Sources rough disponibles ─────────────────────────────────────────────────────
 
 STATMOD_MATERIALS = {
-    "gold", "tin", "bronze", "diamond",
+    "gold", "tin", "bronze", "diamond", "netherite",
     "pyrium", "arcane", "mithril",
     "low_magisteel", "magisteel", "pure_magisteel", "high_magisteel",
     "orichalcum", "adamantite", "hihiirokane",
+}
+
+# Extra rough copies in assembly ingredients by material tier
+# Higher-tier weapons need more raw material to assemble
+MATERIAL_TIER_EXTRA = {
+    "tin": 0, "bronze": 0, "gold": 0,
+    "copper": 0, "iron": 0, "steel": 0, "silver": 0, "wood": 0, "stone": 0,
+    "diamond": 0, "pyrium": 0, "arcane": 0, "mithril": 0,
+    "low_magisteel": 0, "magisteel": 0,
+    "pure_magisteel": 1, "high_magisteel": 1, "orichalcum": 1,
+    "adamantite": 2, "hihiirokane": 2, "netherite": 1,
 }
 
 # Overgeared natif — material → class → overgeared rough id
@@ -348,9 +359,10 @@ def rough_for(material: str, weapon_class: str) -> str | None:
         return f"statmod:rough_{weapon_class}_{material}"
     if material in OVERGEARED_ROUGH and weapon_class in OVERGEARED_ROUGH[material]:
         return OVERGEARED_ROUGH[material][weapon_class]
-    # Fallback : silver/netherite/wood/stone/iron-pour-classes-non-overgeared
+    # Fallback : silver/wood/stone/copper/iron-pour-classes-non-overgeared
     # → utilise diamond rough comme placeholder universel
-    if material in ("silver", "netherite", "wood", "stone", "copper"):
+    # netherite a ses propres rough depuis generate_phase_beta_resources.py
+    if material in ("silver", "wood", "stone", "copper"):
         return f"statmod:rough_{weapon_class}_diamond"
     # iron + classes non couvertes par overgeared (spear/bow/staff/dagger)
     if material == "iron" and weapon_class not in OVERGEARED_ROUGH["iron"]:
@@ -410,6 +422,17 @@ def unique_pool(*ingredient_ids: str) -> list[str]:
     return ordered
 
 
+def material_from_rough(rough_id: str) -> str | None:
+    """Extract material name from a statmod rough item id.
+    Handles compound names like 'high_magisteel', 'low_magisteel', 'pure_magisteel'.
+    """
+    if rough_id.startswith("statmod:rough_"):
+        rest = rough_id[len("statmod:rough_"):]
+        parts = rest.split("_", 1)
+        return parts[1] if len(parts) > 1 else None
+    return None
+
+
 def build_profile_ingredients(
     modid: str,
     item_path: str,
@@ -462,6 +485,12 @@ def build_profile_ingredients(
         ingredients.append(accent_id)
         if has_any(path, ("crossbow", "longbow")):
             ingredients.append(rough_id)
+
+    # Surcoût par tier de matériau : les hauts tiers demandent plus de matière
+    mat = material_from_rough(rough_id)
+    extra = MATERIAL_TIER_EXTRA.get(mat, 0) if mat else 0
+    for _ in range(extra):
+        ingredients.append(rough_id)
 
     # Sous-charge stable déterministe sur les ingrédients déjà cohérents de l'arme.
     pool = unique_pool(rough_id, component_id, grip_id, accent_id, signature_id)

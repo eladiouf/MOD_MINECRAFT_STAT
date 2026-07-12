@@ -34,6 +34,10 @@ public final class ClientPayloadHandler {
         ClientPayloadActions.handleSyncMagic(payload, context);
     }
 
+    public static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
+        ClientPayloadActions.handleManaSync(payload, context);
+    }
+
     /** Ouvre le Codex du Mage sur le client (Mission J). */
     public static void handleOpenMageCodex(OpenMageCodexPayload payload, IPayloadContext context) {
         ClientPayloadActions.handleOpenMageCodex(payload, context);

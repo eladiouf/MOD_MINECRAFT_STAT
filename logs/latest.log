@@ -1,5 +1,5 @@
-[12Jul2026 02:26:40.082] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=-1.0 maxMana=1250.0 cappedMax=1250.0 result=1250.0
-[12Jul2026 02:26:40.132] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=320.0 maxMana=1250.0 cappedMax=1250.0 result=320.0
-[12Jul2026 02:26:40.134] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=1200.0 maxMana=900.0 cappedMax=900.0 result=900.0
-[12Jul2026 02:26:45.639] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 18 legacy magic points → unified pool (capped at 100)
-[12Jul2026 02:26:45.641] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 9999 legacy magic points → unified pool (capped at 100)
+[12Jul2026 18:03:29.216] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=-1.0 maxMana=1250.0 cappedMax=1250.0 result=1250.0
+[12Jul2026 18:03:29.223] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=320.0 maxMana=1250.0 cappedMax=1250.0 result=320.0
+[12Jul2026 18:03:29.223] [Test worker/INFO] [tong.statmod.STATMod/]: resolveRestoredMana: stored=1200.0 maxMana=900.0 cappedMax=900.0 result=900.0
+[12Jul2026 18:03:34.652] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 18 legacy magic points → unified pool (capped at 100)
+[12Jul2026 18:03:34.659] [Test worker/INFO] [tong.statmod.STATMod/]: Migrated 9999 legacy magic points → unified pool (capped at 100)

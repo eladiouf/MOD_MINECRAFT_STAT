@@ -26,6 +26,9 @@ public class NetworkHandler {
         registrar.playToClient(StatUpdatePayload.TYPE, StatUpdatePayload.CODEC,
                 (payload, context) -> ClientPayloadHandler.handleStatUpdate(payload, context));
 
+        registrar.playToClient(ManaSyncPayload.TYPE, ManaSyncPayload.CODEC,
+                (payload, context) -> ClientPayloadHandler.handleManaSync(payload, context));
+
         registrar.playToClient(StaminaSyncPayload.TYPE, StaminaSyncPayload.CODEC,
                 (payload, context) -> ClientPayloadHandler.handleStaminaSync(payload, context));
 

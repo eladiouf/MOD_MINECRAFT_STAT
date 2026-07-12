@@ -104,6 +104,7 @@ class OvergearedRecipeGateTest {
                 "magistuarmory:tin_ingot",         // 3
                 "magistuarmory:bronze_ingot",      // 5
                 "minecraft:gold_ingot",            // 8
+                "tensura:orichalcum_ingot",        // 12
                 "irons_spellbooks:pyrium_ingot",   // 12
                 "irons_spellbooks:arcane_ingot",   // 15
                 "minecraft:diamond",               // 20
@@ -113,7 +114,6 @@ class OvergearedRecipeGateTest {
                 "minecraft:netherite_ingot",       // 35
                 "tensura:pure_magisteel_ingot",    // 40
                 "tensura:high_magisteel_ingot",    // 50
-                "tensura:orichalcum_ingot",        // 55
                 "tensura:adamantite_ingot",        // 60
                 "tensura:hihiirokane_ingot",       // 70
         };

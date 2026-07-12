@@ -14,7 +14,8 @@
     { "item": "statmod:rough_bow_limb_high_magisteel" },
     { "item": "statmod:rough_bow_limb_orichalcum" },
     { "item": "statmod:rough_bow_limb_adamantite" },
-    { "item": "statmod:rough_bow_limb_hihiirokane" }
+    { "item": "statmod:rough_bow_limb_hihiirokane" },
+    { "item": "statmod:rough_bow_limb_netherite" }
   ],
   "tooltype": "hoe"
 }

@@ -1,24 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "G": {
+  "ingredients": [
+    {
       "item": "statmod:wooden_grip"
     },
-    "N": {
-      "item": "minecraft:gold_nugget"
-    },
-    "W": {
+    {
       "item": "statmod:wire_wrap"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
     }
-  },
-  "pattern": [
-    " A ",
-    "WGN",
-    " A "
   ],
   "result": {
     "count": 1,

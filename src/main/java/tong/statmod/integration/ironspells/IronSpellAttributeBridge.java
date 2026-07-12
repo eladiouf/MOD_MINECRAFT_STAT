@@ -54,9 +54,10 @@ final class IronSpellAttributeBridge {
             // SyncManaPacket. Iron's ne re-synchronise que quand le mana serveur CHANGE : si le
             // paquet initial se perd (ou mana déjà au max), le client reste à 0 pour toujours →
             // barre vide ET cast au keybind refusé par le pré-check CLIENT d'Iron's (« not enough
-            // mana ») alors que le serveur a du mana. L'ancienne fenêtre de 30 s après login ne
-            // couvrait pas ce cas. Sync forcée permanente, légère (1 petit paquet / 2 s).
-            if (serverPlayer.tickCount % 40 == 0) {
+            // mana ») alors que le serveur a du mana. Sync forcée toutes les 20 ticks (1s) pour
+            // couvrir toute fenêtre morte. On sync depuis MagicData (source de vérité) — PAS
+            // depuis storedMana, qui pourrait être un instantané antérieur à la consommation.
+            if (serverPlayer.tickCount % 20 == 0) {
                 MagicData md = MagicData.getPlayerMagicData(serverPlayer);
                 if (md != null) {
                     IronSpellManaSyncBridge.syncMana(serverPlayer, md.getMana(), true);

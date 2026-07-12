@@ -6,6 +6,6 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "statmod.refmap.json",
   "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "IronInscriptionTableScreenMixin", "EpicFightPlayerScaleMixin", "PuffishSkillsScreenMixin", "ShopPageMixin", "ShopPageModernMixin", "ShopTabPanelMixin"],
-  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "AssemblyCraftingResultMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedForgingRecipeMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin", "IronSpellIconResolverMixin", "IndestructibleServerMixin", "RecipeManagerMixin"],
+  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "AssemblyCraftingResultMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedForgingRecipeMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin", "IronSpellIconResolverMixin", "IronSpellManaOverrideMixin", "SpellSelectionManagerMixin", "IndestructibleServerMixin", "RecipeManagerMixin"],
   "server": []
 }

@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ForgingIntermediatesTest {
 
     @Test
-    void exactly_84_intermediates_declared() {
-        assertEquals(6 * 14, ForgingIntermediateIds.count(),
-                "expected 6 classes × 14 materials = 84 rough intermediates");
+    void exactly_90_intermediates_declared() {
+        assertEquals(6 * 15, ForgingIntermediateIds.count(),
+                "expected 6 classes × 15 materials = 90 rough intermediates");
     }
 
     @Test
@@ -30,12 +30,13 @@ class ForgingIntermediatesTest {
 
     @Test
     void materials_listMatchesPhaseAlpha() {
-        assertEquals(14, ForgingIntermediateIds.MATERIALS.size());
+        assertEquals(15, ForgingIntermediateIds.MATERIALS.size());
         assertEquals("gold", ForgingIntermediateIds.MATERIALS.get(0));
-        assertEquals("hihiirokane", ForgingIntermediateIds.MATERIALS.get(13));
+        assertEquals("netherite", ForgingIntermediateIds.MATERIALS.get(14));
         // Material identities preserved (no generic tier_N collapse)
         assertTrue(ForgingIntermediateIds.MATERIALS.contains("orichalcum"));
         assertTrue(ForgingIntermediateIds.MATERIALS.contains("adamantite"));
+        assertTrue(ForgingIntermediateIds.MATERIALS.contains("netherite"));
     }
 
     @Test
@@ -44,6 +45,8 @@ class ForgingIntermediatesTest {
         assertTrue(ForgingIntermediateIds.isKnownId("rough_dagger_blade_gold"));
         assertTrue(ForgingIntermediateIds.isKnownId("rough_staff_core_arcane"));
         assertTrue(ForgingIntermediateIds.isKnownId("rough_axe_head_orichalcum"));
+        assertTrue(ForgingIntermediateIds.isKnownId("rough_spear_tip_netherite"));
+        assertTrue(ForgingIntermediateIds.isKnownId("rough_bow_limb_netherite"));
     }
 
     @Test
@@ -56,10 +59,10 @@ class ForgingIntermediatesTest {
     }
 
     @Test
-    void allIds_listHas84UniqueEntries() {
-        assertEquals(84, ForgingIntermediateIds.allIds().size());
+    void allIds_listHas90UniqueEntries() {
+        assertEquals(90, ForgingIntermediateIds.allIds().size());
         long unique = ForgingIntermediateIds.allIds().stream().distinct().count();
-        assertEquals(84, unique, "all 84 ids must be unique");
+        assertEquals(90, unique, "all 90 ids must be unique");
     }
 
     @Test

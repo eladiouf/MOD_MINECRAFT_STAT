@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_blade_diamond"
+      "item": "statmod:rough_blade_netherite"
     },
     {
       "item": "statmod:claymore_pommel"
@@ -16,6 +16,9 @@
     },
     {
       "item": "minecraft:coal"
+    },
+    {
+      "item": "statmod:rough_blade_netherite"
     },
     {
       "item": "minecraft:iron_ingot"

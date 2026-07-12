@@ -203,7 +203,14 @@
       "PowerShell(\\(Select-String -Path \"C:\\\\Users\\\\El Hadji\\\\AppData\\\\Roaming\\\\.minecraft\\\\versions\\\\test\\\\logs\\\\debug.log\" -Pattern \"\\\\[DEBUG\\\\]\" | Select-Object -First 3\\).Line)",
       "PowerShell(& \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-21.0.11.10-hotspot\\\\bin\\\\javap.exe\" -p -classpath \"$env:TEMP\\\\isb_extract\" io.redspace.ironsspellbooks.entity.mobs.goals.WizardAttackGoal)",
       "Bash('/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\watch_mage_casts2.ps1')",
-      "PowerShell(git *)"
+      "PowerShell(git *)",
+      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\gen_icon.py\")",
+      "PowerShell(curl.exe -s \"https://api.cfwidget.com/1583282\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-21.0.11.10-hotspot\\\\bin\\\\javap.exe\" -p -classpath \"$env:TEMP\\\\sdm_extract\" net.sixk.sdmshop.shop.Tab.TabRender net.sixk.sdmshop.shop.Tab.Tab)",
+      "PowerShell(\"live: \" + \\(curl.exe -s -o NUL -w \"%{http_code}\" \"https://eladiouf.github.io/statmod-wiki/\"\\))",
+      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\extract_mod_logos.py\")",
+      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\diag_logos.py\")",
+      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\fetch_missing_logos.py\")"
     ]
   },
   "remote": {

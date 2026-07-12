@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -44,31 +45,47 @@ public final class IronSpellEventBridge {
     @SubscribeEvent
     public static void onPreCast(SpellPreCastEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        STATMod.LOGGER.info("PreCast FIRED: spellId={} entity={}", event.getSpellId(), player.getName().getString());
         AbstractSpell spell = SpellRegistry.getSpell(event.getSpellId());
         if (spell == null) {
             STATMod.LOGGER.warn("PreCast: null spell for id={}", event.getSpellId());
             return;
         }
         String spellId = IronSpellsApiAdapter.spellId(spell);
+        MagicBranch branch = IronSpellsApiAdapter.branchOf(spell);
         PlayerStatData data = player.getData(ModAttachments.STATS);
         boolean learned = data.hasLearnedSpell(spellId);
-        int manaCost = spell.getManaCost(event.getSpellLevel());
+        int spellLevel = event.getSpellLevel();
+        int manaCost = spell.getManaCost(spellLevel);
         MagicData md = MagicData.getPlayerMagicData(player);
         float currentMana = md != null ? md.getMana() : -999;
         float maxMana = (float) player.getAttributeValue(AttributeRegistry.MAX_MANA);
-        STATMod.LOGGER.info("PreCast: {} learned={} mana={}/{} cost={} cancel={}",
-                spellId, learned, currentMana, maxMana, manaCost, !learned);
+        STATMod.LOGGER.info("PreCast: {} spellLevel={} branch={} learned={} mana={}/{} cost={} cancel={}",
+                spellId, spellLevel, branch, learned, currentMana, maxMana, manaCost, !learned);
         if (shouldCancelPreCast(data, spellId)) {
             event.setCanceled(true);
             player.displayClientMessage(Component.translatable("statmod.magic.locked_spell"), true);
             return;
         }
         if (!player.isCreative() && currentMana < manaCost) {
+            // Récupération de désync : forcer un resync depuis la valeur persistée et ré-essayer
+            float storedMana = player.getData(ModAttachments.STATS).getStoredMana();
+            if (storedMana >= manaCost && storedMana > currentMana + 1.0f) {
+                STATMod.LOGGER.warn("MANA DESYNC onPreCast: MagicData={} stored={} cost={} — recovery sync",
+                        currentMana, storedMana, manaCost);
+                IronSpellManaSyncBridge.syncMana(player, storedMana, true);
+                MagicData md2 = MagicData.getPlayerMagicData(player);
+                float afterSync = md2 != null ? md2.getMana() : -999;
+                if (afterSync >= manaCost) {
+                    STATMod.LOGGER.info("MANA RECOVERY OK: after sync mana={} cost={}", afterSync, manaCost);
+                    CAST_IMPACT_TRACKER.begin(player.getUUID(), spellId, player.serverLevel().getGameTime());
+                    return;
+                }
+            }
             event.setCanceled(true);
             player.displayClientMessage(
                     Component.literal("§cNot enough mana: §f" + Math.round(currentMana)
-                            + "§7/§f" + manaCost), true);
+                            + "§7/§f" + manaCost + " §7(stored: " + Math.round(storedMana)
+                            + " lv" + spellLevel + ")"), true);
             return;
         }
         // Cast accepté (sort appris + mana suffisant) : ouvrir la fenêtre de preuve d'impact
@@ -94,6 +111,14 @@ public final class IronSpellEventBridge {
         int branchChain = IronSpellPerkState.recordCast(uuid, branch, now, 6000L);
 
         activateAdvancedCastPerks(player, data, branch, quickCast, branchChain, event.getManaCost());
+
+        // Sync immédiat post-consommation : Iron's envoie son SyncManaPacket interne, mais
+        // parfois le client reçoit un état antérieur. Notre sync forcée garantit que le client
+        // a la vraie mana serveur juste après le cast (évite le « not enough mana » au cast suivant).
+        MagicData postCastMd = MagicData.getPlayerMagicData(player);
+        if (postCastMd != null) {
+            IronSpellManaSyncBridge.syncMana(player, postCastMd.getMana(), true);
+        }
 
         int spellLevel = event.getSpellLevel();
         // Récompense différée via tell(TickTask) — PAS server.execute : sur le thread
@@ -185,7 +210,7 @@ public final class IronSpellEventBridge {
 
     @SubscribeEvent
     public static void onModifySpellLevel(ModifySpellLevelEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (!(event.getEntity() instanceof Player player)) return;
         PlayerStatData data = player.getData(ModAttachments.STATS);
         MagicBranch branch = IronSpellsApiAdapter.branchOf(event.getSpell());
         int clamped = clampSpellLevel(data, branch, event.getLevel());

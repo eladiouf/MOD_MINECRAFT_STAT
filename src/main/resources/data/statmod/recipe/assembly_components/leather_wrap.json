@@ -7,13 +7,10 @@
     },
     {
       "item": "minecraft:string"
-    },
-    {
-      "item": "minecraft:string"
     }
   ],
   "result": {
-    "count": 2,
+    "count": 1,
     "id": "statmod:leather_wrap"
   }
 }

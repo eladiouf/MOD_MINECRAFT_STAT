@@ -48,7 +48,18 @@ MATERIALS = [
     ("orichalcum",      "above_b", 10, "statmod:heated_orichalcum_ingot",      (255, 193, 7),    "Orichalcum",    "Orichalque"),
     ("adamantite",      "above_b", 11, "statmod:heated_adamantite_ingot",      (106, 13, 173),   "Adamantite",    "Adamantite"),
     ("hihiirokane",     "above_b", 12, "statmod:heated_hihiirokane_ingot",     (220, 20, 60),    "Hihi'irokane",  "Hihi'irokane"),
+    ("netherite",       "above_b", 8,  "overgeared:heated_netherite_alloy",      (100, 100, 100),  "Netherite",     "Netherite"),
 ]
+
+# Material tier multiplier for ingot cost scaling
+# Higher tiers require more raw material to forge
+MATERIAL_MULTIPLIER = {
+    "gold": 1, "tin": 1, "bronze": 1,
+    "diamond": 2, "pyrium": 2, "arcane": 2, "mithril": 2,
+    "low_magisteel": 2, "magisteel": 2,
+    "pure_magisteel": 3, "high_magisteel": 3, "orichalcum": 3,
+    "adamantite": 4, "hihiirokane": 4, "netherite": 3,
+}
 
 # Patterns par classe : (pattern[], ingot_count, en_label, fr_label)
 WEAPON_CLASS_SPECS = {
@@ -77,21 +88,21 @@ BLUEPRINTS = [
     ("blueprint_universal_pole",  "Universal Pole Blueprint",  "Plan de Hampe Universel",
      [{"item": "minecraft:paper"}, {"item": "minecraft:stick"}, {"item": "minecraft:iron_nugget"}]),
     ("blueprint_runic_blade",     "Runic Blade Blueprint",     "Plan de Lame Runique",
-     [{"item": "minecraft:paper"}, {"item": "minecraft:amethyst_shard"}, {"item": "minecraft:gold_nugget"}]),
+     [{"item": "statmod:blueprint_universal_blade"}, {"item": "statmod:rune_essence_arcane"}, {"item": "minecraft:gold_nugget"}]),
     ("blueprint_legendary",       "Legendary Blueprint",       "Plan Légendaire",
-     [{"item": "minecraft:paper"}, {"item": "minecraft:nether_star"}]),
+     [{"item": "statmod:blueprint_runic_blade"}, {"item": "minecraft:nether_star"}]),
 ]
 
 # Grips : (name, en_label, fr_label, ingredients_shapeless)
 GRIPS = [
     ("wooden_grip", "Wooden Grip",   "Manche en Bois",
-     [{"item": "minecraft:stick"}, {"item": "minecraft:stick"}]),
+     [{"item": "statmod:leather_wrap"}, {"item": "minecraft:stick"}, {"item": "minecraft:stick"}]),
     ("leather_wrap", "Leather Wrap", "Manche en Cuir",
      [{"item": "minecraft:leather"}, {"item": "minecraft:string"}]),
     ("wire_wrap", "Wire Wrap",       "Manche Filetée",
-     [{"item": "minecraft:iron_nugget"}, {"item": "minecraft:string"}]),
+     [{"item": "statmod:leather_wrap"}, {"item": "minecraft:iron_nugget"}]),
     ("runic_grip", "Runic Grip",     "Manche Runique",
-     [{"item": "minecraft:leather"}, {"item": "minecraft:amethyst_shard"}]),
+     [{"item": "statmod:wooden_grip"}, {"item": "statmod:wire_wrap"}, {"item": "minecraft:amethyst_shard"}]),
 ]
 
 
@@ -153,6 +164,22 @@ def write_shapeless_recipe(name: str, ingredients: list[dict]) -> None:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def scale_pattern(pattern: list[str], multiplier: int) -> list[str]:
+    """Scale a forging pattern by duplicating each # horizontally by multiplier."""
+    if multiplier <= 1:
+        return pattern
+    result: list[str] = []
+    for row in pattern:
+        new_row = ""
+        for ch in row:
+            if ch == '#':
+                new_row += '#' * multiplier
+            else:
+                new_row += ch
+        result.append(new_row)
+    return result
+
+
 def merge_lang(lang_file: Path, entries: dict[str, str]) -> None:
     if lang_file.exists():
         existing = json.loads(lang_file.read_text(encoding="utf-8"))
@@ -177,10 +204,13 @@ def main() -> None:
         brightness = CLASS_BRIGHTNESS[cls]
         for (mat, anvil_tier, hammering, source_heated, color, mat_en, mat_fr) in MATERIALS:
             name = f"rough_{cls}_{mat}"
+            mult = MATERIAL_MULTIPLIER.get(mat, 1)
+            scaled_pattern = scale_pattern(pattern, mult)
+            scaled_count = ingot_count * mult
             write_texture(name, color, brightness, base)
             write_model(name)
             write_forging_recipe(name, source_heated, anvil_tier, hammering,
-                                  pattern, ingot_count, cls)
+                                  scaled_pattern, scaled_count, cls)
             en_entries[f"item.statmod.{name}"] = f"Rough {mat_en} {cls_en}"
             fr_entries[f"item.statmod.{name}"] = f"{cls_fr} Brut(e) en {mat_fr}"
             rough_count += 1

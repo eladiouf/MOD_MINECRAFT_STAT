@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_dagger_blade_diamond"
+      "item": "statmod:rough_dagger_blade_netherite"
     },
     {
       "item": "statmod:rapier_guard"

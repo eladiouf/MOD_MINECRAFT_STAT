@@ -50,7 +50,7 @@ public final class OvergearedRecipeGate {
         m.put(ResourceLocation.parse("tensura:magisteel_ingot"),              new MaterialGate(30, 12, 8));
         m.put(ResourceLocation.parse("tensura:pure_magisteel_ingot"),         new MaterialGate(40, 15, 10));
         m.put(ResourceLocation.parse("tensura:high_magisteel_ingot"),         new MaterialGate(50, 20, 12));
-        m.put(ResourceLocation.parse("tensura:orichalcum_ingot"),             new MaterialGate(55, 22, 15));
+        m.put(ResourceLocation.parse("tensura:orichalcum_ingot"),             new MaterialGate(12, 3, 0));
         m.put(ResourceLocation.parse("tensura:adamantite_ingot"),             new MaterialGate(60, 25, 18));
         m.put(ResourceLocation.parse("tensura:hihiirokane_ingot"),            new MaterialGate(70, 30, 22));
         return Map.copyOf(m);
@@ -102,7 +102,7 @@ public final class OvergearedRecipeGate {
             Map.entry("netherite",       new MaterialGate(35, 0, 0)),
             Map.entry("pure_magisteel",  new MaterialGate(40, 15, 10)),
             Map.entry("high_magisteel",  new MaterialGate(50, 20, 12)),
-            Map.entry("orichalcum",      new MaterialGate(55, 22, 15)),
+            Map.entry("orichalcum",      new MaterialGate(12, 3, 0)),
             Map.entry("adamantite",      new MaterialGate(60, 25, 18)),
             Map.entry("hihiirokane",     new MaterialGate(70, 30, 22))
     );

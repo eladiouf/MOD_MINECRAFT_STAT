@@ -36,21 +36,27 @@ class SDMShopPricingBalanceTest {
         Map.entry("Composants de monstres", new int[] {12000, 30000})
     );
 
+    private static final Map<String, int[]> TIER_ONE_BANDS = Map.of(
+        "Minerais bruts", new int[] {100, 800},
+        "Potions et soins", new int[] {100, 2000},
+        "Lingots et gemmes", new int[] {800, 3000},
+        "Armures magiques", new int[] {12000, 30000},
+        "Armes uniques et légendaires", new int[] {12000, 30000},
+        "Objets rares contrôlés", new int[] {12000, 30000}
+    );
+
     @Test
     void earlyCategoriesStayCheapAndHighTierTabsStayExpensive() {
-        assertPriceBand("Minerais bruts", 100, 800);
-        assertPriceBand("Lingots et gemmes", 300, 2500);
-        assertPriceBand("Potions et soins", 200, 3000);
-        assertPriceBand("Armures magiques", 4000, 14000);
-        assertPriceBand("Armes uniques et légendaires", 8000, 30000);
-        assertPriceBand("Objets rares contrôlés", 10000, 30000);
+        for (Map.Entry<String, int[]> band : TIER_ONE_BANDS.entrySet()) {
+            assertPriceBand(band.getKey(), band.getValue()[0], band.getValue()[1]);
+        }
     }
 
     @Test
     void keyProgressionAnchorsIncreaseMonotonically() {
         assertPriceLessThan("minecraft:raw_iron", "minecraft:diamond");
         assertPriceLessThan("minecraft:diamond", "minecraft:netherite_ingot");
-        assertPriceLessThan("epicfight:diamond_dagger", "simplyswords:netherite_katana");
+        assertPriceLessThan("minecraft:diamond_chestplate", "simplyswords:diamond_katana");
         assertPriceLessThan("simplyswords:diamond_katana", "simplyswords:runic_katana");
         assertPriceLessThan("minecraft:diamond_chestplate", "minecraft:netherite_chestplate");
     }

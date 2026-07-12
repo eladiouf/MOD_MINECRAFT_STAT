@@ -87,7 +87,31 @@ public final class WeaponMaterialDetector {
                 Map.entry("paladin",         "mithril"),
                 Map.entry("infernal",        "pyrium"),
                 Map.entry("knight",          "steel"),
-                Map.entry("samurai",         "steel")
+                Map.entry("samurai",         "steel"),
+                // Iceandfire
+                Map.entry("dragonsteel",     "high_magisteel"),
+                Map.entry("dread",           "pure_magisteel"),
+                Map.entry("ghost",           "orichalcum"),
+                Map.entry("tide",            "arcane"),
+                Map.entry("hippogryph",      "steel"),
+                // SimplySwords uniques
+                Map.entry("stormbringer",    "hihiirokane"),
+                Map.entry("hearthflame",     "pure_magisteel"),
+                Map.entry("soulpyre",        "high_magisteel"),
+                Map.entry("mirrorguard",     "adamantite"),
+                Map.entry("wildvine",        "low_magisteel"),
+                Map.entry("bloomsoul",       "mithril"),
+                Map.entry("twisted",         "orichalcum"),
+                Map.entry("soulrender",      "high_magisteel"),
+                Map.entry("soulstealer",     "high_magisteel"),
+                // Tensura uniques
+                Map.entry("spatial",         "hihiirokane"),
+                Map.entry("dead_end",        "hihiirokane"),
+                Map.entry("vorpal",          "adamantite"),
+                Map.entry("ice_blade",       "high_magisteel"),
+                Map.entry("mad_sword",       "high_magisteel"),
+                // Overgeared natif (hébergé par le mod Overgeared)
+                Map.entry("heated",          "steel")
         );
     }
 

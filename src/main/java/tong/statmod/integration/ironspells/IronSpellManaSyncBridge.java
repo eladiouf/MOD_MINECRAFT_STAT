@@ -6,6 +6,7 @@ import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
+import tong.statmod.network.ManaSyncPayload;
 import tong.statmod.storage.ModAttachments;
 
 public final class IronSpellManaSyncBridge {
@@ -55,6 +56,7 @@ public final class IronSpellManaSyncBridge {
         if (!shouldBroadcast) return;
 
         PacketDistributor.sendToPlayer(player, new SyncManaPacket(magicData));
+        PacketDistributor.sendToPlayer(player, new ManaSyncPayload(targetMana, (float) maxMana));
     }
 
     static boolean shouldBroadcastClientSync(float liveMana, float targetMana, boolean forceClientSync) {

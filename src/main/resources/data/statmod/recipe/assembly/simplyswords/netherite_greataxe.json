@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_axe_head_diamond"
+      "item": "statmod:rough_axe_head_netherite"
     },
     {
       "item": "statmod:warhammer_core"
@@ -30,7 +30,7 @@
       "item": "minecraft:flint"
     },
     {
-      "item": "statmod:rough_axe_head_diamond"
+      "item": "statmod:rough_axe_head_netherite"
     }
   ],
   "result": {

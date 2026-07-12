@@ -1,24 +1,24 @@
 {
-    "type":  "overgeared:forging",
-    "blueprint":  [
-                      "multitool"
-                  ],
-    "category":  "TOOL_HEADS",
-    "hammering":  6,
-    "key":  {
-                "#":  {
-                          "item":  "statmod:heated_pyrium_ingot"
-                      }
-            },
-    "pattern":  [
-                    "#",
-                    "#",
-                    "#"
-                ],
-    "result":  {
-                   "count":  1,
-                   "id":  "statmod:rough_staff_core_pyrium"
-               },
-    "show_notification":  false,
-    "tier":  "above_a"
+  "type": "overgeared:forging",
+  "blueprint": [
+    "multitool"
+  ],
+  "category": "TOOL_HEADS",
+  "hammering": 6,
+  "key": {
+    "#": {
+      "item": "statmod:heated_pyrium_ingot"
+    }
+  },
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "result": {
+    "count": 1,
+    "id": "statmod:rough_staff_core_pyrium"
+  },
+  "show_notification": false,
+  "tier": "above_a"
 }

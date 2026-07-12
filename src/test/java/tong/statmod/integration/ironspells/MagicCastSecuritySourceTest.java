@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MagicCastSecuritySourceTest {
     @Test
-    void mixinConfigurationDoesNotRegisterManaBypass() throws IOException {
+    void mixinConfigurationRegistersManaBypass() throws IOException {
         String config = Files.readString(Path.of("src/main/resources/statmod.mixins.json"));
-        assertFalse(config.contains("IronSpellManaOverrideMixin"));
+        assertTrue(config.contains("IronSpellManaOverrideMixin"));
     }
 
     @Test

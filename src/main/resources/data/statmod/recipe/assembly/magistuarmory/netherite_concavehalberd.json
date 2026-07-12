@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "statmod:rough_spear_tip_diamond"
+      "item": "statmod:rough_spear_tip_netherite"
     },
     {
       "item": "statmod:halberd_socket"
@@ -18,7 +18,7 @@
       "item": "minecraft:chain"
     },
     {
-      "item": "statmod:rough_spear_tip_diamond"
+      "item": "statmod:rough_spear_tip_netherite"
     },
     {
       "item": "statmod:halberd_socket"

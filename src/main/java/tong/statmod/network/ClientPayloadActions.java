@@ -59,6 +59,10 @@ final class ClientPayloadActions {
                 payload.raceOrdinal(), payload.startBranchOrdinal()));
     }
 
+    static void handleManaSync(ManaSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ClientManaCache.update(payload.currentMana(), payload.maxMana()));
+    }
+
     static void handleOpenMageCodex(OpenMageCodexPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> Minecraft.getInstance().setScreen(new MageCodexScreen()));
     }

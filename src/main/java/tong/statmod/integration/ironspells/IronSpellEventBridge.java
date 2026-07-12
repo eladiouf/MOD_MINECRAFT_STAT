@@ -10,6 +10,7 @@ import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -36,6 +37,9 @@ import java.util.UUID;
 
 public final class IronSpellEventBridge {
     private IronSpellEventBridge() {}
+
+    /** Preuve d'impact serveur par cast — la progression bancable exige des dégâts réels (Tâche 3). */
+    private static final CastImpactTracker CAST_IMPACT_TRACKER = new CastImpactTracker();
 
     @SubscribeEvent
     public static void onPreCast(SpellPreCastEvent event) {
@@ -67,6 +71,8 @@ public final class IronSpellEventBridge {
                             + "§7/§f" + manaCost), true);
             return;
         }
+        // Cast accepté (sort appris + mana suffisant) : ouvrir la fenêtre de preuve d'impact
+        CAST_IMPACT_TRACKER.begin(player.getUUID(), spellId, player.serverLevel().getGameTime());
     }
 
     @SubscribeEvent
@@ -81,7 +87,6 @@ public final class IronSpellEventBridge {
 
         double maxMana = player.getAttributeValue(AttributeRegistry.MAX_MANA);
         double manaFrac = maxMana > 0 ? event.getManaCost() / maxMana : 0.0;
-        boolean hadImpact = manaFrac >= 0.25;
         boolean wasFreeCast = manaFrac <= 0;
         UUID uuid = player.getUUID();
         long now = System.currentTimeMillis();
@@ -90,14 +95,28 @@ public final class IronSpellEventBridge {
 
         activateAdvancedCastPerks(player, data, branch, quickCast, branchChain, event.getManaCost());
 
-        CastContext ctx = new CastContext(canonicalId, branch, manaFrac, hadImpact, wasFreeCast, event.getSpellLevel());
-        CastRewardPolicy.Reward reward = CastRewardPolicy.evaluate(ctx);
-        if (reward.masteryDelta() > 0) SchoolProgressTracker.applyMastery(data, branch, reward.masteryDelta());
-        if (reward.magicPointsDelta() > 0) data.addMagicPoints(reward.magicPointsDelta());
-        boolean magicChanged = reward.masteryDelta() > 0 || reward.magicPointsDelta() > 0;
-        if (magicChanged) SyncHelper.syncMagic(player);
-        STATMod.LOGGER.debug("Cast progression: {} branch={} mastery+={} magicPoints+={}",
-                canonicalId, branch, reward.masteryDelta(), reward.magicPointsDelta());
+        int spellLevel = event.getSpellLevel();
+        // Récompense différée via tell(TickTask) — PAS server.execute : sur le thread
+        // serveur, execute() tourne inline, or Iron's tire SpellOnCastEvent AVANT
+        // spell.onCast (vérifié bytecode 3.16.1) → les dégâts d'un sort instantané
+        // arrivent APRÈS ce handler dans la même pile. tell() met toujours en file,
+        // drainée après la pile courante : les SpellDamageEvent du cast sont observés
+        // avant de décider si ce cast a réellement porté (Tâche 3).
+        player.server.tell(new TickTask(player.server.getTickCount(), () -> {
+            if (player.isRemoved() || player.hasDisconnected()) return;
+            boolean hadImpact = CAST_IMPACT_TRACKER.consume(uuid, canonicalId,
+                    player.serverLevel().getGameTime());
+            CastContext ctx = new CastContext(canonicalId, branch, manaFrac, hadImpact, wasFreeCast, spellLevel);
+            CastRewardPolicy.Reward reward = CastRewardPolicy.evaluate(ctx);
+            if (reward.practiceMasteryDelta() > 0) SchoolProgressTracker.applyPracticeMastery(data, branch, reward.practiceMasteryDelta());
+            if (reward.progressionMasteryDelta() > 0) SchoolProgressTracker.applyMastery(data, branch, reward.progressionMasteryDelta());
+            if (reward.magicPointsDelta() > 0) data.addMagicPoints(reward.magicPointsDelta());
+            boolean magicChanged = reward.practiceMasteryDelta() > 0 || reward.progressionMasteryDelta() > 0 || reward.magicPointsDelta() > 0;
+            if (magicChanged) SyncHelper.syncMagic(player);
+            STATMod.LOGGER.debug("Cast progression: {} branch={} impact={} practice+={} mastery+={} magicPoints+={}",
+                    canonicalId, branch, hadImpact, reward.practiceMasteryDelta(), reward.progressionMasteryDelta(),
+                    reward.magicPointsDelta());
+        }));
     }
 
     @SubscribeEvent
@@ -156,6 +175,12 @@ public final class IronSpellEventBridge {
             event.setAmount((float) (event.getAmount() * advancedMultiplier));
             applyAdvancedElementalHitEffects(branch, data, target, branchChain);
         }
+
+        // Preuve d'impact (Tâche 3) : seuls des dégâts de sort strictement positifs
+        // attestent que le cast a réellement porté.
+        if (spell != null && event.getAmount() > 0.0f) {
+            CAST_IMPACT_TRACKER.markImpact(uuid, IronSpellsApiAdapter.spellId(spell));
+        }
     }
 
     @SubscribeEvent
@@ -179,16 +204,19 @@ public final class IronSpellEventBridge {
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         IronSpellPerkState.clear(event.getEntity().getUUID());
+        CAST_IMPACT_TRACKER.clear(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         IronSpellPerkState.clear(event.getEntity().getUUID());
+        CAST_IMPACT_TRACKER.clear(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         IronSpellPerkState.clear(event.getEntity().getUUID());
+        CAST_IMPACT_TRACKER.clear(event.getEntity().getUUID());
     }
 
     public static boolean shouldCancelPreCast(PlayerStatData data, String spellId) {

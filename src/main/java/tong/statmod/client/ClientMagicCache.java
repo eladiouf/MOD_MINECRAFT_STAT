@@ -15,18 +15,25 @@ public final class ClientMagicCache {
     private static final Set<String> learnedSpells = new HashSet<>();
     private static int magicPoints;
     private static int[] masteryProgress = new int[MagicBranch.values().length];
+    private static int[] practiceMasteryProgress = new int[MagicBranch.values().length];
     private static int raceOrdinal = -1;
     private static int startBranchOrdinal = -1;
 
     private ClientMagicCache() {}
 
     public static void update(String[] nodes, String[] spells, int mp, int[] mastery, int race, int branch) {
+        update(nodes, spells, mp, mastery, new int[0], race, branch);
+    }
+
+    public static void update(String[] nodes, String[] spells, int mp, int[] mastery, int[] practice,
+                              int race, int branch) {
         magicNodes.clear();
         if (nodes != null) for (String n : nodes) if (isUsableId(n)) magicNodes.add(n);
         learnedSpells.clear();
         if (spells != null) for (String s : spells) if (isUsableId(s)) learnedSpells.add(s);
         magicPoints = Math.max(0, mp);
         masteryProgress = sanitizeMastery(mastery);
+        practiceMasteryProgress = sanitizeMastery(practice);
         raceOrdinal = sanitizeOrdinal(race, MagicRace.values().length);
         startBranchOrdinal = sanitizeOrdinal(branch, MagicBranch.values().length);
     }
@@ -36,6 +43,7 @@ public final class ClientMagicCache {
         learnedSpells.clear();
         magicPoints = 0;
         masteryProgress = new int[MagicBranch.values().length];
+        practiceMasteryProgress = new int[MagicBranch.values().length];
         raceOrdinal = -1;
         startBranchOrdinal = -1;
     }
@@ -51,6 +59,10 @@ public final class ClientMagicCache {
         return b == null ? 0 : masteryProgress[b.ordinal()];
     }
     public static int[] getMasteryProgressArray() { return masteryProgress.clone(); }
+    public static int getPracticeMasteryProgress(MagicBranch b) {
+        return b == null ? 0 : practiceMasteryProgress[b.ordinal()];
+    }
+    public static int[] getPracticeMasteryProgressArray() { return practiceMasteryProgress.clone(); }
     public static int getRaceOrdinal() { return raceOrdinal; }
     public static int getStartBranchOrdinal() { return startBranchOrdinal; }
 

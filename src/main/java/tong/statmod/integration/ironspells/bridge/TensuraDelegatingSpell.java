@@ -268,9 +268,9 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     }
 
     /**
-     * Résout (en l'apprenant silencieusement si nécessaire) le {@code SkillStorage} et le
-     * {@code ManasSkillInstance} pour la compétence ciblée puis exécute l'action avec les
-     * deux. Les échecs sont logués en WARN (visibles dans la console normale).
+     * Résout le {@code SkillStorage} et le {@code ManasSkillInstance} pour la compétence
+     * ciblée, puis exécute l'action seulement si la compétence a déjà été accordée. Les
+     * échecs sont logués en WARN (visibles dans la console normale).
      */
     private void withStorage(LivingEntity caster, BiConsumer<SkillStorage, ManasSkillInstance> action) {
         try {
@@ -282,14 +282,11 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
             ResourceLocation canonical = ResourceLocation.parse(
                     TensuraSkillIds.canonicalize(tensuraSkillId));
             Optional<ManasSkillInstance> resolved = storage.getSkill(canonical);
-            if (resolved.isEmpty()) {
-                storage.learnSkill(canonical);
-                resolved = storage.getSkill(canonical);
-            }
             if (resolved.isPresent()) {
                 action.accept(storage, resolved.get());
             } else {
-                LOGGER.warn("TensuraDelegatingSpell {} still empty after learn", tensuraSkillId);
+                LOGGER.warn("TensuraDelegatingSpell {} unavailable for {}: skill was not granted",
+                        tensuraSkillId, caster.getName().getString());
             }
         } catch (Throwable t) {
             LOGGER.warn("TensuraDelegatingSpell {} dispatch failed: {}", tensuraSkillId, t.toString());

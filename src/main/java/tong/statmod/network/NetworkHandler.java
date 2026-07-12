@@ -9,7 +9,7 @@ public class NetworkHandler {
 
     @SubscribeEvent
     public static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("1");
+        PayloadRegistrar registrar = event.registrar("2");
 
         registrar.playToClient(SyncPerksPayload.TYPE, SyncPerksPayload.CODEC,
                 (payload, context) -> ClientPayloadHandler.handleSyncPerks(payload, context));

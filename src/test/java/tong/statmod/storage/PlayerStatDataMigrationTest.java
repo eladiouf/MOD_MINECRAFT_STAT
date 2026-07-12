@@ -121,6 +121,8 @@ class PlayerStatDataMigrationTest {
         assertEquals(0, data.getLearnedSpells().length, "learnedSpells defaults to empty array");
         assertEquals(null, data.getMagicRace(), "magicRace defaults to null when missing");
         assertEquals(null, data.getChosenStartBranch(), "chosenStartBranch defaults to null when missing");
+        assertEquals(0, data.getSchoolPracticeMasteryProgress(MagicBranch.FIRE),
+                "practice mastery defaults to zero when missing from old saves");
     }
 
     @Test
@@ -136,6 +138,8 @@ class PlayerStatDataMigrationTest {
         data.setChosenStartBranch(MagicBranch.EARTH);
         data.setSchoolMasteryProgress(MagicBranch.FIRE, 5);
         data.setSchoolMasteryProgress(MagicBranch.WATER, 3);
+        data.setSchoolPracticeMasteryProgress(MagicBranch.FIRE, 7);
+        data.setSchoolPracticeMasteryProgress(MagicBranch.WATER, 2);
         data.setSoulLevel(10);
         data.setLevel(StatType.BRUTE_FORCE.index, 5);
         data.setPerkPointsForFamily(StatFamily.FRONTLINE_PHYSICAL_COMBAT, 3);
@@ -155,6 +159,10 @@ class PlayerStatDataMigrationTest {
                 restored.getSchoolMasteryProgress(MagicBranch.FIRE), "schoolMastery FIRE round-trip");
         assertEquals(data.getSchoolMasteryProgress(MagicBranch.WATER),
                 restored.getSchoolMasteryProgress(MagicBranch.WATER), "schoolMastery WATER round-trip");
+        assertEquals(data.getSchoolPracticeMasteryProgress(MagicBranch.FIRE),
+                restored.getSchoolPracticeMasteryProgress(MagicBranch.FIRE), "schoolPracticeMastery FIRE round-trip");
+        assertEquals(data.getSchoolPracticeMasteryProgress(MagicBranch.WATER),
+                restored.getSchoolPracticeMasteryProgress(MagicBranch.WATER), "schoolPracticeMastery WATER round-trip");
         assertEquals(data.getSoulLevel(), restored.getSoulLevel(), "soulLevel round-trip");
         assertEquals(data.getLevel(StatType.BRUTE_FORCE.index),
                 restored.getLevel(StatType.BRUTE_FORCE.index), "level round-trip");

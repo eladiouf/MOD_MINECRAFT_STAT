@@ -53,7 +53,8 @@ public final class SyncHelper {
         SyncMagicPayload payload = MagicStateSyncService.payload(data);
         if (!SNAPSHOT_GATE.shouldSendMagic(player.getUUID(),
                 payload.magicNodes(), payload.learnedSpells(), payload.magicPoints(),
-                payload.masteryProgress(), payload.raceOrdinal(), payload.startBranchOrdinal())) {
+                payload.masteryProgress(), payload.practiceMasteryProgress(),
+                payload.raceOrdinal(), payload.startBranchOrdinal())) {
             return;
         }
         PacketDistributor.sendToPlayer(player, payload);

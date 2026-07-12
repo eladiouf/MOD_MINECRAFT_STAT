@@ -34,6 +34,7 @@ public class PlayerStatData {
     @Deprecated
     private final int[] schoolPoints = new int[tong.statmod.magic.MagicBranch.values().length];
     private final int[] schoolMasteryProgress = new int[tong.statmod.magic.MagicBranch.values().length];
+    private final int[] schoolPracticeMasteryProgress = new int[tong.statmod.magic.MagicBranch.values().length];
 
     /**
      * Dernière tranche de niveau global pour laquelle des perk points ont été crédités.
@@ -109,6 +110,8 @@ public class PlayerStatData {
         arcanePoints = source.arcanePoints;
         System.arraycopy(source.schoolPoints, 0, schoolPoints, 0, schoolPoints.length);
         System.arraycopy(source.schoolMasteryProgress, 0, schoolMasteryProgress, 0, schoolMasteryProgress.length);
+        System.arraycopy(source.schoolPracticeMasteryProgress, 0, schoolPracticeMasteryProgress, 0,
+                schoolPracticeMasteryProgress.length);
         lastPerkGrantTier = source.lastPerkGrantTier;
         magicNodes = normalizeStringIds(source.magicNodes);
         learnedSpells = normalizeStringIds(source.learnedSpells);
@@ -325,6 +328,20 @@ public class PlayerStatData {
     }
     public void addSchoolMasteryProgress(tong.statmod.magic.MagicBranch b, int delta) {
         if (b != null) schoolMasteryProgress[b.ordinal()] = saturatingAddNonNegative(schoolMasteryProgress[b.ordinal()], delta);
+    }
+
+    /** Maîtrise de pratique non bancaire, isolée des conversions et paliers. */
+    public int getSchoolPracticeMasteryProgress(tong.statmod.magic.MagicBranch b) {
+        return b == null ? 0 : schoolPracticeMasteryProgress[b.ordinal()];
+    }
+    public void setSchoolPracticeMasteryProgress(tong.statmod.magic.MagicBranch b, int v) {
+        if (b != null) schoolPracticeMasteryProgress[b.ordinal()] = Math.max(0, v);
+    }
+    public void addSchoolPracticeMasteryProgress(tong.statmod.magic.MagicBranch b, int delta) {
+        if (b != null) {
+            schoolPracticeMasteryProgress[b.ordinal()] =
+                    saturatingAddNonNegative(schoolPracticeMasteryProgress[b.ordinal()], delta);
+        }
     }
 
     public String[] getMagicNodes() { return magicNodes.clone(); }

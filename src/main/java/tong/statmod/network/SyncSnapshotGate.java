@@ -55,19 +55,28 @@ final class SyncSnapshotGate {
     }
 
     boolean shouldSendMagic(UUID playerId, String[] magicNodes, String[] learnedSpells, int magicPoints,
-                            int[] masteryProgress, int raceOrdinal, int startBranchOrdinal) {
+                             int[] masteryProgress, int raceOrdinal, int startBranchOrdinal) {
+        return shouldSendMagic(playerId, magicNodes, learnedSpells, magicPoints, masteryProgress, new int[0],
+                raceOrdinal, startBranchOrdinal);
+    }
+
+    boolean shouldSendMagic(UUID playerId, String[] magicNodes, String[] learnedSpells, int magicPoints,
+                             int[] masteryProgress, int[] practiceMasteryProgress,
+                             int raceOrdinal, int startBranchOrdinal) {
         if (playerId == null) {
             return true;
         }
 
         MagicSnapshot previous = magicSnapshots.get(playerId);
         if (previous != null && previous.matches(
-                magicNodes, learnedSpells, magicPoints, masteryProgress, raceOrdinal, startBranchOrdinal)) {
+                magicNodes, learnedSpells, magicPoints, masteryProgress, practiceMasteryProgress,
+                raceOrdinal, startBranchOrdinal)) {
             return false;
         }
 
         magicSnapshots.put(playerId, MagicSnapshot.capture(
-                magicNodes, learnedSpells, magicPoints, masteryProgress, raceOrdinal, startBranchOrdinal));
+                magicNodes, learnedSpells, magicPoints, masteryProgress, practiceMasteryProgress,
+                raceOrdinal, startBranchOrdinal));
         return true;
     }
 
@@ -118,26 +127,31 @@ final class SyncSnapshotGate {
     }
 
     private record MagicSnapshot(String[] magicNodes, String[] learnedSpells, int magicPoints,
-                                 int[] masteryProgress, int raceOrdinal, int startBranchOrdinal) {
+                                  int[] masteryProgress, int[] practiceMasteryProgress,
+                                  int raceOrdinal, int startBranchOrdinal) {
         private static MagicSnapshot capture(String[] magicNodes, String[] learnedSpells, int magicPoints,
-                                             int[] masteryProgress, int raceOrdinal, int startBranchOrdinal) {
+                                              int[] masteryProgress, int[] practiceMasteryProgress,
+                                              int raceOrdinal, int startBranchOrdinal) {
             return new MagicSnapshot(
                     copy(magicNodes),
                     copy(learnedSpells),
                     magicPoints,
                     copy(masteryProgress),
+                    copy(practiceMasteryProgress),
                     raceOrdinal,
                     startBranchOrdinal
             );
         }
 
         private boolean matches(String[] candidateMagicNodes, String[] candidateLearnedSpells, int candidateMagicPoints,
-                                int[] candidateMasteryProgress, int candidateRaceOrdinal,
-                                int candidateStartBranchOrdinal) {
+                                 int[] candidateMasteryProgress, int[] candidatePracticeMasteryProgress,
+                                 int candidateRaceOrdinal,
+                                 int candidateStartBranchOrdinal) {
             return Arrays.equals(magicNodes, candidateMagicNodes)
                     && Arrays.equals(learnedSpells, candidateLearnedSpells)
                     && magicPoints == candidateMagicPoints
                     && Arrays.equals(masteryProgress, candidateMasteryProgress)
+                    && Arrays.equals(practiceMasteryProgress, candidatePracticeMasteryProgress)
                     && raceOrdinal == candidateRaceOrdinal
                     && startBranchOrdinal == candidateStartBranchOrdinal;
         }

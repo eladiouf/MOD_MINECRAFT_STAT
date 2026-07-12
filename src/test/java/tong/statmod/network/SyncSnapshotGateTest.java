@@ -56,4 +56,20 @@ class SyncSnapshotGateTest {
         assertTrue(gate.shouldSendMagic(playerId,
                 new String[]{"node/a"}, new String[]{"spell/a"}, 12, new int[]{1, 2}, 3, 4));
     }
+
+    @Test
+    void magicPracticeMasteryChangesForceASync() {
+        SyncSnapshotGate gate = new SyncSnapshotGate();
+        UUID playerId = UUID.randomUUID();
+
+        assertTrue(gate.shouldSendMagic(playerId,
+                new String[]{"node/a"}, new String[]{"spell/a"}, 12,
+                new int[]{1, 2}, new int[]{0, 3}, 3, 4));
+        assertFalse(gate.shouldSendMagic(playerId,
+                new String[]{"node/a"}, new String[]{"spell/a"}, 12,
+                new int[]{1, 2}, new int[]{0, 3}, 3, 4));
+        assertTrue(gate.shouldSendMagic(playerId,
+                new String[]{"node/a"}, new String[]{"spell/a"}, 12,
+                new int[]{1, 2}, new int[]{0, 4}, 3, 4));
+    }
 }

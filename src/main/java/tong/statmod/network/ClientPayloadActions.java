@@ -55,7 +55,8 @@ final class ClientPayloadActions {
 
     static void handleSyncMagic(SyncMagicPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> ClientMagicCache.update(payload.magicNodes(), payload.learnedSpells(),
-                payload.magicPoints(), payload.masteryProgress(), payload.raceOrdinal(), payload.startBranchOrdinal()));
+                payload.magicPoints(), payload.masteryProgress(), payload.practiceMasteryProgress(),
+                payload.raceOrdinal(), payload.startBranchOrdinal()));
     }
 
     static void handleOpenMageCodex(OpenMageCodexPayload payload, IPayloadContext context) {

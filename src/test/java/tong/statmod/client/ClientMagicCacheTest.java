@@ -8,6 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ClientMagicCacheTest {
     @Test
+    void update_exposes_practice_mastery_separately_from_bankable_mastery() {
+        int[] bankable = new int[MagicBranch.values().length];
+        int[] practice = new int[MagicBranch.values().length];
+        bankable[MagicBranch.FIRE.ordinal()] = 125;
+        practice[MagicBranch.FIRE.ordinal()] = 9;
+
+        ClientMagicCache.update(new String[0], new String[0], 0, bankable, practice, -1, -1);
+
+        assertEquals(125, ClientMagicCache.getMasteryProgress(MagicBranch.FIRE));
+        assertEquals(9, ClientMagicCache.getPracticeMasteryProgress(MagicBranch.FIRE));
+    }
+
+    @Test
     void updateClampsInvalidValuesAndClearsMalformedMasteryPayloads() {
         ClientMagicCache.reset();
         ClientMagicCache.update(

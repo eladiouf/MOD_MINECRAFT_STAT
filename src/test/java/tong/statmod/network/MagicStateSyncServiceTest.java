@@ -1,5 +1,7 @@
 package tong.statmod.network;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.magic.MagicRace;
@@ -20,6 +22,7 @@ class MagicStateSyncServiceTest {
         data.learnSpell("irons_spellbooks:firebolt");
         data.setMagicPoints(4);
         data.setSchoolMasteryProgress(MagicBranch.FIRE, 2);
+        data.setSchoolPracticeMasteryProgress(MagicBranch.FIRE, 9);
         data.setMagicRace(MagicRace.DWARF);
         data.setChosenStartBranch(MagicBranch.FIRE);
 
@@ -29,6 +32,7 @@ class MagicStateSyncServiceTest {
         assertArrayEquals(new String[]{"irons_spellbooks:firebolt"}, payload.learnedSpells());
         assertEquals(4, payload.magicPoints());
         assertEquals(2, payload.masteryProgress()[MagicBranch.FIRE.ordinal()]);
+        assertEquals(9, payload.practiceMasteryProgress()[MagicBranch.FIRE.ordinal()]);
         assertEquals(MagicRace.DWARF.ordinal(), payload.raceOrdinal());
         assertEquals(MagicBranch.FIRE.ordinal(), payload.startBranchOrdinal());
     }
@@ -55,5 +59,30 @@ class MagicStateSyncServiceTest {
 
         assertNull(sent.get());
         assertEquals(0, mirrorRuns.get());
+    }
+
+    @Test
+    void payloadCodecPreservesPracticeMastery() {
+        SyncMagicPayload expected = new SyncMagicPayload(
+                new String[]{"common/foundation/arcane_focus"},
+                new String[]{"irons_spellbooks:firebolt"},
+                4,
+                new int[]{2, 0},
+                new int[]{9, 0},
+                MagicRace.DWARF.ordinal(),
+                MagicBranch.FIRE.ordinal());
+        ByteBuf buffer = Unpooled.buffer();
+
+        try {
+            SyncMagicPayload.CODEC.encode(buffer, expected);
+            SyncMagicPayload restored = SyncMagicPayload.CODEC.decode(buffer);
+
+            assertArrayEquals(expected.masteryProgress(), restored.masteryProgress());
+            assertArrayEquals(expected.practiceMasteryProgress(), restored.practiceMasteryProgress());
+            assertEquals(expected.raceOrdinal(), restored.raceOrdinal());
+            assertEquals(expected.startBranchOrdinal(), restored.startBranchOrdinal());
+        } finally {
+            buffer.release();
+        }
     }
 }

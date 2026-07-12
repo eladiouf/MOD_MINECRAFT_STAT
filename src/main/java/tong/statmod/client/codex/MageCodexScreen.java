@@ -122,13 +122,15 @@ public final class MageCodexScreen extends Screen {
         y += 10;
         for (MagicBranch branch : MagicBranch.values()) {
             if (branch == MagicBranch.COMMON) continue;
-            int mastery = ClientMagicCache.getMasteryProgress(branch);
-            int nextMilestone = nextMilestone(mastery);
+            int progressionMastery = ClientMagicCache.getMasteryProgress(branch);
+            int practiceMastery = ClientMagicCache.getPracticeMasteryProgress(branch);
+            long totalMastery = (long) progressionMastery + practiceMastery;
+            int nextMilestone = nextMilestone(progressionMastery);
             String suffix = nextMilestone > 0
                     ? " §8→ next palier " + nextMilestone
                     : " §8(max paliers)";
             graphics.drawString(this.font,
-                    "§f" + capitalize(branch.id) + " §7Lv§r " + (mastery / 100) + "§7." + (mastery % 100) + suffix,
+                    "§f" + capitalize(branch.id) + " §7Lv§r " + (totalMastery / 100) + "§7." + (totalMastery % 100) + suffix,
                     x + 8, y, GRAY_300, false);
             y += 9;
         }

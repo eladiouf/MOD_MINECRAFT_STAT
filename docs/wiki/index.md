@@ -9,6 +9,24 @@ nav_order: 0
 Bienvenue sur le wiki officiel de **STAT Mod**, un système complet de statistiques,
 progression, magie et donjon pour Minecraft NeoForge 1.21.1.
 
+**S'intègre avec :**
+
+<div class="logo-strip">
+<a href="https://neoforged.net/" title="NeoForge"><img src="assets/mods/neoforge.png" alt="NeoForge"></a>
+<a href="dependencies/" title="Iron's Spellbooks"><img src="assets/mods/irons_spellbooks.png" alt="Iron's Spellbooks"></a>
+<a href="dependencies/" title="Tensura Reincarnated"><img src="assets/mods/tensura.png" alt="Tensura"></a>
+<a href="dependencies/" title="Pufferfish's Skills"><img src="assets/mods/puffish_skills.png" alt="Puffish Skills"></a>
+<a href="dependencies/" title="Epic Fight"><img src="assets/mods/epicfight.png" alt="Epic Fight"></a>
+<a href="dependencies/" title="Overgeared"><img src="assets/mods/overgeared.png" alt="Overgeared"></a>
+<a href="dependencies/" title="ParCool"><img src="assets/mods/parcool.png" alt="ParCool"></a>
+<a href="dependencies/" title="Waystones"><img src="assets/mods/waystones.png" alt="Waystones"></a>
+<a href="dependencies/" title="Lootr"><img src="assets/mods/lootr.png" alt="Lootr"></a>
+<a href="dependencies/" title="L2 Hostility"><img src="assets/mods/l2hostility.png" alt="L2 Hostility"></a>
+<a href="dependencies/" title="PlayerRevive"><img src="assets/mods/playerrevive.png" alt="PlayerRevive"></a>
+<a href="dependencies/" title="FTB Teams"><img src="assets/mods/ftbteams.png" alt="FTB Teams"></a>
+<a href="dependencies/" title="SDM Shop"><img src="assets/mods/sdmshop.png" alt="SDM Shop"></a>
+</div>
+
 ## Fonctionnalités
 
 - **23 Stats** — 14 stats actives + 8 stats magiques + Forging

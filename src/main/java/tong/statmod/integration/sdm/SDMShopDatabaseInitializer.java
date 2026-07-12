@@ -3,12 +3,16 @@ package tong.statmod.integration.sdm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -18,8 +22,6 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -113,7 +115,8 @@ public final class SDMShopDatabaseInitializer {
         try {
             boolean needsRegen = !Files.exists(tabFile) || !Files.exists(listFile)
                 || Files.size(tabFile) < 20 || Files.size(listFile) < 20
-                || !hasCorrectCurrency(listFile);
+                || !hasCorrectCurrency(listFile)
+                || !hasCurrentCatalogVersion(tabFile, listFile);
 
             if (needsRegen) {
                 tong.statmod.STATMod.LOGGER.info("[Shop] Régénération des fichiers SDM Shop (currency={})", CURRENCY_NAME);
@@ -135,76 +138,48 @@ public final class SDMShopDatabaseInitializer {
         return CURRENCY_NAME.equals(first.getString("currency"));
     }
 
+    private static boolean hasCurrentCatalogVersion(Path tabFile, Path listFile) throws IOException {
+        CompoundTag tabs = NbtIo.read(tabFile);
+        CompoundTag items = NbtIo.read(listFile);
+        return tabs != null && items != null
+            && SDMShopCatalog.isCurrentVersion(tabs.getInt("statmodCatalogVersion"))
+            && SDMShopCatalog.isCurrentVersion(items.getInt("statmodCatalogVersion"));
+    }
+
     private static void initializeShopData(Path tabFile, Path listFile, MinecraftServer server) {
         var registryAccess = server.registryAccess();
-        
-        // 1. Définition des onglets
-        List<ShopTabRecord> tabs = new ArrayList<>();
-        tabs.add(new ShopTabRecord("Armes", Items.IRON_SWORD));
-        tabs.add(new ShopTabRecord("Armures", Items.IRON_CHESTPLATE));
-        tabs.add(new ShopTabRecord("Potions", Items.POTION));
-        tabs.add(new ShopTabRecord("Artisanat", Items.CRAFTING_TABLE));
 
-        // 2. Sérialisation des onglets
         CompoundTag tabRoot = new CompoundTag();
         ListTag tabListTag = new ListTag();
-        for (ShopTabRecord tab : tabs) {
+        for (SDMShopCatalog.ShopTab tab : SDMShopCatalog.tabs()) {
+            Item icon = resolveItem(tab.iconId());
+            if (icon == null) {
+                tong.statmod.STATMod.LOGGER.warn("[Shop] Icône absente {}, onglet {} ignoré", tab.iconId(), tab.name());
+                continue;
+            }
             CompoundTag tabTag = new CompoundTag();
-            tabTag.putString("name", tab.name);
-            
-            // Sérialisation de l'icône de l'onglet via la méthode native 1.21.1
-            ItemStack iconStack = new ItemStack(tab.iconItem);
-            tabTag.put("item", iconStack.save(registryAccess));
-            
+            tabTag.putString("name", tab.name());
+            tabTag.put("item", new ItemStack(icon).save(registryAccess));
             tabListTag.add(tabTag);
         }
+        tabRoot.putInt("statmodCatalogVersion", SDMShopCatalog.VERSION);
         tabRoot.put("tabName", tabListTag);
 
-        // 3. Définition et sérialisation des articles
         CompoundTag listRoot = new CompoundTag();
         ListTag tovarListTag = new ListTag();
+        for (SDMShopCatalog.ShopItem entry : SDMShopCatalog.items()) {
+            Item item = resolveItem(entry.itemId());
+            if (item == null) {
+                tong.statmod.STATMod.LOGGER.warn("[Shop] Objet absent {}, entrée ignorée", entry.itemId());
+                continue;
+            }
+            ItemStack stack = createStack(item, entry);
+            addShopItem(server, tovarListTag, entry.tab(), stack, entry.price());
+        }
 
-        // ── ONGLET ARMES ──
-        addShopItem(server, tovarListTag, "Armes", Items.WOODEN_SWORD, 5);
-        addShopItem(server, tovarListTag, "Armes", Items.STONE_SWORD, 10);
-        addShopItem(server, tovarListTag, "Armes", Items.IRON_SWORD, 25);
-        addShopItem(server, tovarListTag, "Armes", Items.DIAMOND_SWORD, 100);
-        addShopItem(server, tovarListTag, "Armes", Items.IRON_AXE, 20);
-        addShopItem(server, tovarListTag, "Armes", Items.DIAMOND_AXE, 90);
-        addShopItem(server, tovarListTag, "Armes", Items.BOW, 15);
-        addShopItem(server, tovarListTag, "Armes", Items.CROSSBOW, 20);
-        addShopItem(server, tovarListTag, "Armes", Items.ARROW, 1, 64); // Pile de 64 flèches pour 1 ◎
-
-        // ── ONGLET ARMURES ──
-        addShopItem(server, tovarListTag, "Armures", Items.LEATHER_CHESTPLATE, 10);
-        addShopItem(server, tovarListTag, "Armures", Items.LEATHER_LEGGINGS, 8);
-        addShopItem(server, tovarListTag, "Armures", Items.IRON_HELMET, 20);
-        addShopItem(server, tovarListTag, "Armures", Items.IRON_CHESTPLATE, 40);
-        addShopItem(server, tovarListTag, "Armures", Items.IRON_LEGGINGS, 30);
-        addShopItem(server, tovarListTag, "Armures", Items.IRON_BOOTS, 15);
-        addShopItem(server, tovarListTag, "Armures", Items.SHIELD, 15);
-        addShopItem(server, tovarListTag, "Armures", Items.DIAMOND_CHESTPLATE, 150);
-
-        // ── ONGLET POTIONS ──
-        addShopItem(server, tovarListTag, "Potions", Items.GOLDEN_APPLE, 50);
-        addShopItem(server, tovarListTag, "Potions", Items.GOLDEN_CARROT, 8);
-        addShopItem(server, tovarListTag, "Potions", Items.COOKED_BEEF, 2);
-        addShopItem(server, tovarListTag, "Potions", Items.ENDER_PEARL, 15);
-        addShopItem(server, tovarListTag, "Potions", Items.EXPERIENCE_BOTTLE, 5);
-
-        // ── ONGLET ARTISANAT ──
-        addShopItem(server, tovarListTag, "Artisanat", Items.COAL, 1);
-        addShopItem(server, tovarListTag, "Artisanat", Items.IRON_INGOT, 5);
-        addShopItem(server, tovarListTag, "Artisanat", Items.GOLD_INGOT, 10);
-        addShopItem(server, tovarListTag, "Artisanat", Items.DIAMOND, 50);
-        addShopItem(server, tovarListTag, "Artisanat", Items.EMERALD, 15);
-        addShopItem(server, tovarListTag, "Artisanat", Items.OBSIDIAN, 20);
-        addShopItem(server, tovarListTag, "Artisanat", Items.ANVIL, 35);
-        addShopItem(server, tovarListTag, "Artisanat", Items.LAPIS_LAZULI, 3);
-
+        listRoot.putInt("statmodCatalogVersion", SDMShopCatalog.VERSION);
         listRoot.put("tovarList", tovarListTag);
 
-        // 4. Écriture des fichiers NBT non compressés sur le disque
         try {
             NbtIo.write(tabRoot, tabFile);
             NbtIo.write(listRoot, listFile);
@@ -214,11 +189,23 @@ public final class SDMShopDatabaseInitializer {
         }
     }
 
-    private static void addShopItem(MinecraftServer server, ListTag list, String tabName, Item item, int price) {
-        addShopItem(server, list, tabName, item, price, 1);
+    private static Item resolveItem(String itemId) {
+        ResourceLocation id = ResourceLocation.tryParse(itemId);
+        if (id == null) return null;
+        return BuiltInRegistries.ITEM.getOptional(id).orElse(null);
     }
 
-    private static void addShopItem(MinecraftServer server, ListTag list, String tabName, Item item, int price, int count) {
+    private static ItemStack createStack(Item item, SDMShopCatalog.ShopItem entry) {
+        if ("strong_healing".equals(entry.potionId())) {
+            return PotionContents.createItemStack(item, Potions.STRONG_HEALING);
+        }
+        if ("strong_strength".equals(entry.potionId())) {
+            return PotionContents.createItemStack(item, Potions.STRONG_STRENGTH);
+        }
+        return new ItemStack(item, entry.count());
+    }
+
+    private static void addShopItem(MinecraftServer server, ListTag list, String tabName, ItemStack stack, int price) {
         CompoundTag itemTag = new CompoundTag();
         
         // Champs communs AbstractTovar
@@ -234,14 +221,10 @@ public final class SDMShopDatabaseInitializer {
         // Champs spécifiques TovarItem
         itemTag.putBoolean("byTag", false);
         
-        // Sérialisation de l'icône de l'onglet via la méthode native 1.21.1
-        ItemStack stack = new ItemStack(item, count);
         itemTag.put("item", stack.save(server.registryAccess()));
 
         list.add(itemTag);
     }
-
-    private record ShopTabRecord(String name, Item iconItem) {}
 
     // ──────────────────────────────────────────────
     // Debug : log l'état des données SDM Shop

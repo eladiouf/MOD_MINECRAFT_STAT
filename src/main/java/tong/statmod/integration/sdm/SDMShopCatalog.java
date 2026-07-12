@@ -4,7 +4,7 @@ import java.util.List;
 
 /** Données déclaratives du shop, séparées de la sérialisation NBT de SDM Shop. */
 public final class SDMShopCatalog {
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     private static final List<String> FORBIDDEN_ID_PARTS = List.of(
         "spawn_egg", "boss_summoner", "creative", "command_block",
         "structure_block", "debug_stick"

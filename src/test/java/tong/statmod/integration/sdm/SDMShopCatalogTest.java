@@ -95,4 +95,11 @@ class SDMShopCatalogTest {
         assertTrue(!SDMShopCatalog.isCurrentVersion(1));
         assertTrue(SDMShopCatalog.isCurrentVersion(SDMShopCatalog.VERSION));
     }
+
+    @Test
+    void detailedCatalogUsesANewMigrationVersion() {
+        assertTrue(SDMShopCatalog.VERSION >= 3);
+        assertTrue(SDMShopCatalog.isCurrentVersion(SDMShopCatalog.VERSION));
+        assertFalse(SDMShopCatalog.isCurrentVersion(2));
+    }
 }

@@ -38,7 +38,10 @@ class PuffishUnifiedPerkCategoryResourceTest {
                 .getResourceAsStream("data/statmod/puffish_skills/categories/statmod_perks/skills.json")) {
             assertNotNull(stream);
             String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-            assertEquals(PuffishFamilyTreeBuilder.unifiedCategoryFiles().skillsJson(), json);
+            assertEquals(
+                normalizeLineEndings(PuffishFamilyTreeBuilder.unifiedCategoryFiles().skillsJson()),
+                normalizeLineEndings(json)
+            );
         }
     }
 
@@ -54,5 +57,9 @@ class PuffishUnifiedPerkCategoryResourceTest {
         try (InputStream stream = loader.getResourceAsStream(path)) {
             assertNotNull(stream, path);
         }
+    }
+
+    private static String normalizeLineEndings(String value) {
+        return value.replace("\r\n", "\n").replace('\r', '\n');
     }
 }

@@ -5,6 +5,22 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.173'
     id 'com.modrinth.minotaur' version '2.+'
+    id 'net.darkhax.curseforgegradle' version '1.1.26'
+}
+
+// Publication CurseForge : `gradlew publishCurseForge` avec CURSEFORGE_TOKEN defini
+// et curseforge_project_id renseigne dans gradle.properties (visible sur la page
+// "About Project" une fois le projet cree sur authors.curseforge.com).
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv('CURSEFORGE_TOKEN') ?: ''
+    def mainFile = upload(project.findProperty('curseforge_project_id') ?: '0', jar)
+    mainFile.releaseType = 'beta'
+    mainFile.changelog = rootProject.file('CHANGELOG.md').exists() ? rootProject.file('CHANGELOG.md').text : 'See GitHub for changes.'
+    mainFile.addGameVersion('1.21.1')
+    mainFile.addModLoader('NeoForge')
+    mainFile.addJavaVersion('Java 21')
+    // Relations (dependances optionnelles) : a ajouter via le site apres creation,
+    // les slugs CurseForge different de Modrinth et un slug faux bloque l'upload.
 }
 
 // Publication Modrinth : `gradlew modrinth` avec la variable d'env MODRINTH_TOKEN définie.

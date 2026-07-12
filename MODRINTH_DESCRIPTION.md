@@ -1,0 +1,44 @@
+# STAT Mod
+
+**A complete RPG progression authority for NeoForge 1.21.1** — stats, XP, perks, a unified magic tree, and an endless procedural Trial Dungeon.
+
+## ⚔️ Core Features
+
+### 23 Stats & 84 Perks
+- **14 active stats** (Strength, Agility, Vitality, Forging…) each with **6 perk tiers** — 84 perks total
+- **8 magic stats** powering a unified magic economy (`magicPoints` + stat gates)
+- XP from combat, defense, and non-combat activities (mining, crafting, farming…)
+- Full GUI: stat tabs, talent tree panel, cosmetic screens
+
+### 🏰 Trial Dungeon
+An **endless procedural dungeon dimension** with 100 rotating themes across 10 arcs:
+- Serpentine room-chain floors, giant open-sky boss arenas, treasure vaults
+- **Predefined boss roster** (40+ bosses) summoned at altars
+- **Dungeon Rush**: kill combos, jackpots, flawless-floor bonuses, personal records
+- Points economy: kills → points → currency exchange
+- Secret rooms, ultra-secret sanctuaries with unique relic weapons, command-block traps
+- Team-based co-op conquest (FTB Teams) with shared unlocks and assist points
+- **Mage mobs** with real caster AI: kiting, spell telegraphs, squad cohesion, cast interruption counterplay
+
+### 🔮 Deep Mod Integrations (all optional)
+| Mod | Integration |
+|---|---|
+| Iron's Spellbooks | Unified magic tree (249 nodes, 9 schools), mana bridge, dungeon mage mobs |
+| Tensura Reincarnated | Race stat modifiers, soul-level sync, skill perk gates |
+| Pufferfish's Skills | Mirror UI for the perk tree |
+| Epic Fight | Skill gating & scaling (experimental) |
+| Overgeared | Forging stat gates, universal forge recipes |
+| Waystones / Lootr / L2 Hostility / PlayerRevive / FTB Teams | Dungeon checkpoints, per-player loot, difficulty scaling, bleed-out revive, team conquest |
+
+**The mod works fully standalone** — integrations light up automatically when the companion mods are present.
+
+## 📋 Requirements
+- Minecraft **1.21.1**
+- NeoForge **21.1+**
+- Java 21
+
+## 🌍 Languages
+English & Français
+
+---
+*Report issues on the [GitHub repository](https://github.com/eladiouf/MOD_MINECRAFT_STAT).*

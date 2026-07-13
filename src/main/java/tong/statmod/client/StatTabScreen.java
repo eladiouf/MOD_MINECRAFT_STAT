@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import tong.statmod.config.Config;
 import tong.statmod.integration.puffish.PuffishSkillsCompat;
 import tong.statmod.integration.PlayerDataBridge;
 import tong.statmod.integration.RaceEffectApplier;
@@ -328,19 +329,36 @@ public class StatTabScreen extends Screen {
         };
     }
 
+    private static float weaponDamageMultiplier(StatType stat,
+                                                int bruteForce,
+                                                int bladeTechnique,
+                                                int precision,
+                                                int rapidite,
+                                                int arcanePower) {
+        return StatCombatScaling.weaponDamageMultiplier(
+                stat,
+                bruteForce,
+                bladeTechnique,
+                precision,
+                rapidite,
+                arcanePower,
+                (float) Config.DEFAULT_WEAPON_DAMAGE_BASE,
+                (float) Config.DEFAULT_WEAPON_DAMAGE_SCALE);
+    }
+
     private List<String> getPassiveEffectsDescription(StatType stat, int level) {
         List<String> list = new ArrayList<>();
         switch (stat) {
             case BRUTE_FORCE -> {
-                float mult = StatCombatScaling.weaponDamageMultiplier(stat, level, 0, 0, 0, 0, 1.5f, 3.0f);
+                float mult = weaponDamageMultiplier(stat, level, 0, 0, 0, 0);
                 list.add(String.format("Multiplicateur dégâts haches/masses: x%.2f", mult));
             }
             case BLADE_TECHNIQUE -> {
-                float mult = StatCombatScaling.weaponDamageMultiplier(stat, 0, level, 0, 0, 0, 1.5f, 3.0f);
+                float mult = weaponDamageMultiplier(stat, 0, level, 0, 0, 0);
                 list.add(String.format("Multiplicateur dégâts épées/lames: x%.2f", mult));
             }
             case RAPIDITE -> {
-                float mult = StatCombatScaling.weaponDamageMultiplier(stat, 0, 0, 0, level, 0, 1.5f, 3.0f);
+                float mult = weaponDamageMultiplier(stat, 0, 0, 0, level, 0);
                 list.add(String.format("Multiplicateur dégâts dagues/rapides: x%.2f", mult));
                 list.add(String.format("Chance de double-frappe: %.1f%%", level * 0.2f));
             }
@@ -350,19 +368,19 @@ public class StatTabScreen extends Screen {
                 list.add(String.format("Dégâts bonus en mouvement: +%.1f%%", level * 0.2f));
             }
             case PHYSICAL_RESISTANCE -> {
-                list.add(String.format("Réduction dégâts physiques subis: -%.1f%%", Math.min(50.0f, level * 0.5f)));
+                list.add(String.format("Réduction dégâts physiques subis (cap 65%%): -%.1f%%", Math.min(65.0f, level * 0.65f)));
             }
             case PHYSICAL_ENDURANCE -> {
-                list.add(String.format("Réduction dégâts subis (cap 30%%): -%.1f%%", Math.min(30.0f, level * 0.2f)));
+                list.add(String.format("Réduction dégâts physiques subis (cap 35%%): -%.1f%%", Math.min(35.0f, level * 0.35f)));
                 list.add(String.format("Dégâts de chute subis: -%.1f%%", level * 0.3f));
             }
             case PRECISION -> {
-                float mult = StatCombatScaling.weaponDamageMultiplier(stat, 0, 0, level, 0, 0, 1.5f, 3.0f);
+                float mult = weaponDamageMultiplier(stat, 0, 0, level, 0, 0);
                 list.add(String.format("Multiplicateur dégâts projectiles: x%.2f", mult));
                 list.add("Niveau 50+: +15% de dégâts critiques à vie max.");
             }
             case ARCANE_POWER -> {
-                float mult = StatCombatScaling.weaponDamageMultiplier(stat, 0, 0, 0, 0, level, 1.5f, 3.0f);
+                float mult = weaponDamageMultiplier(stat, 0, 0, 0, 0, level);
                 list.add(String.format("Multiplicateur dégâts sorts/magie: x%.2f", mult));
             }
             case WATER_AFFINITY -> {
@@ -381,7 +399,7 @@ public class StatTabScreen extends Screen {
                 list.add("Donne un effet de Slow Falling lors des grandes chutes (niv. 20+).");
             }
             case MAGIC_RESISTANCE -> {
-                list.add(String.format("Réduction dégâts magiques subis: -%.1f%%", Math.min(50.0f, level * 0.5f)));
+                list.add(String.format("Réduction dégâts magiques subis (cap 65%%): -%.1f%%", Math.min(65.0f, level * 0.65f)));
             }
             case CASTING_SPEED -> {
                 list.add("Donne Haste I/II permanent (niv. 10+) pour miner et attaquer.");
@@ -413,7 +431,7 @@ public class StatTabScreen extends Screen {
                 list.add(String.format("Dégâts accrus contre les cibles marquées: +%.1f%%", level * 0.5f));
             }
             case WILLPOWER -> {
-                list.add(String.format("Réduction durée des effets négatifs (cap 30%%): -%.1f%%", Math.min(30.0f, level * 0.3f)));
+                list.add(String.format("Réduction dégâts et durée des effets négatifs (cap 45%%): -%.1f%%", Math.min(45.0f, level * 0.45f)));
             }
         }
         if (list.isEmpty()) {

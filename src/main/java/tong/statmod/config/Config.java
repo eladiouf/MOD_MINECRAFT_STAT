@@ -6,6 +6,9 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
+    public static final double DEFAULT_WEAPON_DAMAGE_BASE = 1.5d;
+    public static final double DEFAULT_WEAPON_DAMAGE_SCALE = 8.5d;
+
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     private static final ModConfigSpec SPEC;
 
@@ -20,7 +23,6 @@ public class Config {
     public static final ModConfigSpec.IntValue DUNGEON_BOSS_STAT_GAIN;
     public static final ModConfigSpec.DoubleValue DUNGEON_HOSTILITY_PER_FLOOR;
     public static final ModConfigSpec.IntValue DUNGEON_HOSTILITY_CAP;
-    public static final ModConfigSpec.DoubleValue DUNGEON_MELEE_DAMAGE_MULTIPLIER;
     public static final ModConfigSpec.ConfigValue<String> SHOP_CURRENCY_NAME;
     public static final ModConfigSpec.DoubleValue POINT_TO_COIN_RATE;
 
@@ -41,11 +43,11 @@ public class Config {
         WEAPON_DAMAGE_BASE = BUILDER
                 .comment("Multiplicateur de dégâts de MÊLÉE de base du joueur (niveau 0 de stat).",
                         "1.0 = dégâts d'arme bruts. Monte ce chiffre si TOUTES les armes tapent trop faible.")
-                .defineInRange("weaponDamageBase", 1.5, 0.5, 10.0);
+                .defineInRange("weaponDamageBase", DEFAULT_WEAPON_DAMAGE_BASE, 0.5, 10.0);
         WEAPON_DAMAGE_SCALE = BUILDER
                 .comment("Amplitude du bonus de dégâts par la stat de combat, au niveau MAX.",
-                        "À 3.0, une stat de combat maxée ajoute ×3 par-dessus la base (donc ~×4.5 total).")
-                .defineInRange("weaponDamageScale", 3.0, 0.0, 20.0);
+                        "À 8.5, une stat de combat principale maxée atteint ×10 dégâts au total.")
+                .defineInRange("weaponDamageScale", DEFAULT_WEAPON_DAMAGE_SCALE, 0.0, 20.0);
         BUILDER.pop();
 
         BUILDER.push("trial_dungeon");
@@ -67,10 +69,6 @@ public class Config {
         DUNGEON_HOSTILITY_CAP = BUILDER
                 .comment("Intégration L2 Hostility : plafond du niveau appliqué par étage (courbe et mode manuel).")
                 .defineInRange("l2HostilityCap", 100, 0, 500);
-        DUNGEON_MELEE_DAMAGE_MULTIPLIER = BUILDER
-                .comment("Multiplicateur des dégâts de mêlée des joueurs dans le Trial Dungeon.",
-                        "Compense les PV gonflés des mobs du donjon (L2 Hostility + scaling par étage).")
-                .defineInRange("meleeDamageMultiplier", 3.0, 1.0, 20.0);
         SHOP_CURRENCY_NAME = BUILDER
                 .comment("Nom de la monnaie SDM créditée à l'échange de points (doit correspondre à la devise du shop SDM).")
                 .define("shopCurrencyName", "FDP_cfa");
@@ -98,7 +96,7 @@ public class Config {
         try {
             return WEAPON_DAMAGE_BASE.get();
         } catch (IllegalStateException e) {
-            return 1.5;
+            return DEFAULT_WEAPON_DAMAGE_BASE;
         }
     }
 
@@ -106,15 +104,7 @@ public class Config {
         try {
             return WEAPON_DAMAGE_SCALE.get();
         } catch (IllegalStateException e) {
-            return 3.0;
-        }
-    }
-
-    public static double getDungeonMeleeDamageMultiplier() {
-        try {
-            return DUNGEON_MELEE_DAMAGE_MULTIPLIER.get();
-        } catch (IllegalStateException e) {
-            return 3.0;
+            return DEFAULT_WEAPON_DAMAGE_SCALE;
         }
     }
 

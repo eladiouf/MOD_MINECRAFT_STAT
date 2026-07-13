@@ -178,7 +178,7 @@ void levelOneHundredPhysicalDefensesCombineMultiplicatively() {
 void willpowerReducesNegativeEffectDurationWithBoundedPerkBonus() {
     assertEquals(1100, StatCombatScaling.negativeEffectDurationTicks(2000, 100, false));
     assertEquals(900, StatCombatScaling.negativeEffectDurationTicks(2000, 100, true));
-    assertEquals(700, StatCombatScaling.negativeEffectDurationTicks(2000, 500, true));
+    assertEquals(900, StatCombatScaling.negativeEffectDurationTicks(2000, 500, true));
 }
 ```
 

@@ -15,6 +15,12 @@
 ### 🏰 Trial Dungeon
 An **endless procedural dungeon dimension** with 100 rotating themes across 10 arcs:
 
+![STAT Mod Trial Dungeon architecture map rendered from its Java sources](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/dungeon-architecture-map.png)
+
+The 4K architectural overview above is generated from the real Floor 0 coordinates,
+the 20-room floor route, objective cadence, vertical offsets, chapter definitions,
+and floor spacing used by the mod.
+
 ![Trial Dungeon encounter](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/dungeon-encounter.png)
 - Serpentine room-chain floors, giant open-sky boss arenas, treasure vaults
 - **Predefined boss roster** (40+ bosses) summoned at altars

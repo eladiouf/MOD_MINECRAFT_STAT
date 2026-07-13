@@ -44,6 +44,10 @@ progression, magie et donjon pour Minecraft NeoForge 1.21.1.
 
 <div class="screenshot-grid">
   <figure>
+    <img src="assets/screenshots/dungeon-architecture-map.png" alt="Plan architectural 4K du Trial Dungeon généré depuis les sources Java">
+    <figcaption>Architecture complète du Trial Dungeon</figcaption>
+  </figure>
+  <figure>
     <img src="assets/screenshots/skill-tree.png" alt="Arbre de compétences complet de STAT Mod">
     <figcaption>Arbre de compétences et progression</figcaption>
   </figure>

@@ -9,6 +9,13 @@ nav_order: 3
 Dimension dédiée (`statmod:trial_dungeon`) : un donjon **procédural infini** en étages,
 où chaque étage doit être **conquis** pour débloquer le suivant.
 
+![Plan architectural 4K du Trial Dungeon](assets/screenshots/dungeon-architecture-map.png)
+
+Ce plan est généré directement depuis les constantes et règles Java du donjon. Il
+représente la géométrie exacte de la Cité des Aventuriers, le parcours des 20 salles
+d'un étage normal et la cadence réelle des étages 1 à 100. Le profil vertical montré
+est celui de l'étage 37 ; les hauteurs restent déterministes mais varient selon l'étage.
+
 ## Entrer et sortir
 
 - **Portail du donjon** (`dungeon_portal`) : clic droit → téléportation au plus haut étage atteint

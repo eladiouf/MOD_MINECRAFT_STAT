@@ -19,12 +19,18 @@ An **endless procedural dungeon dimension** with 100 rotating themes across 10 a
 - Serpentine room-chain floors, giant open-sky boss arenas, treasure vaults
 - **Predefined boss roster** (40+ bosses) summoned at altars
 - **Dungeon Rush**: kill combos, jackpots, flawless-floor bonuses, personal records
-- Points economy: kills → points → currency exchange
+- **Points economy**: kills and floor conquest award dungeon points, then the Floor 0 exchanger or `/dungeon convert [amount]` converts them into spendable physical `FDP_cfa` currency
 - Secret rooms, ultra-secret sanctuaries with unique relic weapons, command-block traps
 - Team-based co-op conquest (FTB Teams) with shared unlocks and assist points
 - **Mage mobs** with real caster AI: kiting, spell telegraphs, squad cohesion, cast interruption counterplay
 
+![Dungeon point conversion and Magic Banker](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/magic-banker.png)
+
 ### 🔮 Deep Mod Integrations (all optional)
+
+![STAT Mod unified magic tree](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/magic-tree.png)
+
+The unified magic tree contains **249 nodes across 9 schools**, with branch progression, spell unlocks, school points, stat requirements, and optional Tensura race affinities.
 
 ![STAT Mod spell codex](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/spell-codex.png)
 

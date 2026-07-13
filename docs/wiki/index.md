@@ -52,6 +52,10 @@ progression, magie et donjon pour Minecraft NeoForge 1.21.1.
     <figcaption>Statistiques, niveaux et perks</figcaption>
   </figure>
   <figure>
+    <img src="assets/screenshots/magic-tree.png" alt="Arbre magique unifié avec neuf écoles">
+    <figcaption>Arbre magique unifié à 9 écoles</figcaption>
+  </figure>
+  <figure>
     <img src="assets/screenshots/spell-codex.png" alt="Codex de sorts avec filtres par école">
     <figcaption>Codex de sorts et écoles magiques</figcaption>
   </figure>
@@ -74,6 +78,10 @@ progression, magie et donjon pour Minecraft NeoForge 1.21.1.
   <figure>
     <img src="assets/screenshots/weapon-shop.png" alt="Boutique d'armes et d'équipement">
     <figcaption>Boutiques d'armes et d'équipement</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/screenshots/magic-banker.png" alt="Banquier magique pour la monnaie FDP">
+    <figcaption>Conversion et gestion de la monnaie FDP</figcaption>
   </figure>
 </div>
 

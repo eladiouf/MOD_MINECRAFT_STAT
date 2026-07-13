@@ -14,7 +14,12 @@ où chaque étage doit être **conquis** pour débloquer le suivant.
 - **Portail du donjon** (`dungeon_portal`) : clic droit → téléportation au plus haut étage atteint
 - **Balise de poche** (`dungeon_beacon`, craftable) : entre dans le donjon depuis n'importe où ; depuis le donjon → retour overworld
 - **Balise de retour** sur chaque étage → retour overworld
+- **Téléporteur d'étage suivant** : apparaît après la conquête et mène à l'étage débloqué
 - La mort dans le donjon est **annulée** : inventaire et XP préservés, soin complet, retour à l'étage 1
+
+![Téléporteur vers l'étage suivant](assets/screenshots/next-floor-teleporter.png)
+
+![Balise de retour vers l'overworld](assets/screenshots/return-beacon.png)
 
 ## Les étages
 
@@ -78,6 +83,11 @@ Le scaling est compatible avec L2 Hostility et ne modifie pas les dégâts des m
 - **Changeur** : convertit les points en monnaie `FDP_cfa` (`/dungeon convert [montant]`)
 - **Marchands spécialisés** : les villageois du donjon ouvrent la boutique SDM verrouillée sur leur rayon (forgeron → Armes, armurier → Armures, clerc → Potions)
 - **Banquier magique** : dépôt/retrait de la monnaie physique (pièces et billets)
+
+Les points gagnés en tuant les monstres et en conquérant les étages deviennent donc
+une monnaie réellement dépensable après conversion auprès du changeur.
+
+![Banquier magique et transaction en monnaie FDP](assets/screenshots/magic-banker.png)
 
 ## Co-op
 

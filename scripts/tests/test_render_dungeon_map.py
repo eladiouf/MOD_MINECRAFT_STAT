@@ -1,5 +1,8 @@
+import tempfile
 import unittest
 from pathlib import Path
+
+from PIL import Image
 
 from scripts.render_dungeon_map import (
     Box,
@@ -7,6 +10,7 @@ from scripts.render_dungeon_map import (
     city_to_canvas,
     extract_dungeon_model,
     floor_role,
+    render_dungeon_map,
 )
 
 
@@ -62,6 +66,21 @@ class DungeonSourceExtractionTest(unittest.TestCase):
         self.assertEqual((700.0, 800.0), transform.apply(0, -500))
         self.assertEqual((100.0, 200.0), transform.apply(-300, -800))
         self.assertEqual((1300.0, 1400.0), transform.apply(300, -200))
+
+    def test_render_writes_validated_4k_blueprint(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "dungeon-map.png"
+
+            report = render_dungeon_map(ROOT, output, representative_floor=37)
+
+            self.assertEqual(15, report.city_sites)
+            self.assertEqual(20, report.rooms)
+            self.assertEqual(100, report.progression_cells)
+            self.assertTrue(report.route_continuous)
+            self.assertEqual(37, report.representative_floor)
+            self.assertEqual((-6, 3), report.profile_range)
+            with Image.open(output) as image:
+                self.assertEqual((3840, 2160), image.size)
 
 
 if __name__ == "__main__":

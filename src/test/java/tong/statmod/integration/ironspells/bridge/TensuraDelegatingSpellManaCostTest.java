@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class TensuraDelegatingSpellManaCostTest {
     private static final String TEST_SKILL_ID = "tensura:test_magicule_spell";
@@ -75,6 +76,21 @@ class TensuraDelegatingSpellManaCostTest {
         TensuraSpellMetadata.invalidate(unknownSkillId);
 
         assertEquals(-1.0, TensuraSpellMetadata.forSkill(unknownSkillId).baselineMagiculeCost());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void unresolved_metadata_is_not_cached_before_tensura_registry_is_ready() throws Exception {
+        String skillId = "tensura:late_registry_skill_unit_test";
+        TensuraSpellMetadata.invalidate(skillId);
+
+        TensuraSpellMetadata.forSkill(skillId);
+
+        Field cacheField = TensuraSpellMetadata.class.getDeclaredField("CACHE");
+        cacheField.setAccessible(true);
+        ConcurrentMap<String, TensuraSpellMetadata> cache =
+                (ConcurrentMap<String, TensuraSpellMetadata>) cacheField.get(null);
+        assertFalse(cache.containsKey(skillId));
     }
 
     private static TensuraSpellProfile profile(String skillId, String discipline) {

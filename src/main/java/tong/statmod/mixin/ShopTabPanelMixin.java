@@ -25,10 +25,16 @@ public class ShopTabPanelMixin {
         String locked = ClientShopTabForcer.lockedTab;
         if (locked == null || locked.isEmpty()) return;
 
+        // Rayon multi-onglets : "Armes légères,Armes lourdes,..." → un bouton par onglet listé
+        java.util.Set<String> lockedNames = new java.util.HashSet<>();
+        for (String name : locked.split(",")) {
+            lockedNames.add(name.trim().toLowerCase());
+        }
+
         TabPanel self = (TabPanel) (Object) this;
         int index = 0;
         for (Tab tab : TovarTab.CLIENT.tabList) {
-            if (tab.name == null || !locked.trim().equalsIgnoreCase(tab.name.trim())) continue;
+            if (tab.name == null || !lockedNames.contains(tab.name.trim().toLowerCase())) continue;
             TabRender render = new TabRender(self, tab);
             self.add(render);
             self.tabRenderList.add(render);

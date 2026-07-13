@@ -54,7 +54,9 @@ public final class RacePhysicalEffects {
     );
 
     private static final Map<String, List<ModSpec>> RACES = Map.of(
-            "tensura:human",     List.of(),
+            "tensura:human", List.of(
+                    new ModSpec(Attributes.MAX_HEALTH,              80.0,   ADD_VALUE)
+            ),
             "tensura:elf", List.of(
                     new ModSpec(Attributes.SCALE,                  0.10,   ADD_VALUE),
                     new ModSpec(Attributes.MOVEMENT_SPEED,         0.15,   ADD_MULTIPLIED_BASE),
@@ -62,14 +64,14 @@ public final class RacePhysicalEffects {
                     new ModSpec(Attributes.JUMP_STRENGTH,          0.05,   ADD_MULTIPLIED_BASE),
                     new ModSpec(Attributes.BLOCK_INTERACTION_RANGE,0.5,    ADD_VALUE),
                     new ModSpec(Attributes.ENTITY_INTERACTION_RANGE,0.5,   ADD_VALUE),
-                    new ModSpec(Attributes.MAX_HEALTH,             -4.0,   ADD_VALUE),
+                    new ModSpec(Attributes.MAX_HEALTH,             40.0,   ADD_VALUE),
                     new ModSpec(Attributes.FALL_DAMAGE_MULTIPLIER, 0.10,   ADD_MULTIPLIED_BASE)
             ),
             "tensura:dwarf", List.of(
                     new ModSpec(Attributes.SCALE,                  -0.15,  ADD_VALUE),
                     new ModSpec(Attributes.MOVEMENT_SPEED,         -0.15,  ADD_MULTIPLIED_BASE),
                     new ModSpec(Attributes.JUMP_STRENGTH,          -0.10,  ADD_MULTIPLIED_BASE),
-                    new ModSpec(Attributes.MAX_HEALTH,              6.0,   ADD_VALUE),
+                    new ModSpec(Attributes.MAX_HEALTH,              130.0,   ADD_VALUE),
                     new ModSpec(Attributes.ATTACK_DAMAGE,           0.5,   ADD_VALUE),
                     new ModSpec(Attributes.ARMOR,                   2.0,   ADD_VALUE),
                     new ModSpec(Attributes.KNOCKBACK_RESISTANCE,    0.3,   ADD_VALUE),
@@ -80,7 +82,7 @@ public final class RacePhysicalEffects {
                     new ModSpec(Attributes.STEP_HEIGHT,             0.5,   ADD_VALUE),
                     new ModSpec(Attributes.MOVEMENT_SPEED,          0.20,  ADD_MULTIPLIED_BASE),
                     new ModSpec(Attributes.JUMP_STRENGTH,           0.20,  ADD_MULTIPLIED_BASE),
-                    new ModSpec(Attributes.MAX_HEALTH,              2.0,   ADD_VALUE),
+                    new ModSpec(Attributes.MAX_HEALTH,              160.0,   ADD_VALUE),
                     new ModSpec(Attributes.ATTACK_DAMAGE,           0.5,   ADD_VALUE),
                     new ModSpec(Attributes.FALL_DAMAGE_MULTIPLIER, -0.20,  ADD_MULTIPLIED_BASE)
             )

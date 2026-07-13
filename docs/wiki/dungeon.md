@@ -26,15 +26,43 @@ où chaque étage doit être **conquis** pour débloquer le suivant.
 
 - **100 thèmes** répartis en 10 arcs (pierre, os, glace, nether, améthyste…), difficulté croissante, boucle au-delà de 100
 - Étages de combat : forteresse en chaîne de pièces avec pièges, mezzanines, salles secrètes
+- Les rencontres sont activées **salle par salle** ; nettoyer une salle ouvre la progression,
+  et l'étage n'est conquis qu'après tous les secteurs obligatoires
 - Étages de boss : arène géante à ciel ouvert, boss du roster (40+ : SLU, Iron's Spellbooks, vanilla) invoqué à l'autel
 - Chambres-fortes **ultra-secrètes** (~1 étage de combat sur 7) : sanctuaire caché → arme relique unique
 
+## Étage 0 — Cité des Aventuriers
+
+L'étage 0 est un hub permanent sans monstres : quartiers humain, elfe, nain et hommes-bêtes,
+grand marché, guilde, artisans, portails, sanctuaire et intérieurs visitables.
+
+- PvP désactivé dans toute la cité, sauf dans l'arène
+- Arène de duel protégée avec porte, barrière intérieure et tribunes
+- Duels joueur contre joueur et affrontements par équipes
+- Terrains d'entraînement séparés pour guerriers, archers et mages
+- Vrais mannequins d'entraînement issus du modpack et marchand de flèches côté archer
+
 ## Mobs & mages
 
-- Vague unique par étage, mobs de 10+ mods selon le thème
+- Rencontres progressives par salle, mobs de 10+ mods selon le thème
 - **Escouades de mages** dès l'étage 3 (Pyromancien, Cryomancien, Électromancien, Clerc, Mage du Wither dès l'étage 15) escortées d'un chevalier et d'un archer
 - Les mages **incantent** (son + particules) : les frapper pendant l'incantation **interrompt le sort**
 - Priorité tactique : éliminez le Clerc (soigneur) en premier !
+
+### Vie des monstres
+
+| Profondeur | Multiplicateur de vie de base |
+|---|---:|
+| Étage 1 | ×3 |
+| Étage 10 | ×4 |
+| Étage 25 | ×6 |
+| Étage 50 | ×9 |
+| Étage 75 | ×12 |
+| Étage 100 | ×15 |
+| Abysses | jusqu'à ×25 |
+
+Les élites reçoivent ensuite un multiplicateur supplémentaire de ×1,25 et les boss de ×1,5.
+Le scaling est compatible avec L2 Hostility et ne modifie pas les dégâts des monstres.
 
 ## Points & Dungeon Rush
 

@@ -26,9 +26,16 @@ public class SpellSelectionManagerMixin {
     @Shadow
     private List<SpellSelectionManager.SelectionOption> selectionOptionList;
 
-    @Inject(method = "init", at = @At("TAIL"))
+    @Shadow
+    private int addOrMergeSelectionOption(SpellSelectionManager.SelectionOption option) {
+        throw new AssertionError();
+    }
+
+    @Inject(method = "init", at = @At(value = "INVOKE",
+            target = "Lnet/neoforged/bus/api/IEventBus;post(Lnet/neoforged/bus/api/Event;)Lnet/neoforged/bus/api/Event;",
+            shift = At.Shift.BEFORE), require = 1)
     private void statmod$addLearnedSpells(CallbackInfo ci) {
-        if (player == null || player.level() == null || player.level().isClientSide) {
+        if (player == null) {
             return;
         }
         PlayerStatData data = player.getData(ModAttachments.STATS);
@@ -47,7 +54,7 @@ public class SpellSelectionManagerMixin {
             SpellData spellData = new SpellData(spell, 1);
             SpellSelectionManager.SelectionOption option = new SpellSelectionManager.SelectionOption(
                     spellData, "statmod", i, selectionOptionList.size());
-            selectionOptionList.add(option);
+            addOrMergeSelectionOption(option);
         }
     }
 }

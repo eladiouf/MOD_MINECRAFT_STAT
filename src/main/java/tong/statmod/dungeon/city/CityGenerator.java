@@ -5,6 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -13,6 +16,7 @@ import tong.statmod.STATMod;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 import tong.statmod.dungeon.IslandGenerator;
+import tong.statmod.dungeon.DungeonMerchant;
 
 /**
  * Orchestrateur de la Cité des Aventuriers : enfile la construction (coque → place → camp →
@@ -24,7 +28,7 @@ import tong.statmod.dungeon.IslandGenerator;
 public final class CityGenerator {
 
     /** Incrémenter à chaque évolution de la génération pour reconstruire les mondes existants. */
-    public static final int CITY_VERSION = 1;
+    public static final int CITY_VERSION = 11;
     /** ~2 bandes de 4×600 par tick ≈ 15-30k blocs/tick : invisible en jeu, cité en ~1-2 min. */
     private static final int JOBS_PER_TICK = 2;
 
@@ -45,7 +49,13 @@ public final class CityGenerator {
     public static void ensureCity(ServerLevel lv) {
         if (building || isBuilt(lv)) return;
         QUEUE.clear();
-        enqueueLegacyCleanupIfNeeded(lv, QUEUE);
+        int previousVersion = CitySavedData.get(lv).builtVersion();
+        if (previousVersion > 0) {
+            enqueueInteriorClear(lv, QUEUE);
+            enqueueCityEntityClear(lv, QUEUE);
+        } else {
+            enqueueLegacyCleanupIfNeeded(lv, QUEUE);
+        }
         enqueueBuild(lv, QUEUE);
         building = true;
         STATMod.LOGGER.info("[City] Construction de la Cité des Aventuriers programmée ({} segments)",
@@ -57,6 +67,7 @@ public final class CityGenerator {
         QUEUE.clear();
         CitySavedData.get(lv).setBuiltVersion(0);
         enqueueInteriorClear(lv, QUEUE);
+        enqueueCityEntityClear(lv, QUEUE);
         enqueueBuild(lv, QUEUE);
         building = true;
         STATMod.LOGGER.info("[City] Regen de la cité programmée ({} segments)", QUEUE.totalJobs());
@@ -65,9 +76,22 @@ public final class CityGenerator {
     private static void enqueueBuild(ServerLevel lv, CityBuildQueue q) {
         CityShell.enqueue(lv, q);
         q.add(() -> PlazaBuilder.build(lv));
+        q.add(() -> CityDistrictBuilder.buildGuild(lv));
+        q.add(() -> CityDistrictBuilder.buildHumanQuarter(lv));
+        q.add(() -> CityDistrictBuilder.buildElvenQuarter(lv));
+        q.add(() -> CityDistrictBuilder.buildDwarvenQuarter(lv));
+        q.add(() -> CityDistrictBuilder.buildBeastQuarter(lv));
+        q.add(() -> CityDistrictBuilder.buildMarket(lv));
         q.add(() -> ArtisanCampBuilder.build(lv));
+        q.add(() -> CityDistrictBuilder.buildArena(lv));
+        q.add(() -> CityDistrictBuilder.buildTrainingGround(lv));
+        q.add(() -> CityDistrictBuilder.buildSanctuary(lv));
+        q.add(() -> CityDistrictBuilder.buildHangingGardens(lv));
+        q.add(() -> CityDistrictBuilder.buildHallOfHeroes(lv));
         DungeonGateBuilder.build(lv, q);
         q.add(() -> PortalCourtBuilder.build(lv));
+        q.add(() -> CityInteriorBuilder.build(lv));
+        q.add(() -> CityDetailPass.build(lv));
     }
 
     /**
@@ -114,6 +138,23 @@ public final class CityGenerator {
                     }
             });
         }
+    }
+
+    private static void enqueueCityEntityClear(ServerLevel lv, CityBuildQueue q) {
+        q.add(() -> {
+            BlockPos c = CityPlan.center();
+            AABB city = new AABB(
+                    c.getX() - CityPlan.RADIUS, CityPlan.GROUND_Y,
+                    c.getZ() - CityPlan.RADIUS,
+                    c.getX() + CityPlan.RADIUS, CityPlan.CEILING_Y,
+                    c.getZ() + CityPlan.RADIUS);
+            for (Entity entity : lv.getEntities((Entity) null, city, e ->
+                    e instanceof ArmorStand
+                            || e.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
+                            || e.getPersistentData().getBoolean(CityTrainingDummies.TAG))) {
+                entity.discard();
+            }
+        });
     }
 
     @SubscribeEvent

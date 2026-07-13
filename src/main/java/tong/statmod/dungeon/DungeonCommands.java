@@ -94,6 +94,33 @@ public final class DungeonCommands {
                             }
                             return 1;
                         }))
+                .then(Commands.literal("arena")
+                        .then(Commands.literal("tp").executes(ctx -> {
+                            ServerLevel dungeon = ctx.getSource().getServer()
+                                    .getLevel(DungeonDimensions.TRIAL_DUNGEON);
+                            if (dungeon == null || !(ctx.getSource().getEntity() instanceof ServerPlayer player)) {
+                                return 0;
+                            }
+                            tong.statmod.dungeon.city.CityArenaController.teleport(player, dungeon);
+                            ctx.getSource().sendSuccess(() -> Component.literal("Téléporté dans l'arène"), false);
+                            return 1;
+                        }))
+                        .then(Commands.literal("open").executes(ctx -> {
+                            ServerLevel dungeon = ctx.getSource().getServer()
+                                    .getLevel(DungeonDimensions.TRIAL_DUNGEON);
+                            if (dungeon == null) return 0;
+                            tong.statmod.dungeon.city.CityArenaController.openGate(dungeon);
+                            ctx.getSource().sendSuccess(() -> Component.literal("Porte de l'arène ouverte"), true);
+                            return 1;
+                        }))
+                        .then(Commands.literal("close").executes(ctx -> {
+                            ServerLevel dungeon = ctx.getSource().getServer()
+                                    .getLevel(DungeonDimensions.TRIAL_DUNGEON);
+                            if (dungeon == null) return 0;
+                            tong.statmod.dungeon.city.CityArenaController.closeGate(dungeon);
+                            ctx.getSource().sendSuccess(() -> Component.literal("Porte de l'arène fermée"), true);
+                            return 1;
+                        })))
                 .then(Commands.literal("regen")
                         .then(Commands.argument("floor", IntegerArgumentType.integer(0, 10000))
                                 .executes(ctx -> {

@@ -130,7 +130,14 @@ public final class DungeonBossHandler {
             return;
         }
 
-        // Vague nettoyée → étage conquis. Pas de gain de stat (réservé aux boss).
+        // La rencontre courante est nettoyée. L'étage reste actif tant qu'un autre secteur
+        // obligatoire n'a pas encore été traversé et sécurisé.
+        if (!DungeonRoomEncounterDirector.onActiveRoomCleared(floor)) {
+            sp.displayClientMessage(Component.literal("§aSecteur nettoyé §7— poursuivez l'exploration"), true);
+            return;
+        }
+
+        // Tous les secteurs sont nettoyés → étage conquis. Pas de gain de stat (réservé aux boss).
         DungeonProgress.completeFloor(sp, floor, DungeonObjective.CLEAR_WAVE, false);
     }
 

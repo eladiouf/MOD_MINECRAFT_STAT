@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.1] - 2026-07-13
+
+### Added
+- **Adventurers' City (floor 0)** expanded with denser districts, decorated interiors,
+  a protected duel arena, spectator stands, PvP isolation, bounty/merchant NPCs, and
+  dedicated warrior, archer, and mage training grounds with real training dummies
+- **Room encounters** on combat floors: enemies now spawn progressively when players enter
+  each required room instead of loading the whole floor as one global wave
+- Explicit normal, elite, and boss roles for dungeon health scaling
+
+### Changed
+- Dungeon monster health now scales from **x3 at floor 1** to **x15 at floor 100**,
+  continuing through the Abyss up to x25; elites receive x1.25 and bosses x1.5
+- Combat floors are completed only after every required room encounter is cleared
+- STAT Mod version advanced to 1.2.1 for Minecraft 1.21.1 / NeoForge 21.1+
+
+### Fixed
+- Long Iron's Spellbooks casts being repeatedly cancelled when another mod refreshed
+  durability or components on the same equipped casting item
+- Tensura spell metadata queried before registry initialization no longer remains cached as
+  an incorrect instant, zero-tick cast
+- Dungeon health modifiers no longer stack or fully heal damaged mobs when reapplied
+
+---
+
 ## [1.2.0-public] - 2026-07-12 — First public release (Modrinth + CurseForge)
 
 ### Added

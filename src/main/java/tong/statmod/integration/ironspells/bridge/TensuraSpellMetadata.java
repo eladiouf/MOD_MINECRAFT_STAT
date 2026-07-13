@@ -41,7 +41,15 @@ public final class TensuraSpellMetadata {
 
     public static TensuraSpellMetadata forSkill(String skillId) {
         if (skillId == null || skillId.isBlank()) return FALLBACK;
-        return CACHE.computeIfAbsent(skillId, TensuraSpellMetadata::query);
+        TensuraSpellMetadata cached = CACHE.get(skillId);
+        if (cached != null) return cached;
+
+        TensuraSpellMetadata queried = query(skillId);
+        // Registry lookup can happen during early client/model initialization. A miss at that
+        // point is temporary and must remain retryable once Tensura finishes registering skills.
+        if (!queried.knownTensuraSkill) return queried;
+        TensuraSpellMetadata raced = CACHE.putIfAbsent(skillId, queried);
+        return raced != null ? raced : queried;
     }
 
     /** Force re-query (visible for tests / dev reloads). */
@@ -53,6 +61,10 @@ public final class TensuraSpellMetadata {
 
     public int defaultCastTimeTicks() {
         return defaultCastTimeTicks;
+    }
+
+    boolean isResolved() {
+        return knownTensuraSkill;
     }
 
     /** True si la compétence cache un vrai temps de charge (= pas instant). */

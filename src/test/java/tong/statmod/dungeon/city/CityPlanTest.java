@@ -4,6 +4,9 @@ import net.minecraft.core.BlockPos;
 import org.junit.jupiter.api.Test;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 
+import java.util.HashSet;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityPlanTest {
@@ -76,5 +79,68 @@ class CityPlanTest {
     @Test
     void legacyHubIsInsideCityFootprint() {
         assertTrue(CityPlan.inCity(0, -300));
+    }
+
+    @Test
+    void finalLandmarksAreUniqueAndInsideCity() {
+        List<BlockPos> landmarks = List.of(
+                CityPlan.center(), CityPlan.guild(), CityPlan.humanQuarter(), CityPlan.elvenQuarter(),
+                CityPlan.dwarvenQuarter(), CityPlan.beastQuarter(), CityPlan.market(),
+                CityPlan.artisanDistrict(), CityPlan.arena(), CityPlan.trainingGround(),
+                CityPlan.sanctuary(), CityPlan.hangingGardens(), CityPlan.hallOfHeroes(),
+                CityPlan.portalCourt(), CityPlan.gateCenter());
+
+        assertEquals(15, new HashSet<>(landmarks).size());
+        for (BlockPos landmark : landmarks) {
+            assertTrue(CityPlan.inCity(landmark.getX(), landmark.getZ()), landmark + " outside city");
+        }
+        for (BlockPos landmark : landmarks.subList(1, landmarks.size())) {
+            assertFalse(CityPlan.inPlaza(landmark.getX(), landmark.getZ()), landmark + " overlaps plaza");
+        }
+    }
+
+    @Test
+    void ringRoadsConnectDistrictsOutsidePlaza() {
+        assertTrue(CityPlan.onRingRoad(CityPlan.CENTER_X + CityPlan.INNER_RING_RADIUS, CityPlan.CENTER_Z));
+        assertTrue(CityPlan.onRingRoad(CityPlan.CENTER_X, CityPlan.CENTER_Z + CityPlan.OUTER_RING_RADIUS));
+        assertFalse(CityPlan.onRingRoad(CityPlan.CENTER_X + 20, CityPlan.CENTER_Z));
+    }
+
+    @Test
+    void citySitesHaveBreathingRoomAndStayInsideWalls() {
+        List<CityPlan.CitySite> sites = CityPlan.sites();
+        for (int i = 0; i < sites.size(); i++) {
+            CityPlan.CitySite a = sites.get(i);
+            double centerDistance = Math.hypot(a.center().getX() - CityPlan.CENTER_X,
+                    a.center().getZ() - CityPlan.CENTER_Z);
+            assertTrue(centerDistance + a.radius() < CityPlan.WALL_INNER,
+                    a.id() + " crosses city wall");
+            for (int j = i + 1; j < sites.size(); j++) {
+                CityPlan.CitySite b = sites.get(j);
+                double distance = Math.hypot(a.center().getX() - b.center().getX(),
+                        a.center().getZ() - b.center().getZ());
+                assertTrue(distance >= a.radius() + b.radius() + 8,
+                        a.id() + " overlaps " + b.id());
+            }
+        }
+    }
+
+    @Test
+    void everyDistrictHasAConnectorTowardThePlaza() {
+        for (CityPlan.CitySite site : CityPlan.sites()) {
+            if (site.id().equals("plaza") || site.id().equals("gate")) continue;
+            int midX = (site.center().getX() + CityPlan.CENTER_X) / 2;
+            int midZ = (site.center().getZ() + CityPlan.CENTER_Z) / 2;
+            assertTrue(CityPlan.onDistrictConnector(midX, midZ), site.id() + " has no connector");
+        }
+    }
+
+    @Test
+    void pvpArenaIsOnlyTheInnerCombatCircle() {
+        BlockPos arena = CityPlan.arena();
+        assertTrue(CityPlan.inArenaCombat(arena.getX(), arena.getZ()));
+        assertTrue(CityPlan.inArenaCombat(arena.getX() + 25, arena.getZ()));
+        assertFalse(CityPlan.inArenaCombat(arena.getX() + 27, arena.getZ()));
+        assertFalse(CityPlan.inArenaCombat(CityPlan.center().getX(), CityPlan.center().getZ()));
     }
 }

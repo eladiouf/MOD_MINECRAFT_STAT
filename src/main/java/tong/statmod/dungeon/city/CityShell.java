@@ -52,7 +52,8 @@ final class CityShell {
                 // Sol : soubassement + surface (pavage sur place/avenues, pierre ailleurs).
                 lv.setBlock(new BlockPos(x, CityPlan.GROUND_Y - 1, z), deep, FLAG);
                 BlockState surface = CityPlan.inPlaza(x, z) ? plazaPave
-                        : CityPlan.onAvenue(x, z) ? pave
+                        : CityPlan.onAvenue(x, z) || CityPlan.onRingRoad(x, z)
+                        || CityPlan.onDistrictConnector(x, z) ? pave
                         : stone;
                 lv.setBlock(new BlockPos(x, CityPlan.GROUND_Y, z), surface, FLAG);
 

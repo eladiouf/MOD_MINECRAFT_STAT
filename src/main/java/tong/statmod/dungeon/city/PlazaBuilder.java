@@ -9,7 +9,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import tong.statmod.dungeon.DungeonBlocks;
-import tong.statmod.dungeon.DungeonMerchant;
 import tong.statmod.dungeon.FloorPalette;
 import tong.statmod.economy.MagicBanker;
 import tong.statmod.integration.waystones.WaystonesBridge;
@@ -36,13 +35,6 @@ final class PlazaBuilder {
         lv.setBlock(c.offset(-3, 0, 12), DungeonBlocks.RETURN_BEACON.get().defaultBlockState(), 3);
         MagicBanker.spawn(lv, c.offset(6, 0, 12));
 
-        // Étals de marchands provisoires aux quatre coins de la place.
-        BlockPos sp = CityPlan.center();
-        FloorPalette palette = FloorPalette.forFloor(10);
-        DungeonMerchant.placeStall(lv, sp, -30, -30, palette, 0, 10); // armes
-        DungeonMerchant.placeStall(lv, sp, -30, 30, palette, 1, 20);  // armures
-        DungeonMerchant.placeStall(lv, sp, 30, -30, palette, 2, 30);  // potions
-        DungeonMerchant.placeStall(lv, sp, 30, 30, palette, 3, 40);   // archerie
     }
 
     /** Bassin circulaire r=5 à margelle, jet central lumineux. L'eau est contenue par la margelle. */

@@ -13,7 +13,8 @@ public class ShopPageMixin {
     private void statmod$selectNPCSubTab(CallbackInfoReturnable<Boolean> cir) {
         String target = ClientShopTabForcer.targetTab;
         if (target != null && !target.isEmpty()) {
-            net.sixk.sdmshop.shop.Tab.TabPanel.selectedTab = target;
+            // Multi-onglets (séparés par des virgules) → on ouvre sur le premier du rayon
+            net.sixk.sdmshop.shop.Tab.TabPanel.selectedTab = target.split(",")[0].trim();
         } else {
             // Ouverture sans PNJ spécialisé (commande, PNJ généraliste) → shop complet
             ClientShopTabForcer.lockedTab = null;

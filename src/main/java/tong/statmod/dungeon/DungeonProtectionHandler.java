@@ -165,6 +165,21 @@ public final class DungeonProtectionHandler {
     public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
         var entity = event.getEntity();
         if (!inDungeon(entity.level())) return;
+        if (entity instanceof net.minecraft.server.level.ServerPlayer target
+                && DungeonTeleportHandler.floorAtPos(target.getBlockX(), target.getBlockZ()) == 0) {
+            var attacker = tong.statmod.progression.CombatXPHandler.resolveAttacker(
+                    event.getSource().getEntity(), event.getSource().getDirectEntity());
+            if (attacker != null) {
+                boolean arenaPvp = tong.statmod.dungeon.city.CityPlan.inArenaCombat(
+                        target.getBlockX(), target.getBlockZ())
+                        && tong.statmod.dungeon.city.CityPlan.inArenaCombat(
+                        attacker.getBlockX(), attacker.getBlockZ());
+                if (!arenaPvp) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+        }
         for (String tag : entity.getTags()) {
             if (tag.startsWith("sdm_tab:")) {
                 event.setCanceled(true);

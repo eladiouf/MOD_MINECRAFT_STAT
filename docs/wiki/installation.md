@@ -6,6 +6,8 @@ nav_order: 1
 
 # Installation
 
+La version actuelle est **STAT Mod 1.2.1**.
+
 ## Prérequis
 
 - Minecraft **1.21.1**

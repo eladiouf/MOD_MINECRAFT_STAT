@@ -2,6 +2,8 @@ package tong.statmod.dungeon.city;
 
 import net.minecraft.core.BlockPos;
 
+import java.util.List;
+
 /**
  * Cité des Aventuriers (Étage 0) — géométrie PURE de la ville (aucun ServerLevel).
  *
@@ -28,6 +30,9 @@ public final class CityPlan {
     public static final int PLAZA_RADIUS = 45;
     /** Demi-largeur des avenues radiales. */
     public static final double AVENUE_HALF_WIDTH = 3.5;
+    public static final int INNER_RING_RADIUS = 100;
+    public static final int OUTER_RING_RADIUS = 205;
+    private static final double RING_HALF_WIDTH = 4.0;
 
     private CityPlan() {}
 
@@ -45,12 +50,46 @@ public final class CityPlan {
 
     /** Cour des Portails : à l'ouest de la place. */
     public static BlockPos portalCourt() {
-        return new BlockPos(CENTER_X - 100, GROUND_Y, CENTER_Z);
+        return new BlockPos(CENTER_X + 100, GROUND_Y, CENTER_Z + 220);
     }
 
     /** Camp des artisans (provisoire, plan A) : à l'est de la place. */
     public static BlockPos artisanCamp() {
-        return new BlockPos(CENTER_X + 100, GROUND_Y, CENTER_Z);
+        return artisanDistrict();
+    }
+
+    public static BlockPos guild() { return new BlockPos(CENTER_X, GROUND_Y, CENTER_Z - 220); }
+    public static BlockPos humanQuarter() { return new BlockPos(CENTER_X - 185, GROUND_Y, CENTER_Z - 20); }
+    public static BlockPos elvenQuarter() { return new BlockPos(CENTER_X + 165, GROUND_Y, CENTER_Z - 150); }
+    public static BlockPos dwarvenQuarter() { return new BlockPos(CENTER_X - 155, GROUND_Y, CENTER_Z + 110); }
+    public static BlockPos beastQuarter() { return new BlockPos(CENTER_X + 155, GROUND_Y, CENTER_Z + 110); }
+    public static BlockPos market() { return new BlockPos(CENTER_X, GROUND_Y, CENTER_Z + 150); }
+    public static BlockPos artisanDistrict() { return new BlockPos(CENTER_X + 105, GROUND_Y, CENTER_Z); }
+    public static BlockPos arena() { return new BlockPos(CENTER_X - 110, GROUND_Y, CENTER_Z + 215); }
+    public static BlockPos trainingGround() { return new BlockPos(CENTER_X + 210, GROUND_Y, CENTER_Z - 30); }
+    public static BlockPos sanctuary() { return new BlockPos(CENTER_X - 110, GROUND_Y, CENTER_Z - 120); }
+    public static BlockPos hangingGardens() { return new BlockPos(CENTER_X - 205, GROUND_Y, CENTER_Z - 140); }
+    public static BlockPos hallOfHeroes() { return new BlockPos(CENTER_X - 200, GROUND_Y, CENTER_Z + 170); }
+
+    public record CitySite(String id, BlockPos center, int radius) {}
+
+    public static List<CitySite> sites() {
+        return List.of(
+                new CitySite("plaza", center(), PLAZA_RADIUS),
+                new CitySite("guild", guild(), 35),
+                new CitySite("human", humanQuarter(), 38),
+                new CitySite("elven", elvenQuarter(), 40),
+                new CitySite("dwarven", dwarvenQuarter(), 40),
+                new CitySite("beast", beastQuarter(), 40),
+                new CitySite("market", market(), 38),
+                new CitySite("artisans", artisanDistrict(), 34),
+                new CitySite("arena", arena(), 42),
+                new CitySite("training", trainingGround(), 40),
+                new CitySite("sanctuary", sanctuary(), 32),
+                new CitySite("gardens", hangingGardens(), 28),
+                new CitySite("heroes", hallOfHeroes(), 25),
+                new CitySite("portals", portalCourt(), 24),
+                new CitySite("gate", gateCenter(), 0));
     }
 
     public static boolean inCity(int x, int z) {
@@ -92,6 +131,34 @@ public final class CityPlan {
             }
         }
         return false;
+    }
+
+    public static boolean onRingRoad(int x, int z) {
+        double dx = x - CENTER_X, dz = z - CENTER_Z;
+        double dist = Math.sqrt(dx * dx + dz * dz);
+        return Math.abs(dist - INNER_RING_RADIUS) <= RING_HALF_WIDTH
+                || Math.abs(dist - OUTER_RING_RADIUS) <= RING_HALF_WIDTH;
+    }
+
+    public static boolean onDistrictConnector(int x, int z) {
+        for (CitySite site : sites()) {
+            if (site.id().equals("plaza") || site.id().equals("gate")) continue;
+            double ax = CENTER_X, az = CENTER_Z;
+            double bx = site.center().getX(), bz = site.center().getZ();
+            double vx = bx - ax, vz = bz - az;
+            double length2 = vx * vx + vz * vz;
+            double t = ((x - ax) * vx + (z - az) * vz) / length2;
+            if (t < 0.18 || t > 0.88) continue;
+            double px = ax + t * vx, pz = az + t * vz;
+            if (Math.hypot(x - px, z - pz) <= AVENUE_HALF_WIDTH) return true;
+        }
+        return false;
+    }
+
+    public static boolean inArenaCombat(int x, int z) {
+        long dx = x - arena().getX();
+        long dz = z - arena().getZ();
+        return dx * dx + dz * dz <= 26L * 26L;
     }
 
     private static double normalizeDeg(double a) {

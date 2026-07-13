@@ -49,7 +49,8 @@ public final class DungeonMobSpawner {
      */
     private static final int L2_APPLY_DELAY_TICKS = 12;
 
-    private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, String originalId, int floor, long dueTick) {}
+    private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, String originalId,
+                           int floor, long dueTick, DungeonMobScaling.MobRole role) {}
 
     private record L2Pending(LivingEntity mob, int floor, long dueTick) {}
 
@@ -67,7 +68,7 @@ public final class DungeonMobSpawner {
      * la dernière écriture (autoritaire).
      */
     public static void scheduleL2(LivingEntity mob, int floor) {
-        if (mob == null || !L2HostilityBridge.loaded()) return;
+        if (mob == null) return;
         L2_QUEUE.add(new L2Pending(mob, floor, serverTick + L2_APPLY_DELAY_TICKS));
     }
 
@@ -77,14 +78,25 @@ public final class DungeonMobSpawner {
      */
     public static void requestWave(ServerLevel lv, int floor) {
         if (!isCombatFloor(floor)) return; // boss (×10) / trésor (×5) : pas de vague
-        if (PENDING_FLOORS.contains(floor)) return;
-        if (countAlive(lv, floor) > 0) return;
+        DungeonRoomEncounterDirector.beginFloor(lv, floor);
+    }
+
+    /** Demande uniquement la rencontre de la salle actuellement traversée. */
+    public static boolean requestRoomWave(ServerLevel lv, int floor, int roomIndex) {
+        if (!isCombatFloor(floor)) return false;
+        if (PENDING_FLOORS.contains(floor)) return false;
+        if (countAlive(lv, floor) > 0) return false;
 
         int players = Math.max(1, DungeonTeleportHandler.playersOnFloor(lv, floor).size());
-        int full = waveSizeForFloor(floor, players);
-        int queued = enqueueWave(lv, floor, full);
-        STATMod.LOGGER.info("[TrialDungeon] Vague étage {} demandée : {} mobs en file ({} joueur(s))",
-                floor, queued, players);
+        int roomWave = Math.min(12, 4 + floor / 20 + Math.max(0, players - 1) * 2);
+        int queued = enqueueWave(lv, floor, roomWave, roomIndex);
+        if (queued <= 0) {
+            PENDING_FLOORS.remove(floor);
+            return false;
+        }
+        STATMod.LOGGER.info("[TrialDungeon] Rencontre étage {}, salle {} : {} mobs en file ({} joueur(s))",
+                floor, roomIndex, queued, players);
+        return true;
     }
 
     /**
@@ -144,6 +156,7 @@ public final class DungeonMobSpawner {
         }
         QUEUE.removeIf(p -> p.floor() == floor);
         PENDING_FLOORS.remove(floor);
+        DungeonRoomEncounterDirector.resetActiveRoom(floor);
         DungeonBossTracker.clear(floor);
         if (removed > 0) {
             STATMod.LOGGER.info("[TrialDungeon] Étage {} purgé : {} mobs retirés (retry)", floor, removed);
@@ -155,7 +168,7 @@ public final class DungeonMobSpawner {
      * sur des positions valides. Marque l'étage comme « en attente ». Retourne le nombre
      * effectivement mis en file.
      */
-    private static int enqueueWave(ServerLevel lv, int floor, int want) {
+    private static int enqueueWave(ServerLevel lv, int floor, int want, int roomIndex) {
         if (want <= 0) return 0;
         List<EntityType<?>> pool = ModdedMobPool.getCombinedPool(floor); // vanilla+mods, ou pool thématique
         if (pool.isEmpty()) return 0;
@@ -169,18 +182,23 @@ public final class DungeonMobSpawner {
         for (DungeonLayout.Room r : DungeonLayout.rooms()) {
             if (r.isFirst()) continue; // pas de mobs dans la pièce d'apparition
             if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue; // havre de paix
+            if (r.index() != roomIndex) continue;
             combatRooms.add(r);
         }
-        if (combatRooms.isEmpty()) return 0;
+        if (combatRooms.isEmpty()) {
+            PENDING_FLOORS.remove(floor);
+            return 0;
+        }
 
         // Mini-boss du thème dans la DERNIÈRE pièce (celle de sortie), en gardien du téléporteur.
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         EntityType<?> miniBoss = firstAvailable(theme.miniBoss());
-        if (miniBoss != null) {
+        if (miniBoss != null && roomIndex == DungeonLayout.ROOM_COUNT - 1) {
             DungeonLayout.Room lastRoom = DungeonLayout.rooms().get(DungeonLayout.ROOM_COUNT - 1);
             int lastY = DungeonRoomChain.roomYOffset(lastRoom.index(), floor);
             BlockPos bossPos = sp.offset(lastRoom.centerX(), lastY, lastRoom.centerZ() - 3);
-            QUEUE.add(new Pending(lv, bossPos, miniBoss, null, floor, serverTick + SPAWN_DELAY_TICKS));
+            QUEUE.add(new Pending(lv, bossPos, miniBoss, null, floor,
+                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.ELITE));
         }
 
         int spawned = 0;
@@ -267,7 +285,8 @@ public final class DungeonMobSpawner {
                 }
             }
 
-            QUEUE.add(new Pending(lv, targetPos, type, originalId, floor, serverTick + SPAWN_DELAY_TICKS));
+            QUEUE.add(new Pending(lv, targetPos, type, originalId, floor,
+                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
             spawned++;
 
             // IA DE GROUPE RPG : Si un mage (Clerc, Cryo, Électro, Wither, Pyromancien) spawn,
@@ -283,9 +302,11 @@ public final class DungeonMobSpawner {
                 BlockPos pos1 = targetPos.offset(2, 0, 2);
                 if (isValidSpawnPosition(lv, pos1)) {
                     if (net.neoforged.fml.ModList.get().isLoaded("slu")) {
-                        QUEUE.add(new Pending(lv, pos1, ModdedMobPool.resolve("slu:knight"), null, floor, serverTick + SPAWN_DELAY_TICKS));
+                        QUEUE.add(new Pending(lv, pos1, ModdedMobPool.resolve("slu:knight"), null, floor,
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
                     } else {
-                        QUEUE.add(new Pending(lv, pos1, EntityType.SKELETON, "statmod:dungeon_knight_fallback", floor, serverTick + SPAWN_DELAY_TICKS));
+                        QUEUE.add(new Pending(lv, pos1, EntityType.SKELETON, "statmod:dungeon_knight_fallback", floor,
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
                     }
                     spawned++;
                 }
@@ -294,7 +315,8 @@ public final class DungeonMobSpawner {
                 if (spawned < want) {
                     BlockPos pos2 = targetPos.offset(-2, 0, -2);
                     if (isValidSpawnPosition(lv, pos2)) {
-                        QUEUE.add(new Pending(lv, pos2, EntityType.SKELETON, null, floor, serverTick + SPAWN_DELAY_TICKS));
+                        QUEUE.add(new Pending(lv, pos2, EntityType.SKELETON, null, floor,
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
                         spawned++;
                     }
                 }
@@ -369,6 +391,7 @@ public final class DungeonMobSpawner {
                         () -> p.type.spawn(p.level, p.pos, MobSpawnType.STRUCTURE));
                 if (entity != null) {
                     spawned++;
+                    entity.getPersistentData().putString(DungeonMobScaling.ROLE_TAG, p.role().id());
                     if (entity instanceof Mob mob && p.originalId != null) {
                         mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);
                     }
@@ -431,7 +454,10 @@ public final class DungeonMobSpawner {
         // Application HORS itération : un scheduleL2 ré-entrant s'ajoute sans risque à L2_QUEUE.
         for (L2Pending p : due) {
             if (p.mob.isAlive()) {
-                L2HostilityBridge.applyFloorLevel(p.mob, p.floor);
+                if (L2HostilityBridge.loaded()) {
+                    L2HostilityBridge.applyFloorLevel(p.mob, p.floor);
+                }
+                DungeonMobScaling.applyFloorScaling(p.mob, p.floor);
             }
         }
     }

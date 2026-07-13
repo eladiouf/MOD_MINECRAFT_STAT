@@ -78,7 +78,9 @@ public final class SDMShopNPCBridge {
 
     /**
      * Tout villageoi qui entre dans le Trial Dungeon reçoit automatiquement
-     * le tag {@code sdm_tab:} avec l'onglet SDM correspondant à son métier.
+     * le tag {@code sdm_tab:} avec le(s) onglet(s) SDM correspondant à son métier
+     * (voir {@link MerchantTabMapping}). Un tag existant dont les onglets n'existent
+     * plus dans le catalogue (refonte 2026-07-12) est migré vers le mapping actuel.
      */
     @SubscribeEvent
     public static void onVillagerJoinDungeon(EntityJoinLevelEvent event) {
@@ -87,20 +89,15 @@ public final class SDMShopNPCBridge {
         if (villager.getPersistentData().getBoolean(DungeonExchanger.TAG)) return;
         if (villager.getPersistentData().getBoolean(MagicBanker.TAG)) return;
         if (!event.getLevel().dimension().equals(tong.statmod.dungeon.DungeonDimensions.TRIAL_DUNGEON)) return;
-        if (hasSdmTab(villager)) return; // déjà tagué
 
-        var profession = villager.getVillagerData().getProfession();
-        String tabName;
-        if (profession == VillagerProfession.WEAPONSMITH || profession == VillagerProfession.TOOLSMITH) {
-            tabName = "Armes";
-        } else if (profession == VillagerProfession.ARMORER) {
-            tabName = "Armures";
-        } else if (profession == VillagerProfession.CLERIC) {
-            tabName = "Potions";
-        } else {
-            tabName = ""; // onglet par défaut (premier de la liste)
+        String staleTag = findStaleSdmTab(villager);
+        if (staleTag == null && hasSdmTab(villager)) return; // déjà tagué et valide
+        if (staleTag != null) {
+            villager.removeTag(staleTag); // onglet disparu du catalogue → re-tag par métier
         }
-        villager.addTag("sdm_tab:" + tabName);
+
+        VillagerProfession profession = villager.getVillagerData().getProfession();
+        villager.addTag("sdm_tab:" + MerchantTabMapping.tabsFor(profession.name()));
     }
 
     private static boolean hasSdmTab(Entity entity) {
@@ -108,5 +105,16 @@ public final class SDMShopNPCBridge {
             if (tag.startsWith("sdm_tab:")) return true;
         }
         return false;
+    }
+
+    /** Tag {@code sdm_tab:} dont un des onglets n'existe plus dans le catalogue, sinon null. */
+    private static String findStaleSdmTab(Entity entity) {
+        for (String tag : entity.getTags()) {
+            if (tag.startsWith("sdm_tab:")
+                    && !MerchantTabMapping.allTabsExist(tag.substring("sdm_tab:".length()).trim())) {
+                return tag;
+            }
+        }
+        return null;
     }
 }

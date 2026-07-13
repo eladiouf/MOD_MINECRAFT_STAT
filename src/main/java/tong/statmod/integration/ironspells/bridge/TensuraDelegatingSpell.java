@@ -53,8 +53,9 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     private final DefaultConfig defaultConfig;
 
     // CastType / castTime sont lazy car le registre Tensura n'est garanti peuplé qu'après le boot.
-    private volatile CastType cachedCastType;
-    private volatile int cachedCastTimeTicks = -1;
+    private volatile CastType cachedCastType = CastType.INSTANT;
+    private volatile int cachedCastTimeTicks;
+    private volatile boolean metadataResolved;
 
     public TensuraDelegatingSpell(TensuraSpellProfile profile) {
         this.profile = profile;
@@ -261,10 +262,12 @@ public final class TensuraDelegatingSpell extends AbstractSpell {
     }
 
     private synchronized void ensureMetadataResolved() {
-        if (cachedCastTimeTicks >= 0) return;
+        if (metadataResolved) return;
         TensuraSpellMetadata meta = TensuraSpellMetadata.forSkill(tensuraSkillId);
+        if (!meta.isResolved()) return;
         cachedCastTimeTicks = meta.defaultCastTimeTicks();
         cachedCastType = meta.isHoldStyle() ? CastType.LONG : CastType.INSTANT;
+        metadataResolved = true;
     }
 
     /**

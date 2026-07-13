@@ -125,6 +125,8 @@ public class DungeonBossAltarBlock extends Block {
                         () -> type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE));
                 if (spawnedEntity != null) {
                     spawned++;
+                    spawnedEntity.getPersistentData().putString(
+                            DungeonMobScaling.ROLE_TAG, DungeonMobScaling.MobRole.BOSS.id());
                     // Enregistre ce boss : l'étage ne se débloque qu'au clear complet (tous morts).
                     DungeonBossTracker.register(floor, spawnedEntity.getUUID());
                     // La difficulté L2 par étage est calée par DungeonSpawnGuard.onEntityJoinLevel.

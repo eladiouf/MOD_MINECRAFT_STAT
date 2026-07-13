@@ -62,7 +62,7 @@ public final class DungeonRoomChain {
         // (2) Portes entre pièces connectées (déduites de connectedTo).
         for (RoomLike r : rooms) {
             int[] conn = r.connectedTo();
-            if (conn.length > 0) carveDoorFromLike(lv, sp, t, r, floor);
+            if (conn.length > 0) carveDoorFromLike(lv, sp, t, r, floor, rooms);
         }
 
         // (3) Contenu par pièce.
@@ -1315,8 +1315,9 @@ public final class DungeonRoomChain {
         shell(lv, sp, t, toLayoutRoom(r, all), floor);
     }
 
-    private static void carveDoorFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor) {
-        carveDoor(lv, sp, t, toLayoutRoom(r), floor);
+    private static void carveDoorFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor,
+                                          List<? extends RoomLike> all) {
+        carveDoor(lv, sp, t, toLayoutRoom(r, all), floor);
     }
 
     private static int roomCeilingHeight(int floor, RoomLike r, int roomCount) {

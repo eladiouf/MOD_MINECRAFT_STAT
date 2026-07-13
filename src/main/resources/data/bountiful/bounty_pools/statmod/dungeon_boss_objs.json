@@ -1,0 +1,11 @@
+{
+  "content": {
+    "b_warden":     { "type": "entity", "rarity": "EPIC", "timeMult": 12.0, "content": "minecraft:warden",              "amount": {"min":1,"max":1}, "unitWorth": 7000 },
+    "b_artorias":   { "type": "entity", "rarity": "EPIC", "timeMult": 12.0, "content": "slu:boss_artorias",             "amount": {"min":1,"max":1}, "unitWorth": 9000 },
+    "b_radahn":     { "type": "entity", "rarity": "EPIC", "timeMult": 12.0, "content": "slu:boss_radahn",               "amount": {"min":1,"max":1}, "unitWorth": 11000 },
+    "b_malenia":    { "type": "entity", "rarity": "EPIC", "timeMult": 14.0, "content": "slu:boss_malenia",              "amount": {"min":1,"max":1}, "unitWorth": 13000 },
+    "b_gael":       { "type": "entity", "rarity": "EPIC", "timeMult": 14.0, "content": "slu:boss_gael",                 "amount": {"min":1,"max":1}, "unitWorth": 13000 },
+    "b_dead_king":  { "type": "entity", "rarity": "EPIC", "timeMult": 12.0, "content": "irons_spellbooks:dead_king",    "amount": {"min":1,"max":1}, "unitWorth": 9000 },
+    "b_keeper":     { "type": "entity", "rarity": "EPIC", "timeMult": 12.0, "content": "irons_spellbooks:citadel_keeper","amount": {"min":1,"max":1}, "unitWorth": 9000 }
+  }
+}

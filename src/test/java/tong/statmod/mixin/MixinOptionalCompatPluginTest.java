@@ -42,6 +42,7 @@ class MixinOptionalCompatPluginTest {
                 Map.entry("IronInscriptionTableScreenMixin", "irons_spellbooks"),
                 Map.entry("IronInscriptionTableMenuMixin", "irons_spellbooks"),
                 Map.entry("IronSpellIconResolverMixin", "irons_spellbooks"),
+                Map.entry("IronLearnedSpellCastSourceMixin", "irons_spellbooks"),
                 Map.entry("PuffishSkillsScreenMixin", "puffish_skills"),
                 Map.entry("ReincarnationMenuRaceFilterMixin", "tensura")
         );

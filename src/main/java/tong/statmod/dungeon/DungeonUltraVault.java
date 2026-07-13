@@ -19,6 +19,7 @@ import java.util.List;
 import static tong.statmod.dungeon.DungeonArchitect.B;
 import static tong.statmod.dungeon.DungeonArchitect.O;
 import static tong.statmod.dungeon.DungeonArchitect.S;
+import tong.statmod.dungeon.layout.OrganicRoomLayout;
 
 /**
  * Chambre-forte ULTRA-SECRÈTE (feedback playtest 2026-07-09 ; entrée « sanctuaire » au lieu d'une
@@ -96,9 +97,15 @@ public final class DungeonUltraVault {
 
         BlockPos islandSp = DungeonTeleportHandler.floorSpawnPos(floor);
         boolean inVault = player.getBlockY() >= islandSp.getY() + VY - 2;
-        BlockPos dest = inVault
-                ? DungeonTeleportHandler.floorPlayerSpawnPos(floor)
-                : O(islandSp, VX, VY + 1, VZ - HALF + 2); // bord sud de la chambre
+        BlockPos dest;
+        if (inVault) {
+            tong.statmod.dungeon.layout.RoomProvider returnProvider = DungeonTeleportHandler.isRoomChainFloor(floor)
+                    ? tong.statmod.dungeon.layout.OrganicRoomLayout.forFloor(floor, DungeonArchitect.HX, DungeonArchitect.HZ)
+                    : DungeonLayout.gridProvider();
+            dest = DungeonTeleportHandler.floorPlayerSpawnPos(floor, returnProvider);
+        } else {
+            dest = O(islandSp, VX, VY + 1, VZ - HALF + 2);
+        }
 
         ServerLevel lv = player.serverLevel();
         lv.sendParticles(net.minecraft.core.particles.ParticleTypes.PORTAL,

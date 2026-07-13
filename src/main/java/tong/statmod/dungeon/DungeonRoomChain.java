@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import tong.statmod.dungeon.layout.NoiseShapeRoom;
 import tong.statmod.dungeon.layout.RoomLike;
 import tong.statmod.dungeon.layout.RoomProvider;
+import tong.statmod.dungeon.layout.OrganicRoomLayout;
 import tong.statmod.dungeon.template.*;
 
 import java.util.List;
@@ -595,7 +596,12 @@ public final class DungeonRoomChain {
 
     /** Position monde du centre de la pièce d'apparition (où téléporter le joueur), y = pad+1. */
     public static BlockPos spawnWorldPos(BlockPos islandCenter) {
-        DungeonLayout.Room r = DungeonLayout.spawnRoom();
+        return spawnWorldPos(islandCenter, DungeonLayout.gridProvider());
+    }
+
+    /** Position monde avec {@link RoomProvider} (organic layout). */
+    public static BlockPos spawnWorldPos(BlockPos islandCenter, RoomProvider provider) {
+        RoomLike r = provider.spawnRoom();
         return islandCenter.offset(r.centerX(), 1, r.centerZ());
     }
 

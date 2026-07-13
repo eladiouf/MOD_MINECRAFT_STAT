@@ -1,1 +1,1 @@
-{"objectives":["inventor_objs","_all_objs"],"rewards":["inventor_rews","_all_rews","fdp_rewards"]}
+{"objectives":["dungeon_slay_objs","dungeon_boss_objs","dungeon_haul_objs","dungeon_delve_objs"],"rewards":["fdp_rewards"]}

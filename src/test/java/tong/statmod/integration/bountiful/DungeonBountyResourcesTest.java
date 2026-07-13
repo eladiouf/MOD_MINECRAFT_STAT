@@ -61,4 +61,29 @@ class DungeonBountyResourcesTest {
             assertTrue(s.contains("\"reached\""), f + " doit exposer le critère 'reached'");
         }
     }
+
+    @Test
+    void everyDecreeUsesOnlyDungeonPoolsAndFdpRewards() throws Exception {
+        Path decrees = Path.of("src/main/resources/data/bountiful/bounty_decrees/bountiful");
+        try (var paths = Files.list(decrees)) {
+            var files = paths.filter(p -> p.toString().endsWith(".json")).toList();
+            assertTrue(files.size() >= 12, "les 12 décrees de métier");
+            for (Path file : files) {
+                String s = Files.readString(file);
+                assertTrue(s.contains("dungeon_slay_objs") && s.contains("dungeon_boss_objs")
+                                && s.contains("dungeon_haul_objs") && s.contains("dungeon_delve_objs"),
+                        file + " doit lister les 4 pools donjon");
+                assertTrue(s.contains("fdp_rewards"), file + " doit récompenser en FDP");
+                // Plus aucun pool vanilla partagé.
+                assertTrue(!s.contains("_all_objs") && !s.contains("_all_rews")
+                                && !s.contains("_equip_rews") && !s.contains("_metal_objs")
+                                && !s.contains("_gardening_rews"),
+                        file + " ne doit plus référencer de pool vanilla partagé");
+                // Ni ses pools de métier vanilla.
+                String profession = file.getFileName().toString().replace(".json", "");
+                assertTrue(!s.contains(profession + "_objs") && !s.contains(profession + "_rews"),
+                        file + " ne doit plus référencer ses pools de métier vanilla");
+            }
+        }
+    }
 }

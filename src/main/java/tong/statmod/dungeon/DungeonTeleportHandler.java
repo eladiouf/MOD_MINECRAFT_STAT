@@ -195,6 +195,10 @@ public final class DungeonTeleportHandler {
         // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
         tong.statmod.network.SyncHelper.syncStats(player);
 
+        // Bounties « atteindre l'étage » : accorde les advancements de palier mérités selon
+        // l'étage le plus profond atteint (rétroactif + idempotent — award ne re-déclenche pas).
+        awardDelveMilestones(player, data.getDungeonFloorReached());
+
         if (floor > 0) {
             // Annonce du thème de l'étage (chaque étage a le sien).
             DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
@@ -216,6 +220,23 @@ public final class DungeonTeleportHandler {
         STATMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
                 player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());
         return true;
+    }
+
+    /** Accorde les advancements de palier « Plongée » (ciblés par les bounties de donjon). */
+    private static void awardDelveMilestones(ServerPlayer player, int deepestFloor) {
+        MinecraftServer server = player.getServer();
+        if (server == null) return;
+        for (int threshold : DungeonBountyMilestones.reached(deepestFloor)) {
+            ResourceLocation id = ResourceLocation.parse(DungeonBountyMilestones.advancementId(threshold));
+            var holder = server.getAdvancements().get(id);
+            if (holder == null) continue; // datapack absent → no-op sûr
+            var progress = player.getAdvancements().getOrStartProgress(holder);
+            if (!progress.isDone()) {
+                for (String criterion : progress.getRemainingCriteria()) {
+                    player.getAdvancements().award(holder, criterion);
+                }
+            }
+        }
     }
 
     /**

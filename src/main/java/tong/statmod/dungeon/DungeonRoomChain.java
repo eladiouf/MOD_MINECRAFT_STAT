@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import tong.statmod.dungeon.layout.NoiseShapeRoom;
 import tong.statmod.dungeon.layout.RoomLike;
 import tong.statmod.dungeon.layout.RoomProvider;
+import tong.statmod.dungeon.template.*;
 
 import java.util.List;
 import java.util.Random;
@@ -82,6 +83,7 @@ public final class DungeonRoomChain {
             } else {
                 placePathwayFromLike(lv, roomSp, t, r, floor);
                 decorateCombatRoom(lv, roomSp, t, toLayoutRoom(r), floor, ceilH);
+                tryPlaceTemplate(lv, roomSp, r, t, floor);
             }
             DungeonWayfinding.mark(lv, roomSp, toLayoutRoom(r), floor);
         }
@@ -127,6 +129,7 @@ public final class DungeonRoomChain {
             } else {
                 placePathway(lv, roomSp, t, r, floor);
                 decorateCombatRoom(lv, roomSp, t, r, floor, ceilH);
+                tryPlaceTemplate(lv, roomSp, r, t, floor);
             }
             // Balisage EN DERNIER (après le décor) : traînée + fanal vers la porte de sortie → guide
             // le joueur, jamais perdu ni à rebrousser chemin.
@@ -1324,5 +1327,37 @@ public final class DungeonRoomChain {
 
     private static void placePathwayFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor) {
         placePathway(lv, sp, t, toLayoutRoom(r), floor);
+    }
+
+    // ── Phase 5: optional NBT template decoration overlay ──
+
+    private static void tryPlaceTemplate(ServerLevel lv, BlockPos sp,
+                                          DungeonLayout.Room r, BlockPalette t, int floor) {
+        if (!TemplateRegistry.isLoaded()) return;
+        String pool = "combat";
+        int cx = r.centerX();
+        int cz = r.centerZ();
+        RoomTemplate tmpl = TemplateRegistry.select(pool, floor, cx, cz);
+        if (tmpl == null) return;
+        DungeonMaterial mat = DungeonMaterial.fromPalette(t);
+        int ox = cx - tmpl.width() / 2;
+        int oz = cz - tmpl.depth() / 2;
+        BlockPos origin = sp.offset(ox, 0, oz);
+        tmpl.place(lv, origin, Direction.NORTH, mat, TemplateProperty.EMPTY);
+    }
+
+    private static void tryPlaceTemplate(ServerLevel lv, BlockPos sp,
+                                          RoomLike r, BlockPalette t, int floor) {
+        if (!TemplateRegistry.isLoaded()) return;
+        String pool = "combat";
+        int cx = r.centerX();
+        int cz = r.centerZ();
+        RoomTemplate tmpl = TemplateRegistry.select(pool, floor, cx, cz);
+        if (tmpl == null) return;
+        DungeonMaterial mat = DungeonMaterial.fromPalette(t);
+        int ox = cx - tmpl.width() / 2;
+        int oz = cz - tmpl.depth() / 2;
+        BlockPos origin = sp.offset(ox, 0, oz);
+        tmpl.place(lv, origin, Direction.NORTH, mat, TemplateProperty.EMPTY);
     }
 }

@@ -2,6 +2,8 @@
 
 **A complete RPG progression authority for NeoForge 1.21.1** — stats, XP, perks, a unified magic tree, and an endless procedural Trial Dungeon.
 
+![STAT Mod skill tree](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/skill-tree.png)
+
 ## ⚔️ Core Features
 
 ### 23 Stats & 84 Perks
@@ -12,6 +14,8 @@
 
 ### 🏰 Trial Dungeon
 An **endless procedural dungeon dimension** with 100 rotating themes across 10 arcs:
+
+![Trial Dungeon encounter](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/dungeon-encounter.png)
 - Serpentine room-chain floors, giant open-sky boss arenas, treasure vaults
 - **Predefined boss roster** (40+ bosses) summoned at altars
 - **Dungeon Rush**: kill combos, jackpots, flawless-floor bonuses, personal records
@@ -21,6 +25,9 @@ An **endless procedural dungeon dimension** with 100 rotating themes across 10 a
 - **Mage mobs** with real caster AI: kiting, spell telegraphs, squad cohesion, cast interruption counterplay
 
 ### 🔮 Deep Mod Integrations (all optional)
+
+![STAT Mod spell codex](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/spell-codex.png)
+
 | Mod | Integration |
 |---|---|
 | Iron's Spellbooks | Unified magic tree (249 nodes, 9 schools), mana bridge, dungeon mage mobs |
@@ -31,6 +38,8 @@ An **endless procedural dungeon dimension** with 100 rotating themes across 10 a
 | Waystones / Lootr / L2 Hostility / PlayerRevive / FTB Teams | Dungeon checkpoints, per-player loot, difficulty scaling, bleed-out revive, team conquest |
 
 **The mod works fully standalone** — integrations light up automatically when the companion mods are present.
+
+![Trial Dungeon treasure floor](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/treasure-floor.png)
 
 ## 📋 Requirements
 - Minecraft **1.21.1**

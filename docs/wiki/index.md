@@ -35,7 +35,7 @@ progression, magie et donjon pour Minecraft NeoForge 1.21.1.
 - **84 Perks** — 6 perks par stat active avec progression par paliers
 - **XP & Leveling** — XP de combat, défense et non-combat avec courbes de progression
 - **Trial Dungeon** — ville permanente, rencontres par salle, 100 thèmes, boss, points, co-op
-- **Arbre Magique Unifié** — Intégration Iron's Spellbooks (249 nœuds, 9 écoles)
+- **Arbre Magique Unifié** — Intégration Iron's Spellbooks (246 nœuds, 9 écoles)
 - **Économie FDP** — monnaie physique, banquier magique, boutique SDM
 - **Système Racial** — Intégration Tensura Reincarnated
 - **Interface Puffish Skills** — Miroir UI pour perks et arbre magique
@@ -52,7 +52,7 @@ progression, magie et donjon pour Minecraft NeoForge 1.21.1.
     <figcaption>Statistiques, niveaux et perks</figcaption>
   </figure>
   <figure>
-    <img src="assets/screenshots/magic-tree.png" alt="Arbre magique unifié avec neuf écoles">
+    <img src="assets/screenshots/magic-tree-render.png" alt="Rendu 4K de l'arbre magique unifié avec neuf écoles">
     <figcaption>Arbre magique unifié à 9 écoles</figcaption>
   </figure>
   <figure>

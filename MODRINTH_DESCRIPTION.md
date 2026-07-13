@@ -28,15 +28,15 @@ An **endless procedural dungeon dimension** with 100 rotating themes across 10 a
 
 ### 🔮 Deep Mod Integrations (all optional)
 
-![STAT Mod unified magic tree](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/magic-tree.png)
+![STAT Mod unified magic tree rendered from its real resources](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/magic-tree-render.png)
 
-The unified magic tree contains **249 nodes across 9 schools**, with branch progression, spell unlocks, school points, stat requirements, and optional Tensura race affinities.
+The unified magic tree contains **246 nodes across 9 schools**, with branch progression, spell unlocks, school points, stat requirements, and optional Tensura race affinities. The 4K overview above is rendered directly from the same node positions, connections, and spell icons used in game.
 
 ![STAT Mod spell codex](https://raw.githubusercontent.com/eladiouf/MOD_MINECRAFT_STAT/neoforge-1.21.1/docs/wiki/assets/screenshots/spell-codex.png)
 
 | Mod | Integration |
 |---|---|
-| Iron's Spellbooks | Unified magic tree (249 nodes, 9 schools), mana bridge, dungeon mage mobs |
+| Iron's Spellbooks | Unified magic tree (246 nodes, 9 schools), mana bridge, dungeon mage mobs |
 | Tensura Reincarnated | Race stat modifiers, soul-level sync, skill perk gates |
 | Pufferfish's Skills | Mirror UI for the perk tree |
 | Epic Fight | Skill gating & scaling (experimental) |

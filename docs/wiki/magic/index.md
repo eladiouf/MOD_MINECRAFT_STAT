@@ -9,7 +9,10 @@ nav_order: 8
 L'arbre magique unifié intègre **Iron's Spellbooks** dans un système de progression
 à **9 écoles**, avec des branches dédiées et des sorts déverrouillables.
 
-![Arbre magique unifié avec ses neuf écoles](../assets/screenshots/magic-tree.png)
+![Rendu 4K de l'arbre magique unifié avec ses neuf écoles](../assets/screenshots/magic-tree-render.png)
+
+Ce rendu est généré directement depuis les **246 nœuds**, les **245 connexions** et
+les icônes de sorts réellement livrés avec le modpack.
 
 ## Progression
 

@@ -33,7 +33,7 @@ Minecraft **1.21.1** · Java **21**
 <span class="mod-type rec">Recommandé</span></div></div>
 </div>
 
-- **Iron's Spellbooks** — arbre magique unifié (249 nœuds, 9 écoles), pont de mana, mages du donjon
+- **Iron's Spellbooks** — arbre magique unifié (246 nœuds, 9 écoles), pont de mana, mages du donjon
 - **Tensura Reincarnated** — races, soul level, gates de compétences
 - **Pufferfish's Skills** — interface miroir de l'arbre de perks
 

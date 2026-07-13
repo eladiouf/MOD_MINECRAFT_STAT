@@ -33,7 +33,7 @@ La liste complète avec les rôles de chaque mod est sur la page [Dépendances](
 
 ### Recommandés (cœur de l'expérience RPG)
 
-- [**Iron's Spellbooks**](https://modrinth.com/mod/irons-spells-n-spellbooks) 3.16+ — arbre magique unifié (249 nœuds, 9 écoles) et mages du donjon
+- [**Iron's Spellbooks**](https://modrinth.com/mod/irons-spells-n-spellbooks) 3.16+ — arbre magique unifié (246 nœuds, 9 écoles) et mages du donjon
 - [**Tensura Reincarnated**](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) — races, soul level, gates de compétences
 - [**Pufferfish's Skills**](https://modrinth.com/mod/skills) — interface miroir de l'arbre de perks
 

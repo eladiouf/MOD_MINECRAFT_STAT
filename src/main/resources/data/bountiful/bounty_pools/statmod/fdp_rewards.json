@@ -7,7 +7,7 @@
     "fdp_500": {"type":"minecraft:item","content":"statmod:fdp_coin_500","unitWorth":500.0,"amount":{"min":1,"max":5}},
     "fdp_1000": {"type":"minecraft:item","content":"statmod:fdp_note_1000","unitWorth":1000.0,"amount":{"min":1,"max":4}},
     "fdp_2000": {"type":"minecraft:item","content":"statmod:fdp_note_2000","unitWorth":2000.0,"amount":{"min":1,"max":3}},
-    "fdp_5000": {"type":"minecraft:item","content":"statmod:fdp_note_5000","unitWorth":5000.0,"amount":{"min":1,"max":2}},
-    "fdp_10000": {"type":"minecraft:item","content":"statmod:fdp_note_10000","unitWorth":10000.0,"amount":{"min":1,"max":1}}
+    "fdp_5000": {"type":"minecraft:item","content":"statmod:fdp_note_5000","unitWorth":5000.0,"amount":{"min":1,"max":4}},
+    "fdp_10000": {"type":"minecraft:item","content":"statmod:fdp_note_10000","unitWorth":10000.0,"amount":{"min":1,"max":3}}
   }
 }

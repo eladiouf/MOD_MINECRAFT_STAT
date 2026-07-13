@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tong.statmod.STATMod;
+import tong.statmod.integration.ironspells.LearnedSpellCastPolicy;
 import tong.statmod.magic.MagicBranch;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
@@ -25,11 +26,6 @@ public class SpellSelectionManagerMixin {
 
     @Shadow
     private List<SpellSelectionManager.SelectionOption> selectionOptionList;
-
-    @Shadow
-    private int addOrMergeSelectionOption(SpellSelectionManager.SelectionOption option) {
-        throw new AssertionError();
-    }
 
     @Inject(method = "init", at = @At(value = "INVOKE",
             target = "Lnet/neoforged/bus/api/IEventBus;post(Lnet/neoforged/bus/api/Event;)Lnet/neoforged/bus/api/Event;",
@@ -52,9 +48,16 @@ public class SpellSelectionManagerMixin {
                 continue;
             }
             SpellData spellData = new SpellData(spell, 1);
+            // Le sort appris prime sur le doublon fourni par l'équipement : sans ça, la
+            // sélection retombe silencieusement sur "mainhand" et le cast exige un staff.
+            selectionOptionList.removeIf(existing ->
+                    existing.spellData.getSpell().equals(spell));
             SpellSelectionManager.SelectionOption option = new SpellSelectionManager.SelectionOption(
-                    spellData, "statmod", i, selectionOptionList.size());
-            addOrMergeSelectionOption(option);
+                    spellData,
+                    LearnedSpellCastPolicy.SLOT,
+                    i,
+                    selectionOptionList.size());
+            selectionOptionList.add(option);
         }
     }
 }

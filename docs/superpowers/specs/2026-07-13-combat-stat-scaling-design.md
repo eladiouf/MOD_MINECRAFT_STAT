@@ -1,7 +1,7 @@
 # Combat Stat Scaling Design
 
-**Date:** 2026-07-13  
-**Status:** Approved design  
+**Date:** 2026-07-13
+**Status:** Approved design
 **Scope:** Offensive and defensive combat-stat curves, plus matching Trial Dungeon health anchors
 
 ## Goal

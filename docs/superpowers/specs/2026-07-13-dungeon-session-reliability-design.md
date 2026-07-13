@@ -9,7 +9,8 @@ Make dungeon encounters reliable across the full physical floor, reset interrupt
 
 ## Confirmed Product Rules
 
-- Only one team may occupy a physical dungeon floor at a time.
+- Only one team may occupy a physical challenge floor (`floor > 0`) at a time.
+- Floor 0 remains a shared city hub for all teams.
 - Members of the occupying team may join that floor and play cooperatively.
 - A combat floor interrupted by a server restart starts again from its first required room.
 - A boss floor interrupted by a server restart is reset: surviving authorized mobs are removed, boss tracking is cleared, and its altar becomes active again.
@@ -63,7 +64,7 @@ The session set is cleared on server stop for integrated-server safety and test 
 
 ### 3. Team-exclusive admission
 
-Before generation or session initialization, `DungeonTeleportHandler.enterFloor` examines living players already assigned to the requested floor.
+Before generation or session initialization, `DungeonTeleportHandler.enterFloor` examines living players already assigned to the requested challenge floor. Floor 0 bypasses admission control and remains shared.
 
 - Empty floor: entry is allowed.
 - At least one occupant in the same FTB team: entry is allowed.

@@ -1,6 +1,6 @@
 ---
 title: Perks
-description: "Liste des 84 perks"
+description: "Liste des 148 perks"
 nav_order: 5
 ---
 

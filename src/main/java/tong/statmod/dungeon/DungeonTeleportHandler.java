@@ -63,19 +63,11 @@ public final class DungeonTeleportHandler {
      * l'arène géante (l'autel occupe le centre).
      */
     public static BlockPos floorPlayerSpawnPos(int floor) {
-        return floorPlayerSpawnPos(floor, null);
-    }
-
-    /** Position avec {@link tong.statmod.dungeon.layout.RoomProvider} (organic layout). */
-    public static BlockPos floorPlayerSpawnPos(int floor, tong.statmod.dungeon.layout.RoomProvider provider) {
         if (floor == 0) {
             return tong.statmod.dungeon.city.CityPlan.playerSpawn(); // Grande Place de la cité
         }
         BlockPos island = floorSpawnPos(floor);
-        if (isRoomChainFloor(floor)) {
-            if (provider != null) return DungeonRoomChain.spawnWorldPos(island, provider);
-            return DungeonRoomChain.spawnWorldPos(island);
-        }
+        if (isRoomChainFloor(floor)) return DungeonRoomChain.spawnWorldPos(island);
         // Boss (générique OU arène importée) : apparaître sur la PLATEFORME au bord sud, hors de la
         // structure/arène (qui est centrée et plus petite que l'emprise) → jamais dans un bloc.
         return island.offset(0, 1, DungeonArchitect.HZ - 12);
@@ -175,11 +167,8 @@ public final class DungeonTeleportHandler {
         }
 
         IslandGenerator.generateFloor(dungeon, floor);
-        // Provider pour le spawn (organic pour combat, grille pour trésor multi-5).
-        tong.statmod.dungeon.layout.RoomProvider spawnProvider = floor > 0 && floor % 5 != 0
-                ? tong.statmod.dungeon.layout.OrganicRoomLayout.forFloor(floor, DungeonArchitect.HX, DungeonArchitect.HZ)
-                : DungeonLayout.gridProvider();
-        BlockPos spawn = safeSpawn(dungeon, floorPlayerSpawnPos(floor, spawnProvider));
+        // Spawn au centre de la pièce d'apparition (combat/trésor) ou au bord sud de la plateforme (boss).
+        BlockPos spawn = safeSpawn(dungeon, floorPlayerSpawnPos(floor));
 
         // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
         // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la
@@ -193,7 +182,7 @@ public final class DungeonTeleportHandler {
             // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
             // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
             // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
-            DungeonMobSpawner.requestWave(dungeon, floor, spawnProvider);
+            DungeonMobSpawner.requestWave(dungeon, floor);
 
             // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
             // la récompense de conquête.

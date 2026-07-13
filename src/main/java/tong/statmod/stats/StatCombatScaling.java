@@ -22,10 +22,10 @@ public final class StatCombatScaling {
      * <pre>{@code mult = base + scale * (level/100)^1.5}</pre>
      * <ul>
      *   <li>{@code base} = plancher au niveau 0 (défaut 1,5 → toutes les armes tapent déjà correct).</li>
-     *   <li>{@code scale} = amplitude ajoutée au niveau max (défaut 8,5 → stat principale maxée = ×10).</li>
+     *   <li>{@code scale} = amplitude ajoutée au niveau max (défaut 3,0 → stat maxée ≈ ×4,5).</li>
      *   <li>Exposant 1,5 : progression un peu accélérante (l'investissement se sent en profondeur).</li>
      * </ul>
-     * Les stats secondaires (Rapidité/Arcane) reçoivent 60 % de l'amplitude (×6,6 au niveau 100).
+     * Les stats secondaires (Rapidité/Arcane) reçoivent 60 % de l'amplitude (ce sont des appoints).
      */
     public static float weaponDamageMultiplier(StatType weaponStat,
                                                int bruteForce,
@@ -60,19 +60,19 @@ public final class StatCombatScaling {
     }
 
     public static float physicalDamageTakenMultiplier(int physicalResistance) {
-        return 1.0f - Math.min(0.65f, Math.max(0, physicalResistance) * 0.0065f);
+        return 1.0f - Math.min(0.5f, Math.max(0, physicalResistance) * 0.005f);
     }
 
     public static float magicDamageTakenMultiplier(int magicResistance) {
-        return 1.0f - Math.min(0.65f, Math.max(0, magicResistance) * 0.0065f);
+        return 1.0f - Math.min(0.5f, Math.max(0, magicResistance) * 0.005f);
     }
 
     public static float enduranceDamageTakenMultiplier(int physicalEndurance) {
-        return 1.0f - Math.min(0.35f, Math.max(0, physicalEndurance) * 0.0035f);
+        return 1.0f - Math.min(0.3f, Math.max(0, physicalEndurance) * 0.002f);
     }
 
     public static float statusDamageTakenMultiplier(int willpower) {
-        return 1.0f - Math.min(0.45f, Math.max(0, willpower) * 0.0045f);
+        return 1.0f - Math.min(0.3f, Math.max(0, willpower) * 0.003f);
     }
 
     public static float incomingDamageMultiplier(IncomingDamageRole role,
@@ -110,11 +110,11 @@ public final class StatCombatScaling {
         if (originalDurationTicks <= 0) {
             return originalDurationTicks;
         }
-        float reduction = Math.min(0.45f, Math.max(0, willpower) * 0.0045f);
+        float reduction = Math.min(0.3f, Math.max(0, willpower) * 0.003f);
         if (ironWillPerkUnlocked) {
             reduction += 0.10f;
         }
-        reduction = Math.min(0.65f, reduction);
+        reduction = Math.min(0.6f, reduction);
         return Math.max(1, Math.round(originalDurationTicks * (1.0f - reduction)));
     }
 

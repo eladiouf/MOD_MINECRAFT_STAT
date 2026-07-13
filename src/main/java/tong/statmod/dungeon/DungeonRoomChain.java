@@ -6,11 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import tong.statmod.dungeon.layout.NoiseShapeRoom;
-import tong.statmod.dungeon.layout.RoomLike;
-import tong.statmod.dungeon.layout.RoomProvider;
-import tong.statmod.dungeon.layout.OrganicRoomLayout;
-import tong.statmod.dungeon.template.*;
 
 import java.util.List;
 import java.util.Random;
@@ -47,60 +42,22 @@ public final class DungeonRoomChain {
 
     private DungeonRoomChain() {}
 
-    /**
-     * Construit tout l'intérieur d'un étage en utilisant {@link RoomProvider}.
-     * Version organique de {@link #build(ServerLevel, BlockPos, BlockPalette, int, DungeonArchitect.Role, Random)}.
-     */
-    public static void build(ServerLevel lv, BlockPos sp, BlockPalette t, int floor,
-                             DungeonArchitect.Role role, RoomProvider provider) {
-        List<? extends RoomLike> rooms = provider.rooms();
-        int count = rooms.size();
-
-        // (1) Coques — convertit RoomLike en Room local pour shell legacy.
-        for (RoomLike r : rooms) shellFromLike(lv, sp, t, r, floor);
-
-        // (2) Portes entre pièces connectées — une porte par voisin.
-        for (RoomLike r : rooms) {
-            int[] conn = r.connectedTo();
-            for (int ni : conn) {
-                RoomLike target = rooms.stream().filter(x -> x.index() == ni).findFirst().orElse(null);
-                if (target == null) continue;
-                DungeonLayout.Dir dir = exitDirToward(r, target);
-                DungeonLayout.Room roomWithDir = new DungeonLayout.Room(
-                        r.index(), 0, 0, r.minX(), r.maxX(), r.minZ(), r.maxZ(),
-                        dir, r.isFirst(), r.isLast());
-                carveDoor(lv, sp, t, roomWithDir, floor);
-            }
+    /** Détermine de combien de blocs une pièce est décalée verticalement. */
+    public static int roomYOffset(int roomIndex, int floor) {
+        Random rng = new Random(floor * 997L + 123L);
+        int[] offsets = new int[DungeonLayout.ROOM_COUNT];
+        offsets[0] = 0; // La pièce de spawn est toujours à Y = 0
+        for (int i = 1; i < DungeonLayout.ROOM_COUNT; i++) {
+            int step = rng.nextInt(3) - 1; // -1, 0, or 1
+            offsets[i] = offsets[i - 1] + step * 3;
+            if (offsets[i] < -6) offsets[i] = -6;
+            if (offsets[i] > 9)  offsets[i] = 9;
         }
-
-        // (3) Contenu par pièce.
-        for (RoomLike r : rooms) {
-            int yOffset = roomYOffset(r.index(), count, floor);
-            BlockPos roomSp = sp.above(yOffset);
-            int ceilH = roomCeilingHeight(floor, r, count);
-            lightRoomFromLike(lv, roomSp, t, r, ceilH);
-            if (r.isFirst()) {
-                spawnPad(lv, roomSp, t, toLayoutRoom(r));
-            } else if (r.isLast()) {
-                if (role == DungeonArchitect.Role.TREASURE) treasureRoom(lv, roomSp, t, floor, toLayoutRoom(r));
-                else exitRoom(lv, roomSp, t, toLayoutRoom(r));
-            } else if (role == DungeonArchitect.Role.TREASURE) {
-                DungeonMerchant.placeStall(lv, roomSp, r.centerX(), r.centerZ(), t,
-                        r.index() % DungeonMerchant.STALL_KINDS, floor);
-            } else if (role == DungeonArchitect.Role.COMBAT && r.index() == count / 2) {
-                safehouseRoom(lv, roomSp, t, floor, toLayoutRoom(r));
-            } else {
-                placePathwayFromLike(lv, roomSp, t, r, floor);
-                decorateCombatRoom(lv, roomSp, t, toLayoutRoom(r), floor, ceilH);
-                tryPlaceTemplate(lv, roomSp, r, t, floor);
-            }
-            DungeonWayfinding.mark(lv, roomSp, toLayoutRoom(r), floor);
-        }
+        return offsets[roomIndex];
     }
 
     /**
-     * Construit tout l'intérieur d'un étage en chaîne de pièces (layout grille 5×4 legacy).
-     * La dernière pièce dépend du rôle :
+     * Construit tout l'intérieur d'un étage en chaîne de pièces. La dernière pièce dépend du rôle :
      * combat → téléporteur ; trésor → coffres + aménagement ; boss → autel + arène + aménagement
      * (le téléporteur y est posé mais scellé tant que l'objectif — vague/loot/boss — n'est pas rempli).
      */
@@ -138,7 +95,6 @@ public final class DungeonRoomChain {
             } else {
                 placePathway(lv, roomSp, t, r, floor);
                 decorateCombatRoom(lv, roomSp, t, r, floor, ceilH);
-                tryPlaceTemplate(lv, roomSp, r, t, floor);
             }
             // Balisage EN DERNIER (après le décor) : traînée + fanal vers la porte de sortie → guide
             // le joueur, jamais perdu ni à rebrousser chemin.
@@ -153,7 +109,8 @@ public final class DungeonRoomChain {
 
     // ═══════════════ coque d'une pièce (forme + hauteur variables) ═══════════════
 
-    // Silhouette au sol désormais gérée par NoiseShapeRoom (OpenSimplex2S).
+    /** Silhouette au sol d'une pièce (varie la FORME, pas seulement la déco intérieure). */
+    private enum Shape { RECT, OCTAGON, CHAMFER, CROSS, DIAMOND, ROUND, STAR }
 
     /**
      * Coque d'une pièce avec <b>forme et hauteur variables</b> (déterministe par étage+pièce). La
@@ -166,27 +123,29 @@ public final class DungeonRoomChain {
         int x0 = r.minX(), x1 = r.maxX(), z0 = r.minZ(), z1 = r.maxZ();
         boolean fixed = r.isFirst() || r.isLast();
         int ceilH = roomCeilingHeight(floor, r);
-        NoiseShapeRoom shape = shapeForRoom(floor, r.index());
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
         int yOffset = roomYOffset(r.index(), floor);
 
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
+                // Remplir de solide sous le sol jusqu'au niveau de base de l'île (Y = -7)
                 for (int y = -7; y < yOffset - 1; y++) {
                     S(lv, O(sp, x, y, z), B(t.base()));
                 }
-                S(lv, O(sp, x, yOffset - 1, z), variedFloor(t, x, z));
-                boolean in = fixed || isInside(r, shape, x, z);
+                S(lv, O(sp, x, yOffset - 1, z), variedFloor(t, x, z));   // sol continu (toute la case)
+                boolean in = inside(r, x, z, shape);
                 if (!in) {
+                    // Coin « en trop » : masse rocheuse pleine jusqu'au plafond (change la silhouette).
                     for (int y = 0; y <= ceilH; y++) S(lv, O(sp, x, yOffset + y, z), variedWall(t, x, yOffset + y, z));
                     continue;
                 }
-                S(lv, O(sp, x, yOffset + ceilH, z), B(t.ceiling()));
+                S(lv, O(sp, x, yOffset + ceilH, z), B(t.ceiling()));       // plafond à hauteur variable
                 boolean edge = x == x0 || x == x1 || z == z0 || z == z1
-                        || !isInside(r, shape, x - 1, z) || !isInside(r, shape, x + 1, z)
-                        || !isInside(r, shape, x, z - 1) || !isInside(r, shape, x, z + 1);
+                        || !inside(r, x - 1, z, shape) || !inside(r, x + 1, z, shape)
+                        || !inside(r, x, z - 1, shape) || !inside(r, x, z + 1, shape);
                 if (edge) {
                     for (int y = 0; y < ceilH; y++) S(lv, O(sp, x, yOffset + y, z), variedWall(t, x, yOffset + y, z));
-                    S(lv, O(sp, x, yOffset, z), B(t.accent()));
+                    S(lv, O(sp, x, yOffset, z), B(t.accent()));        // plinthe au ras du sol
                 } else {
                     for (int y = 0; y < ceilH; y++) S(lv, O(sp, x, yOffset + y, z), AIR());
                 }
@@ -200,7 +159,50 @@ public final class DungeonRoomChain {
         return h[Math.floorMod(floor * 13 + idx * 29, h.length)];
     }
 
-    /** Forme organique : déléguée à NoiseShapeRoom.inside() (OpenSimplex2S). */
+    /** Silhouette variée déterministe. */
+    private static Shape shapeFor(int floor, int idx) {
+        Shape[] s = Shape.values();
+        return s[Math.floorMod(floor * 17 + idx * 11, s.length)];
+    }
+
+    /**
+     * {@code true} si (x,z) est à l'intérieur de la pièce selon sa silhouette. Toutes les formes ne
+     * coupent que les COINS → les 4 milieux de bords restent pleins (portes toujours praticables).
+     */
+    private static boolean inside(DungeonLayout.Room r, int x, int z, Shape shape) {
+        int w = r.maxX() - r.minX(), d = r.maxZ() - r.minZ();
+        int lx = x - r.minX(), lz = z - r.minZ();
+        if (lx < 0 || lz < 0 || lx > w || lz > d) return false;
+        int ax = Math.min(lx, w - lx); // distance au mur X le plus proche
+        int az = Math.min(lz, d - lz); // distance au mur Z le plus proche
+
+        double cx = w / 2.0;
+        double cz = d / 2.0;
+        double dx = lx - cx;
+        double dz = lz - cz;
+
+        return switch (shape) {
+            case RECT -> true;
+            case OCTAGON -> ax + az >= 12;         // petits pans coupés élargis
+            case CHAMFER -> ax + az >= 22;         // grands pans coupés élargis
+            case CROSS -> !(ax < 18 && az < 18);   // coins carrés retirés élargis
+            case DIAMOND -> {
+                // Losange pur, MAIS on élargit les pointes cardinales (milieu des bords)
+                // pour que les portes (largeur 2·DOOR_HALF+1 = 3) ne soient jamais bouchées.
+                // Si le bloc est sur l'axe médian horizontal ou vertical (± marge de la porte),
+                // on considère qu'il est « intérieur » tant qu'il reste dans la case de la pièce.
+                int doorMargin = DOOR_HALF + 2; // 3 blocs de marge de chaque côté de l'axe
+                boolean onCardinalAxis = Math.abs(dx) <= doorMargin || Math.abs(dz) <= doorMargin;
+                double dist = Math.abs(dx) / cx + Math.abs(dz) / cz;
+                yield onCardinalAxis ? dist <= 1.15 : dist <= 1.0;
+            }
+            case ROUND -> (dx * dx) / (cx * cx) + (dz * dz) / (cz * cz) <= 1.0;
+            case STAR -> {
+                double dist = Math.abs(dx) / cx + Math.abs(dz) / cz;
+                yield dist <= 1.0 || (Math.abs(dx) < cx * 0.4 && Math.abs(dz) < cz * 0.4);
+            }
+        };
+    }
 
     /** Hash déterministe [0,100) d'une position — bruit reproductible (même étage → même donjon). */
     private static int noise(int x, int y, int z) {
@@ -511,20 +513,22 @@ public final class DungeonRoomChain {
 
     private static void decorateCombatRoom(ServerLevel lv, BlockPos sp, BlockPalette t,
                                            DungeonLayout.Room r, int floor, int ceilH) {
-        NoiseShapeRoom shape = shapeForRoom(floor, r.index());
+        // (1) Base architectural layout variation
+        int layout = Math.floorMod(floor * 7 + r.index() * 31, 5);
+        switch (layout) {
+            case 0 -> pillarHall(lv, sp, t, r, ceilH, floor);
+            case 1 -> centralDais(lv, sp, t, r);
+            case 2 -> columnRing(lv, sp, t, r, ceilH, floor);
+            case 3 -> themedPool(lv, sp, t, r);
+            default -> quadPillars(lv, sp, t, r, ceilH, floor);
+        }
 
-        // (1) Piliers organiques (OpenSimplex2S, placement par bruit)
-        shape.placePillars(lv, sp, t, r.minX(), r.minZ(), r.maxX(), r.maxZ(), ceilH);
-
-        // (2) Éléments de sol organiques (plateformes/fosses/bassins)
-        shape.placeFloorFeatures(lv, sp, t, r.minX(), r.minZ(), r.maxX(), r.maxZ(), floor);
-
-        // (3) Secret Vault Puzzle (~25% chance in combat rooms)
+        // (1.5) Secret Vault Button Puzzle (~25% chance in combat rooms)
         if (Math.floorMod(floor * 17 + r.index() * 43, 100) < 25) {
             placeSecretVaultPuzzle(lv, sp, t, r, floor);
         }
 
-        // (4) Archetype detailing and themed props
+        // (2) Archetype detailing and themed props
         int archetype = Math.floorMod(floor * 13 + r.index() * 29, 6);
         switch (archetype) {
             case 0 -> archiveRoom(lv, sp, t, r, ceilH);
@@ -535,7 +539,7 @@ public final class DungeonRoomChain {
             default -> treasuryRoom(lv, sp, t, r, ceilH);
         }
         if (ceilH >= 12) {
-            buildMezzaninesAndBridges(lv, sp, t, r, floor, shape, ceilH);
+            buildMezzaninesAndBridges(lv, sp, t, r, floor, ceilH);
 
             // Hanging chains/ropes from ceiling
             int q = Math.max(4, Math.min(r.maxX() - r.minX(), r.maxZ() - r.minZ()) / 4);
@@ -579,14 +583,17 @@ public final class DungeonRoomChain {
                                                   DungeonLayout.Room r, int floor) {
         if (!DungeonUltraVault.isVaultFloor(floor)) return;
         if (r.isFirst() || r.isLast()) return;
+        // Pièce élue de l'étage (différente en général de celle de la salle secrète).
         if (r.index() != 2 + Math.floorMod(floor * 5 + 3, 7)) return;
 
-        NoiseShapeRoom shape = shapeForRoom(floor, r.index());
+        Shape shape = shapeFor(floor, r.index());
+
+        // Cherche une case intérieure valide dans le quadrant sud-est, hors axes de portes.
         int cx = r.centerX(), cz = r.centerZ();
         for (int x = cx + 3; x <= r.maxX() - 2; x++) {
             for (int z = cz + 3; z <= r.maxZ() - 2; z++) {
                 if (x == cx || z == cz) continue;
-                if (!isInside(r, shape, x, z) || getWallDistance(r, shape, x, z) < 2) continue;
+                if (!inside(r, x, z, shape) || getWallDistance(r, x, z, shape) < 2) continue;
                 DungeonUltraVault.placeShrine(lv, O(sp, x, 0, z));
                 DungeonUltraVault.build(lv, sp, t, floor);
                 return;
@@ -594,22 +601,123 @@ public final class DungeonRoomChain {
         }
     }
 
-    /** Piliers organiques : délégué à NoiseShapeRoom.placePillars(). */
+    /** Hall à piliers : grille de colonnes montant jusqu'au plafond de la pièce, allées libres. */
     private static void pillarHall(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
-        NoiseShapeRoom shape = shapeForRoom(floor, r.index());
-        shape.placePillars(lv, sp, t, r.minX(), r.minZ(), r.maxX(), r.maxZ(), ceilH);
+        BlockState pillar = B(t.decorPrimary());
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
+        for (int x = r.minX() + 4; x <= r.maxX() - 4; x += 6) {
+            for (int z = r.minZ() + 4; z <= r.maxZ() - 4; z += 6) {
+                if (ceilH >= 12 && getWallDistance(r, x, z, shape) <= 2) {
+                    continue;
+                }
+                for (int y = 0; y < ceilH - 1; y++) S(lv, O(sp, x, y, z), pillar);
+                S(lv, O(sp, x, ceilH - 1, z), B(t.accent()));
+            }
+        }
+    }
+
+    /** Estrade centrale surélevée (7×7) avec 4 accès en escalier — relief central. */
+    private static void centralDais(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+        int cx = r.centerX(), cz = r.centerZ();
+        for (int dx = -3; dx <= 3; dx++) for (int dz = -3; dz <= 3; dz++) {
+            boolean rim = Math.abs(dx) == 3 || Math.abs(dz) == 3;
+            S(lv, O(sp, cx + dx, 0, cz + dz), rim ? B(t.slab()) : B(t.accent()));
+        }
+        S(lv, O(sp, cx, 1, cz - 4), stair(t.stair(), Direction.SOUTH));
+        S(lv, O(sp, cx, 1, cz + 4), stair(t.stair(), Direction.NORTH));
+        S(lv, O(sp, cx - 4, 1, cz), stair(t.stair(), Direction.EAST));
+        S(lv, O(sp, cx + 4, 1, cz), stair(t.stair(), Direction.WEST));
+        S(lv, O(sp, cx, 1, cz), B(t.light()));
+    }
+
+    /** Anneau de colonnes autour du centre (8 colonnes montant au plafond) — arène circulaire. */
+    private static void columnRing(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
+        int cx = r.centerX(), cz = r.centerZ();
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
+        for (int i = 0; i < 8; i++) {
+            double a = Math.PI * 2 * i / 8;
+            int dx = (int) Math.round(Math.cos(a) * 6);
+            int dz = (int) Math.round(Math.sin(a) * 6);
+            int px = cx + dx;
+            int pz = cz + dz;
+            if (ceilH >= 12 && getWallDistance(r, px, pz, shape) <= 2) {
+                continue;
+            }
+            for (int y = 0; y < ceilH - 2; y++) S(lv, O(sp, px, y, pz), B(t.decorPrimary()));
+            S(lv, O(sp, px, ceilH - 2, pz), B(t.light()));
+        }
+    }
+
+    /** Bassin thématique 5×5 encastré dans le sol, bordé de dalles. */
+    private static void themedPool(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r) {
+        int cx = r.centerX(), cz = r.centerZ();
+        boolean infernal = t.light() == Blocks.SHROOMLIGHT || t.base() == Blocks.POLISHED_BLACKSTONE_BRICKS;
+        BlockState fluid = infernal ? B(Blocks.LAVA) : B(Blocks.WATER);
+        for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++) {
+            boolean rim = Math.abs(dx) == 2 || Math.abs(dz) == 2;
+            if (rim) S(lv, O(sp, cx + dx, 0, cz + dz), B(t.slab()));
+            else {
+                S(lv, O(sp, cx + dx, -1, cz + dz), fluid);
+                if (infernal) {
+                    S(lv, O(sp, cx + dx, -2, cz + dz), B(Blocks.MAGMA_BLOCK));
+                } else {
+                    if (dx == 0 && dz == 0) {
+                        S(lv, O(sp, cx, -2, cz), B(Blocks.SEA_LANTERN));
+                    } else {
+                        S(lv, O(sp, cx + dx, -2, cz + dz), B(t.accent()));
+                    }
+                }
+            }
+        }
+        if (!infernal) {
+            S(lv, O(sp, cx, 0, cz), B(Blocks.LILY_PAD));
+        }
+    }
+
+    /** Quatre grands piliers d'angle (2×2) montant au plafond — cadre imposant, centre dégagé, avec bases sculptées. */
+    private static void quadPillars(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int ceilH, int floor) {
+        int ox = Math.max(3, (r.maxX() - r.minX()) / 3);
+        int oz = Math.max(3, (r.maxZ() - r.minZ()) / 3);
+        BlockState pillar = B(t.decorPrimary());
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
+        for (int[] c : new int[][]{{-ox, -oz}, {ox, -oz}, {-ox, oz}, {ox, oz}}) {
+            int px = r.centerX() + c[0];
+            int pz = r.centerZ() + c[1];
+            if (ceilH >= 12 && getWallDistance(r, px, pz, shape) <= 2) {
+                continue;
+            }
+            for (int dx = 0; dx <= 1; dx++) for (int dz = 0; dz <= 1; dz++) {
+                for (int y = 0; y < ceilH - 1; y++)
+                    S(lv, O(sp, px + dx, y, pz + dz), pillar);
+            }
+            // Detail bases using stairs at Y = 0
+            for (int dx = -1; dx <= 2; dx++) {
+                for (int dz = -1; dz <= 2; dz++) {
+                    if (dx == -1 || dx == 2 || dz == -1 || dz == 2) {
+                        if ((dx == -1 || dx == 2) && (dz == -1 || dz == 2)) continue; // skip corners
+                        Direction facing = Direction.NORTH;
+                        if (dx == -1) facing = Direction.EAST;
+                        else if (dx == 2) facing = Direction.WEST;
+                        else if (dz == -1) facing = Direction.SOUTH;
+                        else if (dz == 2) facing = Direction.NORTH;
+                        BlockPos stairPos = O(sp, px + dx, 0, pz + dz);
+                        if (lv.getBlockState(stairPos).isAir()) {
+                            S(lv, stairPos, stair(t.stair(), facing));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // ═══════════════ positions monde (pour spawn joueur / mobs) ═══════════════
 
     /** Position monde du centre de la pièce d'apparition (où téléporter le joueur), y = pad+1. */
     public static BlockPos spawnWorldPos(BlockPos islandCenter) {
-        return spawnWorldPos(islandCenter, DungeonLayout.gridProvider());
-    }
-
-    /** Position monde avec {@link RoomProvider} (organic layout). */
-    public static BlockPos spawnWorldPos(BlockPos islandCenter, RoomProvider provider) {
-        RoomLike r = provider.spawnRoom();
+        DungeonLayout.Room r = DungeonLayout.spawnRoom();
         return islandCenter.offset(r.centerX(), 1, r.centerZ());
     }
 
@@ -749,8 +857,10 @@ public final class DungeonRoomChain {
         QuarkDungeonDecorator.enhanceSafehouse(lv, sp, cx, cz);
     }
 
-    private static void buildMezzaninesAndBridges(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int floor, NoiseShapeRoom shape, int ceilH) {
+    private static void buildMezzaninesAndBridges(ServerLevel lv, BlockPos sp, BlockPalette t, DungeonLayout.Room r, int floor, int ceilH) {
         int x0 = r.minX(), x1 = r.maxX(), z0 = r.minZ(), z1 = r.maxZ();
+        boolean fixed = r.isFirst() || r.isLast();
+        Shape shape = fixed ? Shape.RECT : shapeFor(floor, r.index());
 
         BlockState walkwayBlock = B(t.accent());
         Block macawRailing = MacawDungeonDecorator.oakStockadeFence();
@@ -758,8 +868,8 @@ public final class DungeonRoomChain {
 
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
-                if (isInside(r, shape, x, z)) {
-                    int dist = getWallDistance(r, shape, x, z);
+                if (inside(r, x, z, shape)) {
+                    int dist = getWallDistance(r, x, z, shape);
                     if (dist == 1) {
                         S(lv, O(sp, x, 4, z), walkwayBlock);
                         S(lv, O(sp, x, 5, z), AIR());
@@ -777,12 +887,15 @@ public final class DungeonRoomChain {
         Direction ladderFacing = null;
         for (int x = x0 + 1; x <= x1 - 1; x++) {
             for (int z = z0 + 1; z <= z1 - 1; z++) {
+                // JAMAIS sur les axes de portes : les ouvertures (largeur 3) sont toujours percées
+                // au centre des murs (cx/cz). Une échelle posée là bouchait le passage d'un bloc
+                // de large (feedback playtest 2026-07-09).
                 if (Math.abs(x - r.centerX()) <= 2 || Math.abs(z - r.centerZ()) <= 2) continue;
-                if (isInside(r, shape, x, z) && getWallDistance(r, shape, x, z) == 1) {
-                    if (isWall(r, shape, x + 1, z)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.EAST; break; }
-                    if (isWall(r, shape, x - 1, z)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.WEST; break; }
-                    if (isWall(r, shape, x, z + 1)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.SOUTH; break; }
-                    if (isWall(r, shape, x, z - 1)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.NORTH; break; }
+                if (inside(r, x, z, shape) && getWallDistance(r, x, z, shape) == 1) {
+                    if (isWall(r, x + 1, z, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.EAST; break; }
+                    if (isWall(r, x - 1, z, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.WEST; break; }
+                    if (isWall(r, x, z + 1, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.SOUTH; break; }
+                    if (isWall(r, x, z - 1, shape)) { ladderPos = O(sp, x, 0, z); ladderFacing = Direction.NORTH; break; }
                 }
             }
             if (ladderPos != null) break;
@@ -809,29 +922,19 @@ public final class DungeonRoomChain {
         }
     }
 
-    // ───── Helpers NoiseShapeRoom ─────
-
-    private static NoiseShapeRoom shapeForRoom(int floor, int roomIndex) {
-        return new NoiseShapeRoom(IslandShaper.seedFor(floor), roomIndex);
-    }
-
-    private static boolean isInside(DungeonLayout.Room r, NoiseShapeRoom shape, int x, int z) {
-        return shape.inside(x - r.minX(), z - r.minZ(), r.maxX() - r.minX(), r.maxZ() - r.minZ());
-    }
-
-    private static boolean isWall(DungeonLayout.Room r, NoiseShapeRoom shape, int x, int z) {
+    private static boolean isWall(DungeonLayout.Room r, int x, int z, Shape shape) {
         if (x == r.minX() || x == r.maxX() || z == r.minZ() || z == r.maxZ()) return true;
-        if (!isInside(r, shape, x, z)) return true;
-        return !isInside(r, shape, x - 1, z) || !isInside(r, shape, x + 1, z)
-            || !isInside(r, shape, x, z - 1) || !isInside(r, shape, x, z + 1);
+        if (!inside(r, x, z, shape)) return true;
+        return !inside(r, x - 1, z, shape) || !inside(r, x + 1, z, shape)
+            || !inside(r, x, z - 1, shape) || !inside(r, x, z + 1, shape);
     }
 
-    private static int getWallDistance(DungeonLayout.Room r, NoiseShapeRoom shape, int x, int z) {
-        if (isWall(r, shape, x, z)) return 0;
+    private static int getWallDistance(DungeonLayout.Room r, int x, int z, Shape shape) {
+        if (isWall(r, x, z, shape)) return 0;
         int dist = 99;
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                if (isWall(r, shape, x + dx, z + dz)) {
+                if (isWall(r, x + dx, z + dz, shape)) {
                     int d = Math.max(Math.abs(dx), Math.abs(dz));
                     if (d < dist) dist = d;
                 }
@@ -1268,111 +1371,5 @@ public final class DungeonRoomChain {
 
         // (4) Place valuable chest inside
         DungeonArchitect.placeChest(lv, O(sp, vx, 0, vz - 2));
-    }
-
-    // ───── Phase 2 : helpers pour RoomLike / RoomProvider ─────
-
-    /** Compatibilité grille 5×4 : utilise {@link DungeonLayout#ROOM_COUNT}. */
-    public static int roomYOffset(int roomIndex, int floor) {
-        return roomYOffset(roomIndex, DungeonLayout.ROOM_COUNT, floor);
-    }
-
-    /** Décalage vertical d'une pièce dans un layout à {@code roomCount} pièces. */
-    public static int roomYOffset(int roomIndex, int roomCount, int floor) {
-        java.util.Random rng = new java.util.Random(floor * 997L + 123L);
-        int[] offsets = new int[roomCount];
-        offsets[0] = 0;
-        for (int i = 1; i < roomCount; i++) {
-            int step = rng.nextInt(3) - 1;
-            offsets[i] = offsets[i - 1] + step * 3;
-            if (offsets[i] < -6) offsets[i] = -6;
-            if (offsets[i] > 9) offsets[i] = 9;
-        }
-        return offsets[roomIndex];
-    }
-
-    private static DungeonLayout.Dir exitDirToward(RoomLike from, RoomLike to) {
-        int dx = to.centerX() - from.centerX();
-        int dz = to.centerZ() - from.centerZ();
-        if (Math.abs(dx) >= Math.abs(dz)) return dx > 0 ? DungeonLayout.Dir.EAST : DungeonLayout.Dir.WEST;
-        return dz > 0 ? DungeonLayout.Dir.SOUTH : DungeonLayout.Dir.NORTH;
-    }
-
-    private static DungeonLayout.Dir exitDirToFirst(RoomLike r, List<? extends RoomLike> all) {
-        int[] conn = r.connectedTo();
-        if (conn.length == 0) return DungeonLayout.Dir.NONE;
-        RoomLike target = null;
-        for (RoomLike candidate : all) {
-            if (candidate.index() == conn[0]) { target = candidate; break; }
-        }
-        return target != null ? exitDirToward(r, target) : DungeonLayout.Dir.NONE;
-    }
-
-    private static DungeonLayout.Room toLayoutRoom(RoomLike r) {
-        return toLayoutRoom(r, java.util.Collections.emptyList());
-    }
-
-    private static DungeonLayout.Room toLayoutRoom(RoomLike r, List<? extends RoomLike> all) {
-        DungeonLayout.Dir dir = all.isEmpty() ? DungeonLayout.Dir.NONE : exitDirToFirst(r, all);
-        return new DungeonLayout.Room(r.index(), 0, 0, r.minX(), r.maxX(), r.minZ(), r.maxZ(),
-                dir, r.isFirst(), r.isLast());
-    }
-
-    private static void shellFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor) {
-        List<? extends RoomLike> all = java.util.Collections.singletonList(r);
-        shell(lv, sp, t, toLayoutRoom(r, all), floor);
-    }
-
-    private static void carveDoorFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor,
-                                          List<? extends RoomLike> all) {
-        carveDoor(lv, sp, t, toLayoutRoom(r, all), floor);
-    }
-
-    private static int roomCeilingHeight(int floor, RoomLike r, int roomCount) {
-        int mid = roomCount / 2;
-        boolean isCenter = r.index() == mid;
-        if (isCenter) return ceilingHeight(floor, r.index());
-        int idx = r.index() > mid ? r.index() - 1 : r.index();
-        return ceilingHeight(floor, idx);
-    }
-
-    private static void lightRoomFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int ceilH) {
-        lightRoom(lv, sp, t, toLayoutRoom(r), ceilH);
-    }
-
-    private static void placePathwayFromLike(ServerLevel lv, BlockPos sp, BlockPalette t, RoomLike r, int floor) {
-        placePathway(lv, sp, t, toLayoutRoom(r), floor);
-    }
-
-    // ── Phase 5: optional NBT template decoration overlay ──
-
-    private static void tryPlaceTemplate(ServerLevel lv, BlockPos sp,
-                                          DungeonLayout.Room r, BlockPalette t, int floor) {
-        if (!TemplateRegistry.isLoaded()) return;
-        String pool = "combat";
-        int cx = r.centerX();
-        int cz = r.centerZ();
-        RoomTemplate tmpl = TemplateRegistry.select(pool, floor, cx, cz);
-        if (tmpl == null) return;
-        DungeonMaterial mat = DungeonMaterial.fromPalette(t);
-        int ox = cx - tmpl.width() / 2;
-        int oz = cz - tmpl.depth() / 2;
-        BlockPos origin = sp.offset(ox, 0, oz);
-        tmpl.place(lv, origin, Direction.NORTH, mat, TemplateProperty.EMPTY);
-    }
-
-    private static void tryPlaceTemplate(ServerLevel lv, BlockPos sp,
-                                          RoomLike r, BlockPalette t, int floor) {
-        if (!TemplateRegistry.isLoaded()) return;
-        String pool = "combat";
-        int cx = r.centerX();
-        int cz = r.centerZ();
-        RoomTemplate tmpl = TemplateRegistry.select(pool, floor, cx, cz);
-        if (tmpl == null) return;
-        DungeonMaterial mat = DungeonMaterial.fromPalette(t);
-        int ox = cx - tmpl.width() / 2;
-        int oz = cz - tmpl.depth() / 2;
-        BlockPos origin = sp.offset(ox, 0, oz);
-        tmpl.place(lv, origin, Direction.NORTH, mat, TemplateProperty.EMPTY);
     }
 }

@@ -1,6 +1,6 @@
 ---
 title: Stats
-description: "Liste complète des 22 stats"
+description: "Liste complète des 23 stats"
 nav_order: 4
 ---
 

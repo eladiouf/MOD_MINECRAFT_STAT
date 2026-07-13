@@ -1,44 +1,39 @@
 package tong.statmod.stats;
 
 import org.junit.jupiter.api.Test;
-import tong.statmod.config.Config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StatCombatScalingTest {
     private static final double EPSILON = 1.0e-6d;
-    private static final float DEFAULT_BASE = (float) Config.DEFAULT_WEAPON_DAMAGE_BASE;
-    private static final float DEFAULT_SCALE = (float) Config.DEFAULT_WEAPON_DAMAGE_SCALE;
+
+    // base=1.5, scale=3.0 (défauts). Courbe : base + scale*weight*(lvl/100)^1.5.
 
     @Test
-    void primaryWeaponStatsReachTenAtLevelOneHundred() {
-        assertEquals(10.0f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.BRUTE_FORCE, 100, 0, 0, 0, 0, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
-        assertEquals(10.0f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.BLADE_TECHNIQUE, 0, 100, 0, 0, 0, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
-        assertEquals(10.0f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.PRECISION, 0, 0, 100, 0, 0, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
+    void weaponDamageUsesOnlyTheResolvedWeaponStat() {
+        // Niveau 100 → t=1 → base + scale*1 = 1.5 + 3.0 = 4.5 (stats primaires, weight 1.0).
+        assertEquals(4.50f, StatCombatScaling.weaponDamageMultiplier(
+                StatType.BRUTE_FORCE, 100, 100, 100, 100, 100, 1.5f, 3.0f), EPSILON);
+        assertEquals(4.50f, StatCombatScaling.weaponDamageMultiplier(
+                StatType.BLADE_TECHNIQUE, 100, 100, 100, 100, 100, 1.5f, 3.0f), EPSILON);
+        assertEquals(4.50f, StatCombatScaling.weaponDamageMultiplier(
+                StatType.PRECISION, 100, 100, 100, 100, 100, 1.5f, 3.0f), EPSILON);
     }
 
     @Test
-    void primaryCurveAcceleratesThroughApprovedMilestones() {
-        assertEquals(2.5625f, primaryDamageAt(25), EPSILON);
-        assertEquals(4.5052037f, primaryDamageAt(50), EPSILON);
-        assertEquals(7.020912f, primaryDamageAt(75), EPSILON);
-    }
-
-    @Test
-    void fastAndArcaneWeaponsKeepReducedRawDamageWeight() {
-        assertEquals(6.6f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.RAPIDITE, 0, 0, 0, 100, 0, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
-        assertEquals(6.6f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.ARCANE_POWER, 0, 0, 0, 0, 100, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
+    void fastAndArcaneWeaponsHaveTheirOwnLowerScaling() {
+        // Niveau 100 → base + scale*0.6 = 1.5 + 1.8 = 3.3 (stats secondaires, weight 0.6).
+        assertEquals(3.30f, StatCombatScaling.weaponDamageMultiplier(
+                StatType.RAPIDITE, 100, 100, 100, 100, 100, 1.5f, 3.0f), EPSILON);
+        assertEquals(3.30f, StatCombatScaling.weaponDamageMultiplier(
+                StatType.ARCANE_POWER, 100, 100, 100, 100, 100, 1.5f, 3.0f), EPSILON);
     }
 
     @Test
     void levelZeroGivesBaseMultiplier() {
+        // Niveau 0 → t=0 → base seul (1.5). Toutes les armes tapent déjà mieux qu'avant (×1.5).
         assertEquals(1.50f, StatCombatScaling.weaponDamageMultiplier(
-                StatType.BRUTE_FORCE, 0, 0, 0, 0, 0, DEFAULT_BASE, DEFAULT_SCALE), EPSILON);
+                StatType.BRUTE_FORCE, 0, 0, 0, 0, 0, 1.5f, 3.0f), EPSILON);
     }
 
     @Test
@@ -50,26 +45,22 @@ class StatCombatScalingTest {
 
     @Test
     void defensiveMultipliersAreClampedAndSeparatedByRole() {
-        assertEquals(0.35f, StatCombatScaling.physicalDamageTakenMultiplier(100), EPSILON);
-        assertEquals(0.35f, StatCombatScaling.physicalDamageTakenMultiplier(500), EPSILON);
-        assertEquals(0.35f, StatCombatScaling.magicDamageTakenMultiplier(100), EPSILON);
-        assertEquals(0.35f, StatCombatScaling.magicDamageTakenMultiplier(500), EPSILON);
-        assertEquals(0.65f, StatCombatScaling.enduranceDamageTakenMultiplier(100), EPSILON);
-        assertEquals(0.65f, StatCombatScaling.enduranceDamageTakenMultiplier(500), EPSILON);
-        assertEquals(0.55f, StatCombatScaling.statusDamageTakenMultiplier(100), EPSILON);
-        assertEquals(0.55f, StatCombatScaling.statusDamageTakenMultiplier(500), EPSILON);
+        assertEquals(0.50f, StatCombatScaling.physicalDamageTakenMultiplier(200), EPSILON);
+        assertEquals(0.50f, StatCombatScaling.magicDamageTakenMultiplier(200), EPSILON);
+        assertEquals(0.70f, StatCombatScaling.enduranceDamageTakenMultiplier(200), EPSILON);
+        assertEquals(0.70f, StatCombatScaling.statusDamageTakenMultiplier(100), EPSILON);
     }
 
     @Test
     void incomingDamageMultiplierOnlyAppliesTheMatchingDefensiveStats() {
-        assertEquals(0.2275f, StatCombatScaling.incomingDamageMultiplier(
-                StatCombatScaling.IncomingDamageRole.PHYSICAL, 100, 100, 100, 100), EPSILON);
         assertEquals(0.35f, StatCombatScaling.incomingDamageMultiplier(
-                StatCombatScaling.IncomingDamageRole.MAGIC, 100, 100, 100, 100), EPSILON);
-        assertEquals(0.55f, StatCombatScaling.incomingDamageMultiplier(
-                StatCombatScaling.IncomingDamageRole.STATUS, 100, 100, 100, 100), EPSILON);
+                StatCombatScaling.IncomingDamageRole.PHYSICAL, 200, 200, 200, 100), EPSILON);
+        assertEquals(0.50f, StatCombatScaling.incomingDamageMultiplier(
+                StatCombatScaling.IncomingDamageRole.MAGIC, 200, 200, 200, 100), EPSILON);
+        assertEquals(0.70f, StatCombatScaling.incomingDamageMultiplier(
+                StatCombatScaling.IncomingDamageRole.STATUS, 200, 200, 200, 100), EPSILON);
         assertEquals(1.0f, StatCombatScaling.incomingDamageMultiplier(
-                StatCombatScaling.IncomingDamageRole.ENVIRONMENT, 100, 100, 100, 100), EPSILON);
+                StatCombatScaling.IncomingDamageRole.ENVIRONMENT, 200, 200, 200, 100), EPSILON);
     }
 
     @Test
@@ -88,15 +79,9 @@ class StatCombatScalingTest {
 
     @Test
     void willpowerReducesFiniteNegativeEffectDurationsButNotInfiniteOnes() {
-        assertEquals(1100, StatCombatScaling.negativeEffectDurationTicks(2000, 100, false));
-        assertEquals(900, StatCombatScaling.negativeEffectDurationTicks(2000, 100, true));
-        assertEquals(900, StatCombatScaling.negativeEffectDurationTicks(2000, 500, true));
+        assertEquals(1400, StatCombatScaling.negativeEffectDurationTicks(2000, 100, false));
+        assertEquals(1200, StatCombatScaling.negativeEffectDurationTicks(2000, 100, true));
         assertEquals(-1, StatCombatScaling.negativeEffectDurationTicks(-1, 100, true));
         assertEquals(0, StatCombatScaling.negativeEffectDurationTicks(0, 100, true));
-    }
-
-    private static float primaryDamageAt(int level) {
-        return StatCombatScaling.weaponDamageMultiplier(
-                StatType.BRUTE_FORCE, level, 0, 0, 0, 0, DEFAULT_BASE, DEFAULT_SCALE);
     }
 }

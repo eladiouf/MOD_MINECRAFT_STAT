@@ -17,8 +17,7 @@ import tong.statmod.STATMod;
  *
  * <p>Formules (base = floor 1) :
  * <ul>
- *   <li>{@code MAX_HEALTH} : courbe par paliers, de x3 à l'étage 1 à x22 à l'étage 100,
- *       puis progression abyssale plafonnée à x32</li>
+ *   <li>{@code MAX_HEALTH} : +8 %/floor, cumul additif → floor 50 : x5.0</li>
  *   <li>{@code ATTACK_DAMAGE} : +5 %/floor, cumul additif → floor 50 : x3.5</li>
  *   <li>{@code ARMOR} : +0.5/floor, cap 40</li>
  *   <li>{@code ARMOR_TOUGHNESS} : +0.1/floor, cap 15</li>
@@ -80,10 +79,10 @@ public final class DungeonMobScaling {
         int safeFloor = Math.max(1, floor);
         double base;
         if (safeFloor > 100) {
-            base = Math.min(32.0, 22.0 + (safeFloor - 100) * 0.10);
+            base = Math.min(25.0, 15.0 + (safeFloor - 100) * 0.10);
         } else {
             int[] floors = {1, 10, 25, 50, 75, 100};
-            double[] multipliers = {3.0, 4.5, 7.5, 12.0, 17.0, 22.0};
+            double[] multipliers = {3.0, 4.0, 6.0, 9.0, 12.0, 15.0};
             base = multipliers[multipliers.length - 1];
             for (int i = 1; i < floors.length; i++) {
                 if (safeFloor <= floors[i]) {

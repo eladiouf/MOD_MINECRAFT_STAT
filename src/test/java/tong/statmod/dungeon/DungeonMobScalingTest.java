@@ -9,27 +9,27 @@ class DungeonMobScalingTest {
     @Test
     void followsConfiguredHealthAnchors() {
         assertMultiplier(3.0, 1, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(4.5, 10, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(7.5, 25, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(12.0, 50, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(17.0, 75, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(22.0, 100, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(4.0, 10, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(6.0, 25, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(9.0, 50, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(12.0, 75, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(15.0, 100, DungeonMobScaling.MobRole.NORMAL);
     }
 
     @Test
     void interpolatesAndClampsTheAbyssCurve() {
-        assertMultiplier(3.0 + (4.0 / 9.0) * 1.5, 5, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(24.5, 125, DungeonMobScaling.MobRole.NORMAL);
-        assertMultiplier(32.0, 500, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(3.0 + 4.0 / 9.0, 5, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(17.5, 125, DungeonMobScaling.MobRole.NORMAL);
+        assertMultiplier(25.0, 500, DungeonMobScaling.MobRole.NORMAL);
         assertMultiplier(3.0, 0, DungeonMobScaling.MobRole.NORMAL);
         assertMultiplier(3.0, -50, DungeonMobScaling.MobRole.NORMAL);
     }
 
     @Test
     void appliesEliteAndBossRoleBonusesAfterTheFloorCurve() {
-        assertMultiplier(9.375, 25, DungeonMobScaling.MobRole.ELITE);
-        assertMultiplier(11.25, 25, DungeonMobScaling.MobRole.BOSS);
-        assertMultiplier(48.0, 500, DungeonMobScaling.MobRole.BOSS);
+        assertMultiplier(7.5, 25, DungeonMobScaling.MobRole.ELITE);
+        assertMultiplier(9.0, 25, DungeonMobScaling.MobRole.BOSS);
+        assertMultiplier(37.5, 500, DungeonMobScaling.MobRole.BOSS);
     }
 
     @Test

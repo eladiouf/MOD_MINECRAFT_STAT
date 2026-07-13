@@ -20,6 +20,7 @@ public class Config {
     public static final ModConfigSpec.IntValue DUNGEON_BOSS_STAT_GAIN;
     public static final ModConfigSpec.DoubleValue DUNGEON_HOSTILITY_PER_FLOOR;
     public static final ModConfigSpec.IntValue DUNGEON_HOSTILITY_CAP;
+    public static final ModConfigSpec.DoubleValue DUNGEON_MELEE_DAMAGE_MULTIPLIER;
     public static final ModConfigSpec.ConfigValue<String> SHOP_CURRENCY_NAME;
     public static final ModConfigSpec.DoubleValue POINT_TO_COIN_RATE;
 
@@ -66,6 +67,10 @@ public class Config {
         DUNGEON_HOSTILITY_CAP = BUILDER
                 .comment("Intégration L2 Hostility : plafond du niveau appliqué par étage (courbe et mode manuel).")
                 .defineInRange("l2HostilityCap", 100, 0, 500);
+        DUNGEON_MELEE_DAMAGE_MULTIPLIER = BUILDER
+                .comment("Multiplicateur des dégâts de mêlée des joueurs dans le Trial Dungeon.",
+                        "Compense les PV gonflés des mobs du donjon (L2 Hostility + scaling par étage).")
+                .defineInRange("meleeDamageMultiplier", 3.0, 1.0, 20.0);
         SHOP_CURRENCY_NAME = BUILDER
                 .comment("Nom de la monnaie SDM créditée à l'échange de points (doit correspondre à la devise du shop SDM).")
                 .define("shopCurrencyName", "FDP_cfa");
@@ -100,6 +105,14 @@ public class Config {
     public static double getWeaponDamageScale() {
         try {
             return WEAPON_DAMAGE_SCALE.get();
+        } catch (IllegalStateException e) {
+            return 3.0;
+        }
+    }
+
+    public static double getDungeonMeleeDamageMultiplier() {
+        try {
+            return DUNGEON_MELEE_DAMAGE_MULTIPLIER.get();
         } catch (IllegalStateException e) {
             return 3.0;
         }

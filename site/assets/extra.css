@@ -59,4 +59,32 @@
   border-radius: 8px;
   transition: transform .12s ease;
 }
+
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.screenshot-grid figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 18%, transparent);
+  border-radius: 0.5rem;
+  background: var(--md-code-bg-color);
+}
+
+.screenshot-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.screenshot-grid figcaption {
+  padding: 0.65rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
 .logo-strip img:hover { transform: scale(1.15); }

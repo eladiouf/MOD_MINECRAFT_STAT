@@ -89,9 +89,13 @@ public final class StartBranchChooserScreen extends Screen {
         this.minecraft.setScreen(parent);
     }
 
+    /**
+     * 1.21 : dessiné dans renderBackground (après le flou du monde, avant les widgets)
+     * — dans render() avant super.render(), la passe de fond de Screen flouterait le panneau.
+     */
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTick);
 
         graphics.fill(panelLeft, panelTop, panelLeft + panelWidth, panelTop + panelHeight, BACKGROUND);
         graphics.renderOutline(panelLeft, panelTop, panelWidth, panelHeight, BORDER);
@@ -110,8 +114,6 @@ public final class StartBranchChooserScreen extends Screen {
             graphics.drawWordWrap(this.font, Component.literal("§8" + race.summary()), panelLeft + 12, panelTop + 42,
                     panelWidth - 24, GRAY_500);
         }
-
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override

@@ -210,7 +210,10 @@
       "PowerShell(\"live: \" + \\(curl.exe -s -o NUL -w \"%{http_code}\" \"https://eladiouf.github.io/statmod-wiki/\"\\))",
       "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\extract_mod_logos.py\")",
       "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\diag_logos.py\")",
-      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\fetch_missing_logos.py\")"
+      "PowerShell(python \"C:\\\\Users\\\\ELHADJ~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-El-Hadji-Downloads-STAT-MOD-test-MOD-MINECRAFT-STAT\\\\b18a38f3-8fa8-4ac1-a801-de2f23100303\\\\scratchpad\\\\fetch_missing_logos.py\")",
+      "PowerShell(.\\\\gradlew compileJava --console=plain -q)",
+      "PowerShell(Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead\\(\"$PWD\\\\libs\\\\sdmshopa-neoforge-3.3.1.jar\"\\); $zip.Entries | Where-Object { $_.FullName -match 'ShopPage|ShopNetworkUtils|TabPanel|TovarTab|SendOpenShopScreen' } | Select-Object -ExpandProperty FullName; $zip.Dispose\\(\\))",
+      "Bash(unzip -o -q libs/irons_spellbooks-1.21.1-3.16.1.jar \"io/redspace/ironsspellbooks/api/magic/SpellSelectionManager*.class\" -d /tmp/iss_check)"
     ]
   },
   "remote": {

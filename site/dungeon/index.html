@@ -716,6 +716,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#etage-0-cite-des-aventuriers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étage 0 — Cité des Aventuriers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mobs-mages" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -723,6 +734,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Mobs &amp; mages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vie-des-monstres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vie des monstres
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1096,6 +1124,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#etage-0-cite-des-aventuriers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étage 0 — Cité des Aventuriers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mobs-mages" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1103,6 +1142,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Mobs &amp; mages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vie-des-monstres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vie des monstres
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1178,8 +1234,11 @@ où chaque étage doit être <strong>conquis</strong> pour débloquer le suivant
 <li><strong>Portail du donjon</strong> (<code>dungeon_portal</code>) : clic droit → téléportation au plus haut étage atteint</li>
 <li><strong>Balise de poche</strong> (<code>dungeon_beacon</code>, craftable) : entre dans le donjon depuis n'importe où ; depuis le donjon → retour overworld</li>
 <li><strong>Balise de retour</strong> sur chaque étage → retour overworld</li>
+<li><strong>Téléporteur d'étage suivant</strong> : apparaît après la conquête et mène à l'étage débloqué</li>
 <li>La mort dans le donjon est <strong>annulée</strong> : inventaire et XP préservés, soin complet, retour à l'étage 1</li>
 </ul>
+<p><img alt="Téléporteur vers l'étage suivant" src="../assets/screenshots/next-floor-teleporter.png" /></p>
+<p><img alt="Balise de retour vers l'overworld" src="../assets/screenshots/return-beacon.png" /></p>
 <h2 id="les-etages">Les étages<a class="headerlink" href="#les-etages" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1210,16 +1269,69 @@ où chaque étage doit être <strong>conquis</strong> pour débloquer le suivant
 <ul>
 <li><strong>100 thèmes</strong> répartis en 10 arcs (pierre, os, glace, nether, améthyste…), difficulté croissante, boucle au-delà de 100</li>
 <li>Étages de combat : forteresse en chaîne de pièces avec pièges, mezzanines, salles secrètes</li>
+<li>Les rencontres sont activées <strong>salle par salle</strong> ; nettoyer une salle ouvre la progression,
+  et l'étage n'est conquis qu'après tous les secteurs obligatoires</li>
 <li>Étages de boss : arène géante à ciel ouvert, boss du roster (40+ : SLU, Iron's Spellbooks, vanilla) invoqué à l'autel</li>
 <li>Chambres-fortes <strong>ultra-secrètes</strong> (~1 étage de combat sur 7) : sanctuaire caché → arme relique unique</li>
 </ul>
+<h2 id="etage-0-cite-des-aventuriers">Étage 0 — Cité des Aventuriers<a class="headerlink" href="#etage-0-cite-des-aventuriers" title="Permanent link">&para;</a></h2>
+<p>L'étage 0 est un hub permanent sans monstres : quartiers humain, elfe, nain et hommes-bêtes,
+grand marché, guilde, artisans, portails, sanctuaire et intérieurs visitables.</p>
+<ul>
+<li>PvP désactivé dans toute la cité, sauf dans l'arène</li>
+<li>Arène de duel protégée avec porte, barrière intérieure et tribunes</li>
+<li>Duels joueur contre joueur et affrontements par équipes</li>
+<li>Terrains d'entraînement séparés pour guerriers, archers et mages</li>
+<li>Vrais mannequins d'entraînement issus du modpack et marchand de flèches côté archer</li>
+</ul>
 <h2 id="mobs-mages">Mobs &amp; mages<a class="headerlink" href="#mobs-mages" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Vague unique par étage, mobs de 10+ mods selon le thème</li>
+<li>Rencontres progressives par salle, mobs de 10+ mods selon le thème</li>
 <li><strong>Escouades de mages</strong> dès l'étage 3 (Pyromancien, Cryomancien, Électromancien, Clerc, Mage du Wither dès l'étage 15) escortées d'un chevalier et d'un archer</li>
 <li>Les mages <strong>incantent</strong> (son + particules) : les frapper pendant l'incantation <strong>interrompt le sort</strong></li>
 <li>Priorité tactique : éliminez le Clerc (soigneur) en premier !</li>
 </ul>
+<h3 id="vie-des-monstres">Vie des monstres<a class="headerlink" href="#vie-des-monstres" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Profondeur</th>
+<th style="text-align: right;">Multiplicateur de vie de base</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Étage 1</td>
+<td style="text-align: right;">×3</td>
+</tr>
+<tr>
+<td>Étage 10</td>
+<td style="text-align: right;">×4</td>
+</tr>
+<tr>
+<td>Étage 25</td>
+<td style="text-align: right;">×6</td>
+</tr>
+<tr>
+<td>Étage 50</td>
+<td style="text-align: right;">×9</td>
+</tr>
+<tr>
+<td>Étage 75</td>
+<td style="text-align: right;">×12</td>
+</tr>
+<tr>
+<td>Étage 100</td>
+<td style="text-align: right;">×15</td>
+</tr>
+<tr>
+<td>Abysses</td>
+<td style="text-align: right;">jusqu'à ×25</td>
+</tr>
+</tbody>
+</table>
+<p>Les élites reçoivent ensuite un multiplicateur supplémentaire de ×1,25 et les boss de ×1,5.
+Le scaling est compatible avec L2 Hostility et ne modifie pas les dégâts des monstres.</p>
 <h2 id="points-dungeon-rush">Points &amp; Dungeon Rush<a class="headerlink" href="#points-dungeon-rush" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Chaque kill rapporte des <strong>points</strong> proportionnels à la difficulté du mob et à la profondeur</li>
@@ -1235,6 +1347,9 @@ où chaque étage doit être <strong>conquis</strong> pour débloquer le suivant
 <li><strong>Marchands spécialisés</strong> : les villageois du donjon ouvrent la boutique SDM verrouillée sur leur rayon (forgeron → Armes, armurier → Armures, clerc → Potions)</li>
 <li><strong>Banquier magique</strong> : dépôt/retrait de la monnaie physique (pièces et billets)</li>
 </ul>
+<p>Les points gagnés en tuant les monstres et en conquérant les étages deviennent donc
+une monnaie réellement dépensable après conversion auprès du changeur.</p>
+<p><img alt="Banquier magique et transaction en monnaie FDP" src="../assets/screenshots/magic-banker.png" /></p>
 <h2 id="co-op">Co-op<a class="headerlink" href="#co-op" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Conquête <strong>partagée</strong> avec les joueurs présents sur l'étage (même équipe FTB Teams : <code>/ftbteams party create</code>)</li>

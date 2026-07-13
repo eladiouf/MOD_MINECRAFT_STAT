@@ -67,9 +67,13 @@ public final class MageCodexScreen extends Screen {
         this.addRenderableWidget(changeBranch);
     }
 
+    /**
+     * 1.21 : dessiné dans renderBackground (après le flou du monde, avant les widgets)
+     * — dans render() avant super.render(), la passe de fond de Screen flouterait le panneau.
+     */
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTick);
 
         // Panel arrière-plan avec bordure
         graphics.fill(panelLeft, panelTop, panelLeft + panelWidth, panelTop + panelHeight, BACKGROUND);
@@ -149,8 +153,6 @@ public final class MageCodexScreen extends Screen {
         graphics.drawString(this.font,
                 "§8" + Component.translatable("statmod.codex.hint_close").getString(),
                 panelLeft + 12, panelTop + panelHeight - 14, GRAY_500, false);
-
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override

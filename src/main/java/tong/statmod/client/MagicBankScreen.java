@@ -60,8 +60,14 @@ public final class MagicBankScreen extends Screen {
         }
     }
 
-    @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+    /**
+     * 1.21 : le flou d'arrière-plan est appliqué par {@code renderBackground} en post-process
+     * sur tout ce qui est déjà dessiné. Le panneau et les textes doivent donc être dessinés
+     * ICI (après le flou du monde, avant les widgets) — les dessiner dans {@code render()}
+     * avant {@code super.render()} les ferait flouter par la passe de fond de Screen.
+     */
+    @Override public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTick);
         int cx = width / 2, cy = height / 2;
         
         // Premium UI Background (Glassmorphism effect)
@@ -94,9 +100,10 @@ public final class MagicBankScreen extends Screen {
                 graphics.drawCenteredString(font, Component.translatable("Solde insuffisant"), cx, top + 56, 0xFF5555);
             }
         }
-        
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
+
+    /** Pas de flou du monde derrière l'UI (choix visuel du mod). */
+    @Override protected void renderBlurredBackground(float partialTick) {}
 
     @Override public boolean isPauseScreen() { return false; }
 }

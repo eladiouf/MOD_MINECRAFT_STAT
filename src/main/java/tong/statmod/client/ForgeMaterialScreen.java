@@ -144,9 +144,13 @@ public final class ForgeMaterialScreen extends Screen {
 
     private final List<Button> itemButtons = new ArrayList<>();
 
+    /**
+     * 1.21 : dessiné dans renderBackground (après le flou du monde, avant les widgets)
+     * — dans render() avant super.render(), la passe de fond de Screen flouterait le panneau.
+     */
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g, mouseX, mouseY, partialTick);
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(g, mouseX, mouseY, partialTick);
         int cx = width / 2, cy = height / 2;
         int left = cx - 160, right = cx + 160, top = cy - 100, bottom = cy + 115;
 
@@ -181,8 +185,6 @@ public final class ForgeMaterialScreen extends Screen {
             g.drawCenteredString(font,
                     Component.literal((start + 1) + "-" + (end) + "/" + total), cx, bottom - 14, 0x888888);
         }
-
-        super.render(g, mouseX, mouseY, partialTick);
     }
 
     private boolean canAfford(String itemId) {

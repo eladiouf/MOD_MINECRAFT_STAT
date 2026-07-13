@@ -55,7 +55,7 @@ public class InfusionForgeScreen extends AbstractContainerScreen<InfusionForgeMe
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        // 1.21 : super.render() applique déjà le fond (flou compris) — pas d'appel manuel
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
     }

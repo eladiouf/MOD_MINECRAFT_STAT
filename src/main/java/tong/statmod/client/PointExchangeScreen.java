@@ -66,9 +66,15 @@ public class PointExchangeScreen extends Screen {
         if (amount > 0) PacketDistributor.sendToServer(new ConvertPointsPayload(amount));
     }
 
+    /**
+     * 1.21 : le flou d'arrière-plan est appliqué par {@code renderBackground} en post-process
+     * sur tout ce qui est déjà dessiné. Le panneau et les textes doivent donc être dessinés
+     * ICI (après le flou du monde, avant les widgets) — les dessiner dans {@code render()}
+     * avant {@code super.render()} les ferait flouter par la passe de fond de Screen.
+     */
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(g, mouseX, mouseY, partialTick);
         int cx = this.width / 2;
         int cy = this.height / 2;
         
@@ -106,9 +112,11 @@ public class PointExchangeScreen extends Screen {
             g.drawCenteredString(this.font,
                     Component.translatable("shop.exchange.warning_ejection"), cx, bottom - 18, 0xFF5555);
         }
-        
-        super.render(g, mouseX, mouseY, partialTick);
     }
+
+    /** Pas de flou du monde derrière l'UI (choix visuel du mod). */
+    @Override
+    protected void renderBlurredBackground(float partialTick) {}
 
     @Override
     public boolean isPauseScreen() { return false; }

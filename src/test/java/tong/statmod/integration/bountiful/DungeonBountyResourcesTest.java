@@ -42,4 +42,23 @@ class DungeonBountyResourcesTest {
                 && s.contains("statmod:rune_essence_mithril"), "rune essences");
         assertTrue(s.contains("statmod:respec_stone"), "matériau donjon signature");
     }
+
+    @Test
+    void delvePoolTargetsFloorAdvancements() throws Exception {
+        String s = read("dungeon_delve_objs.json");
+        assertTrue(s.contains("\"type\": \"criteria\""));
+        assertTrue(s.contains("statmod:dungeon/delve_10")
+                && s.contains("statmod:dungeon/delve_50")
+                && s.contains("statmod:dungeon/delve_100"), "cible les advancements de palier");
+    }
+
+    @Test
+    void delveAdvancementsExistAndAreCodeGranted() throws Exception {
+        Path adv = Path.of("src/main/resources/data/statmod/advancement/dungeon");
+        for (String f : new String[]{"delve_10.json","delve_25.json","delve_50.json","delve_100.json"}) {
+            String s = Files.readString(adv.resolve(f));
+            assertTrue(s.contains("\"trigger\": \"minecraft:impossible\""), f + " doit être code-granted");
+            assertTrue(s.contains("\"reached\""), f + " doit exposer le critère 'reached'");
+        }
+    }
 }

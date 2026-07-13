@@ -273,6 +273,23 @@ l'approche par `CityGateOpener`, 4 statues des peuples, téléporteur étage 1),
 le camp provisoire et les étals de la place seront redistribués), plan C (Hall des Héros,
 tableau de bord Guilde, Sanctuaire respec, duels d'arène, mannequins).
 
+**Bounties de donjon en FDP (2026-07-13)** : les tableaux de bounty de la cité (Bountiful)
+ne servent plus les tâches de métiers vanilla mais des **bounties thématisés donjon payés
+uniquement en billets FDP**. Les 12 décrees `data/bountiful/bounty_decrees/bountiful/*.json`
+sont réécrites pour ne pointer que vers 4 pools `data/bountiful/bounty_pools/statmod/` :
+`dungeon_slay_objs` (tuer des mobs de donjon, par rareté), `dungeon_boss_objs` (tuer un boss,
+EPIC), `dungeon_haul_objs` (rapporter des matériaux de coffre : rune essences, perk tome…),
+`dungeon_delve_objs` (`criteria` « atteindre l'étage N »), récompense = `fdp_rewards` seul.
+Bountiful égalise la valeur de récompense à celle de l'objectif → les bounties durs paient
+plus de FDP automatiquement. « Atteindre l'étage » s'appuie sur les advancements
+`statmod:dungeon/delve_{10,25,50,100}` accordés par code dans `DungeonTeleportHandler.enterFloor`
+(helper pur `DungeonBountyMilestones`, basé sur l'étage le plus profond atteint, rétroactif +
+idempotent). Bountiful reste **optionnel** (Exit Conditions : sans lui, FDP toujours gagnable
+via le Banquier). Portée globale assumée (tout tableau du monde devient donjon+FDP). Tests :
+`DungeonBountyResourcesTest`, `DungeonBountyMilestonesTest`. Spec/plan :
+`docs/superpowers/{specs,plans}/2026-07-13-dungeon-bounties-fdp*`.
+⚠ À valider en jeu : forme exacte du `content` d'un objectif `criteria` (id d'advancement).
+
 ### Fichiers clés
 
 | Fichier | Rôle |
@@ -286,6 +303,7 @@ tableau de bord Guilde, Sanctuaire respec, duels d'arène, mannequins).
 | `dungeon/city/DungeonGateBuilder.java` | Porte du Donjon + statues + téléporteur étage 1 |
 | `dungeon/city/CityGateOpener.java` | Ouverture/fermeture de la porte à l'approche (tick) |
 | `dungeon/city/PortalCourtBuilder.java` | Cour des Portails (1 active retour, 4 scellées) |
+| `dungeon/DungeonBountyMilestones.java` | **Bounties donjon** : paliers `delve_{10,25,50,100}` → advancement à accorder — cœur pur testable (2026-07-13) |
 | `dungeon/DungeonRush.java` | **Dungeon Rush** : combo/jackpot/sans-faute — cœur pur testable (2026-07-09) |
 | `dungeon/DungeonRushHandler.java` | Câblage Rush : coup reçu → combo brisé + sans-faute perdu ; logout → purge |
 | `dungeon/DungeonDimensions.java` | ResourceKeys pour `statmod:trial_dungeon` |

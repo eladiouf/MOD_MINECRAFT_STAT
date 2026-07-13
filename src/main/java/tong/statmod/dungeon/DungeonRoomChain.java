@@ -59,10 +59,18 @@ public final class DungeonRoomChain {
         // (1) Coques — convertit RoomLike en Room local pour shell legacy.
         for (RoomLike r : rooms) shellFromLike(lv, sp, t, r, floor);
 
-        // (2) Portes entre pièces connectées (déduites de connectedTo).
+        // (2) Portes entre pièces connectées — une porte par voisin.
         for (RoomLike r : rooms) {
             int[] conn = r.connectedTo();
-            if (conn.length > 0) carveDoorFromLike(lv, sp, t, r, floor, rooms);
+            for (int ni : conn) {
+                RoomLike target = rooms.stream().filter(x -> x.index() == ni).findFirst().orElse(null);
+                if (target == null) continue;
+                DungeonLayout.Dir dir = exitDirToward(r, target);
+                DungeonLayout.Room roomWithDir = new DungeonLayout.Room(
+                        r.index(), 0, 0, r.minX(), r.maxX(), r.minZ(), r.maxZ(),
+                        dir, r.isFirst(), r.isLast());
+                carveDoor(lv, sp, t, roomWithDir, floor);
+            }
         }
 
         // (3) Contenu par pièce.

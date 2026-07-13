@@ -28,7 +28,7 @@ public final class NoiseShapeRoom {
         double nz = (lz - d / 2.0) / (d / 2.0);
         float noise = OpenSimplex2S.noise2(seed, nx * 3.0, nz * 3.0);
         double dist = Math.sqrt(nx * nx + nz * nz);
-        double threshold = -0.2 + dist * 0.3;
+        double threshold = -0.7 + dist * 0.2;
         return noise > threshold;
     }
 

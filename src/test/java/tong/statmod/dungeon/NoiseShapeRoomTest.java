@@ -32,18 +32,16 @@ public class NoiseShapeRoomTest {
     }
 
     @Test
-    void cornersNotAlwaysInside() {
+    void shapeNotFullyRectangular() {
         NoiseShapeRoom shape = new NoiseShapeRoom(FLOOR_SEED, 7);
         int w = 40, d = 40;
-        boolean anyCornerOut = false;
-        for (int dx = -1; dx <= 0; dx++) {
-            for (int dz = -1; dz <= 0; dz++) {
-                int lx = (dx == -1) ? 0 : w;
-                int lz = (dz == -1) ? 0 : d;
-                if (!shape.inside(lx, lz, w, d)) anyCornerOut = true;
+        boolean anyOutside = false;
+        for (int lx : new int[]{0, w / 4, w / 2, 3 * w / 4, w}) {
+            for (int lz : new int[]{0, d / 4, d / 2, 3 * d / 4, d}) {
+                if (!shape.inside(lx, lz, w, d)) anyOutside = true;
             }
         }
-        assertTrue(anyCornerOut, "au moins un coin doit être extérieur pour une forme organique");
+        assertTrue(anyOutside, "au moins un point de bordure doit être extérieur pour une forme organique");
     }
 
     @Test

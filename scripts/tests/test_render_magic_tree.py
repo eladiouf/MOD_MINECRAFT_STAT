@@ -6,7 +6,13 @@ from pathlib import Path
 
 from PIL import Image
 
-from scripts.render_magic_tree import build_texture_index, load_tree, resolve_texture
+from scripts.render_magic_tree import (
+    build_texture_index,
+    compute_transform,
+    load_tree,
+    render_tree,
+    resolve_texture,
+)
 
 
 class ResourceLoadingTest(unittest.TestCase):
@@ -70,6 +76,29 @@ class ResourceLoadingTest(unittest.TestCase):
         image = resolve_texture("example:textures/gui/icon.png", index)
         self.assertIsNotNone(image)
         self.assertEqual((16, 16), image.size)
+
+    def test_transform_fits_all_nodes_inside_margin(self):
+        tree = load_tree(self.root)
+
+        transform = compute_transform(tree, (3840, 2160), 140)
+        points = [transform.apply(node.x, node.y) for node in tree.nodes]
+
+        self.assertTrue(all(140 <= x <= 3700 for x, _ in points))
+        self.assertTrue(all(140 <= y <= 2020 for _, y in points))
+        self.assertLess(points[0][0], points[1][0])
+        self.assertLess(points[0][1], points[1][1])
+
+    def test_render_reports_content_and_writes_4k_png(self):
+        output = self.root / "render.png"
+
+        report = render_tree(self.root, output)
+
+        self.assertEqual(2, report.nodes_rendered)
+        self.assertEqual(1, report.edges_rendered)
+        self.assertEqual(1, report.icons_found)
+        self.assertEqual((), report.missing_textures)
+        with Image.open(output) as image:
+            self.assertEqual((3840, 2160), image.size)
 
 
 if __name__ == "__main__":

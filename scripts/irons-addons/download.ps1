@@ -24,6 +24,34 @@ function New-ManifestRow {
     }
 }
 
+function Write-ManifestAtomically {
+    param([object[]]$Rows, [string]$Path)
+
+    $temporaryPath = "$Path.part"
+    $backupPath = "$Path.backup.part"
+    try {
+        $selectedRows = @($Rows | Select-Object $manifestColumns)
+        if ($selectedRows.Count -eq 0) {
+            $header = ($manifestColumns | ForEach-Object { '"' + $_ + '"' }) -join ','
+            [System.IO.File]::WriteAllText($temporaryPath, $header + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($true)))
+        }
+        else {
+            $selectedRows | Export-Csv -LiteralPath $temporaryPath -NoTypeInformation -Encoding UTF8
+        }
+
+        if (Test-Path -LiteralPath $Path) {
+            [System.IO.File]::Replace($temporaryPath, $Path, $backupPath)
+        }
+        else {
+            [System.IO.File]::Move($temporaryPath, $Path)
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $backupPath -Force -ErrorAction SilentlyContinue
+    }
+}
+
 function Get-ArchiveStatus {
     param([string]$Path)
 
@@ -34,7 +62,8 @@ function Get-ArchiveStatus {
             $hasMetadata = $false
             foreach ($entry in $archive.Entries) {
                 $entryName = $entry.FullName.Replace('\', '/')
-                if ($entryName -ieq 'META-INF/mods.toml' -or $entryName -ieq 'META-INF/neoforge.mods.toml') {
+                if ([string]::Equals($entryName, 'META-INF/mods.toml', [System.StringComparison]::Ordinal) -or
+                    [string]::Equals($entryName, 'META-INF/neoforge.mods.toml', [System.StringComparison]::Ordinal)) {
                     $hasMetadata = $true
                     break
                 }
@@ -105,6 +134,7 @@ try {
 
         if ($DryRun) {
             $results += New-ManifestRow -CatalogRow $row -Status 'dry-run'
+            Write-ManifestAtomically -Rows $results -Path $manifestPath
             continue
         }
 
@@ -114,6 +144,7 @@ try {
             if ($hash -eq ([string]$existingByKey[$key].sha256).ToLowerInvariant()) {
                 $size = (Get-Item -LiteralPath $destination).Length
                 $results += New-ManifestRow -CatalogRow $row -Status 'skipped-existing' -Sha256 $hash -Size $size
+                Write-ManifestAtomically -Rows $results -Path $manifestPath
                 continue
             }
         }
@@ -141,6 +172,7 @@ try {
         if (-not $downloaded) {
             $hadDownloadFailure = $true
             $results += New-ManifestRow -CatalogRow $row -Status 'download-failed'
+            Write-ManifestAtomically -Rows $results -Path $manifestPath
             continue
         }
 
@@ -148,9 +180,10 @@ try {
         $size = (Get-Item -LiteralPath $destination).Length
         $status = Get-ArchiveStatus -Path $destination
         $results += New-ManifestRow -CatalogRow $row -Status $status -Sha256 $hash -Size $size
+        Write-ManifestAtomically -Rows $results -Path $manifestPath
     }
 
-    $results | Select-Object $manifestColumns | Export-Csv -LiteralPath $manifestPath -NoTypeInformation -Encoding UTF8
+    Write-ManifestAtomically -Rows $results -Path $manifestPath
     if ($hadDownloadFailure) { exit 1 }
     exit 0
 }

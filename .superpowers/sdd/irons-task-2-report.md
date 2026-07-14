@@ -50,3 +50,36 @@ PASS: Windows ZIP separator normalization.
 ## Préoccupations
 
 Aucune préoccupation bloquante. Aucun JAR réel n’a été téléchargé ou committé, conformément au périmètre de la tâche.
+
+## Correctif après revue indépendante
+
+Statut : `DONE`
+
+- Après normalisation de `\` vers `/`, les entrées sont maintenant comparées avec `StringComparison.Ordinal` : les chemins exacts avec slash ou antislash sont valides, tandis que `meta-inf/mods.toml` reste `missing-metadata` et provoque un code non nul.
+- Les deux scripts écrivent `manifest.csv.part` dans le même répertoire, puis utilisent `File.Move` lors de la création ou `File.Replace` lors d’une mise à jour. Les fichiers temporaires et sauvegardes sont nettoyés.
+- `download.ps1` sauvegarde atomiquement le manifeste après chaque résultat de catalogue; `verify.ps1` le sauvegarde après chaque JAR contrôlé.
+
+Preuves RED :
+
+```text
+Exit=0 forward=valid backslash=valid lowercase=valid
+RED confirmed: lowercase metadata is incorrectly accepted.
+
+Exit=0 tempObserved=False rows=1 status=dry-run partRemains=False
+RED confirmed: atomic manifest temp file was not observed.
+```
+
+Preuves GREEN :
+
+```text
+Exit=1 forward=valid backslash=valid lowercase=missing-metadata partFiles=0
+PASS: exact case enforced after separator normalization.
+
+Exit=0 tempObserved=True rows=1 status=dry-run partRemains=0
+PASS: manifest written through same-directory temp and remains valid.
+
+PASS DryRun exit=0 destinations=74 rows=74 dry-run=74 parts=0
+PASS Parser scripts/irons-addons/download.ps1 errors=0
+PASS Parser scripts/irons-addons/verify.ps1 errors=0
+PASS git diff --check exit=0
+```

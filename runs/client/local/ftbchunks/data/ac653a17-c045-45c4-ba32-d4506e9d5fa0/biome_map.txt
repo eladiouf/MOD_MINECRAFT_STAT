@@ -1,9 +1,0 @@
-#3D6 minecraft:cold_ocean
-#109 minecraft:deep_cold_ocean
-#286 minecraft:grove
-#498 minecraft:lush_caves
-#73A minecraft:old_growth_pine_taiga
-#60C minecraft:old_growth_spruce_taiga
-#5FF minecraft:river
-#51A minecraft:stony_shore
-#169 minecraft:taiga

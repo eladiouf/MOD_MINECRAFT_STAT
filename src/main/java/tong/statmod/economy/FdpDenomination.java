@@ -17,6 +17,13 @@ public enum FdpDenomination {
     NOTE_5000("fdp_note_5000", 5_000),
     NOTE_10000("fdp_note_10000", 10_000);
 
+    /**
+     * Nom canonique de la devise SDM. Source de vérité unique partagée par le pont
+     * ({@code SDMEconomyBridge}) et l'enregistrement du shop ({@code SDMShopDatabaseInitializer}) :
+     * les deux DOIVENT référencer cette constante pour ne jamais diverger.
+     */
+    public static final String CURRENCY_ID = "FDP_cfa";
+
     private final String id;
     private final long value;
 

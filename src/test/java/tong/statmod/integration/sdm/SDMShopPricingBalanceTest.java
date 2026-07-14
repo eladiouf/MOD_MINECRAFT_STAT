@@ -30,7 +30,7 @@ class SDMShopPricingBalanceTest {
         Map.entry("Lances et armes d'hast", new int[] {3000, 12000}),
         Map.entry("Armes légères", new int[] {12000, 30000}),
         Map.entry("Armes lourdes", new int[] {12000, 30000}),
-        Map.entry("Armes de Tensura", new int[] {12000, 30000}),
+        Map.entry("Armes de Tensura", new int[] {50000, 300000}),
         Map.entry("Armures fantastiques", new int[] {12000, 30000}),
         Map.entry("Armures historiques", new int[] {12000, 30000}),
         Map.entry("Composants de monstres", new int[] {12000, 30000})
@@ -41,7 +41,7 @@ class SDMShopPricingBalanceTest {
         "Potions et soins", new int[] {100, 2000},
         "Lingots et gemmes", new int[] {800, 3000},
         "Armures magiques", new int[] {12000, 30000},
-        "Armes uniques et légendaires", new int[] {12000, 30000},
+        "Armes uniques et légendaires", new int[] {50000, 300000},
         "Objets rares contrôlés", new int[] {12000, 30000}
     );
 

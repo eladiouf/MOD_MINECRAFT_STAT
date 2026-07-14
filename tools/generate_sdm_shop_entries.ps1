@@ -29,8 +29,8 @@ function Get-CategoryProfile {
         'Armes lourdes'               = @{ Tier=4; BasePrice=20000; Count=1 }
         "Lances et armes d'hast"      = @{ Tier=3; BasePrice=6000; Count=1 }
         'Armes à distance'            = @{ Tier=3; BasePrice=5000; Count=1 }
-        'Armes de Tensura'            = @{ Tier=4; BasePrice=16000; Count=1 }
-        'Armes uniques et légendaires' = @{ Tier=4; BasePrice=20000; Count=1 }
+        'Armes de Tensura'            = @{ Tier=5; BasePrice=75000; Count=1 }
+        'Armes uniques et légendaires' = @{ Tier=5; BasePrice=60000; Count=1 }
         'Armures classiques'          = @{ Tier=3; BasePrice=6000; Count=1 }
         'Armures fantastiques'        = @{ Tier=4; BasePrice=18000; Count=1 }
         'Armures historiques'         = @{ Tier=4; BasePrice=18000; Count=1 }
@@ -58,6 +58,7 @@ function Get-TierBand {
         2 = @{ Min=800; Max=3000 }
         3 = @{ Min=3000; Max=12000 }
         4 = @{ Min=12000; Max=30000 }
+        5 = @{ Min=50000; Max=300000 }
     }
     return $bands[$Tier]
 }
@@ -66,16 +67,28 @@ function Get-RarityWeight {
     param([string]$ItemId)
     # Ultra-rare / boss tier
     if ($ItemId -match 'dragonsteel|mythic|legendary|boss_') { return 4.0 }
+    # Mythic unique weapons — spatial_blade/stormbringer are super-rare boss drops
+    if ($ItemId -match 'spatial_blade|dead_end|vorpal|stormbringer|hearthflame|soulpyre') { return 5.0 }
     # High-tier weapons and materials
-    if ($ItemId -match 'netherite|adamantite|runic|unique|spatial_blade|dead_end|vorpal|stormbringer|hearthflame|soulpyre') { return 3.0 }
-    # Mid-high: epic, pure_magisteel, hihiirokane, or dragon-related items
-    if ($ItemId -match 'epic|pure_magisteel|hihiirokane|dragon(?!steel)') { return 2.0 }
-    # Mid: diamond, rare, high_magisteel, mithril, orichalcum
+    if ($ItemId -match 'netherite|adamantite|runic|unique|soulrender|soulstealer|soulkeeper|twisted_blade') { return 3.0 }
+    # Mid-high: epic, enchanted golden apple, unique weapons
+    if ($ItemId -match ':epic|enchanted_golden|pure_magisteel|hihiirokane|dragon(?!steel)|dread_sword|tide_trident|ghost_sword|hippogryph_sword|ice_blade|mad_swords|mirrorguard|wildvine|bloomsoul') { return 2.0 }
+    # Mid: diamond, rare, high_magisteel, mithril, orichalcum, arcane_ingot
     if ($ItemId -match 'diamond|rare|high_magisteel|arcane_ingot|orichalcum|mithril') { return 1.5 }
+    # Magistuarmory armor tiers for Armures historiques
+    if ($ItemId -match 'crusader_') { return 2.0 }
+    if ($ItemId -match 'maximilian_') { return 1.5 }
+    if ($ItemId -match 'gothic_') { return 1.3 }
+    if ($ItemId -match 'knight_') { return 1.2 }
+    if ($ItemId -match 'plate_') { return 1.0 }
+    if ($ItemId -match 'scale_') { return 0.8 }
+    if ($ItemId -match 'chain_') { return 0.5 }
     # Low-tier base metals and common materials
     if ($ItemId -match 'iron_|copper_|gold_|stone_|wood_|tin_|bronze_|steel_|silver_') { return 0.8 }
     # Basic / raw materials
     if ($ItemId -match 'leather|chainmail|raw_|cobblestone|sand|gravel|dirt|planks|log_|sapling|seeds') { return 0.5 }
+    # Consumable projectiles (arrows) — sold in stacks of 1, so unit price must stay low
+    if ($ItemId -match 'arrow$') { return 0.3 }
     # Default for everything else
     return 1.0
 }
@@ -109,8 +122,11 @@ function Add-Category {
     foreach ($candidate in $matches) {
         $id = $candidate.item_id
         $price = Get-PriceForItem -Tab $Tab -ItemId $id -BasePrice $profile.BasePrice
-        $selected.Add([pscustomobject]@{
-            Tab=$Tab; Id=$id; Price=$price; Count=$profile.Count; Potion=$null
+        $count = $profile.Count
+    # Arrows sell in stacks; price per arrow then becomes palatable
+    if ($Tab -eq "Armes à distance" -and $id -match 'arrow$') { $count = 32 }
+    $selected.Add([pscustomobject]@{
+            Tab=$Tab; Id=$id; Price=$price; Count=$count; Potion=$null
         })
         [void]$used.Add($id)
     }
@@ -143,8 +159,10 @@ function Add-MixedCategory {
     foreach ($candidate in $tsvMatches) {
         $id = $candidate.item_id
         $price = Get-PriceForItem -Tab $Tab -ItemId $id -BasePrice $profile.BasePrice
+        $count = $profile.Count
+        if ($Tab -eq "Armes à distance" -and $id -match 'arrow$') { $count = 32 }
         $selected.Add([pscustomobject]@{
-            Tab=$Tab; Id=$id; Price=$price; Count=$profile.Count; Potion=$null
+            Tab=$Tab; Id=$id; Price=$price; Count=$count; Potion=$null
         })
         [void]$used.Add($id)
     }
@@ -155,8 +173,10 @@ function Add-MixedCategory {
         if ($inlineAdded -ge $remaining) { break }
         if ($used.Contains($id)) { continue }
         $price = Get-PriceForItem -Tab $Tab -ItemId $id -BasePrice $profile.BasePrice
+        $count = $profile.Count
+        if ($Tab -eq "Armes à distance" -and $id -match 'arrow$') { $count = 32 }
         $selected.Add([pscustomobject]@{
-            Tab=$Tab; Id=$id; Price=$price; Count=$profile.Count; Potion=$null
+            Tab=$Tab; Id=$id; Price=$price; Count=$count; Potion=$null
         })
         [void]$used.Add($id)
         $inlineAdded++
@@ -308,9 +328,9 @@ Add-Category 'Armes légères' ':(.+_(dagger|rapier|katana|kodachi|tachi|sai|cut
 
 Add-Category 'Armes lourdes' ':(.+_(greatsword|great_sword|claymore|greataxe|greathammer|longsword|long_sword|scythe|odachi)|greatsword|hulk_hammer)$' 'blocking|awakened|legendary|relic|compat/' 52
 
-Add-Category 'Armes de Tensura' ':adamantite_.+|:hihiirokane_.+|:pure_magisteel_.+|:high_magisteel_.+|:low_magisteel_.+|:silver_.+|:mithril_.+' '(helmet|chestplate|leggings|boots|block|gear_schematic|tool|hoe|axe|pickaxe|shovel|bone_golem|bow)' 48
+Add-Category 'Armes de Tensura' ':adamantite_.+|:hihiirokane_.+|:pure_magisteel_.+|:high_magisteel_.+|:low_magisteel_.+|:silver_.+|:mithril_.+' '(helmet|chestplate|leggings|boots|block|gear_schematic|tool|hoe|axe|pickaxe|shovel|bone_golem|bow|nugget|pile|gear)' 48
 
-Add-Category 'Armes uniques et légendaires' ':runic_.+|:soulkeeper|:twisted_blade|:soulrender|:soulstealer|:stormbringer|:hearthflame|:soulpyre|:mirrorguard|:wildvine|:bloomsoul|:dragonsteel_.+_sword|:dread_sword|:tide_trident|:ghost_sword|:hippogryph_sword|:spatial_blade|:dead_end_rainbow|:vorpal_sword|:ice_blade|:mad_swords' '' 45
+Add-Category 'Armes uniques et légendaires' ':runic_.+|:soulkeeper|:twisted_blade|:soulrender|:soulstealer|:stormbringer|:hearthflame|:soulpyre|:mirrorguard|:wildvine|:bloomsoul|:dragonsteel_.+_sword|:dread_sword|:tide_trident|:ghost_sword|:hippogryph_sword|:spatial_blade|:dead_end_rainbow|:vorpal_sword|:ice_blade|:mad_swords' 'grip|nugget|hilt|schematic' 45
 
 Add-Category 'Armures fantastiques' ':(armor_.+_(helmet|chestplate|leggings|boots))$' 'trim|copper_metal|spawn|cosmetic|dragonsteel' 48
 

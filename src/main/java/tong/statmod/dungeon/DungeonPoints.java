@@ -21,22 +21,25 @@ public final class DungeonPoints {
 
     /** Points minimum garantis pour n'importe quel kill. */
     private static final int MOB_POINTS_MIN = 3;
-    /** Points par point de « difficulté » du mob (voir {@link #difficultyRating}). */
-    private static final double POINTS_PER_DIFFICULTY = 0.6;
-    /** Bonus multiplicatif de profondeur : +5 % de points par étage franchi. */
-    private static final double DEPTH_BONUS_PER_FLOOR = 0.05;
-    /** Plafond de points par mob (anti-abus si un mob a des PV délirants). */
-    private static final int MOB_POINTS_CAP = 400;
+    /**
+     * Points par point de difficulté du mob.
+     * difficultyRating utilise déjà les stats scalées par l'étage (HP ×3..×15) → pas besoin de
+     * multiplicateur de profondeur supplémentaire. Ce taux est volontairement bas car le donjon
+     * spawn 18 salles × 4-12 mobs = 72-216 mobs par étage de combat.
+     */
+    private static final double POINTS_PER_DIFFICULTY = 0.25;
+    /** Plafond de points par mob (anti-abus si un modded mob a des PV délirants). */
+    private static final int MOB_POINTS_CAP = 250;
 
     /** Bonus de conquête d'un étage de combat/trésor. */
-    private static final int FLOOR_CLEAR_POINTS = 25;
+    private static final int FLOOR_CLEAR_POINTS = 50;
     /** Points par boss vaincu (gros gain). */
-    private static final int BOSS_POINTS = 150;
+    private static final int BOSS_POINTS = 300;
 
     /** Fraction des points perdue à la mort (mort punitive). */
-    private static final double DEATH_LOSS_FRACTION = 0.25;
-    /** Perte minimale garantie à la mort (pour que la mort pique même à faible total). */
-    private static final int DEATH_LOSS_MIN = 20;
+    private static final double DEATH_LOSS_FRACTION = 0.15;
+    /** Perte minimale garantie à la mort. */
+    private static final int DEATH_LOSS_MIN = 30;
 
     private DungeonPoints() {}
 
@@ -60,13 +63,14 @@ public final class DungeonPoints {
     }
 
     /**
-     * Points gagnés pour un mob tué : proportionnels à sa difficulté réelle, amplifiés par la
-     * profondeur de l'étage. Toujours ≥ {@link #MOB_POINTS_MIN}, plafonnés à {@link #MOB_POINTS_CAP}.
+     * Points gagnés pour un mob tué : proportionnels à sa difficulté réelle (déjà scalée par
+     * l'étage), plafonnés à {@link #MOB_POINTS_CAP}. Toujours ≥ {@link #MOB_POINTS_MIN}.
+     * <p>Pas de bonus de profondeur supplémentaire : le {@link DungeonMobScaling} augmente déjà
+     * les PV/ATK/Armure des mobs, ce qui fait monter naturellement le {@link #difficultyRating}.
      */
     public static int mobReward(LivingEntity mob, int floor) {
         double base = difficultyRating(mob) * POINTS_PER_DIFFICULTY;
-        double depthMult = 1.0 + Math.max(0, floor - 1) * DEPTH_BONUS_PER_FLOOR;
-        int pts = (int) Math.round(base * depthMult);
+        int pts = (int) Math.round(base);
         return Math.max(MOB_POINTS_MIN, Math.min(MOB_POINTS_CAP, pts));
     }
 
@@ -80,9 +84,10 @@ public final class DungeonPoints {
     }
 
     /**
-     * Récompense de kill de mob (points ∝ difficulté du mob × profondeur), amplifiée par la
+     * Récompense de kill de mob (points ∝ difficulté réelle du mob), amplifiée par la
      * couche « Dungeon Rush » : combo de kills (multiplicateur croissant, brisé quand on encaisse
      * un coup) et jackpot aléatoire (petite chance de ×{@value DungeonRush#JACKPOT_MULTIPLIER}).
+     * Les coéquipiers sur l'étage touchent une part d'assist (40 % des points de base du kill).
      */
     public static void awardMobKill(ServerPlayer player, LivingEntity mob, int floor) {
         int base = mobReward(mob, floor);

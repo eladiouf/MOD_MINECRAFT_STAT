@@ -16,20 +16,20 @@ import java.util.OptionalLong;
 public final class ForgeShopPrices {
 
     private static final int[] TIER_PRICES = {
-            50,   // 0: gold
-            50,   // 1: tin
-            70,   // 2: bronze
-            100,  // 3: diamond
-            150,  // 4: pyrium
-            250,  // 5: arcane
-            400,  // 6: mithril
-            500,  // 7: low_magisteel
-            600,  // 8: magisteel
-            700,  // 9: pure_magisteel
-            800,  // 10: high_magisteel
-            1000, // 11: orichalcum
-            1500, // 12: adamantite
-            3000, // 13: hihiirokane
+            50,   // 0:  gold
+            60,   // 1:  tin
+            80,   // 2:  bronze
+            120,  // 3:  diamond
+            180,  // 4:  pyrium
+            280,  // 5:  arcane
+            400,  // 6:  mithril
+            550,  // 7:  low_magisteel
+            700,  // 8:  magisteel
+            900,  // 9:  pure_magisteel
+            1100, // 10: high_magisteel
+            1400, // 11: orichalcum
+            1800, // 12: adamantite
+            2500, // 13: hihiirokane
             3500, // 14: netherite
     };
 

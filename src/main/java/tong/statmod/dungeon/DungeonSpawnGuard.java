@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 
 import java.util.function.Supplier;
 
@@ -176,5 +177,16 @@ public final class DungeonSpawnGuard {
                 }
             }
         }
+    }
+
+    /**
+     * Empêche toute conversion de mob dans le donjon (piglins → zombie piglins, etc.).
+     * Une conversion créerait une entité sans AUTHORIZED_TAG → le garde l'annulerait
+     * immédiatement, faisant "disparaître" le mob aux yeux du joueur.
+     */
+    @SubscribeEvent
+    public static void onLivingConversion(LivingConversionEvent.Pre event) {
+        if (!event.getEntity().level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
+        event.setCanceled(true);
     }
 }

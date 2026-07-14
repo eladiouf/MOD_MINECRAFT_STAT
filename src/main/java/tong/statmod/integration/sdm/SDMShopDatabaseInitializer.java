@@ -3,7 +3,12 @@ package tong.statmod.integration.sdm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
+import static tong.statmod.integration.sdm.SDMWeaponPoisonHandler.TAG_POISON_DURATION;
+import static tong.statmod.integration.sdm.SDMWeaponPoisonHandler.TAG_POISON_AMPLIFIER;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -32,7 +40,7 @@ import java.util.function.Supplier;
  */
 public final class SDMShopDatabaseInitializer {
 
-    private static final String CURRENCY_NAME = "FDP_cfa";
+    private static final String CURRENCY_NAME = tong.statmod.economy.FdpDenomination.CURRENCY_ID;
     private static boolean currencyRegistered = false;
 
     @SubscribeEvent
@@ -173,7 +181,7 @@ public final class SDMShopDatabaseInitializer {
                 tong.statmod.STATMod.LOGGER.warn("[Shop] Objet absent {}, entrée ignorée", entry.itemId());
                 continue;
             }
-            ItemStack stack = createStack(item, entry);
+            ItemStack stack = createStack(item, entry, registryAccess);
             addShopItem(server, tovarListTag, entry.tab(), stack, entry.price());
         }
 
@@ -195,14 +203,89 @@ public final class SDMShopDatabaseInitializer {
         return BuiltInRegistries.ITEM.getOptional(id).orElse(null);
     }
 
-    private static ItemStack createStack(Item item, SDMShopCatalog.ShopItem entry) {
+    private static ItemStack createStack(Item item, SDMShopCatalog.ShopItem entry, RegistryAccess registryAccess) {
         if ("strong_healing".equals(entry.potionId())) {
             return PotionContents.createItemStack(item, Potions.STRONG_HEALING);
         }
         if ("strong_strength".equals(entry.potionId())) {
             return PotionContents.createItemStack(item, Potions.STRONG_STRENGTH);
         }
-        return new ItemStack(item, entry.count());
+        ItemStack stack = new ItemStack(item, entry.count());
+        applyTier5Enchantments(stack, entry.itemId(), registryAccess);
+        return stack;
+    }
+
+    private static void applyTier5Enchantments(ItemStack stack, String itemId, RegistryAccess registryAccess) {
+        var enchantments = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+
+        // 300k FDP — Mythic unique weapons
+        if (itemId.contains("spatial_blade") || itemId.contains("dead_end") || itemId.contains("stormbringer")
+            || itemId.contains("hearthflame") || itemId.contains("soulpyre") || itemId.contains("vorpal")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 30);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 10);
+            stack.enchant(enchantments.getOrThrow(Enchantments.FIRE_ASPECT), 5);
+            stack.enchant(enchantments.getOrThrow(Enchantments.LOOTING), 10);
+            stack.enchant(enchantments.getOrThrow(Enchantments.KNOCKBACK), 5);
+            tagPoison(stack, 200, 4);
+            return;
+        }
+
+        // 240k FDP — Dragonsteel swords
+        if (itemId.contains("dragonsteel")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 25);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 8);
+            stack.enchant(enchantments.getOrThrow(Enchantments.FIRE_ASPECT), 4);
+            stack.enchant(enchantments.getOrThrow(Enchantments.LOOTING), 8);
+            tagPoison(stack, 160, 4);
+            return;
+        }
+
+        // 225k FDP — Adamantite (Tensura top tier)
+        if (itemId.contains("adamantite")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 20);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 7);
+            stack.enchant(enchantments.getOrThrow(Enchantments.LOOTING), 6);
+            tagPoison(stack, 160, 4);
+            return;
+        }
+
+        // 180k FDP — Runic / Soul weapons
+        if (itemId.contains("runic_") || itemId.contains("soulkeeper") || itemId.contains("soulrender")
+            || itemId.contains("soulstealer") || itemId.contains("twisted_blade")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 15);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 5);
+            stack.enchant(enchantments.getOrThrow(Enchantments.LOOTING), 4);
+            tagPoison(stack, 120, 3);
+            return;
+        }
+
+        // 120k FDP — Unique named weapons
+        if (itemId.contains("dread_sword") || itemId.contains("tide_trident")
+            || itemId.contains("ghost_sword") || itemId.contains("hippogryph_sword")
+            || itemId.contains("ice_blade") || itemId.contains("mad_swords")
+            || itemId.contains("mirrorguard") || itemId.contains("wildvine")
+            || itemId.contains("bloomsoul")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 12);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 4);
+            tagPoison(stack, 100, 2);
+            return;
+        }
+
+        // 112.5k FDP — High magisteel
+        if (itemId.contains("high_magisteel")) {
+            stack.enchant(enchantments.getOrThrow(Enchantments.SHARPNESS), 10);
+            stack.enchant(enchantments.getOrThrow(Enchantments.UNBREAKING), 3);
+            tagPoison(stack, 80, 2);
+        }
+    }
+
+    private static void tagPoison(ItemStack stack, int duration, int amplifier) {
+        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> {
+            var tag = data.copyTag();
+            tag.putInt(TAG_POISON_DURATION, duration);
+            tag.putInt(TAG_POISON_AMPLIFIER, amplifier);
+            return CustomData.of(tag);
+        });
     }
 
     private static void addShopItem(MinecraftServer server, ListTag list, String tabName, ItemStack stack, int price) {

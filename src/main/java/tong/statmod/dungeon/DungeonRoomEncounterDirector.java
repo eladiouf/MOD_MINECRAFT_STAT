@@ -38,6 +38,8 @@ public final class DungeonRoomEncounterDirector {
         if (state != null) state.resetActiveRoom();
     }
 
+
+
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
         if (++tick % 5 != 0) return;

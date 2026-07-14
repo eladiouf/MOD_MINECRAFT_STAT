@@ -35,4 +35,33 @@ Le script PowerShell prescrit dans le brief a été exécuté après création e
 
 ## Préoccupations
 
-Les routes CurseForge `/download/<fileId>` sont les endpoints officiels fournis par les rapports et peuvent nécessiter le suivi d'une redirection. La compatibilité runtime des entrées, en particulier celles marquées `needs-testing`, reste à valider dans l'instance du modpack.
+La compatibilité runtime des entrées, en particulier celles marquées `needs-testing`, reste à valider dans l'instance du modpack. La préoccupation initiale sur les routes CurseForge `/download/<fileId>` est résolue par la correction ci-dessous.
+
+## Correction après revue indépendante
+
+### Livraison autonome
+
+- Statut : `DONE_WITH_CONCERNS`
+- Commit livré et revu : `d89a37c`
+- Base de la correction : `d89a37c`
+- Objet de la correction : URL ForgeCDN directement consommables, classification prudente de KubeJS et normalisation des dépendances.
+
+### Correctifs
+
+Les 14 routes de pages CurseForge qui retournaient HTTP 403 ont été remplacées par les URL officielles directes `https://mediafilez.forgecdn.net/files/<fileId/1000>/<fileId%1000>/<filename>`. Les segments sont numériques sans zéro initial : le file ID `8024061` utilise donc `/8024/61/`, point confirmé par les métadonnées/API CurseForge et un téléchargement partiel réussi.
+
+KubeJS Iron's Spells est maintenant classé `needs-testing`, car sa métadonnée Modrinth référence une version Iron's Spells 1.21.1 incohérente avec cette sélection 1.20.1. Son rôle de couche de scripting reste décrit par `kind=addon` et le champ `dependencies`.
+
+Le champ `dependencies` ne contient plus de balises Markdown. Il utilise des éléments séparés par des points-virgules, avec `optional:` pour les relations facultatives et `unknown` lorsque les métadonnées ne déclarent rien.
+
+### TDD et vérification réseau
+
+RED avant correction : la commande ciblée `curl.exe -L --range 0-1 ...` appliquée aux 14 routes `www.curseforge.com` a donné `14/14` échecs, tous `HTTP=403` avec signature `3C21` (`<!`).
+
+GREEN après correction : la même boucle sur les 14 URL `mediafilez.forgecdn.net` exige un statut `200` ou `206` et les deux premiers octets `504B`. Résultat : `14/14 URL directes HTTP succès + PK`; chaque entrée a répondu `HTTP=206 SIG=504B`.
+
+Le contrôle complet du brief a ensuite été rejoué sur les 74 lignes, complété par les contrôles suivants : exactement 14 URL ForgeCDN, aucune route de page CurseForge restante, KubeJS en `needs-testing`, aucune balise Markdown dans `dependencies`, en-tête exact et classifications fermées.
+
+### Préoccupations résiduelles
+
+Les 14 JAR CurseForge sont directement téléchargeables au moment de cette correction, mais leur disponibilité externe peut évoluer. La compatibilité runtime des addons `needs-testing` reste hors du contrôle de structure et doit être validée dans l'instance du modpack.

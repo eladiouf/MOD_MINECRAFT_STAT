@@ -10,9 +10,9 @@
 
 ## Sources et déduplication
 
-Le catalogue combine les relevés officiels Modrinth et CurseForge. Lorsqu'un même projet et une même version existent sur les deux plateformes, l'URL directe Modrinth est préférée si elle a été vérifiée. Une version plus récente vérifiée remplace l'ancienne sélection : Dark Doppelganger utilise ainsi la version CurseForge 9.8.3. Les URL CurseForge sont leurs routes officielles `/download/<fileId>` et peuvent répondre par une redirection vers le JAR.
+Le catalogue combine les relevés officiels Modrinth et CurseForge. Lorsqu'un même projet et une même version existent sur les deux plateformes, l'URL directe Modrinth est préférée si elle a été vérifiée. Une version plus récente vérifiée remplace l'ancienne sélection : Dark Doppelganger utilise ainsi la version CurseForge 9.8.3. Les fichiers CurseForge utilisent les URL directes officielles `mediafilez.forgecdn.net`; chaque URL a été contrôlée par requête partielle avec succès HTTP et signature ZIP/JAR `PK`.
 
-Les resource packs, datapacks et publications sans JAR Forge 1.20.1 sont exclus. Les dépendances indiquées reflètent les métadonnées connues au moment du relevé et peuvent ne pas couvrir toute la chaîne transitive.
+Les resource packs, datapacks et publications sans JAR Forge 1.20.1 sont exclus. Le champ `dependencies` ne contient pas de Markdown : les éléments sont séparés par des points-virgules, `optional:` signale les dépendances facultatives et `unknown` l'absence de métadonnées déclarées. Les identifiants de projet et versions sont conservés après le nom lorsqu'ils sont connus. Cette liste peut ne pas couvrir toute la chaîne transitive.
 
 ## Limite de compatibilité
 

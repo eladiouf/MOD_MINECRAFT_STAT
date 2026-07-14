@@ -11,20 +11,10 @@
 
 ## Preuve de couverture
 
-La commande PowerShell intégrée au document a été exécutée depuis la racine du dépôt et a terminé avec le code 0 :
+La commande PowerShell intégrée au document a été exécutée depuis la racine du dépôt et a terminé avec le code 0. Sa sortie exacte est :
 
 ```text
-Expected     : 74
-Listed       : 74
-Unique       : 74
-Lots         : 44
-Lot0         : 4
-MaxAddonLot  : 5
-CoverageDiff : 0
-Duplicates   : 0
-Oversized    : 0
-BadLotZero   : 0
-DiskDiff     : 0
+OK: 74 JAR uniques; 44 lots; lots addons <= 5; 4 dependencies dans le lot 0.
 ```
 
 Ainsi, les 74 noms du manifeste correspondent aux 74 JAR présents sur disque et apparaissent chacun exactement une fois dans l'ordre de test.

@@ -9,18 +9,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LearnedSpellSelectionMixinSourceTest {
-    private static final Path SOURCE = Path.of("src", "main", "java", "tong", "statmod",
+    private static final Path SELECTION = Path.of("src", "main", "java", "tong", "statmod",
             "mixin", "SpellSelectionManagerMixin.java");
 
     @Test
-    void learnedSpellsUseStableVirtualSlotAndReplaceEquipmentDuplicates() throws Exception {
-        String source = Files.readString(SOURCE);
+    void learnedSpellsAreCastableFromTheHeldWeaponViaMainhandSlot() throws Exception {
+        String selection = Files.readString(SELECTION);
 
-        assertTrue(source.contains("LearnedSpellCastPolicy.SLOT"));
-        assertTrue(source.contains("selectionOptionList.removeIf"));
-        assertTrue(source.contains("existing.spellData.getSpell().equals(spell)"));
-        assertTrue(source.contains("selectionOptionList.add(option)"));
-        assertFalse(source.contains("addOrMergeSelectionOption(option)"));
-        assertFalse(source.contains("new SelectionOption(\n                    spellData, \"statmod\""));
+        // Slot MAINHAND → serverSideInitiateCast (touche V) prend l'arme en main comme objet
+        // support → le cast se complète. PAS de slot virtuel (sans objet, le cast n'aboutit pas).
+        assertTrue(selection.contains("SpellSelectionManager.MAINHAND"),
+                "les sorts appris doivent être castables depuis la main (touche V)");
+        assertFalse(selection.contains("LearnedSpellCastPolicy.SLOT"),
+                "ne doit plus utiliser le slot virtuel");
+
+        // N'écrase pas un sort déjà proposé par un objet équipé (grimoire curio, staff).
+        assertTrue(selection.contains("alreadyOffered"));
+        // Sélection restaurée par identité de sort après mutation.
+        assertTrue(selection.contains("previouslySelected"));
     }
 }

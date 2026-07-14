@@ -12,12 +12,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tong.statmod.STATMod;
-import tong.statmod.integration.ironspells.LearnedSpellCastPolicy;
 import tong.statmod.storage.ModAttachments;
 import tong.statmod.storage.PlayerStatData;
 
 import java.util.List;
 
+/**
+ * Injecte les sorts appris de l'arbre dans la roue de sélection, castables depuis la <b>main</b>
+ * (slot {@link SpellSelectionManager#MAINHAND} → source de cast {@code SWORD} → l'objet support
+ * est l'arme tenue). Couplé à {@code IronWeaponCastImplementMixin} qui fait reconnaître n'importe
+ * quelle arme comme objet de cast valide, on caste ses sorts appris au <b>clic-droit</b> en tenant
+ * son arme de combat — sans staff ni grimoire en main.
+ *
+ * <p>On ne remplace jamais un sort déjà proposé par un objet équipé (grimoire curio, staff) : ce
+ * sort-là reste castable nativement. On ne fait qu'<b>ajouter</b> les sorts appris manquants.
+ */
 @Mixin(SpellSelectionManager.class)
 public class SpellSelectionManagerMixin {
 
@@ -40,19 +49,14 @@ public class SpellSelectionManagerMixin {
             target = "Lnet/neoforged/bus/api/IEventBus;post(Lnet/neoforged/bus/api/Event;)Lnet/neoforged/bus/api/Event;",
             shift = At.Shift.BEFORE), require = 1)
     private void statmod$addLearnedSpells(CallbackInfo ci) {
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
         PlayerStatData data = player.getData(ModAttachments.STATS);
         if (data == null) return;
         String[] learned = data.getLearnedSpells();
         if (learned == null || learned.length == 0) return;
 
-        // Capture le sort actuellement sélectionné (résolu par Iron's pendant initItem, ex. le
-        // sort du grimoire en main) AVANT de muter la liste : le removeIf ci-dessous décale les
-        // positions, or selectionIndex est une POSITION → sans cette restauration il pointerait
-        // ensuite sur un autre sort (un sort appris injecté). C'est la cause du "il lance le sort
-        // de l'arbre au lieu de celui du grimoire".
+        // Capture la sélection courante (résolue par Iron's) AVANT de muter la liste, pour la
+        // restaurer ensuite sur le même sort (l'ajout décale sinon selectionIndex → mauvais sort).
         AbstractSpell previouslySelected = null;
         if (selectionValid && selectionIndex >= 0 && selectionIndex < selectionOptionList.size()) {
             previouslySelected = selectionOptionList.get(selectionIndex).spellData.getSpell();
@@ -66,46 +70,30 @@ public class SpellSelectionManagerMixin {
                 STATMod.LOGGER.warn("SpellSelectionManager: unknown learned spell '{}'", spellId);
                 continue;
             }
-            SpellData spellData = new SpellData(spell, 1);
-            // Le sort appris prime sur le doublon fourni par l'équipement : sans ça, la
-            // sélection retombe silencieusement sur "mainhand" et le cast exige un staff.
-            selectionOptionList.removeIf(existing ->
-                    existing.spellData.getSpell().equals(spell));
-            // globalIndex temporaire : renuméroté ci-dessous pour respecter l'invariant d'Iron's.
-            SpellSelectionManager.SelectionOption option = new SpellSelectionManager.SelectionOption(
-                    spellData,
-                    LearnedSpellCastPolicy.SLOT,
+            // Déjà proposé par un objet équipé (grimoire curio, staff en main) → laisser Iron's
+            // le caster nativement, ne pas dupliquer.
+            final AbstractSpell learnedSpell = spell;
+            boolean alreadyOffered = selectionOptionList.stream()
+                    .anyMatch(existing -> existing.spellData.getSpell().equals(learnedSpell));
+            if (alreadyOffered) continue;
+            // Slot MAINHAND → getCastSource() = SWORD → le cast utilise l'objet en main (l'arme),
+            // rendu valide par IronWeaponCastImplementMixin. globalIndex renuméroté plus bas.
+            selectionOptionList.add(new SpellSelectionManager.SelectionOption(
+                    new SpellData(spell, 1),
+                    SpellSelectionManager.MAINHAND,
                     i,
-                    0);
-            selectionOptionList.add(option);
+                    0));
         }
 
-        // (a) Invariant Iron's : globalIndex == position dans la liste. Le removeIf ci-dessus
-        // décale les positions sans toucher aux globalIndex des options d'équipement → la roue
-        // (getGlobalSelectionIndex/HUD) et le matching de sélection se désynchronisaient. On
-        // renumérote tout après injection.
+        // Invariant Iron's : globalIndex == position dans la liste (la roue/HUD indexent dessus).
         for (int gi = 0; gi < selectionOptionList.size(); gi++) {
             selectionOptionList.get(gi).globalIndex = gi;
         }
 
-        // (b) Restaure la sélection sur le MÊME sort qu'avant la mutation (grimoire, staff, ou
-        // appris) — indépendamment de sa nouvelle position/slot. Corrige le "lance le mauvais
-        // sort" causé par le décalage de positions du removeIf.
+        // Restaure la sélection sur le même sort qu'avant la mutation.
         if (previouslySelected != null) {
             for (int pos = 0; pos < selectionOptionList.size(); pos++) {
                 if (selectionOptionList.get(pos).spellData.getSpell().equals(previouslySelected)) {
-                    selectionIndex = pos;
-                    selectionValid = true;
-                    break;
-                }
-            }
-        } else if (spellSelection != null && LearnedSpellCastPolicy.isVirtualSlot(spellSelection.equipmentSlot)) {
-            // Sélection persistée sur un sort appris (slot virtuel) jamais validée par Iron's
-            // (les appris sont ajoutés après initItem) → on la retrouve par slotIndex.
-            int wantSlotIndex = spellSelection.index;
-            for (int pos = 0; pos < selectionOptionList.size(); pos++) {
-                SpellSelectionManager.SelectionOption opt = selectionOptionList.get(pos);
-                if (LearnedSpellCastPolicy.isVirtualSlot(opt.slot) && opt.slotIndex == wantSlotIndex) {
                     selectionIndex = pos;
                     selectionValid = true;
                     break;

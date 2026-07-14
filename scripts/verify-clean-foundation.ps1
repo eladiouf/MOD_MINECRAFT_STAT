@@ -48,6 +48,35 @@ if ($Mode -eq 'After') {
     if ((Get-Content -Raw gradle.properties) -notmatch 'forge_version=47\.4\.10') {
         throw 'Wrong Forge version.'
     }
+
+    $trackedJars = @(git ls-files 'external-mods/irons-spells-forge-1.20.1/*.jar')
+    if ($trackedJars.Count -ne 0) {
+        throw "External mod JARs must remain untracked:`n$($trackedJars -join "`n")"
+    }
+
+    $builtJars = @(Get-ChildItem (Join-Path $root 'build/libs') -File -Filter 'statmod-*.jar')
+    if ($builtJars.Count -ne 1) {
+        throw "Expected exactly one built STAT Mod JAR, found $($builtJars.Count)."
+    }
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = [IO.Compression.ZipFile]::OpenRead($builtJars[0].FullName)
+    try {
+        $entries = @($archive.Entries | ForEach-Object FullName)
+        foreach ($requiredEntry in 'META-INF/mods.toml', 'tong/statmod/StatMod.class') {
+            if ($entries -notcontains $requiredEntry) {
+                throw "Built JAR is missing $requiredEntry"
+            }
+        }
+    }
+    finally {
+        $archive.Dispose()
+    }
+
+    & git diff --check
+    if ($LASTEXITCODE -ne 0) {
+        throw 'git diff --check failed.'
+    }
 }
 
 "OK mode=$Mode branch=$branch jars=$($jars.Count) manifest=$($manifest.Count)"

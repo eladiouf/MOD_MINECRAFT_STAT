@@ -11,3 +11,12 @@
 The cleanup must preserve every JAR listed in
 `external-mods/irons-spells-forge-1.20.1/manifest.csv` with its recorded
 SHA-256. The binaries remain local and ignored by Git.
+
+## Clean-foundation validation
+
+- Official Forge MDK: `forge-1.20.1-47.4.10-mdk.zip`
+- MDK SHA-1: `31133abd261aa4d23672d1820db06ccec80326ad`
+- Runtime: Java 17
+- Required output entries: `META-INF/mods.toml` and
+  `tong/statmod/StatMod.class`
+- Active Tensura/NeoForge references: none

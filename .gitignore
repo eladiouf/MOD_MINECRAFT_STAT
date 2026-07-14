@@ -27,3 +27,7 @@ forge*changelog.txt
 
 # Worktrees isoles des agents Claude
 .claude/worktrees/
+
+# JAR externes Iron's Spells telecharges localement
+external-mods/irons-spells-forge-1.20.1/**/*.jar
+external-mods/irons-spells-forge-1.20.1/**/*.part

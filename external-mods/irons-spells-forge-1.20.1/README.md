@@ -17,3 +17,11 @@ Les resource packs, datapacks et publications sans JAR Forge 1.20.1 sont exclus.
 ## Limite de compatibilité
 
 La présence dans ce catalogue ne garantit pas la compatibilité avec Iron's Spells 3.16.2, entre addons, ni avec le modpack complet. Toute mise à jour ou entrée `needs-testing` doit passer par une instance de test avant déploiement.
+
+## Telechargement final
+
+Les 74 entrées du catalogue ont été téléchargées et validées : 35 JAR dans `active/`, 35 dans `needs-testing/` et 4 dans `dependencies/`. Le manifeste contient 74 statuts `valid`, aucun statut `download-failed`, pour une taille totale de 149 016 547 octets (environ 142,11 Mio).
+
+### Échecs
+
+Aucun échec de téléchargement.

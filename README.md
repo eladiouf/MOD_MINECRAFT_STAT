@@ -76,10 +76,15 @@ Brute Force, Blade Technique et Precision multiplient uniquement les attaques
 classées pour leur spécialisation. La courbe reste neutre au niveau 0 (`x1`)
 et atteint `x10` au niveau 100. Les tags publics d'équipement déterminent la
 classification, y compris pour les armes d'addons.
+Chaque palier automatique 25/50/75 ajoute ensuite `5 %` aux dégâts de la même
+classe seulement. Au niveau 100 avec les trois perks, le multiplicateur total
+atteint donc `x11,5`.
 
 Physical Resistance et Physical Endurance réduisent uniquement les dégâts de
-combat physiques éligibles. Leurs réductions sont multiplicatives et atteignent
-ensemble `77,25 %` lorsque les deux statistiques sont au niveau 100.
+combat physiques éligibles. Leurs réductions sont multiplicatives. Les trois
+perks de Physical Resistance ajoutent chacun 2 points de pourcentage avant le
+plafond de sécurité; au niveau 100 pour les deux statistiques, la réduction
+totale atteint `81,15 %`.
 
 Arcane Power, Casting Speed, Mana Pool et Magic Resistance renforcent les six
 attributs correspondants d'Iron's Spells. STAT Mod ne crée aucune seconde
@@ -87,16 +92,20 @@ réserve de mana et ne remplit jamais le mana lors d'un rafraîchissement.
 
 ## Perks automatiques
 
-STAT Mod fournit 21 perks passifs automatiques pour Rapidité, Agility,
-Physical Endurance, Arcane Power, Casting Speed, Mana Pool et Magic
-Resistance. Trois perks cumulatifs s'activent aux niveaux 25, 50 et 75 de la
-statistique correspondante. Ils se désactivent automatiquement si le niveau
-repasse sous leur prérequis.
+STAT Mod fournit 33 perks passifs automatiques : les 21 perks d'attributs
+existants, plus 12 perks de combat classifié pour Brute Force, Blade Technique,
+Precision et Physical Resistance. Trois perks cumulatifs s'activent aux niveaux
+25, 50 et 75 de la statistique correspondante. Ils se désactivent
+automatiquement si le niveau repasse sous leur prérequis. Tracking et Keen
+Senses restent reportés à un lot ultérieur.
 
 Il n'existe aucun arbre, point de perk, achat, respec ou affinité. Le serveur
 déduit les perks actifs directement des niveaux et les affiche dans une liste
 non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
 fournisseur d'attributs compatibles.
+
+Le protocole réseau interne est la version `6` et borne la liste synchronisée à
+33 identifiants canoniques.
 
 ## Compiler
 

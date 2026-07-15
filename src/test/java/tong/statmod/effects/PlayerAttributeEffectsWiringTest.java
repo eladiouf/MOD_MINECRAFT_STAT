@@ -21,13 +21,14 @@ class PlayerAttributeEffectsWiringTest {
     }
 
     @Test
-    void automaticXpRefreshesOnlyAfterEnduranceLevelChanges() throws Exception {
+    void automaticXpRefreshesOnlyAfterRelevantAttributeLevelsChange() throws Exception {
         String xp = source("progression/xp/XpAwardService.java");
 
-        assertTrue(xp.contains("beforeEnduranceLevel"));
-        assertTrue(xp.indexOf("beforeEnduranceLevel")
+        assertTrue(xp.contains("AttributeEffectLevels beforeEffects"));
+        assertTrue(xp.indexOf("AttributeEffectLevels beforeEffects")
                 < xp.indexOf("XpAwardCoordinator.apply"));
-        assertTrue(xp.contains("afterEnduranceLevel != beforeEnduranceLevel"));
+        assertTrue(xp.contains("AttributeEffectLevels afterEffects"));
+        assertTrue(xp.contains("!afterEffects.equals(beforeEffects)"));
         assertTrue(xp.contains("PlayerAttributeEffects.refresh(player)"));
     }
 

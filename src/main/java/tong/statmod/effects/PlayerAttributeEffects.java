@@ -1,5 +1,7 @@
 package tong.statmod.effects;
 
+import java.util.UUID;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -11,6 +13,8 @@ import tong.statmod.stats.StatType;
 
 public final class PlayerAttributeEffects {
     private static final String ENDURANCE_MODIFIER_NAME = "STAT Mod Physical Endurance";
+    private static final String RAPIDITE_MODIFIER_NAME = "STAT Mod Rapidité";
+    private static final String AGILITY_MODIFIER_NAME = "STAT Mod Agility";
 
     private PlayerAttributeEffects() {
     }
@@ -28,24 +32,34 @@ public final class PlayerAttributeEffects {
 
         int level = stats.get(StatType.PHYSICAL_ENDURANCE).level();
         for (StaminaAttributeTarget target : StaminaAttributeTarget.values()) {
-            Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(target.id());
-            if (attribute == null) {
-                continue;
-            }
-            AttributeInstance instance = player.getAttribute(attribute);
-            if (instance == null) {
-                continue;
-            }
+            replaceModifier(player, target.id(), target.modifierId(),
+                    ENDURANCE_MODIFIER_NAME, target.amount(level));
+        }
+        for (MobilityAttributeTarget target : MobilityAttributeTarget.values()) {
+            String name = target.stat() == StatType.RAPIDITE
+                    ? RAPIDITE_MODIFIER_NAME : AGILITY_MODIFIER_NAME;
+            replaceModifier(player, target.id(), target.modifierId(), name, target.amount(stats));
+        }
+    }
 
-            instance.removeModifier(target.modifierId());
-            double amount = target.amount(level);
-            if (amount > 0.0) {
-                instance.addTransientModifier(new AttributeModifier(
-                        target.modifierId(),
-                        ENDURANCE_MODIFIER_NAME,
-                        amount,
-                        AttributeModifier.Operation.MULTIPLY_BASE));
-            }
+    private static void replaceModifier(ServerPlayer player, ResourceLocation attributeId,
+            UUID modifierId, String name, double amount) {
+        Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(attributeId);
+        if (attribute == null) {
+            return;
+        }
+        AttributeInstance instance = player.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+
+        instance.removeModifier(modifierId);
+        if (amount > 0.0) {
+            instance.addTransientModifier(new AttributeModifier(
+                    modifierId,
+                    name,
+                    amount,
+                    AttributeModifier.Operation.MULTIPLY_BASE));
         }
     }
 }

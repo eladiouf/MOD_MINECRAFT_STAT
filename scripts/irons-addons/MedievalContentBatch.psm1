@@ -214,4 +214,118 @@ function Test-ProposedDependencyClosure {
     }
 }
 
-Export-ModuleMember -Function Read-MedievalContentCatalog, Test-BatchArtifact, Test-ProposedDependencyClosure
+function Resolve-BatchSource {
+    param($Artifact, [string]$PreparedRoot, [string]$CacheRoot)
+
+    if ([string]$Artifact.source_kind -eq 'prepared') {
+        return Join-Path $PreparedRoot ([string]$Artifact.file_name)
+    }
+    New-Item -ItemType Directory -Path $CacheRoot -Force | Out-Null
+    $destination = Join-Path $CacheRoot ([string]$Artifact.file_name)
+    if (Test-Path -LiteralPath $destination -PathType Leaf) { return $destination }
+
+    $part = "$destination.part"
+    Remove-Item -LiteralPath $part -Force -ErrorAction SilentlyContinue
+    try {
+        if ([string]$Artifact.distribution -eq 'modrinth') {
+            $metadata = Invoke-RestMethod -Uri ([string]$Artifact.metadata_url) -Headers @{'User-Agent'='STAT-Mod-Irons-Batch/1.0'}
+            if ([string]$metadata.id -ne [string]$Artifact.distribution_version_id) { throw 'Modrinth version ID mismatch.' }
+            $primary = @($metadata.files | Where-Object primary -eq $true)
+            if ($primary.Count -ne 1) { throw 'Modrinth metadata must expose one primary file.' }
+            Invoke-WebRequest -UseBasicParsing -Uri ([string]$primary[0].url) -OutFile $part
+            $actual = (Get-FileHash -LiteralPath $part -Algorithm SHA512).Hash.ToLowerInvariant()
+            if ($actual -ne ([string]$primary[0].hashes.sha512).ToLowerInvariant()) { throw 'AzureLib SHA-512 mismatch.' }
+        } elseif ([string]$Artifact.distribution -eq 'curseforge') {
+            Invoke-WebRequest -UseBasicParsing -Uri ([string]$Artifact.download_url) -OutFile $part
+        } else {
+            throw "Unsupported distribution: $($Artifact.distribution)"
+        }
+        Move-Item -LiteralPath $part -Destination $destination
+    } catch {
+        Remove-Item -LiteralPath $part -Force -ErrorAction SilentlyContinue
+        throw
+    }
+    return $destination
+}
+
+function Invoke-MedievalContentBatch {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$ClientRoot,
+        [Parameter(Mandatory)][string]$PreparedRoot,
+        [Parameter(Mandatory)][string]$CacheRoot,
+        [Parameter(Mandatory)][string]$CatalogPath,
+        [switch]$Apply,
+        [scriptblock]$AfterCopyHook
+    )
+
+    $catalog = Read-MedievalContentCatalog -Path $CatalogPath
+    $clientRootFull = [IO.Path]::GetFullPath($ClientRoot)
+    $mods = Join-Path $clientRootFull 'mods'
+    $disabled = Join-Path $clientRootFull 'disabled-mods'
+    if (-not (Test-Path -LiteralPath $mods -PathType Container)) { throw "Missing mods directory: $mods" }
+    New-Item -ItemType Directory -Path $disabled -Force | Out-Null
+
+    $batchRecords = @($catalog.artifacts | ForEach-Object {
+        $source = Resolve-BatchSource -Artifact $_ -PreparedRoot $PreparedRoot -CacheRoot $CacheRoot
+        Test-BatchArtifact -Artifact $_ -Path $source
+    })
+    foreach ($record in $batchRecords) {
+        $destination = Join-Path $mods $record.FileName
+        if (Test-Path -LiteralPath $destination) { throw "Destination already exists: $destination" }
+    }
+
+    $activeRecords = @(Get-ChildItem -LiteralPath $mods -Filter '*.jar' -File | ForEach-Object { Get-ModJarRecord -Path $_.FullName })
+    $closure = Test-ProposedDependencyClosure -Records @($activeRecords + $batchRecords) -ProtectedModIds @($catalog.protected_mod_ids) -IntroducedPrimaryModIds @($catalog.artifacts.primary_mod_id) -MinimumVersions $catalog.required_active_minimum_versions
+    if (@($closure.MissingDependencies).Count) { throw "Missing mandatory dependencies: $($closure.MissingDependencies | ConvertTo-Json -Compress)" }
+    if (@($closure.Conflicts).Count) { throw "Mod-ID conflicts: $($closure.Conflicts | ConvertTo-Json -Compress)" }
+    if (@($closure.AbsentProtectedIds).Count) { throw "Protected mod IDs absent: $($closure.AbsentProtectedIds -join ', ')" }
+    if (@($closure.BelowMinimumVersions).Count) { throw "Required active versions are too old: $($closure.BelowMinimumVersions | ConvertTo-Json -Compress)" }
+
+    $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
+    $manifestPath = Join-Path $disabled "irons-content-batch-$stamp.json"
+    $manifest = [ordered]@{
+        schema_version = 1
+        status = 'planned'
+        created_at = (Get-Date).ToString('o')
+        client_root = $clientRootFull
+        files = @($batchRecords | ForEach-Object {
+            [ordered]@{file_name=$_.FileName;source=$_.Path;sha256=$_.Sha256;length=$_.Length;primary_mod_id=$_.PrimaryModId;version=$_.Version}
+        })
+    }
+    $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
+    if (-not $Apply) {
+        return [pscustomobject]@{Status='planned';ManifestPath=$manifestPath;Files=$batchRecords}
+    }
+
+    $clientPathPattern = [regex]::Escape($clientRootFull)
+    $running = @(Get-CimInstance Win32_Process -Filter "Name='java.exe' OR Name='javaw.exe'" -ErrorAction SilentlyContinue | Where-Object { [string]$_.CommandLine -match $clientPathPattern })
+    if ($running.Count) { throw "The target client is running in Java process $($running.ProcessId -join ',')." }
+
+    $introduced = [Collections.Generic.List[string]]::new()
+    try {
+        $index = 0
+        foreach ($record in $batchRecords) {
+            $index++
+            $destination = Join-Path $mods $record.FileName
+            Copy-Item -LiteralPath $record.Path -Destination $destination
+            $introduced.Add($destination)
+            if ($null -ne $AfterCopyHook) { & $AfterCopyHook $index $destination }
+            $hash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToUpperInvariant()
+            if ($hash -ne $record.Sha256) { throw "Destination SHA-256 mismatch: $destination" }
+        }
+        $manifest.status = 'complete'
+        $manifest.completed_at = (Get-Date).ToString('o')
+        $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
+        return [pscustomobject]@{Status='complete';ManifestPath=$manifestPath;Files=$batchRecords}
+    } catch {
+        foreach ($path in $introduced) { Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue }
+        $manifest.status = 'rolled_back'
+        $manifest.rolled_back_at = (Get-Date).ToString('o')
+        $manifest.error = $_.Exception.Message
+        $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
+        return [pscustomobject]@{Status='rolled_back';ManifestPath=$manifestPath;Files=$batchRecords;Error=$_.Exception.Message}
+    }
+}
+
+Export-ModuleMember -Function Read-MedievalContentCatalog, Test-BatchArtifact, Test-ProposedDependencyClosure, Invoke-MedievalContentBatch

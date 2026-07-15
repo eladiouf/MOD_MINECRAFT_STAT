@@ -128,3 +128,59 @@ try {
 }
 
 Write-Output 'metadata_and_closure_tests=PASS'
+
+function New-TestClient {
+    param([Parameter(Mandatory)][string]$Root)
+    New-Item -ItemType Directory -Path (Join-Path $Root 'mods') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $Root 'disabled-mods') -Force | Out-Null
+    foreach ($base in @(
+        @{Id='statmod';Version='1.0.0'},
+        @{Id='epicfight';Version='20.10.0'},
+        @{Id='irons_spellbooks';Version='1.20.1-3.16.2'},
+        @{Id='project_babylon_weapons';Version='1.0.0'},
+        @{Id='cataclysm';Version='3.31'}
+    )) {
+        New-TestForgeJar -Path (Join-Path $Root "mods\$($base.Id).jar") -ModId $base.Id -Version $base.Version
+    }
+}
+
+$transactionRoot = Join-Path ([IO.Path]::GetTempPath()) ('irons-batch-transaction-' + [guid]::NewGuid().ToString('N'))
+$prepared = Join-Path $transactionRoot 'prepared'
+$cache = Join-Path $transactionRoot 'cache'
+$client = Join-Path $transactionRoot 'client'
+$rollbackClient = Join-Path $transactionRoot 'rollback-client'
+New-Item -ItemType Directory -Path $prepared,$cache | Out-Null
+New-TestClient -Root $client
+New-TestClient -Root $rollbackClient
+try {
+    foreach ($artifact in @($catalog.artifacts)) {
+        $targetRoot = if ($artifact.source_kind -eq 'prepared') { $prepared } else { $cache }
+        New-TestForgeJar -Path (Join-Path $targetRoot $artifact.file_name) -ModId $artifact.primary_mod_id -Version $artifact.expected_version
+    }
+
+    $dryRun = Invoke-MedievalContentBatch -ClientRoot $client -PreparedRoot $prepared -CacheRoot $cache -CatalogPath $catalogPath
+    Assert-Equal 'planned' $dryRun.Status 'Dry run status mismatch.'
+    Assert-Equal 5 @(Get-ChildItem (Join-Path $client 'mods') -Filter '*.jar').Count 'Dry run mutated mods.'
+    Assert-Equal 9 @($dryRun.Files).Count 'Dry run did not plan nine files.'
+
+    $applied = Invoke-MedievalContentBatch -ClientRoot $client -PreparedRoot $prepared -CacheRoot $cache -CatalogPath $catalogPath -Apply
+    Assert-Equal 'complete' $applied.Status 'Apply status mismatch.'
+    Assert-Equal 14 @(Get-ChildItem (Join-Path $client 'mods') -Filter '*.jar').Count 'Apply did not add nine JARs.'
+    $completeManifest = Get-Content -LiteralPath $applied.ManifestPath -Raw | ConvertFrom-Json
+    Assert-Equal 'complete' $completeManifest.status 'Complete manifest status mismatch.'
+    foreach ($file in @($completeManifest.files)) {
+        $destinationHash = (Get-FileHash -LiteralPath (Join-Path $client "mods\$($file.file_name)") -Algorithm SHA256).Hash
+        Assert-Equal $file.sha256 $destinationHash 'Installed hash mismatch.'
+    }
+
+    $corruptFifthCopy = { param($index,$destination) if ($index -eq 5) { [IO.File]::WriteAllText($destination,'corrupt') } }
+    $rollback = Invoke-MedievalContentBatch -ClientRoot $rollbackClient -PreparedRoot $prepared -CacheRoot $cache -CatalogPath $catalogPath -Apply -AfterCopyHook $corruptFifthCopy
+    Assert-Equal 'rolled_back' $rollback.Status 'Rollback status mismatch.'
+    Assert-Equal 5 @(Get-ChildItem (Join-Path $rollbackClient 'mods') -Filter '*.jar').Count 'Rollback left introduced JARs.'
+    $rollbackManifest = Get-Content -LiteralPath $rollback.ManifestPath -Raw | ConvertFrom-Json
+    Assert-Equal 'rolled_back' $rollbackManifest.status 'Rollback manifest status mismatch.'
+} finally {
+    Remove-Item -LiteralPath $transactionRoot -Recurse -Force
+}
+
+Write-Output 'transaction_tests=PASS'

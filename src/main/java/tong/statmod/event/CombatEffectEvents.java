@@ -16,6 +16,8 @@ import tong.statmod.effects.CombatStatScaling;
 import tong.statmod.progression.xp.CombatEligibility;
 import tong.statmod.progression.xp.WeaponClassification;
 import tong.statmod.progression.xp.WeaponClassifier;
+import tong.statmod.perks.AutomaticPerkBonuses;
+import tong.statmod.perks.AutomaticPerkEffect;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -65,8 +67,16 @@ public final class CombatEffectEvents {
         if (stats == null) {
             return amount;
         }
+        AutomaticPerkBonuses bonuses = AutomaticPerkBonuses.from(stats);
+        AutomaticPerkEffect perkEffect = switch (stat) {
+            case BRUTE_FORCE -> AutomaticPerkEffect.BRUTE_FORCE_DAMAGE;
+            case BLADE_TECHNIQUE -> AutomaticPerkEffect.BLADE_TECHNIQUE_DAMAGE;
+            case PRECISION -> AutomaticPerkEffect.PRECISION_DAMAGE;
+            default -> null;
+        };
+        double perkBonus = perkEffect == null ? 0.0 : bonuses.amount(perkEffect);
         double multiplier = CombatStatScaling.offensiveMultiplier(
-                stats.get(stat).level(), rules);
+                stats.get(stat).level(), perkBonus, rules);
         return CombatStatScaling.applyMultiplier(amount, multiplier);
     }
 
@@ -83,9 +93,11 @@ public final class CombatEffectEvents {
         if (stats == null) {
             return amount;
         }
+        AutomaticPerkBonuses bonuses = AutomaticPerkBonuses.from(stats);
         double multiplier = CombatStatScaling.defensiveMultiplier(
                 stats.get(StatType.PHYSICAL_RESISTANCE).level(),
                 stats.get(StatType.PHYSICAL_ENDURANCE).level(),
+                bonuses.amount(AutomaticPerkEffect.PHYSICAL_RESISTANCE),
                 rules);
         return CombatStatScaling.applyMultiplier(amount, multiplier);
     }

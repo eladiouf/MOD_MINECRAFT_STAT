@@ -22,16 +22,29 @@ public final class CombatStatScaling {
     }
 
     public static double offensiveMultiplier(int level, CombatScalingRules rules) {
+        return offensiveMultiplier(level, 0.0, rules);
+    }
+
+    public static double offensiveMultiplier(
+            int level, double perkBonus, CombatScalingRules rules) {
         int bounded = Math.max(0, Math.min(StatProgress.MAX_LEVEL, level));
         double progress = bounded / (double) StatProgress.MAX_LEVEL;
         double multiplier = rules.weaponDamageBase()
                 + rules.weaponDamageScale() * Math.pow(progress, rules.weaponDamageExponent());
-        return Double.isFinite(multiplier) && multiplier >= 0.0 ? multiplier : 1.0;
+        double continuous = Double.isFinite(multiplier) && multiplier >= 0.0 ? multiplier : 1.0;
+        return continuous * (1.0 + boundedPerk(perkBonus));
     }
 
     public static double defensiveMultiplier(
             int resistanceLevel, int enduranceLevel, CombatScalingRules rules) {
-        double resistance = rules.physicalResistanceCap() * normalized(resistanceLevel);
+        return defensiveMultiplier(resistanceLevel, enduranceLevel, 0.0, rules);
+    }
+
+    public static double defensiveMultiplier(int resistanceLevel, int enduranceLevel,
+            double perkBonus, CombatScalingRules rules) {
+        double resistance = Math.min(0.95,
+                rules.physicalResistanceCap() * normalized(resistanceLevel)
+                        + boundedPerk(perkBonus));
         double endurance = rules.physicalEnduranceCap() * normalized(enduranceLevel);
         double multiplier = (1.0 - resistance) * (1.0 - endurance);
         return Double.isFinite(multiplier) ? Math.max(0.0, multiplier) : 1.0;
@@ -52,5 +65,11 @@ public final class CombatStatScaling {
     private static double normalized(int level) {
         int bounded = Math.max(0, Math.min(StatProgress.MAX_LEVEL, level));
         return bounded / (double) StatProgress.MAX_LEVEL;
+    }
+
+    private static double boundedPerk(double perkBonus) {
+        return Double.isFinite(perkBonus)
+                ? Math.max(0.0, Math.min(0.75, perkBonus))
+                : 0.0;
     }
 }

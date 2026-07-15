@@ -10,7 +10,7 @@ class PlayerStatsTest {
     void startsWithAllStatsAtZero() {
         PlayerStats stats = new PlayerStats();
 
-        assertEquals(23, stats.snapshot().size());
+        assertEquals(19, stats.snapshot().size());
         assertEquals(new StatValue(0, 0), stats.get(StatType.BRUTE_FORCE));
     }
 

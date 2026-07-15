@@ -12,8 +12,8 @@ class StatsSnapshotMessageTest {
     @Test
     void roundTripsByStableStringId() {
         PlayerStats stats = new PlayerStats();
-        stats.setLevel(StatType.FIRE_AFFINITY, 17);
-        stats.addXp(StatType.FIRE_AFFINITY, 30);
+        stats.setLevel(StatType.MAGIC_RESISTANCE, 17);
+        stats.addXp(StatType.MAGIC_RESISTANCE, 30);
         StatsSnapshotMessage original = StatsSnapshotMessage.from(stats);
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
 

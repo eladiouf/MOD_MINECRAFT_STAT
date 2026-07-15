@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class StatModRuntimeTest {
     @Test
-    void exposesStableProtocolAndFirstVersionedPlayerSchema() {
+    void exposesStableProtocolAndSecondVersionedPlayerSchema() {
         assertEquals("2", StatModRuntime.NETWORK_PROTOCOL);
-        assertEquals(1, StatModRuntime.PLAYER_STATS_SCHEMA);
+        assertEquals(2, StatModRuntime.PLAYER_STATS_SCHEMA);
     }
 }

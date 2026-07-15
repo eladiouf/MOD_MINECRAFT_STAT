@@ -11,11 +11,7 @@ public record StatPresentation(
             StatType.CASTING_SPEED,
             StatType.MANA_POOL,
             StatType.ERUDITION,
-            StatType.MAGIC_RESISTANCE,
-            StatType.FIRE_AFFINITY,
-            StatType.WATER_AFFINITY,
-            StatType.EARTH_AFFINITY,
-            StatType.AIR_AFFINITY);
+            StatType.MAGIC_RESISTANCE);
 
     public static StatPresentation of(StatType type) {
         return new StatPresentation(

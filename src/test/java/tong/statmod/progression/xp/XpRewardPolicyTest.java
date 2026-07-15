@@ -46,8 +46,7 @@ class XpRewardPolicyTest {
     void neverEmitsDeferredMagicalStats() {
         Set<StatType> deferred = EnumSet.of(
                 StatType.ARCANE_POWER, StatType.CASTING_SPEED, StatType.MANA_POOL,
-                StatType.ERUDITION, StatType.MAGIC_RESISTANCE, StatType.FIRE_AFFINITY,
-                StatType.WATER_AFFINITY, StatType.EARTH_AFFINITY, StatType.AIR_AFFINITY);
+                StatType.ERUDITION, StatType.MAGIC_RESISTANCE);
         for (XpActionKind kind : XpActionKind.values()) {
             XpAction action = new XpAction(kind, 120, 4, 2, true, null);
             assertTrue(XpRewardPolicy.awards(action).stream()

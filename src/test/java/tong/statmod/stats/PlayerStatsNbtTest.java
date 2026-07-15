@@ -1,6 +1,7 @@
 package tong.statmod.stats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import net.minecraft.nbt.CompoundTag;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class PlayerStatsNbtTest {
         PlayerStats loaded = new PlayerStats();
 
         CompoundTag saved = source.serializeNbt();
-        assertEquals(1, PlayerStats.serializedSchema(saved));
+        assertEquals(2, PlayerStats.serializedSchema(saved));
         loaded.deserializeNbt(saved);
 
         assertEquals(source.snapshot(), loaded.snapshot());
@@ -50,7 +51,7 @@ class PlayerStatsNbtTest {
         loaded.deserializeNbt(root);
 
         assertEquals(new StatValue(0, 0), loaded.get(StatType.AGILITY));
-        assertEquals(23, loaded.snapshot().size());
+        assertEquals(19, loaded.snapshot().size());
     }
 
     @Test
@@ -67,5 +68,29 @@ class PlayerStatsNbtTest {
         loaded.deserializeNbt(root);
 
         assertEquals(new StatValue(2, 5), loaded.get(StatType.ARCANE_POWER));
+    }
+
+    @Test
+    void ignoresRetiredSchemaOneAffinitiesAndPreservesKnownStats() {
+        CompoundTag root = new CompoundTag();
+        root.putInt("schema", 1);
+        CompoundTag entries = new CompoundTag();
+        CompoundTag agility = new CompoundTag();
+        agility.putInt("level", 17);
+        agility.putInt("xp", 12);
+        entries.put("agility", agility);
+        CompoundTag retired = new CompoundTag();
+        retired.putInt("level", 99);
+        retired.putInt("xp", 3);
+        entries.put("fire_affinity", retired);
+        root.put("stats", entries);
+
+        PlayerStats loaded = new PlayerStats();
+        loaded.deserializeNbt(root);
+
+        assertEquals(new StatValue(17, 12), loaded.get(StatType.AGILITY));
+        assertEquals(19, loaded.snapshot().size());
+        assertEquals(2, PlayerStats.serializedSchema(loaded.serializeNbt()));
+        assertFalse(loaded.serializeNbt().getCompound("stats").contains("fire_affinity"));
     }
 }

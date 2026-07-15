@@ -77,8 +77,7 @@ class AutomaticXpContractTest {
 
         Set<StatType> deferred = EnumSet.of(
                 StatType.ARCANE_POWER, StatType.CASTING_SPEED, StatType.MANA_POOL,
-                StatType.ERUDITION, StatType.MAGIC_RESISTANCE, StatType.FIRE_AFFINITY,
-                StatType.WATER_AFFINITY, StatType.EARTH_AFFINITY, StatType.AIR_AFFINITY);
+                StatType.ERUDITION, StatType.MAGIC_RESISTANCE);
         assertEquals(14, emitted.size());
         assertTrue(emitted.stream().noneMatch(deferred::contains));
     }

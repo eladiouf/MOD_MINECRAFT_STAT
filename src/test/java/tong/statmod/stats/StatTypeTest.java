@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class StatTypeTest {
     @Test
-    void exposesTwentyThreeUniqueStableIdsInSixFamilies() {
+    void exposesNineteenUniqueStableIdsInFiveFamilies() {
         Set<String> ids = Arrays.stream(StatType.values())
                 .map(StatType::id)
                 .collect(Collectors.toSet());
@@ -18,9 +18,14 @@ class StatTypeTest {
                 .map(StatType::family)
                 .collect(Collectors.toSet());
 
-        assertEquals(23, StatType.values().length);
-        assertEquals(23, ids.size());
-        assertEquals(6, families.size());
+        assertEquals(19, StatType.values().length);
+        assertEquals(19, ids.size());
+        assertEquals(5, families.size());
+        assertEquals(5, StatFamily.values().length);
+        assertTrue(StatType.fromId("fire_affinity").isEmpty());
+        assertTrue(StatType.fromId("water_affinity").isEmpty());
+        assertTrue(StatType.fromId("earth_affinity").isEmpty());
+        assertTrue(StatType.fromId("air_affinity").isEmpty());
     }
 
     @Test

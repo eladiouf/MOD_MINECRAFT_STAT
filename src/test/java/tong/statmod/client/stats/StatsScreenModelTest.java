@@ -21,7 +21,7 @@ class StatsScreenModelTest {
                 .toList();
 
         assertEquals(List.of(StatType.values()), flattened);
-        assertEquals(6, model.families().size());
+        assertEquals(5, model.families().size());
         assertEquals(7, model.revision());
     }
 

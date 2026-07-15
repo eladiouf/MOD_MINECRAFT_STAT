@@ -22,10 +22,12 @@ class StatsFoundationContractTest {
     }
 
     @Test
-    void activeSourceHasNoThirdPartyIntegrationImports() throws Exception {
+    void coreSourceHasNoThirdPartyIntegrationImports() throws Exception {
         try (var paths = Files.walk(Path.of("src/main/java"))) {
             String sources = paths
                     .filter(path -> path.toString().endsWith(".java"))
+                    .filter(path -> !path.toString().replace('\\', '/')
+                            .contains("/integration/ironspells/"))
                     .map(path -> {
                         try {
                             return Files.readString(path);

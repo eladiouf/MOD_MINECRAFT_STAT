@@ -76,7 +76,9 @@ if ($Mode -eq 'After') {
             'tong/statmod/progression/xp/XpAwardService.class'
             'tong/statmod/effects/CombatScalingRules.class'
             'tong/statmod/effects/CombatStatScaling.class'
-            'tong/statmod/effects/PhysicalEnduranceScaling.class'
+            'tong/statmod/effects/LinearStatScaling.class'
+            'tong/statmod/effects/MobilityAttributeTarget.class'
+            'tong/statmod/effects/AttributeEffectLevels.class'
             'tong/statmod/effects/PlayerAttributeEffects.class'
             'tong/statmod/effects/StaminaAttributeTarget.class'
             'tong/statmod/config/StatModServerConfig.class'
@@ -105,6 +107,7 @@ if ($Mode -eq 'After') {
         $forbiddenPrefixes = @(
             'io/redspace/ironsspellbooks/'
             'yesman/epicfight/'
+            'net/puffish/attributesmod/'
             'net/neoforged/'
         )
         foreach ($entry in $entries) {

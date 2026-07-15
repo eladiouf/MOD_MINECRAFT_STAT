@@ -132,8 +132,8 @@ scale the same hit.
 | Brute Force | STAT Mod heavy-hit policy | Later Epic Fight `impact` may add posture identity, never duplicate raw damage. |
 | Blade Technique | STAT Mod blade-hit policy | `max_strikes` or armor negation requires an Epic Fight-specific balance slice. |
 | Precision | STAT Mod precision-hit policy | Prefer Apothic draw speed/arrow velocity later; do not add arrow damage twice. |
-| Rapidité | Vanilla attack speed plus Epic Fight offhand attack speed | Stable attribute modifiers; no periodic potion effect. |
-| Agility | Vanilla movement speed; optional Puffish sprint/jump/fall reduction | Apothic dodge chance is a separately capped perk-like effect. |
+| Rapidité | **Implemented:** `minecraft:generic.attack_speed` and `epicfight:offhand_attack_speed` | +30% base at level 100 by default; stable transient modifiers. |
+| Agility | **Implemented:** `minecraft:generic.movement_speed` and `puffish_attributes:sprinting_speed` | +20% general movement and +10% specialized sprinting at level 100 by default. |
 | Physical Resistance | STAT Mod physical damage policy | Epic Fight stun armor is complementary; Puffish resistance is not stacked. |
 | Physical Endurance | **Implemented:** Epic Fight max stamina/regen and ParCool fallback max/recovery | Registry-only transient modifiers; +100% capacity and +50% recovery at level 100 by default. Existing ParCool adapter chooses the active pool. |
 | Tracking | No direct output selected | Fortune is not assumed to represent tracking until loot behavior is designed. |
@@ -155,7 +155,9 @@ scale the same hit.
 1. **Implemented:** Physical Endurance → existing Epic Fight/ParCool stamina
    attributes. Refresh occurs on login, respawn, dimension change, stat commands,
    and automatic XP level-up; stable UUID replacement prevents stacking.
-2. Rapidité and Agility → vanilla plus selected optional movement attributes.
+2. **Implemented:** Rapidité and Agility → vanilla plus required-provider
+   combat/movement attributes. Jump and fall reduction remain excluded from
+   this slice.
 3. Iron's Spells core → mana, spell power/resist, and casting attributes.
 4. Elemental school taxonomy → exact school attributes and addon schools.
 5. Mental and crafting candidates only after their gameplay policies exist.

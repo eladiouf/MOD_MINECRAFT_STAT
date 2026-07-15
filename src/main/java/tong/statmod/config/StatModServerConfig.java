@@ -28,6 +28,12 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue MANA_CAPACITY_REGEN_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_PER_MILESTONE;
 
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_EARLY_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_MID_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_LATE_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_ABYSS_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_BOSS_ROSTER;
+
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -85,6 +91,23 @@ public final class StatModServerConfig {
                 "manaCapacityRegenPerMilestone", 0.03, 0.0, 0.25);
         MAGIC_RESISTANCE_PER_MILESTONE = builder.defineInRange(
                 "magicResistancePerMilestone", 0.02, 0.0, 0.25);
+        builder.pop();
+        builder.push("dungeon");
+        DUNGEON_EARLY_MOBS = builder.defineList("earlyMobs",
+                java.util.List.of("minecraft:zombie", "minecraft:skeleton", "minecraft:spider", "minecraft:creeper"),
+                obj -> obj instanceof String);
+        DUNGEON_MID_MOBS = builder.defineList("midMobs",
+                java.util.List.of("minecraft:zombie", "minecraft:cave_spider", "minecraft:husk", "minecraft:stray"),
+                obj -> obj instanceof String);
+        DUNGEON_LATE_MOBS = builder.defineList("lateMobs",
+                java.util.List.of("minecraft:wither_skeleton", "minecraft:blaze", "minecraft:piglin_brute", "minecraft:witch"),
+                obj -> obj instanceof String);
+        DUNGEON_ABYSS_MOBS = builder.defineList("abyssMobs",
+                java.util.List.of("minecraft:enderman", "minecraft:shulker", "minecraft:evoker", "minecraft:vindicator"),
+                obj -> obj instanceof String);
+        DUNGEON_BOSS_ROSTER = builder.defineList("bossRoster",
+                java.util.List.of("minecraft:elder_guardian", "minecraft:wither", "minecraft:warden"),
+                obj -> obj instanceof String);
         builder.pop();
         SPEC = builder.build();
     }
@@ -171,5 +194,25 @@ public final class StatModServerConfig {
 
     public static double magicResistancePerMilestone() {
         return MAGIC_RESISTANCE_PER_MILESTONE.get();
+    }
+
+    public static java.util.List<? extends String> dungeonEarlyMobs() {
+        return DUNGEON_EARLY_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonMidMobs() {
+        return DUNGEON_MID_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonLateMobs() {
+        return DUNGEON_LATE_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonAbyssMobs() {
+        return DUNGEON_ABYSS_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonBossRoster() {
+        return DUNGEON_BOSS_ROSTER.get();
     }
 }

@@ -15,6 +15,15 @@ public final class PlayerStats {
 
     private final EnumMap<StatType, StatProgress> values = new EnumMap<>(StatType.class);
 
+    private int dungeonFloorReached = 1;
+    private String lastOverworldDimensionId = "";
+    private long lastOverworldPosPacked;
+    private boolean hasLastOverworldPos;
+    private int dungeonPoints = 0;
+    private int dungeonBestCombo = 0;
+    private int dungeonBestClearTicks = 0;
+    private final java.util.Map<Integer, Long> bossCooldowns = new java.util.HashMap<>();
+
     public PlayerStats() {
         for (StatType type : StatType.values()) {
             values.put(type, new StatProgress());
@@ -43,6 +52,15 @@ public final class PlayerStats {
         for (StatType type : StatType.values()) {
             values.get(type).copyFrom(source.values.get(type));
         }
+        this.dungeonFloorReached = source.dungeonFloorReached;
+        this.lastOverworldDimensionId = source.lastOverworldDimensionId;
+        this.lastOverworldPosPacked = source.lastOverworldPosPacked;
+        this.hasLastOverworldPos = source.hasLastOverworldPos;
+        this.dungeonPoints = source.dungeonPoints;
+        this.dungeonBestCombo = source.dungeonBestCombo;
+        this.dungeonBestClearTicks = source.dungeonBestClearTicks;
+        this.bossCooldowns.clear();
+        this.bossCooldowns.putAll(source.bossCooldowns);
     }
 
     public CompoundTag serializeNbt() {
@@ -56,7 +74,19 @@ public final class PlayerStats {
             entry.putInt(XP_KEY, value.xp());
             entries.put(type.id(), entry);
         }
-        root.put(STATS_KEY, entries);
+        root.put("stats", entries);
+        root.putInt("dungeonFloorReached", dungeonFloorReached);
+        root.putString("lastOverworldDimensionId", lastOverworldDimensionId);
+        root.putLong("lastOverworldPosPacked", lastOverworldPosPacked);
+        root.putBoolean("hasLastOverworldPos", hasLastOverworldPos);
+        root.putInt("dungeonPoints", dungeonPoints);
+        root.putInt("dungeonBestCombo", dungeonBestCombo);
+        root.putInt("dungeonBestClearTicks", dungeonBestClearTicks);
+
+        CompoundTag cooldownsTag = new CompoundTag();
+        bossCooldowns.forEach((floor, cooldown) -> cooldownsTag.putLong(String.valueOf(floor), cooldown));
+        root.put("bossCooldowns", cooldownsTag);
+
         return root;
     }
 
@@ -76,9 +106,114 @@ public final class PlayerStats {
             CompoundTag entry = entries.getCompound(type.id());
             load(type, entry.getInt(LEVEL_KEY), entry.getInt(XP_KEY));
         }
+        if (root.contains("dungeonFloorReached")) {
+            dungeonFloorReached = root.getInt("dungeonFloorReached");
+        }
+        if (root.contains("lastOverworldDimensionId")) {
+            lastOverworldDimensionId = root.getString("lastOverworldDimensionId");
+        }
+        if (root.contains("lastOverworldPosPacked")) {
+            lastOverworldPosPacked = root.getLong("lastOverworldPosPacked");
+        }
+        if (root.contains("hasLastOverworldPos")) {
+            hasLastOverworldPos = root.getBoolean("hasLastOverworldPos");
+        }
+        if (root.contains("dungeonPoints")) {
+            dungeonPoints = root.getInt("dungeonPoints");
+        }
+        if (root.contains("dungeonBestCombo")) {
+            dungeonBestCombo = root.getInt("dungeonBestCombo");
+        }
+        if (root.contains("dungeonBestClearTicks")) {
+            dungeonBestClearTicks = root.getInt("dungeonBestClearTicks");
+        }
+
+        bossCooldowns.clear();
+        if (root.contains("bossCooldowns", Tag.TAG_COMPOUND)) {
+            CompoundTag cooldownsTag = root.getCompound("bossCooldowns");
+            for (String key : cooldownsTag.getAllKeys()) {
+                try {
+                    int floor = java.lang.Integer.parseInt(key);
+                    long cooldown = cooldownsTag.getLong(key);
+                    bossCooldowns.put(floor, cooldown);
+                } catch (NumberFormatException ignored) {}
+            }
+        }
     }
 
     void load(StatType type, int level, int xp) {
         values.get(type).load(level, xp);
+    }
+
+    public int getDungeonFloorReached() {
+        return dungeonFloorReached;
+    }
+
+    public void setDungeonFloorReached(int floor) {
+        this.dungeonFloorReached = floor;
+    }
+
+    public String getLastOverworldDimensionId() {
+        return lastOverworldDimensionId;
+    }
+
+    public void setLastOverworldDimensionId(String id) {
+        this.lastOverworldDimensionId = id;
+    }
+
+    public long getLastOverworldPosPacked() {
+        return lastOverworldPosPacked;
+    }
+
+    public void setLastOverworldPos(long packedPos) {
+        this.lastOverworldPosPacked = packedPos;
+        this.hasLastOverworldPos = true;
+    }
+
+    public boolean hasLastOverworldPos() {
+        return hasLastOverworldPos;
+    }
+
+    public int getDungeonPoints() {
+        return dungeonPoints;
+    }
+
+    public void setDungeonPoints(int points) {
+        this.dungeonPoints = Math.max(0, points);
+    }
+
+    public long getBossCooldown(int floor) {
+        return bossCooldowns.getOrDefault(floor, 0L);
+    }
+
+    public void setBossCooldown(int floor, long gameTime) {
+        bossCooldowns.put(floor, gameTime);
+    }
+
+    public int addDungeonPoints(int amount) {
+        setDungeonPoints(this.dungeonPoints + amount);
+        return this.dungeonPoints;
+    }
+
+    public void unlockDungeonFloor(int floor) {
+        if (floor > this.dungeonFloorReached) {
+            setDungeonFloorReached(floor);
+        }
+    }
+
+    public int getDungeonBestCombo() {
+        return dungeonBestCombo;
+    }
+
+    public void setDungeonBestCombo(int combo) {
+        this.dungeonBestCombo = combo;
+    }
+
+    public int getDungeonBestClearTicks() {
+        return dungeonBestClearTicks;
+    }
+
+    public void setDungeonBestClearTicks(int clearTicks) {
+        this.dungeonBestClearTicks = clearTicks;
     }
 }

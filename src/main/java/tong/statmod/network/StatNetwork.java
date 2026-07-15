@@ -83,6 +83,16 @@ public final class StatNetwork {
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(4, ConvertPointsMessage.class,
+                ConvertPointsMessage::encode,
+                ConvertPointsMessage::decode,
+                ConvertPointsMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(5, OpenExchangeMessage.class,
+                OpenExchangeMessage::encode,
+                OpenExchangeMessage::decode,
+                OpenExchangeMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void sendSnapshot(ServerPlayer player) {
@@ -104,5 +114,14 @@ public final class StatNetwork {
     public static void sendBookStudyCompletion(ServerPlayer player, ItemStack book) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 new BookStudyCompletionMessage(book));
+    }
+
+    public static void sendConvertPoints(int amount) {
+        CHANNEL.sendToServer(new ConvertPointsMessage(amount));
+    }
+
+    public static void sendOpenExchange(ServerPlayer player, int points, long coins, float rate) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new OpenExchangeMessage(points, coins, rate));
     }
 }

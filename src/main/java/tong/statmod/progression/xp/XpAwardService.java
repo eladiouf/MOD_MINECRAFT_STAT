@@ -39,8 +39,26 @@ public final class XpAwardService {
         return awardEligible(player, List.of(action), tick);
     }
 
+    public static boolean awardBookStudy(ServerPlayer player, XpAction action,
+            long tick, Runnable beforeSync) {
+        if (player == null
+                || player instanceof FakePlayer
+                || player.isSpectator()
+                || action == null
+                || action.kind() != XpActionKind.BOOK_STUDIED
+                || beforeSync == null) {
+            return false;
+        }
+        return awardEligible(player, List.of(action), tick, beforeSync);
+    }
+
     private static boolean awardEligible(
             ServerPlayer player, List<XpAction> actions, long tick) {
+        return awardEligible(player, actions, tick, () -> { });
+    }
+
+    private static boolean awardEligible(
+            ServerPlayer player, List<XpAction> actions, long tick, Runnable beforeSync) {
         PlayerStats stats = player.getCapability(StatCapabilities.PLAYER_STATS)
                 .resolve().orElse(null);
         PlayerXpState state = player.getCapability(StatCapabilities.PLAYER_XP_STATE)
@@ -54,6 +72,7 @@ public final class XpAwardService {
         if (!result.changed()) {
             return false;
         }
+        beforeSync.run();
         AttributeEffectLevels afterEffects = AttributeEffectLevels.from(stats);
         if (!afterEffects.equals(beforeEffects)) {
             PlayerAttributeEffects.refresh(player);

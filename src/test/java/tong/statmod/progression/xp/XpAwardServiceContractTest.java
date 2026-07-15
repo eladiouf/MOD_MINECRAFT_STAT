@@ -32,12 +32,32 @@ class XpAwardServiceContractTest {
         assertTrue(general.contains("!(player instanceof FakePlayer)"));
 
         String spell = method(source, "public static boolean awardSpellCast(",
-                "private static boolean awardEligible(");
+                "public static boolean awardBookStudy(");
         assertTrue(spell.contains("action.kind() != XpActionKind.SPELL_CAST"));
         assertTrue(spell.contains("player instanceof FakePlayer"));
         assertTrue(spell.contains("player.isSpectator()"));
         assertFalse(spell.contains("player.isCreative()"));
         assertTrue(spell.contains("awardEligible(player, List.of(action), tick)"));
+
+        String book = method(source, "public static boolean awardBookStudy(",
+                "private static boolean awardEligible(");
+        assertTrue(book.contains("action.kind() != XpActionKind.BOOK_STUDIED"));
+        assertTrue(book.contains("player instanceof FakePlayer"));
+        assertTrue(book.contains("player.isSpectator()"));
+        assertFalse(book.contains("player.isCreative()"));
+        assertTrue(book.contains("beforeSync"));
+        assertTrue(book.contains("awardEligible("));
+    }
+
+    @Test
+    void acceptedBookConsumptionRunsBeforeSynchronization() throws IOException {
+        String source = Files.readString(Path.of(
+                "src/main/java/tong/statmod/progression/xp/XpAwardService.java"));
+        int changed = source.indexOf("if (!result.changed())");
+        int callback = source.indexOf("beforeSync.run()", changed);
+        int snapshot = source.indexOf("StatNetwork.sendSnapshot(player)", changed);
+        assertTrue(changed >= 0 && callback > changed && snapshot > callback);
+        assertEquals(1, occurrences(source, "beforeSync.run()"));
     }
 
     private static String method(String source, String start, String end) {

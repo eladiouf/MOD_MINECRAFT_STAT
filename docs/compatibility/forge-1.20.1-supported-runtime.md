@@ -103,3 +103,9 @@ level and mana cost to progress Arcane Power, Casting Speed, and Mana Pool.
 Scrolls, spellblades, commands, mobs, schools, and retired affinities do not
 produce cast XP. Erudition and Magic Resistance await their dedicated gameplay
 sources.
+
+Creative players are accepted only by the dedicated spell-cast award path so
+the development client can validate progression; Spectator and fake players
+remain excluded. Cast XP is committed-event based: shields, healing, movement,
+summons, control, and other non-damaging spells count without a target or hit.
+All other automatic XP remains disabled in Creative.

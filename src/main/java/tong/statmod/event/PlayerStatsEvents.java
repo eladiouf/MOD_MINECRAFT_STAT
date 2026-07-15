@@ -15,6 +15,7 @@ import tong.statmod.capability.PlayerStatsProvider;
 import tong.statmod.capability.PlayerXpStateProvider;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.command.StatsCommands;
+import tong.statmod.effects.PlayerAttributeEffects;
 import tong.statmod.network.StatNetwork;
 import tong.statmod.progression.xp.PlayerXpState;
 import tong.statmod.stats.PlayerStats;
@@ -83,6 +84,7 @@ public final class PlayerStatsEvents {
 
     private static void sync(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
+            PlayerAttributeEffects.refresh(serverPlayer);
             StatNetwork.sendSnapshot(serverPlayer);
         }
     }

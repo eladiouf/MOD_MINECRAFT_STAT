@@ -4,8 +4,10 @@ import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.effects.PlayerAttributeEffects;
 import tong.statmod.network.StatNetwork;
 import tong.statmod.stats.PlayerStats;
+import tong.statmod.stats.StatType;
 
 public final class XpAwardService {
     private XpAwardService() {
@@ -27,9 +29,14 @@ public final class XpAwardService {
         if (stats == null || state == null) {
             return false;
         }
+        int beforeEnduranceLevel = stats.get(StatType.PHYSICAL_ENDURANCE).level();
         XpAwardResult result = XpAwardCoordinator.apply(stats, state, actions, tick);
         if (!result.changed()) {
             return false;
+        }
+        int afterEnduranceLevel = stats.get(StatType.PHYSICAL_ENDURANCE).level();
+        if (afterEnduranceLevel != beforeEnduranceLevel) {
+            PlayerAttributeEffects.refresh(player);
         }
         StatNetwork.sendSnapshot(player);
         return true;

@@ -15,6 +15,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.effects.PlayerAttributeEffects;
 import tong.statmod.network.StatNetwork;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatProgress;
@@ -134,6 +135,7 @@ public final class StatsCommands {
 
         PlayerStats stats = optional.get();
         mutation.accept(stats);
+        PlayerAttributeEffects.refresh(target);
         StatNetwork.sendSnapshot(target);
         StatValue value = stats.get(type);
         source.sendSuccess(() -> Component.translatable("command.statmod.stat.updated",

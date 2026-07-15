@@ -133,7 +133,7 @@ scale the same hit.
 | Rapidité | Vanilla attack speed plus Epic Fight offhand attack speed | Stable attribute modifiers; no periodic potion effect. |
 | Agility | Vanilla movement speed; optional Puffish sprint/jump/fall reduction | Apothic dodge chance is a separately capped perk-like effect. |
 | Physical Resistance | STAT Mod physical damage policy | Epic Fight stun armor is complementary; Puffish resistance is not stacked. |
-| Physical Endurance | Epic Fight max stamina/regen and ParCool fallback max/recovery | Existing ParCool adapter chooses the active pool. |
+| Physical Endurance | **Implemented:** Epic Fight max stamina/regen and ParCool fallback max/recovery | Registry-only transient modifiers; +100% capacity and +50% recovery at level 100 by default. Existing ParCool adapter chooses the active pool. |
 | Tracking | No direct output selected | Fortune is not assumed to represent tracking until loot behavior is designed. |
 | Keen Senses | Optional Apothic dodge chance | Must remain capped and distinct from Agility. |
 | Arcane Power | Iron's Spells spell power | Puffish magic damage is fallback only if a non-Iron magic provider needs it. |
@@ -150,7 +150,9 @@ scale the same hit.
 
 ## Implementation order
 
-1. Physical Endurance → existing Epic Fight/ParCool stamina attributes.
+1. **Implemented:** Physical Endurance → existing Epic Fight/ParCool stamina
+   attributes. Refresh occurs on login, respawn, dimension change, stat commands,
+   and automatic XP level-up; stable UUID replacement prevents stacking.
 2. Rapidité and Agility → vanilla plus selected optional movement attributes.
 3. Iron's Spells core → mana, spell power/resist, and casting attributes.
 4. Elemental school taxonomy → exact school attributes and addon schools.

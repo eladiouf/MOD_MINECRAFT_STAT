@@ -1,0 +1,11 @@
+package tong.statmod.perks;
+
+public enum AutomaticPerkEffect {
+    RAPIDITE_ATTACK_SPEED,
+    AGILITY_MOVEMENT,
+    ENDURANCE_STAMINA,
+    ARCANE_SPELL_POWER,
+    CASTING_SPEED_REDUCTIONS,
+    MANA_CAPACITY_REGEN,
+    MAGIC_RESISTANCE
+}

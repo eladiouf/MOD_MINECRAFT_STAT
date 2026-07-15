@@ -40,7 +40,7 @@ public enum StaminaAttributeTarget {
         double maximum = bonusKind == BonusKind.CAPACITY
                 ? StatModServerConfig.staminaCapacityBonusAt100()
                 : StatModServerConfig.staminaRecoveryBonusAt100();
-        return PhysicalEnduranceScaling.bonus(level, maximum);
+        return LinearStatScaling.bonus(level, maximum);
     }
 
     public enum BonusKind {

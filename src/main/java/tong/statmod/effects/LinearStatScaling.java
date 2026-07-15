@@ -1,7 +1,7 @@
 package tong.statmod.effects;
 
-public final class PhysicalEnduranceScaling {
-    private PhysicalEnduranceScaling() {
+public final class LinearStatScaling {
+    private LinearStatScaling() {
     }
 
     public static double bonus(int level, double bonusAt100) {

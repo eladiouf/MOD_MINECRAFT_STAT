@@ -14,6 +14,7 @@ import tong.statmod.StatMod;
 import tong.statmod.StatModRuntime;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.client.ClientStatsCache;
+import tong.statmod.client.notice.ClientProgressNotices;
 import tong.statmod.stats.StatType;
 
 public final class StatNetwork {
@@ -39,6 +40,16 @@ public final class StatNetwork {
                     var context = contextSupplier.get();
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                             () -> () -> ClientStatsCache.replace(message.values())));
+                    context.setPacketHandled(true);
+                },
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(1, StatProgressNoticeMessage.class,
+                StatProgressNoticeMessage::encode,
+                StatProgressNoticeMessage::decode,
+                (message, contextSupplier) -> {
+                    var context = contextSupplier.get();
+                    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                            () -> () -> ClientProgressNotices.offer(message)));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));

@@ -6,6 +6,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
+import tong.statmod.client.notice.ClientProgressNotices;
 import tong.statmod.client.stats.StatsOverviewScreen;
 
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID, value = Dist.CLIENT)
@@ -18,6 +19,7 @@ public final class ClientInputEvents {
         if (event.phase != TickEvent.Phase.END) {
             return;
         }
+        ClientProgressNotices.tick();
         Minecraft minecraft = Minecraft.getInstance();
         while (ClientKeyMappings.OPEN_STATS.consumeClick()) {
             if (minecraft.player != null && minecraft.screen == null) {

@@ -40,6 +40,10 @@ public final class PlayerAttributeEffects {
                     ? RAPIDITE_MODIFIER_NAME : AGILITY_MODIFIER_NAME;
             replaceModifier(player, target.id(), target.modifierId(), name, target.amount(stats));
         }
+        for (MagicAttributeTarget target : MagicAttributeTarget.values()) {
+            replaceModifier(player, target.id(), target.modifierId(),
+                    "STAT Mod " + target.stat().id(), target.amount(stats));
+        }
     }
 
     private static void replaceModifier(ServerPlayer player, ResourceLocation attributeId,

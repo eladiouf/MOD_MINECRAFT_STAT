@@ -16,6 +16,8 @@ class PlayerAttributeEffectsContractTest {
         assertTrue(source.contains("ForgeRegistries.ATTRIBUTES.getValue"));
         assertTrue(source.contains("StaminaAttributeTarget.values()"));
         assertTrue(source.contains("MobilityAttributeTarget.values()"));
+        assertTrue(source.contains("for (MagicAttributeTarget target : MagicAttributeTarget.values())"));
+        assertTrue(source.contains("target.amount(stats)"));
         assertTrue(source.contains("replaceModifier("));
         assertTrue(source.contains("removeModifier(modifierId)"));
         assertTrue(source.contains("addTransientModifier"));
@@ -24,5 +26,6 @@ class PlayerAttributeEffectsContractTest {
         assertFalse(source.contains("yesman.epicfight"));
         assertFalse(source.contains("com.alrex.parcool"));
         assertFalse(source.contains("net.puffish.attributesmod"));
+        assertFalse(source.contains("io.redspace.ironsspellbooks"));
     }
 }

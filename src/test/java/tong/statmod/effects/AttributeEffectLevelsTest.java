@@ -14,16 +14,20 @@ class AttributeEffectLevelsTest {
         stats.setLevel(StatType.RAPIDITE, 12);
         stats.setLevel(StatType.AGILITY, 34);
         stats.setLevel(StatType.PHYSICAL_ENDURANCE, 56);
+        stats.setLevel(StatType.ARCANE_POWER, 11);
+        stats.setLevel(StatType.CASTING_SPEED, 22);
+        stats.setLevel(StatType.MANA_POOL, 33);
+        stats.setLevel(StatType.MAGIC_RESISTANCE, 44);
 
-        assertEquals(new AttributeEffectLevels(12, 34, 56),
+        assertEquals(new AttributeEffectLevels(12, 34, 56, 11, 22, 33, 44),
                 AttributeEffectLevels.from(stats));
     }
 
     @Test
     void comparesSnapshotsByValue() {
-        assertEquals(new AttributeEffectLevels(1, 2, 3),
-                new AttributeEffectLevels(1, 2, 3));
-        assertNotEquals(new AttributeEffectLevels(1, 2, 3),
-                new AttributeEffectLevels(1, 3, 3));
+        assertEquals(new AttributeEffectLevels(1, 2, 3, 4, 5, 6, 7),
+                new AttributeEffectLevels(1, 2, 3, 4, 5, 6, 7));
+        assertNotEquals(new AttributeEffectLevels(1, 2, 3, 4, 5, 6, 7),
+                new AttributeEffectLevels(1, 2, 3, 4, 5, 6, 8));
     }
 }

@@ -22,3 +22,6 @@ jobs:
       - name: Verify artifact and preserved addon baseline
         shell: pwsh
         run: ./scripts/verify-clean-foundation.ps1 -Mode After
+      - name: Smoke dedicated Forge server
+        shell: pwsh
+        run: ./scripts/smoke-gametest-server.ps1

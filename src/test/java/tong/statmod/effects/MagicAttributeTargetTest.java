@@ -6,6 +6,7 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import tong.statmod.config.StatModServerConfig;
 import tong.statmod.stats.PlayerStats;
@@ -31,6 +32,20 @@ class MagicAttributeTargetTest {
     void givesEveryTargetAUniqueStableUuid() {
         assertEquals(6, Arrays.stream(MagicAttributeTarget.values())
                 .map(MagicAttributeTarget::modifierId)
+                .distinct()
+                .count());
+    }
+
+    @Test
+    void modifierUuidsAreUniqueAcrossEveryAttributeBridge() {
+        assertEquals(14, Stream.of(
+                        Arrays.stream(MagicAttributeTarget.values())
+                                .map(MagicAttributeTarget::modifierId),
+                        Arrays.stream(MobilityAttributeTarget.values())
+                                .map(MobilityAttributeTarget::modifierId),
+                        Arrays.stream(StaminaAttributeTarget.values())
+                                .map(StaminaAttributeTarget::modifierId))
+                .flatMap(stream -> stream)
                 .distinct()
                 .count());
     }

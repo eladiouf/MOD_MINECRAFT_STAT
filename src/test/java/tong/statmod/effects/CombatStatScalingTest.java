@@ -39,6 +39,25 @@ class CombatStatScalingTest {
     }
 
     @Test
+    void appliesOnlyFiniteBoundedOffensivePerkBonuses() {
+        CombatScalingRules rules = CombatScalingRules.defaults();
+        double continuous = CombatStatScaling.offensiveMultiplier(50, rules);
+
+        assertEquals(continuous,
+                CombatStatScaling.offensiveMultiplier(50, 0.0, rules), EPSILON);
+        assertEquals(continuous * 1.05,
+                CombatStatScaling.offensiveMultiplier(50, 0.05, rules), EPSILON);
+        assertEquals(continuous * 1.15,
+                CombatStatScaling.offensiveMultiplier(50, 0.15, rules), EPSILON);
+        assertEquals(continuous,
+                CombatStatScaling.offensiveMultiplier(50, -0.50, rules), EPSILON);
+        assertEquals(continuous,
+                CombatStatScaling.offensiveMultiplier(50, Double.NaN, rules), EPSILON);
+        assertEquals(continuous * 1.75,
+                CombatStatScaling.offensiveMultiplier(50, 50.0, rules), EPSILON);
+    }
+
+    @Test
     void appliesBoundedMultiplicativePhysicalDefense() {
         CombatScalingRules rules = CombatScalingRules.defaults();
 
@@ -48,6 +67,24 @@ class CombatStatScalingTest {
                 CombatStatScaling.defensiveMultiplier(100, 100, rules)), 0.0001F);
         assertEquals(0.2275, CombatStatScaling.defensiveMultiplier(500, 500, rules), EPSILON);
         assertEquals(1.0, CombatStatScaling.defensiveMultiplier(-20, -20, rules), EPSILON);
+    }
+
+    @Test
+    void addsOnlyFinitePerkResistanceBeforeTheSafetyCap() {
+        CombatScalingRules rules = CombatScalingRules.defaults();
+
+        assertEquals((1.0 - 0.325) * (1.0 - 0.175),
+                CombatStatScaling.defensiveMultiplier(50, 50, 0.0, rules), EPSILON);
+        assertEquals((1.0 - 0.385) * (1.0 - 0.175),
+                CombatStatScaling.defensiveMultiplier(50, 50, 0.06, rules), EPSILON);
+        assertEquals(0.1885,
+                CombatStatScaling.defensiveMultiplier(100, 100, 0.06, rules), EPSILON);
+        assertEquals(CombatStatScaling.defensiveMultiplier(50, 50, rules),
+                CombatStatScaling.defensiveMultiplier(50, 50, -0.20, rules), EPSILON);
+        assertEquals(CombatStatScaling.defensiveMultiplier(50, 50, rules),
+                CombatStatScaling.defensiveMultiplier(50, 50, Double.NaN, rules), EPSILON);
+        assertEquals((1.0 - 0.95) * (1.0 - 0.175),
+                CombatStatScaling.defensiveMultiplier(50, 50, 50.0, rules), EPSILON);
     }
 
     @Test

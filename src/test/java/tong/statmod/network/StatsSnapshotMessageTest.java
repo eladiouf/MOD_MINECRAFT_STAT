@@ -35,10 +35,33 @@ class StatsSnapshotMessageTest {
         StatsSnapshotMessage.encode(original, buffer);
         StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
 
-        assertEquals(21, StatsSnapshotMessage.MAX_PERKS);
+        assertEquals(33, StatsSnapshotMessage.MAX_PERKS);
         assertEquals(java.util.List.of(
                 "statmod:rapidite_25", "statmod:rapidite_50"),
                 decoded.activePerkIds());
+    }
+
+    @Test
+    void roundTripsTheCompleteCanonicalPerkCatalogInStableOrder() {
+        PlayerStats stats = new PlayerStats();
+        for (StatType type : new StatType[] {StatType.RAPIDITE, StatType.AGILITY,
+                StatType.PHYSICAL_ENDURANCE, StatType.ARCANE_POWER,
+                StatType.CASTING_SPEED, StatType.MANA_POOL,
+                StatType.MAGIC_RESISTANCE, StatType.BRUTE_FORCE,
+                StatType.BLADE_TECHNIQUE, StatType.PRECISION,
+                StatType.PHYSICAL_RESISTANCE}) {
+            stats.setLevel(type, 75);
+        }
+        StatsSnapshotMessage original = StatsSnapshotMessage.from(stats);
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+
+        StatsSnapshotMessage.encode(original, buffer);
+        StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
+
+        assertEquals(33, decoded.activePerkIds().size());
+        assertEquals("statmod:rapidite_25", decoded.activePerkIds().get(0));
+        assertEquals("statmod:physical_resistance_75",
+                decoded.activePerkIds().get(32));
     }
 
     @Test

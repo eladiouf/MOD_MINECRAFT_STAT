@@ -30,4 +30,23 @@ class AutomaticPerkLanguageTest {
             assertFalse(json.contains("air_affinity"));
         }
     }
+
+    @Test
+    void bothLocalesStateTheExactClassifiedCombatPerkAmounts() throws Exception {
+        String english = Files.readString(Path.of(
+                "src/main/resources/assets/statmod/lang/en_us.json"));
+        String french = Files.readString(Path.of(
+                "src/main/resources/assets/statmod/lang/fr_fr.json"));
+
+        for (String path : List.of("brute_force", "blade_technique", "precision")) {
+            assertTrue(english.contains("\"perk.statmod." + path
+                    + "_25.description\": \"+5%"));
+            assertTrue(french.contains("\"perk.statmod." + path
+                    + "_25.description\": \"+5 %"));
+        }
+        assertTrue(english.contains("\"perk.statmod.physical_resistance_25.description\""
+                + ": \"+2 physical-damage reduction percentage points."));
+        assertTrue(french.contains("\"perk.statmod.physical_resistance_25.description\""
+                + ": \"+2 points de pourcentage de réduction des dégâts physiques."));
+    }
 }

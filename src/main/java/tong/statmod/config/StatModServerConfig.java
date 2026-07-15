@@ -27,6 +27,10 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_REDUCTIONS_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue MANA_CAPACITY_REGEN_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue BRUTE_FORCE_DAMAGE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue BLADE_TECHNIQUE_DAMAGE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue PRECISION_DAMAGE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue PHYSICAL_RESISTANCE_PER_MILESTONE;
 
     private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_EARLY_MOBS;
     private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_MID_MOBS;
@@ -91,6 +95,14 @@ public final class StatModServerConfig {
                 "manaCapacityRegenPerMilestone", 0.03, 0.0, 0.25);
         MAGIC_RESISTANCE_PER_MILESTONE = builder.defineInRange(
                 "magicResistancePerMilestone", 0.02, 0.0, 0.25);
+        BRUTE_FORCE_DAMAGE_PER_MILESTONE = builder.defineInRange(
+                "bruteForceDamagePerMilestone", 0.05, 0.0, 0.25);
+        BLADE_TECHNIQUE_DAMAGE_PER_MILESTONE = builder.defineInRange(
+                "bladeTechniqueDamagePerMilestone", 0.05, 0.0, 0.25);
+        PRECISION_DAMAGE_PER_MILESTONE = builder.defineInRange(
+                "precisionDamagePerMilestone", 0.05, 0.0, 0.25);
+        PHYSICAL_RESISTANCE_PER_MILESTONE = builder.defineInRange(
+                "physicalResistancePerMilestone", 0.02, 0.0, 0.25);
         builder.pop();
         builder.push("dungeon");
         DUNGEON_EARLY_MOBS = builder.defineList("earlyMobs",
@@ -214,5 +226,21 @@ public final class StatModServerConfig {
 
     public static java.util.List<? extends String> dungeonBossRoster() {
         return DUNGEON_BOSS_ROSTER.get();
+    }
+
+    public static double bruteForceDamagePerMilestone() {
+        return BRUTE_FORCE_DAMAGE_PER_MILESTONE.get();
+    }
+
+    public static double bladeTechniqueDamagePerMilestone() {
+        return BLADE_TECHNIQUE_DAMAGE_PER_MILESTONE.get();
+    }
+
+    public static double precisionDamagePerMilestone() {
+        return PRECISION_DAMAGE_PER_MILESTONE.get();
+    }
+
+    public static double physicalResistancePerMilestone() {
+        return PHYSICAL_RESISTANCE_PER_MILESTONE.get();
     }
 }

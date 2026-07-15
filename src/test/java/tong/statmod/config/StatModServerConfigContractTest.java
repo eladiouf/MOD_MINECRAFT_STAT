@@ -50,8 +50,16 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("castingSpeedReductionsPerMilestone\", 0.02, 0.0, 0.25"));
         assertTrue(config.contains("manaCapacityRegenPerMilestone\", 0.03, 0.0, 0.25"));
         assertTrue(config.contains("magicResistancePerMilestone\", 0.02, 0.0, 0.25"));
+        assertTrue(config.contains("bruteForceDamagePerMilestone\", 0.05, 0.0, 0.25"));
+        assertTrue(config.contains("bladeTechniqueDamagePerMilestone\", 0.05, 0.0, 0.25"));
+        assertTrue(config.contains("precisionDamagePerMilestone\", 0.05, 0.0, 0.25"));
+        assertTrue(config.contains("physicalResistancePerMilestone\", 0.02, 0.0, 0.25"));
         assertTrue(config.contains("rapiditeAttackSpeedPerMilestone()"));
         assertTrue(config.contains("magicResistancePerMilestone()"));
+        assertTrue(config.contains("bruteForceDamagePerMilestone()"));
+        assertTrue(config.contains("bladeTechniqueDamagePerMilestone()"));
+        assertTrue(config.contains("precisionDamagePerMilestone()"));
+        assertTrue(config.contains("physicalResistancePerMilestone()"));
         assertTrue(config.contains("new CombatScalingRules("));
     }
 }

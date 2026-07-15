@@ -125,14 +125,27 @@ earlier mutable `SpellDamageEvent`, require a kill, or classify a spell school.
 
 ## Automatic perks
 
-The supported runtime contains 21 automatic perks for the seven mature
-attribute-backed stats. Three cumulative milestones activate at levels 25, 50, and 75.
+The supported runtime contains 33 automatic perks: the original 21 perks for
+the seven mature attribute-backed stats plus 12 classified combat perks for
+Brute Force, Blade Technique, Precision, and Physical Resistance. Three
+cumulative milestones activate at levels 25, 50, and 75.
 Activation is derived from the current server-authoritative levels, so
 lowering a level below a requirement immediately removes the corresponding
 bonus; no separate unlock state is saved.
+
+The offensive defaults add 5% classified damage per milestone after the
+continuous Brute Force, Blade Technique, or Precision multiplier. The defensive
+default adds 2 physical-reduction percentage points per milestone before the
+0.95 resistance safety cap, then composes multiplicatively with Physical
+Endurance. At level 100 in both defensive stats with all three resistance perks,
+the final multiplier is `0.1885`, for `81.15%` total reduction.
+Tracking and Keen Senses are deferred from this combat batch.
 
 There is no tree, perk points, purchases, respecs, or affinities. The server
 synchronizes known IDs for the active-perk list in the native `P` screen.
 Pufferfish's Attributes remains an attribute provider and never owns perk
 progression. Existing stable transient modifier UUIDs combine continuous stat
 scaling and milestone bonuses without stacking.
+
+The bounded snapshot transport uses protocol 6 and accepts at most the 33
+canonical perk IDs in catalog order.

@@ -29,7 +29,12 @@ class SupportedRuntimeContractTest {
         assertTrue(attributes.contains("irons_spellbooks:spell_power"));
         assertTrue(attributes.contains("irons_spellbooks:max_mana"));
         assertTrue(attributes.contains("irons_spellbooks:spell_resist"));
-        assertTrue(record.contains("21 automatic perks"));
+        assertTrue(record.contains("33 automatic perks"));
+        assertTrue(record.contains("12 classified combat perks"));
+        assertTrue(record.contains("protocol 6"));
+        assertTrue(record.contains("5% classified damage per milestone"));
+        assertTrue(record.contains("2 physical-reduction percentage points per milestone"));
+        assertTrue(record.contains("Tracking and Keen Senses are deferred"));
         assertTrue(record.contains("levels 25, 50, and 75"));
         assertTrue(record.contains("no tree, perk points, purchases, respecs, or affinities"));
         assertTrue(record.contains("Pufferfish's Attributes remains an attribute provider"));

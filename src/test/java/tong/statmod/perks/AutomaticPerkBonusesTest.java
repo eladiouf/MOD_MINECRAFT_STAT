@@ -49,6 +49,18 @@ class AutomaticPerkBonusesTest {
         assertEquals(0.02, bonuses.amount(AutomaticPerkEffect.MAGIC_RESISTANCE), 1.0e-9);
     }
 
+    @Test
+    void accumulatesConfiguredCombatPerksAtLevelSeventyFive() {
+        assertEquals(0.15, bonusesAt(StatType.BRUTE_FORCE, 75)
+                .amount(AutomaticPerkEffect.BRUTE_FORCE_DAMAGE), 1.0e-9);
+        assertEquals(0.15, bonusesAt(StatType.BLADE_TECHNIQUE, 75)
+                .amount(AutomaticPerkEffect.BLADE_TECHNIQUE_DAMAGE), 1.0e-9);
+        assertEquals(0.15, bonusesAt(StatType.PRECISION, 75)
+                .amount(AutomaticPerkEffect.PRECISION_DAMAGE), 1.0e-9);
+        assertEquals(0.06, bonusesAt(StatType.PHYSICAL_RESISTANCE, 75)
+                .amount(AutomaticPerkEffect.PHYSICAL_RESISTANCE), 1.0e-9);
+    }
+
     private static AutomaticPerkBonuses bonusesAt(StatType type, int level) {
         PlayerStats stats = new PlayerStats();
         stats.setLevel(type, level);

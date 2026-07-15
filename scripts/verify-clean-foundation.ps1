@@ -66,6 +66,7 @@ if ($Mode -eq 'After') {
         $requiredEntries = @(
             'META-INF/mods.toml'
             'tong/statmod/StatMod.class'
+            'tong/statmod/StatModRuntime.class'
             'tong/statmod/stats/PlayerStats.class'
             'tong/statmod/capability/PlayerStatsProvider.class'
             'tong/statmod/network/StatsSnapshotMessage.class'
@@ -84,6 +85,26 @@ if ($Mode -eq 'After') {
         foreach ($requiredEntry in $requiredEntries) {
             if ($entries -notcontains $requiredEntry) {
                 throw "Built JAR is missing $requiredEntry"
+            }
+        }
+
+        $duplicateEntries = @($archive.Entries |
+            Group-Object -Property FullName |
+            Where-Object Count -GT 1)
+        if ($duplicateEntries.Count -ne 0) {
+            throw "Built JAR contains duplicate entries:`n$($duplicateEntries.Name -join "`n")"
+        }
+
+        $forbiddenPrefixes = @(
+            'io/redspace/ironsspellbooks/'
+            'yesman/epicfight/'
+            'net/neoforged/'
+        )
+        foreach ($entry in $entries) {
+            foreach ($prefix in $forbiddenPrefixes) {
+                if ($entry.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
+                    throw "Built JAR embeds forbidden external class path: $entry"
+                }
             }
         }
     }

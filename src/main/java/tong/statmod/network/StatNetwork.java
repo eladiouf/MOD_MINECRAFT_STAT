@@ -14,6 +14,7 @@ import tong.statmod.StatMod;
 import tong.statmod.StatModRuntime;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.client.ClientStatsCache;
+import tong.statmod.stats.StatType;
 
 public final class StatNetwork {
     private static final AtomicBoolean REGISTERED = new AtomicBoolean();
@@ -47,5 +48,11 @@ public final class StatNetwork {
         player.getCapability(StatCapabilities.PLAYER_STATS).ifPresent(stats ->
                 CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                         StatsSnapshotMessage.from(stats)));
+    }
+
+    public static void sendProgressNotice(ServerPlayer player, StatType stat,
+            int awardedXp, int newLevel, int levelsGained) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new StatProgressNoticeMessage(stat, awardedXp, newLevel, levelsGained));
     }
 }

@@ -29,6 +29,19 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("rapiditeAttackSpeedBonusAt100\", 0.30, 0.0, 2.0"));
         assertTrue(config.contains("agilityMovementSpeedBonusAt100\", 0.20, 0.0, 2.0"));
         assertTrue(config.contains("agilitySprintingSpeedBonusAt100\", 0.10, 0.0, 2.0"));
+        assertTrue(config.contains("builder.push(\"magic\")"));
+        assertTrue(config.contains("arcanePowerSpellPowerBonusAt100\", 1.00, 0.0, 10.0"));
+        assertTrue(config.contains("castingSpeedCastTimeBonusAt100\", 0.30, 0.0, 0.90"));
+        assertTrue(config.contains("castingSpeedCooldownBonusAt100\", 0.20, 0.0, 0.90"));
+        assertTrue(config.contains("manaPoolCapacityBonusAt100\", 2.00, 0.0, 20.0"));
+        assertTrue(config.contains("manaPoolRegenBonusAt100\", 0.50, 0.0, 10.0"));
+        assertTrue(config.contains("magicResistanceBonusAt100\", 0.50, 0.0, 0.90"));
+        assertTrue(config.contains("arcanePowerSpellPowerBonusAt100()"));
+        assertTrue(config.contains("castingSpeedCastTimeBonusAt100()"));
+        assertTrue(config.contains("castingSpeedCooldownBonusAt100()"));
+        assertTrue(config.contains("manaPoolCapacityBonusAt100()"));
+        assertTrue(config.contains("manaPoolRegenBonusAt100()"));
+        assertTrue(config.contains("magicResistanceBonusAt100()"));
         assertTrue(config.contains("new CombatScalingRules("));
     }
 }

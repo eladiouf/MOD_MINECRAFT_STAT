@@ -14,6 +14,12 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue RAPIDITE_ATTACK_SPEED_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue AGILITY_MOVEMENT_SPEED_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue AGILITY_SPRINTING_SPEED_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue ARCANE_POWER_SPELL_POWER_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_CAST_TIME_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_COOLDOWN_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue MANA_POOL_CAPACITY_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue MANA_POOL_REGEN_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_BONUS_AT_100;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -42,6 +48,20 @@ public final class StatModServerConfig {
                 "agilityMovementSpeedBonusAt100", 0.20, 0.0, 2.0);
         AGILITY_SPRINTING_SPEED_BONUS_AT_100 = builder.defineInRange(
                 "agilitySprintingSpeedBonusAt100", 0.10, 0.0, 2.0);
+        builder.pop();
+        builder.push("magic");
+        ARCANE_POWER_SPELL_POWER_BONUS_AT_100 = builder.defineInRange(
+                "arcanePowerSpellPowerBonusAt100", 1.00, 0.0, 10.0);
+        CASTING_SPEED_CAST_TIME_BONUS_AT_100 = builder.defineInRange(
+                "castingSpeedCastTimeBonusAt100", 0.30, 0.0, 0.90);
+        CASTING_SPEED_COOLDOWN_BONUS_AT_100 = builder.defineInRange(
+                "castingSpeedCooldownBonusAt100", 0.20, 0.0, 0.90);
+        MANA_POOL_CAPACITY_BONUS_AT_100 = builder.defineInRange(
+                "manaPoolCapacityBonusAt100", 2.00, 0.0, 20.0);
+        MANA_POOL_REGEN_BONUS_AT_100 = builder.defineInRange(
+                "manaPoolRegenBonusAt100", 0.50, 0.0, 10.0);
+        MAGIC_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
+                "magicResistanceBonusAt100", 0.50, 0.0, 0.90);
         builder.pop();
         SPEC = builder.build();
     }
@@ -76,5 +96,29 @@ public final class StatModServerConfig {
 
     public static double agilitySprintingSpeedBonusAt100() {
         return AGILITY_SPRINTING_SPEED_BONUS_AT_100.get();
+    }
+
+    public static double arcanePowerSpellPowerBonusAt100() {
+        return ARCANE_POWER_SPELL_POWER_BONUS_AT_100.get();
+    }
+
+    public static double castingSpeedCastTimeBonusAt100() {
+        return CASTING_SPEED_CAST_TIME_BONUS_AT_100.get();
+    }
+
+    public static double castingSpeedCooldownBonusAt100() {
+        return CASTING_SPEED_COOLDOWN_BONUS_AT_100.get();
+    }
+
+    public static double manaPoolCapacityBonusAt100() {
+        return MANA_POOL_CAPACITY_BONUS_AT_100.get();
+    }
+
+    public static double manaPoolRegenBonusAt100() {
+        return MANA_POOL_REGEN_BONUS_AT_100.get();
+    }
+
+    public static double magicResistanceBonusAt100() {
+        return MAGIC_RESISTANCE_BONUS_AT_100.get();
     }
 }

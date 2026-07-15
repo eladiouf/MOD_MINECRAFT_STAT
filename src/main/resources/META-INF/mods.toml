@@ -46,7 +46,7 @@ side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="lootr"
-mandatory=false
+mandatory=true
 versionRange="[0.4.0,)"
 ordering="AFTER"
 side="BOTH"

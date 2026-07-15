@@ -46,6 +46,22 @@ class StatsLanguageResourcesTest {
         }
     }
 
+    @Test
+    void magicalProgressionDescriptionsMatchImplementedGameplay() throws Exception {
+        String french = Files.readString(Path.of(
+                "src/main/resources/assets/statmod/lang/fr_fr.json"));
+        String english = Files.readString(Path.of(
+                "src/main/resources/assets/statmod/lang/en_us.json"));
+        assertTrue(french.contains(
+                "Progresse en étudiant des livres enchantés et en inscrivant de nouveaux sorts."));
+        assertTrue(french.contains(
+                "Progresse en survivant aux dégâts réellement infligés par des sorts."));
+        assertTrue(english.contains(
+                "Progresses by studying enchanted books and inscribing new spells."));
+        assertTrue(english.contains(
+                "Progresses by enduring damage actually dealt by spells."));
+    }
+
     private static void assertContains(String json, String key, String locale) {
         assertTrue(json.contains("\"" + key + "\""), () -> locale + " missing " + key);
     }

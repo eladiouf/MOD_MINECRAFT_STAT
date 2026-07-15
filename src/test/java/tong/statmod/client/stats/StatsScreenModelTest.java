@@ -42,18 +42,9 @@ class StatsScreenModelTest {
     }
 
     @Test
-    void implementedMagicStatsAreActiveAndEruditionRemainsFoundation() {
-        assertEquals(StatDisplayState.ACTIVE,
-                StatPresentation.of(StatType.BRUTE_FORCE).state());
-        assertEquals(StatDisplayState.ACTIVE,
-                StatPresentation.of(StatType.ARCANE_POWER).state());
-        assertEquals(StatDisplayState.ACTIVE,
-                StatPresentation.of(StatType.CASTING_SPEED).state());
-        assertEquals(StatDisplayState.ACTIVE,
-                StatPresentation.of(StatType.MANA_POOL).state());
-        assertEquals(StatDisplayState.ACTIVE,
-                StatPresentation.of(StatType.MAGIC_RESISTANCE).state());
-        assertEquals(StatDisplayState.FOUNDATION,
-                StatPresentation.of(StatType.ERUDITION).state());
+    void everyImplementedStatIsActive() {
+        for (StatType type : StatType.values()) {
+            assertEquals(StatDisplayState.ACTIVE, StatPresentation.of(type).state(), type.id());
+        }
     }
 }

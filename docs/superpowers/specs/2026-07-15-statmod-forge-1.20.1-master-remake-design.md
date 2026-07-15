@@ -115,8 +115,9 @@ the effect safely.
 
 ### Milestone 3 — Iron's Spells progression
 
-The core attribute bridge and spellbook-cast XP slice are implemented.
-Erudition learning XP and Magic Resistance damage-received XP remain.
+Milestone 3 is implemented. The core attribute bridge, spellbook-cast XP,
+committed inscription Erudition XP, enchanted-book study, and final
+spell-damage Magic Resistance XP are active.
 
 - target the modpack's pinned Iron's Spells 3.16.2 API first;
 - award magical XP from validated spell events without duplicating progression

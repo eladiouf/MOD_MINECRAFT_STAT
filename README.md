@@ -38,8 +38,8 @@ une statistique exige le niveau opérateur 2.
 
 La touche `P` ouvre l'écran natif de STAT Mod. Il présente les 19 statistiques
 dans cinq familles, avec leur niveau, leur XP et leur progression vers le niveau
-suivant. Les quatre statistiques reliées aux attributs d'Iron's Spells sont
-actives ; Érudition reste clairement indiquée comme fondation préparée.
+suivant. Les cinq statistiques magiques sont actives et reliées aux actions
+d'Iron's Spells ou à l'étude de livres enchantés.
 
 Les gains automatiques affichent une notification discrète en haut à droite.
 Les gains rapprochés de la même statistique sont regroupés et un passage de
@@ -49,11 +49,20 @@ de gameplay.
 
 ## XP automatique et addons Epic Fight
 
-Quatorze statistiques progressent automatiquement : Brute Force, Blade
+Les dix-neuf statistiques progressent automatiquement. Quatorze utilisent les
+actions physiques, d'exploration et d'artisanat : Brute Force, Blade
 Technique, Rapidité, Agility, Physical Resistance, Physical Endurance,
 Precision, Tracking, Keen Senses, Intimidation, Willpower, Forging, Cooking et
-Alchemy. La progression XP des cinq statistiques magiques reste différée :
-Arcane Power, Casting Speed, Mana Pool, Erudition et Magic Resistance.
+Alchemy. Arcane Power, Casting Speed et Mana Pool progressent au lancement d'un
+sort depuis un grimoire. Érudition progresse par inscription de sorts et par
+étude de livres enchantés ; Magic Resistance progresse sur les dégâts de sorts
+réellement reçus.
+
+Maintenir le clic d'utilisation pendant deux secondes avec un livre enchanté
+étudie tous ses enchantements. Le gain dépend de leur niveau et de leur rareté,
+le livre est ensuite consommé hors Créatif et l'animation du Totem confirme la
+réussite. Une lecture interrompue ou entièrement refusée par la limite anti-farm
+ne consomme rien.
 
 La compatibilité des équipements d'addons est pilotée par quatre tags publics,
 sans dépendance Java envers Epic Fight. Voir le

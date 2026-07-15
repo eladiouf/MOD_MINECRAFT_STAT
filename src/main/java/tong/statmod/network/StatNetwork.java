@@ -11,17 +11,17 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import tong.statmod.StatMod;
+import tong.statmod.StatModRuntime;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.client.ClientStatsCache;
 
 public final class StatNetwork {
-    private static final String PROTOCOL = "1";
     private static final AtomicBoolean REGISTERED = new AtomicBoolean();
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(StatMod.MOD_ID, "main"))
-            .networkProtocolVersion(() -> PROTOCOL)
-            .clientAcceptedVersions(PROTOCOL::equals)
-            .serverAcceptedVersions(PROTOCOL::equals)
+            .networkProtocolVersion(() -> StatModRuntime.NETWORK_PROTOCOL)
+            .clientAcceptedVersions(StatModRuntime.NETWORK_PROTOCOL::equals)
+            .serverAcceptedVersions(StatModRuntime.NETWORK_PROTOCOL::equals)
             .simpleChannel();
 
     private StatNetwork() {

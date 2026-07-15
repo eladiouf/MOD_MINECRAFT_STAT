@@ -13,9 +13,26 @@ class PlayerStatsNbtTest {
         source.addXp(StatType.FORGING, 37);
         PlayerStats loaded = new PlayerStats();
 
-        loaded.deserializeNbt(source.serializeNbt());
+        CompoundTag saved = source.serializeNbt();
+        assertEquals(1, PlayerStats.serializedSchema(saved));
+        loaded.deserializeNbt(saved);
 
         assertEquals(source.snapshot(), loaded.snapshot());
+    }
+
+    @Test
+    void loadsLegacyUnversionedDataAsSchemaZero() {
+        PlayerStats source = new PlayerStats();
+        source.setLevel(StatType.BLADE_TECHNIQUE, 18);
+        source.addXp(StatType.BLADE_TECHNIQUE, 73);
+
+        CompoundTag legacy = source.serializeNbt();
+        legacy.remove("schema");
+
+        assertEquals(0, PlayerStats.serializedSchema(legacy));
+        PlayerStats restored = new PlayerStats();
+        restored.deserializeNbt(legacy);
+        assertEquals(source.snapshot(), restored.snapshot());
     }
 
     @Test

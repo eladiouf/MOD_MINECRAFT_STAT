@@ -5,8 +5,10 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import tong.statmod.StatModRuntime;
 
 public final class PlayerStats {
+    private static final String SCHEMA_KEY = "schema";
     private static final String STATS_KEY = "stats";
     private static final String LEVEL_KEY = "level";
     private static final String XP_KEY = "xp";
@@ -45,6 +47,7 @@ public final class PlayerStats {
 
     public CompoundTag serializeNbt() {
         CompoundTag root = new CompoundTag();
+        root.putInt(SCHEMA_KEY, StatModRuntime.PLAYER_STATS_SCHEMA);
         CompoundTag entries = new CompoundTag();
         for (StatType type : StatType.values()) {
             StatValue value = get(type);
@@ -55,6 +58,10 @@ public final class PlayerStats {
         }
         root.put(STATS_KEY, entries);
         return root;
+    }
+
+    static int serializedSchema(CompoundTag root) {
+        return root.contains(SCHEMA_KEY, Tag.TAG_INT) ? root.getInt(SCHEMA_KEY) : 0;
     }
 
     public void deserializeNbt(CompoundTag root) {

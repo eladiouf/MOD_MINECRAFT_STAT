@@ -48,6 +48,20 @@ sans dépendance Java envers Epic Fight. Voir le
 [guide XP des addons Epic Fight](docs/compatibility/epic-fight-addon-xp.md) et
 la [matrice de validation](docs/compatibility/epic-fight-addon-matrix.csv).
 
+## Effets de combat des statistiques
+
+Brute Force, Blade Technique et Precision multiplient uniquement les attaques
+classées pour leur spécialisation. La courbe reste neutre au niveau 0 (`x1`)
+et atteint `x10` au niveau 100. Les tags publics d'équipement déterminent la
+classification, y compris pour les armes d'addons.
+
+Physical Resistance et Physical Endurance réduisent uniquement les dégâts de
+combat physiques éligibles. Leurs réductions sont multiplicatives et atteignent
+ensemble `77,25 %` lorsque les deux statistiques sont au niveau 100.
+
+La magie, la stamina, les perks, la qualité d'artisanat et l'intégration directe
+d'Epic Fight seront activés dans leurs tranches fonctionnelles dédiées.
+
 ## Compiler
 
 Sous Windows :

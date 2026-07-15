@@ -221,7 +221,7 @@ Expected: tests/build succeed and verifier reports 74/74 addon entries with one 
 
 - [ ] **Step 5: Run GameTest with exact required providers**
 
-Verify the two source JAR paths remain inside the named `test-1.20.1/mods` client, copy only those two files into the worktree `run/mods`, invoke `scripts/smoke-gametest-server.ps1`, and remove only the two copied targets in a `finally` block after resolving/validating every path. Expected: Epic Fight 20.14.17 and Puffish Attributes 0.8.2 load; server starts, saves, stops, and the smoke script reports OK.
+Invoke `scripts/smoke-gametest-server.ps1 -ProviderModsDirectory <validated-client-mods>`. The script copies the two exact audited filenames to a safe build directory, exposes them through a temporary flat-directory repository, applies `fg.deobf`, enables Mixin refmap remapping, runs GameTest, and removes only its exact temporary files in a `finally` block. Expected: Epic Fight 20.14.17 and Puffish Attributes 0.8.2 load; server starts, saves, stops, and the smoke script reports OK.
 
 - [ ] **Step 6: Final diff and commit**
 
@@ -230,4 +230,3 @@ Run `git diff --check`, confirm unrelated modpack script changes are unstaged, t
 ```powershell
 git commit -m "docs: validate mobility attribute bridge"
 ```
-

@@ -42,6 +42,16 @@ public record XpAction(
         return new XpAction(XpActionKind.POTION_BREWED, 0, effectCount, amplifierSum, false, null);
     }
 
+    public static XpAction spellCast(int originalSpellLevel, int originalManaCost) {
+        return new XpAction(
+                XpActionKind.SPELL_CAST,
+                originalManaCost,
+                originalSpellLevel,
+                0,
+                false,
+                null);
+    }
+
     public XpAction withOpponent(UUID id) {
         return new XpAction(kind, magnitude, quantity, secondary, dangerousTarget, id);
     }

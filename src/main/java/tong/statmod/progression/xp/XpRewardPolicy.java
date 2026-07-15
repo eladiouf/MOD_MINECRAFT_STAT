@@ -33,6 +33,7 @@ public final class XpRewardPolicy {
             case POTION_BREWED -> action.quantity() <= 0 ? List.of()
                     : single(StatType.ALCHEMY,
                             clamp(5 + 2 * action.quantity() + Math.max(0, action.secondary()), 1, 15), action);
+            case SPELL_CAST -> spellCastAwards(action);
         };
     }
 
@@ -63,6 +64,30 @@ public final class XpRewardPolicy {
         int durabilityUnits = (int) Math.ceil(Math.max(1, action.magnitude()) / 100.0);
         return single(StatType.FORGING,
                 clamp(durabilityUnits * action.quantity(), 1, 20), action);
+    }
+
+    private static List<StatXpAward> spellCastAwards(XpAction action) {
+        int level = action.quantity();
+        double manaCost = action.magnitude();
+        if (level <= 0 || !Double.isFinite(manaCost)) {
+            return List.of();
+        }
+
+        List<StatXpAward> awards = new ArrayList<>(3);
+        int arcanePower = (int) Math.min(12L, 2L + level);
+        int castingSpeed = (int) Math.min(6L, 1L + ((long) level + 1L) / 2L);
+        awards.add(new StatXpAward(
+                StatType.ARCANE_POWER, arcanePower, action.kind().name()));
+        awards.add(new StatXpAward(
+                StatType.CASTING_SPEED, castingSpeed, action.kind().name()));
+
+        if (manaCost > 0) {
+            long manaUnits = (long) Math.ceil(manaCost / 10.0);
+            int manaPool = (int) Math.min(15L, Math.max(1L, manaUnits));
+            awards.add(new StatXpAward(
+                    StatType.MANA_POOL, manaPool, action.kind().name()));
+        }
+        return List.copyOf(awards);
     }
 
     private static List<StatXpAward> single(StatType stat, int amount, XpAction action) {

@@ -49,17 +49,17 @@ class AutomaticXpContractTest {
     }
 
     @Test
-    void mainCodeHasNoOptionalModImports() throws IOException {
+    void mainCodeHasNoUnsupportedProviderImports() throws IOException {
         try (Stream<Path> files = Files.walk(Path.of("src/main/java"))) {
             String source = files.filter(path -> path.toString().endsWith(".java"))
                     .map(AutomaticXpContractTest::readUnchecked)
                     .collect(Collectors.joining("\n")).toLowerCase();
-            assertFalse(hasOptionalModImport(source));
+            assertFalse(hasUnsupportedProviderImport(source));
         }
     }
 
     @Test
-    void rewardPolicyActivatesExactlyFourteenNonMagicalStats() {
+    void rewardPolicyActivatesFourteenNonMagicalAndThreeCastStats() {
         List<XpAction> actions = List.of(
                 XpAction.damage(XpActionKind.MELEE_HEAVY, 5),
                 XpAction.damage(XpActionKind.MELEE_BLADE, 5),
@@ -69,16 +69,16 @@ class AutomaticXpContractTest {
                 XpAction.damage(XpActionKind.WILLPOWER_SURVIVAL, 5),
                 XpAction.combo(3), XpAction.landing(8), XpAction.biome(),
                 XpAction.kill(120, true), XpAction.forging(100, 1),
-                XpAction.cooking(1), XpAction.alchemy(1, 0));
-        Set<StatType> emitted = actions.stream().flatMap(action ->
-                        XpRewardPolicy.awards(action).stream())
-                .map(StatXpAward::stat).collect(Collectors.toCollection(
-                        () -> EnumSet.noneOf(StatType.class)));
+                XpAction.cooking(1), XpAction.alchemy(1, 0),
+                XpAction.spellCast(4, 20));
+        Set<StatType> emitted = actions.stream()
+                .flatMap(action -> XpRewardPolicy.awards(action).stream())
+                .map(StatXpAward::stat)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(StatType.class)));
 
         Set<StatType> deferred = EnumSet.of(
-                StatType.ARCANE_POWER, StatType.CASTING_SPEED, StatType.MANA_POOL,
                 StatType.ERUDITION, StatType.MAGIC_RESISTANCE);
-        assertEquals(14, emitted.size());
+        assertEquals(17, emitted.size());
         assertTrue(emitted.stream().noneMatch(deferred::contains));
     }
 
@@ -90,13 +90,11 @@ class AutomaticXpContractTest {
         }
     }
 
-    private static boolean hasOptionalModImport(String source) {
+    private static boolean hasUnsupportedProviderImport(String source) {
         return source.lines()
                 .map(String::strip)
                 .filter(line -> line.startsWith("import "))
                 .anyMatch(line -> line.contains("epicfight")
-                        || line.contains("ironsspellbooks")
-                        || line.contains("irons_spellbooks")
                         || line.contains("tensura")
                         || line.contains("parcool"));
     }

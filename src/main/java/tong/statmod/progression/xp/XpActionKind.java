@@ -13,5 +13,6 @@ public enum XpActionKind {
     WILLPOWER_SURVIVAL,
     EQUIPMENT_CRAFTED,
     FOOD_COOKED,
-    POTION_BREWED
+    POTION_BREWED,
+    SPELL_CAST
 }

@@ -6,20 +6,35 @@
 ## Goal
 
 Give Rapidité and Agility stable passive identities using vanilla attributes as
-the guaranteed baseline and audited Epic Fight/Puffish attributes as optional
-specialized outputs.
+the baseline and audited Epic Fight/Puffish attributes as required specialized
+outputs.
+
+## Required runtime dependencies
+
+STAT Mod declares both installed, audited providers as mandatory in
+`META-INF/mods.toml`:
+
+- Epic Fight, mod ID `epicfight`, version range `[20.14.17,)`;
+- Pufferfish's Attributes, mod ID `puffish_attributes`, version range
+  `[0.8.2,)`.
+
+Both dependencies use `ordering="AFTER"` and `side="BOTH"`. Forge must stop
+loading with its normal dependency error before a world opens when either mod
+is missing or older than the supported floor.
 
 ## Selected approach
 
 All targets, including vanilla targets, are resolved through the Forge
 attribute registry. STAT Mod applies transient `MULTIPLY_BASE` modifiers with
 stable per-target UUIDs. This extends the existing Physical Endurance adapter
-without importing any optional-mod class.
+without importing provider internals, keeping the bridge resistant to package
+refactors inside supported provider versions.
 
 Rejected alternatives:
 
 - Vanilla-only effects would ignore useful installed integration points.
-- Addon-only effects would make core stats inert when an addon is absent.
+- Addon-only effects would unnecessarily discard vanilla interoperability and
+  make the stat behavior harder for other equipment mods to compose with.
 - Tick-based potion effects would cause churn, visual noise, and poor
   interaction with other attribute sources.
 
@@ -33,7 +48,7 @@ STAT Mod modifier and is neutral.
 Rapidité represents offensive cadence, not world movement.
 
 - `minecraft:generic.attack_speed`: +30% base at level 100;
-- `epicfight:offhand_attack_speed`: +30% base at level 100 when present.
+- `epicfight:offhand_attack_speed`: +30% base at level 100.
 
 Both targets receive the same configured amount so main-hand and Epic Fight
 off-hand cadence remain coherent. The default matches the previously approved
@@ -44,7 +59,7 @@ off-hand cadence remain coherent. The default matches the previously approved
 Agility represents movement, repositioning, and body control.
 
 - `minecraft:generic.movement_speed`: +20% base at level 100;
-- `puffish_attributes:sprinting_speed`: +10% base at level 100 when present.
+- `puffish_attributes:sprinting_speed`: +10% base at level 100.
 
 Puffish applies its sprinting attribute only while the player is sprinting, so
 it is a specialized burst layered on the guaranteed general movement bonus.
@@ -90,8 +105,10 @@ targets through one shared replace helper:
 3. remove the modifier UUID;
 4. add one transient `MULTIPLY_BASE` modifier if the amount is positive.
 
-Missing optional targets remain silent no-ops. Vanilla targets are expected to
-exist on players but use the same safe path.
+ParCool Endurance targets remain optional. Required Epic Fight/Puffish targets
+still use the safe registry path; loader dependency validation guarantees the
+providers exist, while a missing player attribute instance is skipped to avoid
+crashing corrupted or non-standard player implementations.
 
 ### Relevant-level snapshot
 
@@ -114,12 +131,15 @@ No periodic player tick handler is added.
 
 ## Compatibility and failure behavior
 
-- Epic Fight absent: vanilla main-hand attack speed still scales.
-- Puffish Attributes absent: vanilla movement speed still scales.
-- Optional attribute or player instance absent: only that output is skipped.
+- Epic Fight or Puffish Attributes absent/too old: Forge rejects the mod set
+  before a world opens with a dependency error.
+- ParCool absent: only the optional ParCool Endurance outputs are skipped.
+- Required provider attribute missing unexpectedly: the player refresh skips
+  that target instead of crashing; artifact/source contracts still catch wrong
+  registry IDs during development.
 - Repeated refresh: stable UUID removal prevents stacking.
 - Stat reset to zero: the previous modifier is removed.
-- Dedicated server: no client or optional-mod classes are referenced.
+- Dedicated server: no client or provider implementation classes are referenced.
 - Existing Physical Endurance behavior and UUIDs remain unchanged.
 
 ## Verification
@@ -131,7 +151,11 @@ Acceptance requires:
    default/config mapping;
 3. adapter contract tests prove registry-only transient replacement;
 4. lifecycle tests prove any of the three relevant levels triggers refresh;
-5. the complete JUnit suite and clean Forge build pass without optional mods;
-6. the built JAR contains the new bridge classes and no external classes;
-7. the finite dedicated GameTest server smoke exits without a fatal signature.
-
+5. metadata tests prove the two exact mandatory dependency entries and version
+   floors;
+6. the complete JUnit suite and clean Forge build pass on the development
+   classpath because integration remains registry-based;
+7. the built JAR contains the new bridge classes and no external classes;
+8. a pack smoke with the required providers validates the live attributes;
+9. the finite dependency-free GameTest run is expected to stop at Forge's
+   missing-dependency gate after metadata becomes mandatory, not start a world.

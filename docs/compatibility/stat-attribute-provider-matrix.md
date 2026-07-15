@@ -13,14 +13,16 @@ channels when they already implement the matching gameplay mechanic.
 
 Rules:
 
-1. Core STAT Mod never imports an optional mod class.
-2. Optional attributes are resolved by registry ID after registries exist.
+1. Core STAT Mod does not import provider internals when a registry attribute
+   is sufficient, even for required providers.
+2. Provider attributes are resolved by registry ID after registries exist.
 3. Each STAT Mod effect has one numerical owner; equivalent attributes from
    two providers are not applied together.
 4. Modifiers use stable STAT Mod UUIDs, are removed before replacement, and
    never stack after relog, death, dimension change, or stat mutation.
-5. A missing mod, attribute, or player attribute instance disables only that
-   optional output.
+5. Epic Fight and Puffish Attributes are required providers. Forge rejects a
+   missing/unsupported required provider before world load. ParCool and other
+   providers remain optional; a missing optional output is skipped.
 6. Weapon damage and physical reduction remain owned by the current STAT Mod
    damage policy; Puffish damage/resistance attributes must not duplicate them.
 7. Direct APIs are used only in a guarded integration module when registry

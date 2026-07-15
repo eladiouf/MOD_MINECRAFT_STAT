@@ -6,12 +6,13 @@
 ## Goal
 
 Make STAT Mod's Physical Endurance level improve the stamina systems already
-owned by Epic Fight and ParCool. The bridge must remain safe when either mod is
-missing and must never introduce a third stamina pool.
+owned by Epic Fight and ParCool. Epic Fight is now a required STAT Mod runtime
+dependency; ParCool remains optional. The bridge must never introduce a third
+stamina pool.
 
 ## Selected approach
 
-STAT Mod resolves optional attributes by registry ID and applies transient
+STAT Mod resolves provider attributes by registry ID and applies transient
 vanilla `AttributeModifier` instances to the server player. This avoids compile-
 time imports from Epic Fight or ParCool while allowing both mods to retain
 ownership of current stamina, consumption, regeneration ticks, and battle-mode
@@ -107,7 +108,9 @@ be done later if operators need immediate live rebalancing.
 
 ## Failure and compatibility behavior
 
-- Missing Epic Fight or ParCool: skip its targets without logging an error.
+- Missing Epic Fight or an unsupported Epic Fight version: Forge rejects the
+  mod set through mandatory dependency metadata before a world opens.
+- Missing ParCool: skip its targets without logging an error.
 - Present mod but absent player attribute instance: skip that target.
 - Level reset to zero: remove existing STAT Mod modifiers and add nothing.
 - Repeated refresh: replace by UUID, never stack.
@@ -122,8 +125,8 @@ The implementation is accepted when:
 2. target IDs and UUID uniqueness tests pass;
 3. source contract tests confirm registry-only optional integration and all
    lifecycle refresh points;
-4. the full JUnit suite and clean Forge build pass without Epic Fight/ParCool;
+4. the full JUnit suite and clean Forge build pass without provider JARs on the
+   compile classpath because integration is registry-based;
 5. the artifact verifier accepts the built JAR;
-6. the finite dedicated GameTest server smoke starts and stops without a fatal
-   error.
-
+6. the pack smoke uses required Epic Fight and optional ParCool; a development
+   GameTest without Epic Fight must stop at Forge's mandatory dependency gate.

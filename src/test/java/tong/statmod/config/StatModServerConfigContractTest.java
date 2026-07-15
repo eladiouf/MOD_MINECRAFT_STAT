@@ -25,6 +25,10 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("staminaRecoveryBonusAt100\", 0.5, 0.0, 5.0"));
         assertTrue(config.contains("staminaCapacityBonusAt100()"));
         assertTrue(config.contains("staminaRecoveryBonusAt100()"));
+        assertTrue(config.contains("builder.push(\"mobility\")"));
+        assertTrue(config.contains("rapiditeAttackSpeedBonusAt100\", 0.30, 0.0, 2.0"));
+        assertTrue(config.contains("agilityMovementSpeedBonusAt100\", 0.20, 0.0, 2.0"));
+        assertTrue(config.contains("agilitySprintingSpeedBonusAt100\", 0.10, 0.0, 2.0"));
         assertTrue(config.contains("new CombatScalingRules("));
     }
 }

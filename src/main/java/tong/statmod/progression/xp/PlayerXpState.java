@@ -107,6 +107,10 @@ public final class PlayerXpState {
         return biomeId != null && discoveredBiomes.add(biomeId);
     }
 
+    public boolean markBiomeDiscovered(ResourceLocation biomeId) {
+        return discoverBiome(biomeId);
+    }
+
     public boolean hasDiscoveredBiome(ResourceLocation biomeId) {
         return discoveredBiomes.contains(biomeId);
     }

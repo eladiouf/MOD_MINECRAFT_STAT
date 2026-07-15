@@ -10,14 +10,16 @@ import tong.statmod.stats.StatType;
 
 class AutomaticPerkCatalogTest {
     @Test
-    void exposesTwentyOneStableUniquePerksInPresentationOrder() {
+    void exposesThirtyThreeStableUniquePerksInPresentationOrder() {
         List<AutomaticPerkDefinition> definitions = AutomaticPerkCatalog.definitions();
 
-        assertEquals(21, definitions.size());
-        assertEquals(21, definitions.stream().map(AutomaticPerkDefinition::id)
+        assertEquals(33, definitions.size());
+        assertEquals(33, definitions.stream().map(AutomaticPerkDefinition::id)
                 .distinct().count());
         assertEquals("statmod:rapidite_25", definitions.get(0).id());
         assertEquals("statmod:magic_resistance_75", definitions.get(20).id());
+        assertEquals("statmod:brute_force_25", definitions.get(21).id());
+        assertEquals("statmod:physical_resistance_75", definitions.get(32).id());
         assertEquals(definitions.stream().map(AutomaticPerkDefinition::order).sorted().toList(),
                 definitions.stream().map(AutomaticPerkDefinition::order).toList());
     }

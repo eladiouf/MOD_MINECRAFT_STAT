@@ -25,6 +25,14 @@ class AutomaticPerkResolverTest {
     }
 
     @Test
+    void activatesEveryCombatPerkAtTheSameMilestoneBoundaries() {
+        assertMilestones(StatType.BRUTE_FORCE, "brute_force");
+        assertMilestones(StatType.BLADE_TECHNIQUE, "blade_technique");
+        assertMilestones(StatType.PRECISION, "precision");
+        assertMilestones(StatType.PHYSICAL_RESISTANCE, "physical_resistance");
+    }
+
+    @Test
     void supportsCombinedRequirementsWithoutPersistedUnlockState() {
         AutomaticPerkDefinition combined = new AutomaticPerkDefinition(
                 "statmod:combined_test", 0,
@@ -44,6 +52,18 @@ class AutomaticPerkResolverTest {
         return AutomaticPerkResolver.active(levels).stream()
                 .map(AutomaticPerkDefinition::id)
                 .toList();
+    }
+
+    private static void assertMilestones(StatType stat, String path) {
+        String first = "statmod:" + path + "_25";
+        String second = "statmod:" + path + "_50";
+        String third = "statmod:" + path + "_75";
+        assertEquals(List.of(), ids(levels(stat, 24)));
+        assertEquals(List.of(first), ids(levels(stat, 25)));
+        assertEquals(List.of(first), ids(levels(stat, 49)));
+        assertEquals(List.of(first, second), ids(levels(stat, 50)));
+        assertEquals(List.of(first, second), ids(levels(stat, 74)));
+        assertEquals(List.of(first, second, third), ids(levels(stat, 75)));
     }
 
     private static Map<StatType, Integer> levels(StatType stat, int level) {

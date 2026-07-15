@@ -28,6 +28,14 @@ public final class AutomaticPerkCatalog {
                 AutomaticPerkEffect.MANA_CAPACITY_REGEN, 0.03);
         addMilestones(definitions, "magic_resistance", StatType.MAGIC_RESISTANCE,
                 AutomaticPerkEffect.MAGIC_RESISTANCE, 0.02);
+        addMilestones(definitions, "brute_force", StatType.BRUTE_FORCE,
+                AutomaticPerkEffect.BRUTE_FORCE_DAMAGE, 0.05);
+        addMilestones(definitions, "blade_technique", StatType.BLADE_TECHNIQUE,
+                AutomaticPerkEffect.BLADE_TECHNIQUE_DAMAGE, 0.05);
+        addMilestones(definitions, "precision", StatType.PRECISION,
+                AutomaticPerkEffect.PRECISION_DAMAGE, 0.05);
+        addMilestones(definitions, "physical_resistance", StatType.PHYSICAL_RESISTANCE,
+                AutomaticPerkEffect.PHYSICAL_RESISTANCE, 0.02);
         DEFINITIONS = List.copyOf(definitions);
 
         LinkedHashMap<String, AutomaticPerkDefinition> byId = new LinkedHashMap<>();

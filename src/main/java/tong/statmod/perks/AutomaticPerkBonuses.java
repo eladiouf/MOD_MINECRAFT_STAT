@@ -41,6 +41,12 @@ public final class AutomaticPerkBonuses {
                     StatModServerConfig.castingSpeedReductionsPerMilestone();
             case MANA_CAPACITY_REGEN -> StatModServerConfig.manaCapacityRegenPerMilestone();
             case MAGIC_RESISTANCE -> StatModServerConfig.magicResistancePerMilestone();
+            case BRUTE_FORCE_DAMAGE -> StatModServerConfig.bruteForceDamagePerMilestone();
+            case BLADE_TECHNIQUE_DAMAGE ->
+                    StatModServerConfig.bladeTechniqueDamagePerMilestone();
+            case PRECISION_DAMAGE -> StatModServerConfig.precisionDamagePerMilestone();
+            case PHYSICAL_RESISTANCE ->
+                    StatModServerConfig.physicalResistancePerMilestone();
         };
     }
 }

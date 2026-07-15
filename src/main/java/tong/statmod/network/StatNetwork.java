@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkDirection;
@@ -15,7 +16,9 @@ import tong.statmod.StatModRuntime;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.notice.ClientProgressNotices;
+import tong.statmod.event.EnchantedBookStudySessions;
 import tong.statmod.stats.StatType;
+import tong.statmod.network.BookStudyInputMessage.Action;
 
 public final class StatNetwork {
     private static final AtomicBoolean REGISTERED = new AtomicBoolean();
@@ -53,6 +56,20 @@ public final class StatNetwork {
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(2, BookStudyInputMessage.class,
+                BookStudyInputMessage::encode,
+                BookStudyInputMessage::decode,
+                (message, contextSupplier) -> {
+                    var context = contextSupplier.get();
+                    ServerPlayer sender = context.getSender();
+                    if (sender != null) {
+                        context.enqueueWork(() -> EnchantedBookStudySessions.input(
+                                sender, message.action(), message.hand(),
+                                sender.serverLevel().getGameTime()));
+                    }
+                    context.setPacketHandled(true);
+                },
+                Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     public static void sendSnapshot(ServerPlayer player) {
@@ -65,5 +82,9 @@ public final class StatNetwork {
             int awardedXp, int newLevel, int levelsGained) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 new StatProgressNoticeMessage(stat, awardedXp, newLevel, levelsGained));
+    }
+
+    public static void sendBookStudyInput(Action action, InteractionHand hand) {
+        CHANNEL.sendToServer(new BookStudyInputMessage(action, hand));
     }
 }

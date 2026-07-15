@@ -20,6 +20,7 @@ class StatsScreenWiringContractTest {
         assertTrue(input.contains("Phase.END"));
         assertTrue(input.contains("consumeClick"));
         assertTrue(input.contains("setScreen(new StatsOverviewScreen())"));
+        assertTrue(input.contains("ClientBookStudyInput.tick(minecraft)"));
     }
 
     @Test

@@ -44,6 +44,7 @@ public final class PlayerStatsEvents {
 
     @SubscribeEvent
     public static void clone(PlayerEvent.Clone event) {
+        EnchantedBookStudySessions.clear(event.getEntity().getUUID());
         event.getOriginal().reviveCaps();
         event.getOriginal().getCapability(StatCapabilities.PLAYER_STATS).ifPresent(source ->
                 event.getEntity().getCapability(StatCapabilities.PLAYER_STATS).ifPresent(target ->
@@ -75,6 +76,11 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         sync(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
+        EnchantedBookStudySessions.clear(event.getEntity().getUUID());
     }
 
     @SubscribeEvent

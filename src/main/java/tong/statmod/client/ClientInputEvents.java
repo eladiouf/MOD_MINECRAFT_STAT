@@ -21,6 +21,7 @@ public final class ClientInputEvents {
         }
         ClientProgressNotices.tick();
         Minecraft minecraft = Minecraft.getInstance();
+        ClientBookStudyInput.tick(minecraft);
         while (ClientKeyMappings.OPEN_STATS.consumeClick()) {
             if (minecraft.player != null && minecraft.screen == null) {
                 minecraft.setScreen(new StatsOverviewScreen());

@@ -8,7 +8,7 @@ prepared, optional, or excluded.
 | Minecraft | 1.20.1 | verified | Compiles and passes the automated suite. The native stats screen targets this client version. |
 | Forge | 47.4.10 | verified | Compiles and passes the automated suite and required-provider GameTest profile. |
 | Java | 17 | verified | Required build and runtime toolchain. |
-| Iron's Spells 'n Spellbooks | 3.16.2 | required | Mandatory provider for spell power, casting, mana, and magic-resistance attributes; spell XP and Curios casting remain deferred. |
+| Iron's Spells 'n Spellbooks | 3.16.2 | required | Mandatory provider for spell power, casting, mana, and magic-resistance attributes; successful spellbook casts now award Arcane Power, Casting Speed, and Mana Pool XP. |
 | Epic Fight | 20.14.17 | required | Mandatory provider for stamina and attack-speed attributes. |
 | Pufferfish's Attributes | 0.8.2 | required | Mandatory provider for specialized movement attributes. |
 | ParCool | 3.4.3.3 | prepared | Optional provider for the existing Endurance stamina targets; minimal runtime is server-smoked. |
@@ -97,3 +97,9 @@ synchronize the screen without presenting them as gameplay rewards.
 Player-stat schema 2 retires the unused Fire, Water, Earth, and Air affinity
 entries. Schema-1 saves retain every remaining stat; retired affinity compounds
 are ignored and omitted from the next save.
+
+Successful server-side Iron spellbook casts use the provider's original spell
+level and mana cost to progress Arcane Power, Casting Speed, and Mana Pool.
+Scrolls, spellblades, commands, mobs, schools, and retired affinities do not
+produce cast XP. Erudition and Magic Resistance await their dedicated gameplay
+sources.

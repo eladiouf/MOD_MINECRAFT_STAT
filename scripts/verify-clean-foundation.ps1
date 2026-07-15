@@ -77,6 +77,7 @@ if ($Mode -eq 'After') {
             'tong/statmod/progression/xp/XpRewardPolicy.class'
             'tong/statmod/progression/xp/PlayerXpState.class'
             'tong/statmod/progression/xp/XpAwardService.class'
+            'tong/statmod/integration/ironspells/IronSpellXpEvents.class'
             'tong/statmod/effects/CombatScalingRules.class'
             'tong/statmod/effects/CombatStatScaling.class'
             'tong/statmod/effects/LinearStatScaling.class'

@@ -27,6 +27,10 @@ Rules:
    damage policy; Puffish damage/resistance attributes must not duplicate them.
 7. Direct APIs are used only in a guarded integration module when registry
    attributes cannot express the required behavior.
+8. Iron's public typed `SpellOnCastEvent` is used only inside
+   `integration.ironspells` because registry attributes cannot report a
+   committed cast. Original level and mana values feed the provider-neutral XP
+   policy; school data is discarded.
 
 ## Audited providers
 
@@ -91,6 +95,10 @@ School attributes follow the installed registry's `<school>_spell_power` and
 `<school>_magic_resist` naming. STAT Mod deliberately does not map them to
 separate affinity statistics; the four unused affinities are retired from the
 Forge 1.20.1 roster.
+
+STAT Mod also compiles against the pinned public `SpellOnCastEvent` and
+`CastSource` API. Only committed `SPELLBOOK` events reach automatic XP; the
+provider JAR remains compile-only and is never embedded.
 
 ### Apothic Attributes
 

@@ -33,7 +33,8 @@ The current branch already provides:
 - Forge player capabilities, defensive NBT persistence, lifecycle copying, and
   full client snapshots;
 - operator and player inspection commands;
-- automatic XP for 14 non-magical statistics;
+- automatic XP for 14 non-magical statistics plus Arcane Power, Casting Speed,
+  and Mana Pool from committed Iron's Spells spellbook casts;
 - rolling anti-farm limits and public equipment classification tags;
 - an Iron's Spells addon catalog and a stable client batch;
 - a clean Forge build with all tests passing and 74 preserved addon JARs.
@@ -113,6 +114,9 @@ the effect safely.
 - keep combat functional when an addon lacks a dedicated classification.
 
 ### Milestone 3 — Iron's Spells progression
+
+The core attribute bridge and spellbook-cast XP slice are implemented.
+Erudition learning XP and Magic Resistance damage-received XP remain.
 
 - target the modpack's pinned Iron's Spells 3.16.2 API first;
 - award magical XP from validated spell events without duplicating progression

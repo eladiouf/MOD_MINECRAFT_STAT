@@ -11,9 +11,13 @@ public final class XpAwardService {
     private XpAwardService() {
     }
 
+    public static boolean isEligible(ServerPlayer player) {
+        return player != null && !(player instanceof FakePlayer)
+                && !player.isCreative() && !player.isSpectator();
+    }
+
     public static boolean award(ServerPlayer player, List<XpAction> actions, long tick) {
-        if (player == null || player instanceof FakePlayer
-                || player.isCreative() || player.isSpectator()) {
+        if (!isEligible(player)) {
             return false;
         }
         PlayerStats stats = player.getCapability(StatCapabilities.PLAYER_STATS)

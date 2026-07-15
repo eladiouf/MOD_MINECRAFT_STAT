@@ -85,6 +85,19 @@ Arcane Power, Casting Speed, Mana Pool et Magic Resistance renforcent les six
 attributs correspondants d'Iron's Spells. STAT Mod ne crée aucune seconde
 réserve de mana et ne remplit jamais le mana lors d'un rafraîchissement.
 
+## Perks automatiques
+
+STAT Mod fournit 21 perks passifs automatiques pour Rapidité, Agility,
+Physical Endurance, Arcane Power, Casting Speed, Mana Pool et Magic
+Resistance. Trois perks cumulatifs s'activent aux niveaux 25, 50 et 75 de la
+statistique correspondante. Ils se désactivent automatiquement si le niveau
+repasse sous leur prérequis.
+
+Il n'existe aucun arbre, point de perk, achat, respec ou affinité. Le serveur
+déduit les perks actifs directement des niveaux et les affiche dans une liste
+non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
+fournisseur d'attributs compatibles.
+
 ## Compiler
 
 Sous Windows :

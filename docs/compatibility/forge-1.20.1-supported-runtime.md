@@ -122,3 +122,17 @@ but observes the same rolling cap.
 Magic Resistance progresses only from final positive `LivingDamageEvent`
 damage whose source is Iron's Spells `SpellDamageSource`. It does not trust the
 earlier mutable `SpellDamageEvent`, require a kill, or classify a spell school.
+
+## Automatic perks
+
+The supported runtime contains 21 automatic perks for the seven mature
+attribute-backed stats. Three cumulative milestones activate at levels 25, 50, and 75.
+Activation is derived from the current server-authoritative levels, so
+lowering a level below a requirement immediately removes the corresponding
+bonus; no separate unlock state is saved.
+
+There is no tree, perk points, purchases, respecs, or affinities. The server
+synchronizes known IDs for the active-perk list in the native `P` screen.
+Pufferfish's Attributes remains an attribute provider and never owns perk
+progression. Existing stable transient modifier UUIDs combine continuous stat
+scaling and milestone bonuses without stacking.

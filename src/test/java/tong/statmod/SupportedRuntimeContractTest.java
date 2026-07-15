@@ -29,5 +29,10 @@ class SupportedRuntimeContractTest {
         assertTrue(attributes.contains("irons_spellbooks:spell_power"));
         assertTrue(attributes.contains("irons_spellbooks:max_mana"));
         assertTrue(attributes.contains("irons_spellbooks:spell_resist"));
+        assertTrue(record.contains("21 automatic perks"));
+        assertTrue(record.contains("levels 25, 50, and 75"));
+        assertTrue(record.contains("no tree, perk points, purchases, respecs, or affinities"));
+        assertTrue(record.contains("Pufferfish's Attributes remains an attribute provider"));
+        assertTrue(record.contains("active-perk list in the native `P` screen"));
     }
 }

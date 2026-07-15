@@ -30,6 +30,7 @@ class StatsScreenWiringContractTest {
         assertTrue(screen.contains("OPEN_STATS.matches"));
         assertTrue(screen.contains("keyInventory.matches"));
         assertTrue(screen.contains("ClientStatsCache.state()"));
+        assertTrue(screen.contains("StatCardRenderer.narration(card)"));
         assertFalse(screen.contains("StatNetwork"));
         assertFalse(screen.contains("sendToServer"));
         assertFalse(screen.contains("StatCapabilities"));

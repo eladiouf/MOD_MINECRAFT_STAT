@@ -55,4 +55,18 @@ public final class StatCardRenderer {
                 List.of(Component.translatable(card.presentation().descriptionKey())),
                 mouseX, mouseY);
     }
+
+    public static Component narration(StatsScreenModel.StatCard card) {
+        Component name = Component.translatable(card.presentation().nameKey());
+        Component xp = card.maxLevel()
+                ? Component.translatable("screen.statmod.max")
+                : Component.translatable("screen.statmod.xp",
+                        card.value().xp(), card.requiredXp());
+        Component status = Component.translatable(card.presentation().state()
+                == StatDisplayState.ACTIVE
+                        ? "screen.statmod.status.active"
+                        : "screen.statmod.status.foundation");
+        return Component.translatable("narration.statmod.card",
+                name, card.value().level(), xp, status);
+    }
 }

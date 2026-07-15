@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import tong.statmod.client.ClientKeyMappings;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.ClientStatsState;
@@ -123,8 +124,13 @@ public final class StatsOverviewScreen extends Screen {
 
     @Override
     public Component getNarrationMessage() {
-        return Component.translatable("narration.statmod.family",
+        MutableComponent narration = Component.translatable("narration.statmod.family",
                 Component.translatable("family.statmod." + selectedFamily.slug()));
+        for (StatsScreenModel.StatCard card : selectedCards()) {
+            narration.append(Component.literal(". "))
+                    .append(StatCardRenderer.narration(card));
+        }
+        return narration;
     }
 
     private List<StatsScreenModel.StatCard> selectedCards() {

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "minecraft_version": "1.20.1",
+  "forge_version": "47.4.10",
+  "protected_mod_ids": ["statmod", "epicfight", "irons_spellbooks", "project_babylon_weapons"],
+  "required_active_minimum_versions": {
+    "irons_spellbooks": "3.15.0",
+    "cataclysm": "3.16"
+  },
+  "artifacts": [
+    {"file_name":"alshanex_familiars-1.20.1_v1.1.2_HotFix.jar","source_kind":"prepared","primary_mod_id":"alshanex_familiars","expected_version":"1.20.1_v1.1.2_HotFix"},
+    {"file_name":"arcanists_equipage-1.0.2-20.1.jar","source_kind":"prepared","primary_mod_id":"arcanists_equipage","expected_version":"1.0.2-20.1"},
+    {"file_name":"constructs_casting-2.2.5.jar","source_kind":"prepared","primary_mod_id":"constructs_casting","expected_version":"2.2.5"},
+    {"file_name":"gtbcs_geomancy_plus-2.0.0-1.20.1.jar","source_kind":"prepared","primary_mod_id":"gtbcs_geomancy_plus","expected_version":"2.0.0-1.20.1"},
+    {"file_name":"magiccircles-1.2.2-1.20.1.jar","source_kind":"prepared","primary_mod_id":"magiccircles","expected_version":"1.2.2-1.20.1"},
+    {"file_name":"cataclysm_spellbooks-1.2.9-1.20.1-all.jar","source_kind":"prepared","primary_mod_id":"cataclysm_spellbooks","expected_version":"1.2.9-1.20.1"},
+    {"file_name":"darkermagic-1.3.1-1.20.1-ver.b.jar","source_kind":"prepared","primary_mod_id":"darkermagic","expected_version":"1.3.1-1.20.1"},
+    {"file_name":"azurelib-neo-3.0.9.jar","source_kind":"remote","primary_mod_id":"azurelib","expected_version":"3.0.9","distribution":"modrinth","distribution_version_id":"M0uqO7Oe","metadata_url":"https://api.modrinth.com/v2/version/M0uqO7Oe"},
+    {"file_name":"deeperdarker-forge-1.20.1-1.3.3.jar","source_kind":"remote","primary_mod_id":"deeperdarker","expected_version":"1.3.3","distribution":"curseforge","distribution_file_id":"5906086","download_url":"https://edge.forgecdn.net/files/5906/086/deeperdarker-forge-1.20.1-1.3.3.jar"}
+  ]
+}

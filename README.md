@@ -5,9 +5,10 @@ Fondation propre de **STAT Mod** pour Minecraft **1.20.1**, Forge
 
 ## État actuel
 
-Cette branche contient le socle technique et la première fondation fonctionnelle
-des statistiques. Les autres systèmes seront réintroduits progressivement.
-Aucun code Tensura ni NeoForge n’est actif dans cette base.
+Cette branche contient le socle technique et la progression automatique des
+statistiques physiques, d'exploration et d'artisanat. Les autres systèmes seront
+réintroduits progressivement. Aucun code Tensura ni NeoForge n’est actif dans
+cette base.
 
 ## Fondation des statistiques joueur
 
@@ -31,9 +32,21 @@ Commandes disponibles :
 ```
 
 La consultation personnelle est libre. Consulter un autre joueur ou modifier
-une statistique exige le niveau opérateur 2. Cette première tranche n’ajoute
-encore aucun gain automatique d’XP, bonus de gameplay, HUD ou intégration avec
-un autre mod.
+une statistique exige le niveau opérateur 2.
+
+## XP automatique et addons Epic Fight
+
+Quatorze statistiques progressent automatiquement : Brute Force, Blade
+Technique, Rapidité, Agility, Physical Resistance, Physical Endurance,
+Precision, Tracking, Keen Senses, Intimidation, Willpower, Forging, Cooking et
+Alchemy. Les neuf statistiques magiques restent différées : Arcane Power,
+Casting Speed, Mana Pool, Erudition, Magic Resistance et les affinités Fire,
+Water, Earth et Air.
+
+La compatibilité des équipements d'addons est pilotée par quatre tags publics,
+sans dépendance Java envers Epic Fight. Voir le
+[guide XP des addons Epic Fight](docs/compatibility/epic-fight-addon-xp.md) et
+la [matrice de validation](docs/compatibility/epic-fight-addon-matrix.csv).
 
 ## Compiler
 

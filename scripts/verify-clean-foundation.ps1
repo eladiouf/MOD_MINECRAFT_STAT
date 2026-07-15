@@ -70,6 +70,16 @@ if ($Mode -eq 'After') {
             'tong/statmod/capability/PlayerStatsProvider.class'
             'tong/statmod/network/StatsSnapshotMessage.class'
             'tong/statmod/command/StatsCommands.class'
+            'tong/statmod/progression/xp/XpRewardPolicy.class'
+            'tong/statmod/progression/xp/PlayerXpState.class'
+            'tong/statmod/progression/xp/XpAwardService.class'
+            'tong/statmod/event/CombatXpEvents.class'
+            'tong/statmod/event/ExplorationXpEvents.class'
+            'tong/statmod/event/CraftingXpEvents.class'
+            'data/statmod/tags/items/heavy_weapons.json'
+            'data/statmod/tags/items/blade_weapons.json'
+            'data/statmod/tags/items/precision_weapons.json'
+            'data/statmod/tags/items/forgeable_equipment.json'
         )
         foreach ($requiredEntry in $requiredEntries) {
             if ($entries -notcontains $requiredEntry) {

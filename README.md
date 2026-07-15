@@ -5,10 +5,35 @@ Fondation propre de **STAT Mod** pour Minecraft **1.20.1**, Forge
 
 ## État actuel
 
-Cette branche contient uniquement le socle technique du mod : point d’entrée
-Forge, métadonnées, ressources minimales, tests et automatisation de build.
-Les systèmes de statistiques et de lancement de sorts seront réintroduits
-progressivement. Aucun code Tensura ni NeoForge n’est actif dans cette base.
+Cette branche contient le socle technique et la première fondation fonctionnelle
+des statistiques. Les autres systèmes seront réintroduits progressivement.
+Aucun code Tensura ni NeoForge n’est actif dans cette base.
+
+## Fondation des statistiques joueur
+
+STAT Mod fournit 23 statistiques réparties en six familles : combat physique,
+chasse, magie fondamentale, affinités élémentaires, mental et artisanat. Chaque
+stat possède un niveau de 0 à 100 et une progression suivant la formule
+`10 × (niveau + 1)²`.
+
+Les données sont autoritaires côté serveur, sauvegardées en NBT, copiées après
+la mort et synchronisées à la connexion, au respawn, au changement de dimension
+et après une modification administrative.
+
+Commandes disponibles :
+
+```text
+/statmod stats
+/statmod stats <joueur>
+/statmod stat get <joueur> <stat>
+/statmod stat set <joueur> <stat> <niveau>
+/statmod stat addxp <joueur> <stat> <quantité>
+```
+
+La consultation personnelle est libre. Consulter un autre joueur ou modifier
+une statistique exige le niveau opérateur 2. Cette première tranche n’ajoute
+encore aucun gain automatique d’XP, bonus de gameplay, HUD ou intégration avec
+un autre mod.
 
 ## Compiler
 

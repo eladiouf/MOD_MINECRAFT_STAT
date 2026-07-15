@@ -1,0 +1,43 @@
+package tong.statmod;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.junit.jupiter.api.Test;
+
+class StatsFoundationContractTest {
+    @Test
+    void entrypointRegistersNetworkAndLifecycleOwnsRequiredEvents() throws Exception {
+        String entrypoint = Files.readString(Path.of("src/main/java/tong/statmod/StatMod.java"));
+        String events = Files.readString(
+                Path.of("src/main/java/tong/statmod/event/PlayerStatsEvents.java"));
+
+        assertTrue(entrypoint.contains("StatNetwork.register()"));
+        assertTrue(events.contains("PlayerLoggedInEvent"));
+        assertTrue(events.contains("PlayerRespawnEvent"));
+        assertTrue(events.contains("PlayerChangedDimensionEvent"));
+        assertTrue(events.contains("RegisterCommandsEvent"));
+    }
+
+    @Test
+    void activeSourceHasNoThirdPartyIntegrationImports() throws Exception {
+        try (var paths = Files.walk(Path.of("src/main/java"))) {
+            String sources = paths
+                    .filter(path -> path.toString().endsWith(".java"))
+                    .map(path -> {
+                        try {
+                            return Files.readString(path);
+                        } catch (Exception exception) {
+                            throw new RuntimeException(exception);
+                        }
+                    })
+                    .reduce("", String::concat);
+
+            assertFalse(sources.contains("irons_spellbooks"));
+            assertFalse(sources.contains("epicfight"));
+            assertFalse(sources.toLowerCase().contains("tensura"));
+        }
+    }
+}

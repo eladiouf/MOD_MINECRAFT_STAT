@@ -38,7 +38,7 @@ foreach ($row in $manifest) {
 
 if ($Mode -eq 'After') {
     $forbidden = & rg -n -i 'net\.neoforged|neoforge|tensura|tensura_iron_spells' `
-        src build.gradle gradle.properties settings.gradle
+        src/main build.gradle gradle.properties settings.gradle
     if ($LASTEXITCODE -eq 0 -and $forbidden) {
         throw "Forbidden active references:`n$forbidden"
     }
@@ -63,7 +63,15 @@ if ($Mode -eq 'After') {
     $archive = [IO.Compression.ZipFile]::OpenRead($builtJars[0].FullName)
     try {
         $entries = @($archive.Entries | ForEach-Object FullName)
-        foreach ($requiredEntry in 'META-INF/mods.toml', 'tong/statmod/StatMod.class') {
+        $requiredEntries = @(
+            'META-INF/mods.toml'
+            'tong/statmod/StatMod.class'
+            'tong/statmod/stats/PlayerStats.class'
+            'tong/statmod/capability/PlayerStatsProvider.class'
+            'tong/statmod/network/StatsSnapshotMessage.class'
+            'tong/statmod/command/StatsCommands.class'
+        )
+        foreach ($requiredEntry in $requiredEntries) {
             if ($entries -notcontains $requiredEntry) {
                 throw "Built JAR is missing $requiredEntry"
             }

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 import tong.statmod.client.ClientKeyMappings;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.ClientStatsState;
@@ -27,6 +28,7 @@ public final class StatsOverviewScreen extends Screen {
     private int cardBottom;
     private int cardWidth;
     private int columns;
+    private int perkTop;
 
     public StatsOverviewScreen() {
         super(Component.translatable("screen.statmod.stats.title"));
@@ -49,7 +51,8 @@ public final class StatsOverviewScreen extends Screen {
                     .bounds(x, y, buttonWidth, 20)
                     .build());
         }
-        cardTop = 91;
+        perkTop = 89;
+        cardTop = 132;
         cardBottom = height - 18;
         columns = panelWidth >= 400 ? 2 : 1;
         cardWidth = (panelWidth - 20 - (columns - 1) * GAP) / columns;
@@ -78,6 +81,7 @@ public final class StatsOverviewScreen extends Screen {
         graphics.fill(panelX, 14, panelX + panelWidth, height - 12, PANEL_BACKGROUND);
         graphics.drawCenteredString(font, title, width / 2, 23, 0xFF_F4E4BE);
         super.render(graphics, mouseX, mouseY, partialTick);
+        renderActivePerks(graphics, mouseX, mouseY);
 
         List<StatsScreenModel.StatCard> cards = selectedCards();
         graphics.enableScissor(panelX + 8, cardTop, panelX + panelWidth - 8, cardBottom);
@@ -130,7 +134,58 @@ public final class StatsOverviewScreen extends Screen {
             narration.append(Component.literal(". "))
                     .append(StatCardRenderer.narration(card));
         }
+        for (ActivePerkPresentation perk : model.activePerks()) {
+            narration.append(Component.literal(". "))
+                    .append(Component.translatable(perk.nameKey()));
+        }
         return narration;
+    }
+
+    private void renderActivePerks(GuiGraphics graphics, int mouseX, int mouseY) {
+        int left = panelX + 10;
+        int availableWidth = panelWidth - 20;
+        graphics.drawString(font,
+                Component.translatable("screen.statmod.stats.active_perks"),
+                left, perkTop, 0xFF_DDBB78, false);
+        if (model.activePerks().isEmpty()) {
+            return;
+        }
+
+        MutableComponent names = Component.empty();
+        int visibleCount = 0;
+        List<FormattedCharSequence> lines = List.of();
+        for (ActivePerkPresentation perk : model.activePerks()) {
+            MutableComponent candidate = names.copy();
+            if (visibleCount > 0) {
+                candidate.append(Component.literal(", "));
+            }
+            candidate.append(Component.translatable(perk.nameKey()));
+            List<FormattedCharSequence> candidateLines = font.split(candidate, availableWidth);
+            if (candidateLines.size() > 3) {
+                break;
+            }
+            names = candidate;
+            lines = candidateLines;
+            visibleCount++;
+        }
+        int hidden = model.activePerks().size() - visibleCount;
+        if (hidden > 0) {
+            names.append(Component.translatable("screen.statmod.stats.more_perks", hidden));
+            lines = font.split(names, availableWidth);
+        }
+        for (int index = 0; index < Math.min(3, lines.size()); index++) {
+            graphics.drawString(font, lines.get(index), left,
+                    perkTop + 12 + index * 10, 0xFF_E8D8B5, false);
+        }
+
+        if (mouseX >= left && mouseX < left + availableWidth
+                && mouseY >= perkTop && mouseY < cardTop) {
+            List<Component> tooltip = model.activePerks().stream()
+                    .limit(Math.max(1, visibleCount))
+                    .map(perk -> (Component) Component.translatable(perk.descriptionKey()))
+                    .toList();
+            graphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+        }
     }
 
     private List<StatsScreenModel.StatCard> selectedCards() {

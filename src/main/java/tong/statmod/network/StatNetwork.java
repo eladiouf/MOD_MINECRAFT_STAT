@@ -44,7 +44,8 @@ public final class StatNetwork {
                 (message, contextSupplier) -> {
                     var context = contextSupplier.get();
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                            () -> () -> ClientStatsCache.replace(message.values())));
+                            () -> () -> ClientStatsCache.replace(
+                                    message.values(), message.activePerkIds())));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));

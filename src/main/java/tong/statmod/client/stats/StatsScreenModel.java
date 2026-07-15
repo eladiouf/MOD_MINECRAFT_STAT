@@ -10,17 +10,20 @@ import tong.statmod.stats.StatFamily;
 import tong.statmod.stats.StatProgress;
 import tong.statmod.stats.StatType;
 import tong.statmod.stats.StatValue;
+import tong.statmod.perks.AutomaticPerkCatalog;
 
 public final class StatsScreenModel {
     private final long revision;
     private final List<FamilySection> families;
     private final Map<StatType, StatCard> cards;
+    private final List<ActivePerkPresentation> activePerks;
 
     private StatsScreenModel(long revision, List<FamilySection> families,
-            Map<StatType, StatCard> cards) {
+            Map<StatType, StatCard> cards, List<ActivePerkPresentation> activePerks) {
         this.revision = revision;
         this.families = List.copyOf(families);
         this.cards = Collections.unmodifiableMap(new EnumMap<>(cards));
+        this.activePerks = List.copyOf(activePerks);
     }
 
     public static StatsScreenModel from(ClientStatsState state) {
@@ -44,7 +47,12 @@ public final class StatsScreenModel {
             }
             families.add(new FamilySection(family, List.copyOf(familyCards)));
         }
-        return new StatsScreenModel(state.revision(), families, cards);
+        List<ActivePerkPresentation> activePerks = state.activePerkIds().stream()
+                .map(AutomaticPerkCatalog::byId)
+                .flatMap(java.util.Optional::stream)
+                .map(ActivePerkPresentation::from)
+                .toList();
+        return new StatsScreenModel(state.revision(), families, cards, activePerks);
     }
 
     public long revision() {
@@ -57,6 +65,10 @@ public final class StatsScreenModel {
 
     public StatCard card(StatType type) {
         return cards.get(type);
+    }
+
+    public List<ActivePerkPresentation> activePerks() {
+        return activePerks;
     }
 
     public record FamilySection(StatFamily family, List<StatCard> cards) {

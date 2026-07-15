@@ -2,6 +2,7 @@ package tong.statmod.client;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.List;
 import tong.statmod.stats.StatType;
 import tong.statmod.stats.StatValue;
 
@@ -12,7 +13,11 @@ public final class ClientStatsCache {
     }
 
     public static void replace(Map<StatType, StatValue> next) {
-        state = new ClientStatsState(state.revision() + 1, next);
+        replace(next, List.of());
+    }
+
+    public static void replace(Map<StatType, StatValue> next, List<String> activePerkIds) {
+        state = new ClientStatsState(state.revision() + 1, next, activePerkIds);
     }
 
     public static void clear() {
@@ -32,6 +37,6 @@ public final class ClientStatsCache {
         for (StatType type : StatType.values()) {
             empty.put(type, new StatValue(0, 0));
         }
-        return new ClientStatsState(revision, empty);
+        return new ClientStatsState(revision, empty, List.of());
     }
 }

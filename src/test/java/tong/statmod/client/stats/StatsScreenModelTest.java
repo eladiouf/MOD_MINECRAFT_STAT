@@ -47,4 +47,18 @@ class StatsScreenModelTest {
             assertEquals(StatDisplayState.ACTIVE, StatPresentation.of(type).state(), type.id());
         }
     }
+
+    @Test
+    void exposesKnownActivePerksInServerOrder() {
+        ClientStatsState state = new ClientStatsState(9, Map.of(), List.of(
+                "statmod:rapidite_25", "statmod:arcane_power_25"));
+
+        StatsScreenModel model = StatsScreenModel.from(state);
+
+        assertEquals(List.of("statmod:rapidite_25", "statmod:arcane_power_25"),
+                model.activePerks().stream().map(ActivePerkPresentation::id).toList());
+        assertEquals("perk.statmod.rapidite_25", model.activePerks().get(0).nameKey());
+        assertEquals("perk.statmod.rapidite_25.description",
+                model.activePerks().get(0).descriptionKey());
+    }
 }

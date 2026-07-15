@@ -18,16 +18,16 @@ function Read-MedievalContentCatalog {
     if ([string]$catalog.required_active_minimum_versions.cataclysm -ne '3.16') { throw 'Cataclysm minimum must equal 3.16.' }
 
     $artifacts = @($catalog.artifacts)
-    if ($artifacts.Count -ne 9) { throw "Catalog must contain exactly nine artifacts; found $($artifacts.Count)." }
-    if (@($artifacts | Where-Object source_kind -eq 'prepared').Count -ne 7) { throw 'Catalog must contain seven prepared artifacts.' }
-    if (@($artifacts | Where-Object source_kind -eq 'remote').Count -ne 2) { throw 'Catalog must contain two remote artifacts.' }
+    if ($artifacts.Count -ne 8) { throw "Catalog must contain exactly eight stable artifacts; found $($artifacts.Count)." }
+    if (@($artifacts | Where-Object source_kind -eq 'prepared').Count -ne 5) { throw 'Catalog must contain five prepared artifacts.' }
+    if (@($artifacts | Where-Object source_kind -eq 'remote').Count -ne 3) { throw 'Catalog must contain three remote artifacts.' }
     foreach ($field in 'file_name', 'primary_mod_id', 'expected_version') {
-        if (@($artifacts.$field | Sort-Object -Unique).Count -ne 9) {
-            throw "Catalog field '$field' must have nine unique values."
+        if (@($artifacts.$field | Sort-Object -Unique).Count -ne $artifacts.Count) {
+            throw "Catalog field '$field' must contain unique values."
         }
     }
     foreach ($remote in @($artifacts | Where-Object source_kind -eq 'remote')) {
-        if ([string]$remote.primary_mod_id -notin @('azurelib', 'deeperdarker')) {
+        if ([string]$remote.primary_mod_id -notin @('azurelib', 'deeperdarker', 'familiarslib')) {
             throw "Unapproved remote dependency: $($remote.primary_mod_id)"
         }
     }

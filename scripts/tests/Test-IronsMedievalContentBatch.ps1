@@ -23,13 +23,14 @@ function Assert-Throws {
 
 $catalogPath = Join-Path $repoRoot 'scripts\irons-addons\medieval-content-batch.json'
 $catalog = Read-MedievalContentCatalog -Path $catalogPath
-Assert-Equal 9 @($catalog.artifacts).Count 'The batch must contain nine artifacts.'
-Assert-Equal 7 @($catalog.artifacts | Where-Object source_kind -eq 'prepared').Count 'Prepared addon count mismatch.'
-Assert-Equal 2 @($catalog.artifacts | Where-Object source_kind -eq 'remote').Count 'Dependency count mismatch.'
-Assert-Equal 9 @($catalog.artifacts.file_name | Sort-Object -Unique).Count 'Filenames must be unique.'
-Assert-Equal 9 @($catalog.artifacts.primary_mod_id | Sort-Object -Unique).Count 'Primary mod IDs must be unique.'
-Assert-Equal 'M0uqO7Oe' ($catalog.artifacts | Where-Object primary_mod_id -eq 'azurelib').distribution_version_id 'AzureLib version ID mismatch.'
+Assert-Equal 8 @($catalog.artifacts).Count 'The stable batch must contain eight artifacts.'
+Assert-Equal 5 @($catalog.artifacts | Where-Object source_kind -eq 'prepared').Count 'Prepared addon count mismatch.'
+Assert-Equal 3 @($catalog.artifacts | Where-Object source_kind -eq 'remote').Count 'Dependency count mismatch.'
+Assert-Equal 8 @($catalog.artifacts.file_name | Sort-Object -Unique).Count 'Filenames must be unique.'
+Assert-Equal 8 @($catalog.artifacts.primary_mod_id | Sort-Object -Unique).Count 'Primary mod IDs must be unique.'
+Assert-Equal '7371538' ($catalog.artifacts | Where-Object primary_mod_id -eq 'azurelib').distribution_file_id 'AzureLib file ID mismatch.'
 Assert-Equal '5906086' ($catalog.artifacts | Where-Object primary_mod_id -eq 'deeperdarker').distribution_file_id 'Deeper and Darker file ID mismatch.'
+Assert-Equal '7696453' ($catalog.artifacts | Where-Object primary_mod_id -eq 'familiarslib').distribution_file_id 'FamiliarsLib file ID mismatch.'
 Assert-Equal '3.15.0' $catalog.required_active_minimum_versions.irons_spellbooks 'Iron''s Spells floor mismatch.'
 Assert-Equal '3.16' $catalog.required_active_minimum_versions.cataclysm 'Cataclysm floor mismatch.'
 
@@ -161,11 +162,11 @@ try {
     $dryRun = Invoke-MedievalContentBatch -ClientRoot $client -PreparedRoot $prepared -CacheRoot $cache -CatalogPath $catalogPath
     Assert-Equal 'planned' $dryRun.Status 'Dry run status mismatch.'
     Assert-Equal 5 @(Get-ChildItem (Join-Path $client 'mods') -Filter '*.jar').Count 'Dry run mutated mods.'
-    Assert-Equal 9 @($dryRun.Files).Count 'Dry run did not plan nine files.'
+    Assert-Equal 8 @($dryRun.Files).Count 'Dry run did not plan eight files.'
 
     $applied = Invoke-MedievalContentBatch -ClientRoot $client -PreparedRoot $prepared -CacheRoot $cache -CatalogPath $catalogPath -Apply
     Assert-Equal 'complete' $applied.Status 'Apply status mismatch.'
-    Assert-Equal 14 @(Get-ChildItem (Join-Path $client 'mods') -Filter '*.jar').Count 'Apply did not add nine JARs.'
+    Assert-Equal 13 @(Get-ChildItem (Join-Path $client 'mods') -Filter '*.jar').Count 'Apply did not add eight JARs.'
     $completeManifest = Get-Content -LiteralPath $applied.ManifestPath -Raw | ConvertFrom-Json
     Assert-Equal 'complete' $completeManifest.status 'Complete manifest status mismatch.'
     foreach ($file in @($completeManifest.files)) {

@@ -2,7 +2,6 @@ package tong.statmod.integration.ironspells;
 
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
-import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,7 +17,6 @@ public final class IronSpellXpEvents {
     @SubscribeEvent
     public static void onSpellCast(SpellOnCastEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)
-                || !XpAwardService.isEligible(player)
                 || event.getCastSource() != CastSource.SPELLBOOK
                 || event.getSpellId() == null
                 || event.getSpellId().isBlank()
@@ -26,11 +24,11 @@ public final class IronSpellXpEvents {
             return;
         }
 
-        XpAwardService.award(
+        XpAwardService.awardSpellCast(
                 player,
-                List.of(XpAction.spellCast(
+                XpAction.spellCast(
                         event.getOriginalSpellLevel(),
-                        event.getOriginalManaCost())),
+                        event.getOriginalManaCost()),
                 player.serverLevel().getGameTime());
     }
 }

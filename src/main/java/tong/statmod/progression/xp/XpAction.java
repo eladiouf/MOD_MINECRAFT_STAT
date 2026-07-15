@@ -52,6 +52,19 @@ public record XpAction(
                 null);
     }
 
+    public static XpAction bookStudied(int rawXp) {
+        return new XpAction(XpActionKind.BOOK_STUDIED, 0, rawXp, 0, false, null);
+    }
+
+    public static XpAction spellInscribed(int spellLevel, int rarityValue) {
+        return new XpAction(
+                XpActionKind.SPELL_INSCRIBED, 0, spellLevel, rarityValue, false, null);
+    }
+
+    public static XpAction magicDamageReceived(double damage) {
+        return damage(XpActionKind.MAGIC_DAMAGE_RECEIVED, damage);
+    }
+
     public XpAction withOpponent(UUID id) {
         return new XpAction(kind, magnitude, quantity, secondary, dangerousTarget, id);
     }

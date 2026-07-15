@@ -78,10 +78,25 @@ class XpRewardPolicyTest {
     }
 
     @Test
-    void neverEmitsEruditionOrMagicResistanceInCurrentPolicy() {
+    void onlyExplicitKnowledgeAndMagicDefenseActionsRewardDeferredStats() {
+        assertEquals(85, amountFor(
+                XpRewardPolicy.awards(XpAction.bookStudied(85)), StatType.ERUDITION));
+        assertEquals(160, amountFor(
+                XpRewardPolicy.awards(XpAction.bookStudied(999)), StatType.ERUDITION));
+        assertEquals(18, amountFor(
+                XpRewardPolicy.awards(XpAction.spellInscribed(2, 3)), StatType.ERUDITION));
+        assertEquals(15, amountFor(
+                XpRewardPolicy.awards(XpAction.magicDamageReceived(7.1)),
+                StatType.MAGIC_RESISTANCE));
+
         Set<StatType> deferred = EnumSet.of(
                 StatType.ERUDITION, StatType.MAGIC_RESISTANCE);
         for (XpActionKind kind : XpActionKind.values()) {
+            if (kind == XpActionKind.BOOK_STUDIED
+                    || kind == XpActionKind.SPELL_INSCRIBED
+                    || kind == XpActionKind.MAGIC_DAMAGE_RECEIVED) {
+                continue;
+            }
             XpAction action = kind == XpActionKind.SPELL_CAST
                     ? XpAction.spellCast(4, 20)
                     : new XpAction(kind, 120, 4, 2, true, null);

@@ -59,7 +59,7 @@ class AutomaticXpContractTest {
     }
 
     @Test
-    void rewardPolicyActivatesFourteenNonMagicalAndThreeCastStats() {
+    void rewardPolicyActivatesEveryStatThroughItsExplicitGameplayAction() {
         List<XpAction> actions = List.of(
                 XpAction.damage(XpActionKind.MELEE_HEAVY, 5),
                 XpAction.damage(XpActionKind.MELEE_BLADE, 5),
@@ -70,16 +70,14 @@ class AutomaticXpContractTest {
                 XpAction.combo(3), XpAction.landing(8), XpAction.biome(),
                 XpAction.kill(120, true), XpAction.forging(100, 1),
                 XpAction.cooking(1), XpAction.alchemy(1, 0),
-                XpAction.spellCast(4, 20));
+                XpAction.spellCast(4, 20), XpAction.bookStudied(20),
+                XpAction.magicDamageReceived(5));
         Set<StatType> emitted = actions.stream()
                 .flatMap(action -> XpRewardPolicy.awards(action).stream())
                 .map(StatXpAward::stat)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(StatType.class)));
 
-        Set<StatType> deferred = EnumSet.of(
-                StatType.ERUDITION, StatType.MAGIC_RESISTANCE);
-        assertEquals(17, emitted.size());
-        assertTrue(emitted.stream().noneMatch(deferred::contains));
+        assertEquals(EnumSet.allOf(StatType.class), emitted);
     }
 
     private static String readUnchecked(Path path) {

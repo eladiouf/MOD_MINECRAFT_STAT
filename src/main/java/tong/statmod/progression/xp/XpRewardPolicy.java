@@ -34,6 +34,9 @@ public final class XpRewardPolicy {
                     : single(StatType.ALCHEMY,
                             clamp(5 + 2 * action.quantity() + Math.max(0, action.secondary()), 1, 15), action);
             case SPELL_CAST -> spellCastAwards(action);
+            case BOOK_STUDIED -> bookStudyAward(action);
+            case SPELL_INSCRIBED -> spellInscriptionAward(action);
+            case MAGIC_DAMAGE_RECEIVED -> damageAward(action, StatType.MAGIC_RESISTANCE);
         };
     }
 
@@ -88,6 +91,23 @@ public final class XpRewardPolicy {
                     StatType.MANA_POOL, manaPool, action.kind().name()));
         }
         return List.copyOf(awards);
+    }
+
+    private static List<StatXpAward> bookStudyAward(XpAction action) {
+        if (action.quantity() <= 0) {
+            return List.of();
+        }
+        return single(StatType.ERUDITION,
+                clamp(action.quantity(), 1, EnchantmentStudyXp.MAX_PER_BOOK), action);
+    }
+
+    private static List<StatXpAward> spellInscriptionAward(XpAction action) {
+        if (action.quantity() <= 0 || action.secondary() < 0) {
+            return List.of();
+        }
+        long raw = 5L + 2L * action.quantity() + 3L * action.secondary();
+        return single(StatType.ERUDITION,
+                clamp((int) Math.min(Integer.MAX_VALUE, raw), 5, 30), action);
     }
 
     private static List<StatXpAward> single(StatType stat, int amount, XpAction action) {

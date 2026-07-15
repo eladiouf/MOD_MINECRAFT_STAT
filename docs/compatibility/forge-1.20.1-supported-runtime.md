@@ -5,7 +5,7 @@ prepared, optional, or excluded.
 
 | Component | Version | Status | Notes |
 |---|---:|---|---|
-| Minecraft | 1.20.1 | verified | Compiles and passes the automated standalone test suite. |
+| Minecraft | 1.20.1 | verified | Compiles and passes the automated suite. The native stats screen targets this client version. |
 | Forge | 47.4.10 | verified | Compiles and passes the automated suite and required-provider GameTest profile. |
 | Java | 17 | verified | Required build and runtime toolchain. |
 | Iron's Spells 'n Spellbooks | 3.16.2 | prepared | Minimal runtime is deployed and server-smoked; STAT Mod integration and spell gameplay are not implemented yet. |
@@ -57,7 +57,7 @@ temporary copies after the run.
 
 ## Minimal `test-vrai` development profile
 
-The deployed `test-vrai` profile contains exactly these ten JARs:
+The supported STAT Mod development profile consists of these ten JARs:
 
 - STAT Mod 0.1.0+1.20.1;
 - Epic Fight 20.14.17;
@@ -70,6 +70,10 @@ The deployed `test-vrai` profile contains exactly these ten JARs:
 - Player Animator 1.0.2-rc1;
 - Patchouli 85.
 
+Launcher-owned or user-owned utility JARs may coexist in `test-vrai`; they are
+outside this compatibility claim and must not be silently removed during STAT
+Mod deployment. The deployment operation replaces only the STAT Mod JAR.
+
 The complete set passes the Forge GameTest startup smoke: all mod IDs load,
 the overworld and Iron's Spells pocket dimension are created and saved, and the
 server shuts down normally. This is a server-startup result, not a completed
@@ -80,3 +84,11 @@ Iron's Spells 3.16.2 currently logs two non-fatal loot-table parse errors for
 entries are present inside the unmodified upstream JAR. STAT Mod does not patch
 that third-party JAR. Patchouli removes the separate ParCool guide recipe and
 loot errors that occur when ParCool is loaded without its guide provider.
+
+## Native stats client surface
+
+Pressing `P` opens STAT Mod's read-only statistics screen. It displays all six
+families and all 23 server-authoritative values, refreshes from revisioned
+snapshots, and closes with `P`, Escape, or the inventory key. Automatic XP
+awards publish bounded, mergeable notifications; administrative mutations
+synchronize the screen without presenting them as gameplay rewards.

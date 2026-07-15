@@ -34,6 +34,19 @@ Commandes disponibles :
 La consultation personnelle est libre. Consulter un autre joueur ou modifier
 une statistique exige le niveau opérateur 2.
 
+## Écran des statistiques et notifications
+
+La touche `P` ouvre l'écran natif de STAT Mod. Il présente les 23 statistiques
+dans six familles, avec leur niveau, leur XP et leur progression vers le niveau
+suivant. Les neuf statistiques magiques y sont clairement indiquées comme des
+fondations préparées, sans simuler des effets qui ne sont pas encore actifs.
+
+Les gains automatiques affichent une notification discrète en haut à droite.
+Les gains rapprochés de la même statistique sont regroupés et un passage de
+niveau reste affiché plus longtemps. Les commandes administratives continuent
+de synchroniser l'écran, mais ne produisent pas de fausse notification de gain
+de gameplay.
+
 ## XP automatique et addons Epic Fight
 
 Quatorze statistiques progressent automatiquement : Brute Force, Blade

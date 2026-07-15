@@ -48,6 +48,31 @@ $providers = @(
         Source = 'puffish_attributes-0.8.2-1.20-forge.jar'
         Target = 'puffish_attributes-0.8.2.jar'
         LogId = 'puffish_attributes'
+    },
+    @{
+        Source = 'irons_spellbooks-1.20.1-3.16.2.jar'
+        Target = 'irons_spellbooks-3.16.2.jar'
+        LogId = 'irons_spellbooks'
+    },
+    @{
+        Source = 'irons_lib-1.20.1-2.1.0.jar'
+        Target = 'irons_lib-2.1.0.jar'
+        LogId = 'irons_lib'
+    },
+    @{
+        Source = 'curios-forge-5.14.1+1.20.1.jar'
+        Target = 'curios-5.14.1.jar'
+        LogId = 'curios'
+    },
+    @{
+        Source = 'geckolib-forge-1.20.1-4.8.4.jar'
+        Target = 'geckolib-4.8.4.jar'
+        LogId = 'geckolib'
+    },
+    @{
+        Source = 'player-animation-lib-forge-1.0.2-rc1+1.20.jar'
+        Target = 'playeranimator-1.0.2-rc1.jar'
+        LogId = 'playeranimator'
     }
 )
 $createdFiles = [Collections.Generic.List[string]]::new()
@@ -83,6 +108,11 @@ gradle.beforeProject { project ->
         def fg = project.extensions.getByName('fg')
         project.dependencies.add('runtimeOnly', fg.deobf('local:epicfight:20.14.17'))
         project.dependencies.add('runtimeOnly', fg.deobf('local:puffish_attributes:0.8.2'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:irons_spellbooks:3.16.2'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:irons_lib:2.1.0'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:curios:5.14.1'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:geckolib:4.8.4'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:playeranimator:1.0.2-rc1'))
         project.minecraft.runs.configureEach {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile',

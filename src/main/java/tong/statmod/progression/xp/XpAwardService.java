@@ -25,6 +25,22 @@ public final class XpAwardService {
         if (!isEligible(player)) {
             return false;
         }
+        return awardEligible(player, actions, tick);
+    }
+
+    public static boolean awardSpellCast(ServerPlayer player, XpAction action, long tick) {
+        if (player == null
+                || player instanceof FakePlayer
+                || player.isSpectator()
+                || action == null
+                || action.kind() != XpActionKind.SPELL_CAST) {
+            return false;
+        }
+        return awardEligible(player, List.of(action), tick);
+    }
+
+    private static boolean awardEligible(
+            ServerPlayer player, List<XpAction> actions, long tick) {
         PlayerStats stats = player.getCapability(StatCapabilities.PLAYER_STATS)
                 .resolve().orElse(null);
         PlayerXpState state = player.getCapability(StatCapabilities.PLAYER_XP_STATE)

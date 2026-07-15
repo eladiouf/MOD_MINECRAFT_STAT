@@ -3,6 +3,8 @@ package tong.statmod.effects;
 import java.util.UUID;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.config.StatModServerConfig;
+import tong.statmod.perks.AutomaticPerkBonuses;
+import tong.statmod.perks.AutomaticPerkEffect;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -51,6 +53,16 @@ public enum MobilityAttributeTarget {
 
     public double amount(PlayerStats stats) {
         return LinearStatScaling.bonus(stats.get(stat).level(), bonusKind.maximumAt100());
+    }
+
+    public double amount(PlayerStats stats, AutomaticPerkBonuses bonuses) {
+        return amount(stats) + bonuses.amount(perkEffect());
+    }
+
+    public AutomaticPerkEffect perkEffect() {
+        return stat == StatType.RAPIDITE
+                ? AutomaticPerkEffect.RAPIDITE_ATTACK_SPEED
+                : AutomaticPerkEffect.AGILITY_MOVEMENT;
     }
 
     public enum BonusKind {

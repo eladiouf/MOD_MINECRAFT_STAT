@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.perks.AutomaticPerkBonuses;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -30,19 +31,21 @@ public final class PlayerAttributeEffects {
             return;
         }
 
+        AutomaticPerkBonuses bonuses = AutomaticPerkBonuses.from(stats);
         int level = stats.get(StatType.PHYSICAL_ENDURANCE).level();
         for (StaminaAttributeTarget target : StaminaAttributeTarget.values()) {
             replaceModifier(player, target.id(), target.modifierId(),
-                    ENDURANCE_MODIFIER_NAME, target.amount(level));
+                    ENDURANCE_MODIFIER_NAME, target.amount(level, bonuses));
         }
         for (MobilityAttributeTarget target : MobilityAttributeTarget.values()) {
             String name = target.stat() == StatType.RAPIDITE
                     ? RAPIDITE_MODIFIER_NAME : AGILITY_MODIFIER_NAME;
-            replaceModifier(player, target.id(), target.modifierId(), name, target.amount(stats));
+            replaceModifier(player, target.id(), target.modifierId(), name,
+                    target.amount(stats, bonuses));
         }
         for (MagicAttributeTarget target : MagicAttributeTarget.values()) {
             replaceModifier(player, target.id(), target.modifierId(),
-                    "STAT Mod " + target.stat().id(), target.amount(stats));
+                    "STAT Mod " + target.stat().id(), target.amount(stats, bonuses));
         }
     }
 

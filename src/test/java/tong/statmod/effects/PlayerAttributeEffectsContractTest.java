@@ -17,10 +17,14 @@ class PlayerAttributeEffectsContractTest {
         assertTrue(source.contains("StaminaAttributeTarget.values()"));
         assertTrue(source.contains("MobilityAttributeTarget.values()"));
         assertTrue(source.contains("for (MagicAttributeTarget target : MagicAttributeTarget.values())"));
-        assertTrue(source.contains("target.amount(stats)"));
+        assertTrue(source.contains("AutomaticPerkBonuses bonuses = AutomaticPerkBonuses.from(stats)"));
+        assertTrue(source.contains("target.amount(stats, bonuses)"));
+        assertTrue(source.contains("target.amount(level, bonuses)"));
         assertTrue(source.contains("replaceModifier("));
         assertTrue(source.contains("removeModifier(modifierId)"));
         assertTrue(source.contains("addTransientModifier"));
+        assertFalse(source.contains("addPermanentModifier"));
+        assertFalse(source.contains("PERK_MODIFIER"));
         assertTrue(source.contains("AttributeModifier.Operation.MULTIPLY_BASE"));
         assertTrue(source.contains("StatType.PHYSICAL_ENDURANCE"));
         assertFalse(source.contains("yesman.epicfight"));

@@ -3,6 +3,8 @@ package tong.statmod.effects;
 import java.util.UUID;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.config.StatModServerConfig;
+import tong.statmod.perks.AutomaticPerkBonuses;
+import tong.statmod.perks.AutomaticPerkEffect;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -56,6 +58,20 @@ public enum MagicAttributeTarget {
 
     public double amount(PlayerStats stats) {
         return LinearStatScaling.bonus(stats.get(stat).level(), bonusKind.maximumAt100());
+    }
+
+    public double amount(PlayerStats stats, AutomaticPerkBonuses bonuses) {
+        return amount(stats) + bonuses.amount(perkEffect());
+    }
+
+    public AutomaticPerkEffect perkEffect() {
+        return switch (stat) {
+            case ARCANE_POWER -> AutomaticPerkEffect.ARCANE_SPELL_POWER;
+            case CASTING_SPEED -> AutomaticPerkEffect.CASTING_SPEED_REDUCTIONS;
+            case MANA_POOL -> AutomaticPerkEffect.MANA_CAPACITY_REGEN;
+            case MAGIC_RESISTANCE -> AutomaticPerkEffect.MAGIC_RESISTANCE;
+            default -> throw new IllegalStateException("unsupported magic perk stat: " + stat);
+        };
     }
 
     public enum BonusKind {

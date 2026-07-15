@@ -42,6 +42,16 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("manaPoolCapacityBonusAt100()"));
         assertTrue(config.contains("manaPoolRegenBonusAt100()"));
         assertTrue(config.contains("magicResistanceBonusAt100()"));
+        assertTrue(config.contains("builder.push(\"automaticPerks\")"));
+        assertTrue(config.contains("rapiditeAttackSpeedPerMilestone\", 0.02, 0.0, 0.25"));
+        assertTrue(config.contains("agilityMovementPerMilestone\", 0.02, 0.0, 0.25"));
+        assertTrue(config.contains("enduranceStaminaPerMilestone\", 0.04, 0.0, 0.25"));
+        assertTrue(config.contains("arcaneSpellPowerPerMilestone\", 0.03, 0.0, 0.25"));
+        assertTrue(config.contains("castingSpeedReductionsPerMilestone\", 0.02, 0.0, 0.25"));
+        assertTrue(config.contains("manaCapacityRegenPerMilestone\", 0.03, 0.0, 0.25"));
+        assertTrue(config.contains("magicResistancePerMilestone\", 0.02, 0.0, 0.25"));
+        assertTrue(config.contains("rapiditeAttackSpeedPerMilestone()"));
+        assertTrue(config.contains("magicResistancePerMilestone()"));
         assertTrue(config.contains("new CombatScalingRules("));
     }
 }

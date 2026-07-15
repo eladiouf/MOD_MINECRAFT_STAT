@@ -3,6 +3,8 @@ package tong.statmod.effects;
 import java.util.UUID;
 import net.minecraft.resources.ResourceLocation;
 import tong.statmod.config.StatModServerConfig;
+import tong.statmod.perks.AutomaticPerkBonuses;
+import tong.statmod.perks.AutomaticPerkEffect;
 
 public enum StaminaAttributeTarget {
     EPIC_FIGHT_CAPACITY(
@@ -41,6 +43,14 @@ public enum StaminaAttributeTarget {
                 ? StatModServerConfig.staminaCapacityBonusAt100()
                 : StatModServerConfig.staminaRecoveryBonusAt100();
         return LinearStatScaling.bonus(level, maximum);
+    }
+
+    public double amount(int level, AutomaticPerkBonuses bonuses) {
+        return amount(level) + bonuses.amount(AutomaticPerkEffect.ENDURANCE_STAMINA);
+    }
+
+    public AutomaticPerkEffect perkEffect() {
+        return AutomaticPerkEffect.ENDURANCE_STAMINA;
     }
 
     public enum BonusKind {

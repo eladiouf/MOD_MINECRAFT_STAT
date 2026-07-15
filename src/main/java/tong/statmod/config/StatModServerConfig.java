@@ -20,6 +20,13 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue MANA_POOL_CAPACITY_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue MANA_POOL_REGEN_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue RAPIDITE_ATTACK_SPEED_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue AGILITY_MOVEMENT_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue ENDURANCE_STAMINA_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue ARCANE_SPELL_POWER_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_REDUCTIONS_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue MANA_CAPACITY_REGEN_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_PER_MILESTONE;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -62,6 +69,22 @@ public final class StatModServerConfig {
                 "manaPoolRegenBonusAt100", 0.50, 0.0, 10.0);
         MAGIC_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
                 "magicResistanceBonusAt100", 0.50, 0.0, 0.90);
+        builder.pop();
+        builder.push("automaticPerks");
+        RAPIDITE_ATTACK_SPEED_PER_MILESTONE = builder.defineInRange(
+                "rapiditeAttackSpeedPerMilestone", 0.02, 0.0, 0.25);
+        AGILITY_MOVEMENT_PER_MILESTONE = builder.defineInRange(
+                "agilityMovementPerMilestone", 0.02, 0.0, 0.25);
+        ENDURANCE_STAMINA_PER_MILESTONE = builder.defineInRange(
+                "enduranceStaminaPerMilestone", 0.04, 0.0, 0.25);
+        ARCANE_SPELL_POWER_PER_MILESTONE = builder.defineInRange(
+                "arcaneSpellPowerPerMilestone", 0.03, 0.0, 0.25);
+        CASTING_SPEED_REDUCTIONS_PER_MILESTONE = builder.defineInRange(
+                "castingSpeedReductionsPerMilestone", 0.02, 0.0, 0.25);
+        MANA_CAPACITY_REGEN_PER_MILESTONE = builder.defineInRange(
+                "manaCapacityRegenPerMilestone", 0.03, 0.0, 0.25);
+        MAGIC_RESISTANCE_PER_MILESTONE = builder.defineInRange(
+                "magicResistancePerMilestone", 0.02, 0.0, 0.25);
         builder.pop();
         SPEC = builder.build();
     }
@@ -120,5 +143,33 @@ public final class StatModServerConfig {
 
     public static double magicResistanceBonusAt100() {
         return MAGIC_RESISTANCE_BONUS_AT_100.get();
+    }
+
+    public static double rapiditeAttackSpeedPerMilestone() {
+        return RAPIDITE_ATTACK_SPEED_PER_MILESTONE.get();
+    }
+
+    public static double agilityMovementPerMilestone() {
+        return AGILITY_MOVEMENT_PER_MILESTONE.get();
+    }
+
+    public static double enduranceStaminaPerMilestone() {
+        return ENDURANCE_STAMINA_PER_MILESTONE.get();
+    }
+
+    public static double arcaneSpellPowerPerMilestone() {
+        return ARCANE_SPELL_POWER_PER_MILESTONE.get();
+    }
+
+    public static double castingSpeedReductionsPerMilestone() {
+        return CASTING_SPEED_REDUCTIONS_PER_MILESTONE.get();
+    }
+
+    public static double manaCapacityRegenPerMilestone() {
+        return MANA_CAPACITY_REGEN_PER_MILESTONE.get();
+    }
+
+    public static double magicResistancePerMilestone() {
+        return MAGIC_RESISTANCE_PER_MILESTONE.get();
     }
 }

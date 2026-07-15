@@ -39,7 +39,7 @@ class StatProgressNoticeMessageTest {
     }
 
     @Test
-    void progressionNoticesBumpTheWireProtocol() {
-        assertEquals("2", StatModRuntime.NETWORK_PROTOCOL);
+    void bookStudyInputUsesTheCurrentWireProtocol() {
+        assertEquals("3", StatModRuntime.NETWORK_PROTOCOL);
     }
 }

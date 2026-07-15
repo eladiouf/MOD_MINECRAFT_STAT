@@ -1,7 +1,11 @@
 package tong.statmod.dungeon;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -21,6 +25,9 @@ public final class DungeonBlocks {
 
     public static final DeferredRegister<Item> BLOCK_ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, StatMod.MOD_ID);
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, StatMod.MOD_ID);
 
     public static final Supplier<Block> DUNGEON_PORTAL = BLOCKS.register("dungeon_portal",
             () -> new DungeonPortalBlock(BlockBehaviour.Properties.of()
@@ -75,9 +82,23 @@ public final class DungeonBlocks {
     public static final Supplier<Item> MAGIC_TELEPORT_CIRCLE_ITEM = BLOCK_ITEMS.register("magic_teleport_circle",
             () -> new BlockItem(MAGIC_TELEPORT_CIRCLE.get(), new Item.Properties().rarity(Rarity.EPIC)));
 
+    public static final Supplier<CreativeModeTab> STAT_MOD_TAB = CREATIVE_TABS.register("stat_mod",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.statmod"))
+                    .icon(() -> new ItemStack(DUNGEON_PORTAL_ITEM.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(DUNGEON_PORTAL_ITEM.get());
+                        output.accept(RETURN_BEACON_ITEM.get());
+                        output.accept(NEXT_FLOOR_TELEPORTER_ITEM.get());
+                        output.accept(BOSS_ALTAR_ITEM.get());
+                        output.accept(MAGIC_TELEPORT_CIRCLE_ITEM.get());
+                    })
+                    .build());
+
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ITEMS.register(modBus);
+        CREATIVE_TABS.register(modBus);
     }
 
     private DungeonBlocks() {}

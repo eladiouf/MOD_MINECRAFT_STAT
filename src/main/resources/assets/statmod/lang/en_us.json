@@ -1,3 +1,9 @@
 {
-  "mod.statmod.name": "STAT Mod"
+  "mod.statmod.name": "STAT Mod",
+  "command.statmod.unknown_stat": "Unknown stat: %s",
+  "command.statmod.capability_missing": "Statistics are unavailable for %s",
+  "command.statmod.stats.header": "Statistics for %s",
+  "command.statmod.stats.entry": "%s: level %s, %s/%s XP",
+  "command.statmod.stat.value": "%s — %s: level %s, %s/%s XP",
+  "command.statmod.stat.updated": "Updated %s for %s: level %s, %s/%s XP"
 }

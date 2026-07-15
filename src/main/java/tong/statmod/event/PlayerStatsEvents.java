@@ -6,12 +6,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.capability.PlayerStatsProvider;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.command.StatsCommands;
 import tong.statmod.network.StatNetwork;
 import tong.statmod.stats.PlayerStats;
 
@@ -58,6 +60,11 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         sync(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void commands(RegisterCommandsEvent event) {
+        StatsCommands.register(event.getDispatcher());
     }
 
     private static void sync(Player player) {

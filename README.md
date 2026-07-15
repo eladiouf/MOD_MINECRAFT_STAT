@@ -60,8 +60,9 @@ réellement reçus.
 
 Maintenir le clic d'utilisation pendant deux secondes avec un livre enchanté
 étudie tous ses enchantements. Le gain dépend de leur niveau et de leur rareté,
-le livre est ensuite consommé hors Créatif et l'animation du Totem confirme la
-réussite. Une lecture interrompue ou entièrement refusée par la limite anti-farm
+le livre est ensuite consommé hors Créatif ; le livre étudié apparaît avec le
+mouvement d'activation vanilla et le son du Totem confirme la réussite. Une
+lecture interrompue ou entièrement refusée par la limite anti-farm
 ne consomme rien.
 
 La compatibilité des équipements d'addons est pilotée par quatre tags publics,

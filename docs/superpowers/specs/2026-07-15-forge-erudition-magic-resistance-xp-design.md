@@ -60,9 +60,10 @@ book but uses the same rolling limit. If Erudition is already level 100 or the
 limiter accepts zero XP, the book is not consumed and the completion effect is
 not played.
 
-Successful study broadcasts the Totem of Undying activation animation and
-sound for the studying player. The effect is presentation only: it never drives
-the reward or consumption decision.
+Successful study displays the exact enchanted book with Minecraft's vanilla
+item-activation motion for the studying player and plays the Totem of Undying
+sound. The effect is presentation only: it never drives the reward or
+consumption decision, and no Totem item is displayed.
 
 ## 3. Iron's Spells Erudition XP
 

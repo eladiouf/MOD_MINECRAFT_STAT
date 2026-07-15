@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.network.BookStudyInputMessage.Action;
+import tong.statmod.network.StatNetwork;
 import tong.statmod.progression.xp.EnchantmentStudyXp;
 import tong.statmod.progression.xp.EnchantmentStudyXp.Entry;
 import tong.statmod.progression.xp.XpAction;
@@ -25,7 +28,6 @@ import tong.statmod.progression.xp.XpAwardService;
 
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class EnchantedBookStudySessions {
-    private static final byte TOTEM_EVENT = 35;
     private static final Map<UUID, Session> SESSIONS = new HashMap<>();
     private static final Map<UUID, InputStamp> LAST_INPUTS = new HashMap<>();
 
@@ -76,6 +78,7 @@ public final class EnchantedBookStudySessions {
 
         SESSIONS.remove(playerId);
         ItemStack held = player.getItemInHand(session.hand());
+        ItemStack visualBook = held.copyWithCount(1);
         int rawXp = studyXp(held);
         boolean awarded = XpAwardService.awardBookStudy(
                 player, XpAction.bookStudied(rawXp), tick, () -> {
@@ -84,7 +87,11 @@ public final class EnchantedBookStudySessions {
                     }
                 });
         if (awarded) {
-            player.serverLevel().broadcastEntityEvent(player, TOTEM_EVENT);
+            StatNetwork.sendBookStudyCompletion(player, visualBook);
+            player.serverLevel().playSound(
+                    null,
+                    player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
         }
     }
 

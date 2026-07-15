@@ -114,9 +114,10 @@ Erudition also progresses from committed Iron's Spells inscriptions and from a
 40-tick held-use study of vanilla enchanted books. Every stored enchantment is
 counted as `level * rarity weight * 5` with weights 1/2/4/8 and a 160 XP
 per-book clamp before the existing 200 XP per-stat, 1,200-tick rolling limit.
-Successful study consumes one book outside Creative and broadcasts the Totem
-completion effect; interruption or a fully rejected reward consumes nothing.
-Creative study retains the book but observes the same rolling cap.
+Successful study consumes one book outside Creative, displays that exact book
+with the vanilla item-activation motion, and plays the Totem sound; interruption
+or a fully rejected reward consumes nothing. Creative study retains the book
+but observes the same rolling cap.
 
 Magic Resistance progresses only from final positive `LivingDamageEvent`
 damage whose source is Iron's Spells `SpellDamageSource`. It does not trust the

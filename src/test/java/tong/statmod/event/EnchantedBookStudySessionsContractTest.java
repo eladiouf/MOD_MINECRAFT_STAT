@@ -25,7 +25,16 @@ class EnchantedBookStudySessionsContractTest {
         assertTrue(source.contains("awardBookStudy"));
         assertTrue(source.contains("shrink(1)"));
         assertTrue(source.contains("!player.isCreative()"));
-        assertTrue(source.contains("broadcastEntityEvent(player, TOTEM_EVENT)"));
+        assertTrue(source.contains("ItemStack visualBook = held.copyWithCount(1);"));
+        assertTrue(source.contains("StatNetwork.sendBookStudyCompletion(player, visualBook);"));
+        assertTrue(source.contains("SoundEvents.TOTEM_USE"));
+        assertTrue(source.contains("SoundSource.PLAYERS"));
+        assertTrue(source.contains("playSound("));
+        assertTrue(source.indexOf("if (awarded)")
+                < source.indexOf("StatNetwork.sendBookStudyCompletion"));
+        assertFalse(source.contains("TOTEM_EVENT"));
+        assertFalse(source.contains("broadcastEntityEvent"));
+        assertFalse(source.contains("(byte) 35"));
         assertTrue(source.indexOf("SESSIONS.remove") < source.indexOf("awardBookStudy"));
         assertFalse(source.contains("SpellDamageEvent"));
     }

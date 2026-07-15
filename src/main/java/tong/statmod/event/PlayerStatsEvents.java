@@ -12,15 +12,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.capability.PlayerStatsProvider;
+import tong.statmod.capability.PlayerXpStateProvider;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.network.StatNetwork;
+import tong.statmod.progression.xp.PlayerXpState;
 import tong.statmod.stats.PlayerStats;
 
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class PlayerStatsEvents {
-    private static final ResourceLocation CAPABILITY_ID =
+    private static final ResourceLocation STATS_CAPABILITY_ID =
             ResourceLocation.fromNamespaceAndPath(StatMod.MOD_ID, "player_stats");
+    private static final ResourceLocation XP_STATE_CAPABILITY_ID =
+            ResourceLocation.fromNamespaceAndPath(StatMod.MOD_ID, "player_xp_state");
 
     private PlayerStatsEvents() {
     }
@@ -29,8 +33,11 @@ public final class PlayerStatsEvents {
     public static void attach(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             PlayerStatsProvider provider = new PlayerStatsProvider();
-            event.addCapability(CAPABILITY_ID, provider);
+            event.addCapability(STATS_CAPABILITY_ID, provider);
             event.addListener(provider::invalidate);
+            PlayerXpStateProvider xpProvider = new PlayerXpStateProvider();
+            event.addCapability(XP_STATE_CAPABILITY_ID, xpProvider);
+            event.addListener(xpProvider::invalidate);
         }
     }
 
@@ -40,11 +47,18 @@ public final class PlayerStatsEvents {
         event.getOriginal().getCapability(StatCapabilities.PLAYER_STATS).ifPresent(source ->
                 event.getEntity().getCapability(StatCapabilities.PLAYER_STATS).ifPresent(target ->
                         copyStats(source, target)));
+        event.getOriginal().getCapability(StatCapabilities.PLAYER_XP_STATE).ifPresent(source ->
+                event.getEntity().getCapability(StatCapabilities.PLAYER_XP_STATE).ifPresent(target ->
+                        copyXpState(source, target)));
         event.getOriginal().invalidateCaps();
     }
 
     public static void copyStats(PlayerStats source, PlayerStats target) {
         target.copyFrom(source);
+    }
+
+    public static void copyXpState(PlayerXpState source, PlayerXpState target) {
+        target.copyPersistentFrom(source);
     }
 
     @SubscribeEvent

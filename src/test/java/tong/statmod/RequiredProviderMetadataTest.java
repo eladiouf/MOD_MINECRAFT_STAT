@@ -13,7 +13,7 @@ class RequiredProviderMetadataTest {
 
         assertRequired(metadata, "epicfight", "[20.14.17,)");
         assertRequired(metadata, "puffish_attributes", "[0.8.2,)");
-        assertRequired(metadata, "irons_spellbooks", "[3.16.2,)");
+        assertRequired(metadata, "irons_spellbooks", "[1.20.1-3.16.2,)");
     }
 
     private static void assertRequired(String metadata, String modId, String versionRange) {

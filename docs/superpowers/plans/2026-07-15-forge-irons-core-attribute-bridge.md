@@ -17,7 +17,7 @@
 - Never import `io.redspace.ironsspellbooks` classes or add an Iron compile/runtime dependency.
 - Never write current mana, refill mana, or create a STAT Mod mana capability.
 - Use stable unique UUIDs and `AttributeModifier.Operation.MULTIPLY_BASE`.
-- `mods.toml` requires `irons_spellbooks` version `[3.16.2,)`, ordered `AFTER`, on `BOTH` sides.
+- `mods.toml` requires the real Forge version range `irons_spellbooks` `[1.20.1-3.16.2,)`, ordered `AFTER`, on `BOTH` sides.
 - An unexpectedly missing registry attribute is still skipped safely.
 - Do not add school-specific progression or recreate affinities under another name.
 - Preserve Epic Fight, Puffish Attributes, ParCool, and every user/launcher JAR during deployment.
@@ -284,12 +284,12 @@ git commit -m "feat: model Iron magic attribute targets"
 
 **Interfaces:**
 - Consumes: Forge dependency metadata and pinned Iron's Spells 3.16.2 profile.
-- Produces: a mandatory `irons_spellbooks` `[3.16.2,)` dependency on both sides.
+- Produces: a mandatory `irons_spellbooks` `[1.20.1-3.16.2,)` dependency on both sides.
 
 - [ ] **Step 1: Add the failing metadata assertion**
 
 ```java
-assertRequired(metadata, "irons_spellbooks", "[3.16.2,)");
+assertRequired(metadata, "irons_spellbooks", "[1.20.1-3.16.2,)");
 ```
 
 - [ ] **Step 2: Run the focused test and confirm RED**
@@ -306,7 +306,7 @@ Expected: failure reports missing dependency `irons_spellbooks`.
 [[dependencies.${mod_id}]]
 modId="irons_spellbooks"
 mandatory=true
-versionRange="[3.16.2,)"
+versionRange="[1.20.1-3.16.2,)"
 ordering="AFTER"
 side="BOTH"
 ```

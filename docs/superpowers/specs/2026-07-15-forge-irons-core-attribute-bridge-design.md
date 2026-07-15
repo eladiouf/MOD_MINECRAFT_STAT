@@ -126,9 +126,10 @@ mobility targets. For every target it:
 
 Repeated refreshes are idempotent. The bridge contains no direct Iron API
 reference, but Iron's Spells is an explicit mandatory runtime dependency for
-the Forge remake. `mods.toml` requires `irons_spellbooks` 3.16.2 or newer on
-both sides and orders STAT Mod after it. Forge therefore rejects a missing or
-unsupported Iron installation before world loading.
+the Forge remake. `mods.toml` requires the JAR's real version range
+`irons_spellbooks` `[1.20.1-3.16.2,)` on both sides and orders STAT Mod after
+it. Forge therefore rejects a missing or unsupported Iron installation before
+world loading.
 
 ### 6.4 Refresh lifecycle
 

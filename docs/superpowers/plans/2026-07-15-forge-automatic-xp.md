@@ -68,7 +68,7 @@ assertEquals(2, only(XpRewardPolicy.awards(XpAction.combo(3))).amount());
 assertEquals(6, only(XpRewardPolicy.awards(XpAction.combo(20))).amount());
 assertEquals(7, only(XpRewardPolicy.awards(XpAction.landing(10.8))).amount());
 assertEquals(10, only(XpRewardPolicy.awards(XpAction.biome())).amount());
-assertEquals(20, only(XpRewardPolicy.awards(XpAction.forging(1561, 1))).amount());
+assertEquals(16, only(XpRewardPolicy.awards(XpAction.forging(1561, 1))).amount());
 assertEquals(8, only(XpRewardPolicy.awards(XpAction.cooking(4))).amount());
 assertEquals(10, only(XpRewardPolicy.awards(XpAction.alchemy(2, 1))).amount());
 assertTrue(XpRewardPolicy.awards(XpAction.damage(

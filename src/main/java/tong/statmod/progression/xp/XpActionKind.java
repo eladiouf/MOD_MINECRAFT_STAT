@@ -1,0 +1,17 @@
+package tong.statmod.progression.xp;
+
+public enum XpActionKind {
+    MELEE_HEAVY,
+    MELEE_BLADE,
+    PROJECTILE,
+    COMBO,
+    CONTROLLED_LANDING,
+    PHYSICAL_DAMAGE_RECEIVED,
+    SHIELD_BLOCKED,
+    HOSTILE_KILL,
+    BIOME_DISCOVERY,
+    WILLPOWER_SURVIVAL,
+    EQUIPMENT_CRAFTED,
+    FOOD_COOKED,
+    POTION_BREWED
+}

@@ -63,6 +63,44 @@ function New-TestJar {
     }
 }
 
+function New-TestModRecord {
+    param(
+        [string]$FileName,
+        [string[]]$ModIds,
+        [string]$Sha256,
+        [hashtable]$Dependencies = @{}
+    )
+
+    $normalizedDependencies = @{}
+    foreach ($modId in $ModIds) {
+        $normalized = $modId.ToLowerInvariant()
+        $normalizedDependencies[$normalized] = if ($Dependencies.ContainsKey($normalized)) {
+            @($Dependencies[$normalized])
+        } else {
+            @()
+        }
+    }
+
+    return [pscustomobject]@{
+        Path = Join-Path 'C:\fake\mods' $FileName
+        FileName = $FileName
+        Length = 100
+        Sha256 = $Sha256
+        ModIds = @($ModIds | ForEach-Object { $_.ToLowerInvariant() })
+        VersionByModId = @{}
+        MandatoryDependencies = $normalizedDependencies
+        MetadataKind = 'forge_toml'
+    }
+}
+
+function Assert-Decision {
+    param($Rows, [string]$FileName, [string]$Decision, [string]$Reason)
+    $row = @($Rows | Where-Object FileName -CEQ $FileName)
+    Assert-Equal 1 $row.Count "Expected one selection row for $FileName."
+    Assert-Equal $Decision $row[0].Decision "Unexpected decision for $FileName."
+    Assert-Equal $Reason $row[0].Reason "Unexpected reason for $FileName."
+}
+
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ('statmod-medieval-tests-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $tempRoot | Out-Null
 
@@ -174,3 +212,63 @@ side="BOTH"
 } finally {
     Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
+
+$configuration = [pscustomobject]@{
+    protected_mod_ids = @('statmod', 'epicfight', 'irons_spellbooks')
+    excluded_mod_ids = @('tensura', 'tensura_iron_spells', 'tensuramoreskills')
+    built_in_dependency_ids = @('minecraft', 'forge', 'neoforge', 'java')
+    excluded_filename_patterns = @('(?i)^tacz-', '(?i)^create-')
+    preferred_filenames = @('epicfight-x-curios-compat-2.2-forge-1.20.1.jar')
+}
+
+$active = @(
+    New-TestModRecord 'statmod.jar' @('statmod') 'HASH-STAT'
+    New-TestModRecord 'cataclysm.jar' @('cataclysm') 'HASH-CAT' @{ cataclysm = @('cataclysm_lib', 'minecraft', 'forge') }
+    New-TestModRecord 'cataclysm-lib.jar' @('cataclysm_lib') 'HASH-LIB'
+    New-TestModRecord 'tacz-guns.jar' @('tacz') 'HASH-GUN'
+    New-TestModRecord 'tensura.jar' @('tensura') 'HASH-TENSURA'
+    New-TestModRecord 'create.jar' @('create') 'HASH-CREATE'
+    New-TestModRecord 'unknown-addon.jar' @('unknown_addon') 'HASH-UNKNOWN'
+    New-TestModRecord 'EpicFight x Curios Compat 2.2.jar' @('ef_curios') 'HASH-DUP'
+    New-TestModRecord 'epicfight-x-curios-compat-2.2-forge-1.20.1.jar' @('ef_curios') 'HASH-DUP'
+)
+$reference = @(
+    New-TestModRecord 'cataclysm-neoforge.jar' @('cataclysm') 'REF-CAT'
+    New-TestModRecord 'ef-curios-neoforge.jar' @('ef_curios') 'REF-EF'
+)
+
+$selection = Get-MedievalSelection -ActiveRecords $active -ReferenceRecords $reference -Configuration $configuration
+Assert-Decision $selection 'statmod.jar' 'retain' 'protected_mod_id'
+Assert-Decision $selection 'cataclysm.jar' 'retain' 'reference_mod_id'
+Assert-Decision $selection 'cataclysm-lib.jar' 'retain' 'mandatory_dependency'
+Assert-Decision $selection 'tacz-guns.jar' 'quarantine' 'excluded_filename_pattern'
+Assert-Decision $selection 'tensura.jar' 'quarantine' 'excluded_mod_id'
+Assert-Decision $selection 'create.jar' 'quarantine' 'outside_medieval_reference'
+Assert-Decision $selection 'unknown-addon.jar' 'quarantine' 'outside_medieval_reference'
+Assert-Decision $selection 'EpicFight x Curios Compat 2.2.jar' 'quarantine' 'duplicate_sha256'
+Assert-Decision $selection 'epicfight-x-curios-compat-2.2-forge-1.20.1.jar' 'retain' 'reference_mod_id'
+
+$reversedSelection = Get-MedievalSelection -ActiveRecords @($active[($active.Count - 1)..0]) -ReferenceRecords $reference -Configuration $configuration
+Assert-Equal (ConvertTo-Json @($selection) -Depth 6 -Compress) (ConvertTo-Json @($reversedSelection) -Depth 6 -Compress) 'Selection changed with input order.'
+
+$missingDependency = @(
+    New-TestModRecord 'reference-owner.jar' @('reference_owner') 'HASH-OWNER' @{ reference_owner = @('missing_lib') }
+)
+$missingReference = @(New-TestModRecord 'reference-owner-neoforge.jar' @('reference_owner') 'REF-OWNER')
+$blocked = Get-MedievalSelection -ActiveRecords $missingDependency -ReferenceRecords $missingReference -Configuration $configuration
+Assert-Decision $blocked 'reference-owner.jar' 'blocked' 'unresolved_mandatory_dependency'
+
+$conflicting = @(
+    New-TestModRecord 'provider-a.jar' @('shared_mod') 'HASH-A'
+    New-TestModRecord 'provider-b.jar' @('shared_mod') 'HASH-B'
+)
+$conflictReference = @(New-TestModRecord 'shared-neoforge.jar' @('shared_mod') 'REF-SHARED')
+$conflict = Get-MedievalSelection -ActiveRecords $conflicting -ReferenceRecords $conflictReference -Configuration $configuration
+Assert-Decision $conflict 'provider-a.jar' 'manual_review' 'same_mod_id_conflict'
+Assert-Decision $conflict 'provider-b.jar' 'manual_review' 'same_mod_id_conflict'
+
+$protectedExcluded = @(New-TestModRecord 'tacz-protected.jar' @('statmod') 'HASH-PROTECTED')
+$protectedResult = Get-MedievalSelection -ActiveRecords $protectedExcluded -ReferenceRecords @() -Configuration $configuration
+Assert-Decision $protectedResult 'tacz-protected.jar' 'retain' 'protected_mod_id'
+
+Write-Output 'selection_tests=PASS'

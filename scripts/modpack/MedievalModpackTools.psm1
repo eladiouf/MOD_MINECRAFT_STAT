@@ -220,4 +220,181 @@ function Get-ModJarRecord {
     }
 }
 
-Export-ModuleMember -Function Assert-PathUnderRoot, Get-ModJarRecord
+function Get-ConfigurationValues {
+    param($Configuration, [string]$Name)
+    $property = $Configuration.PSObject.Properties[$Name]
+    if ($null -eq $property -or $null -eq $property.Value) { return @() }
+    return @($property.Value)
+}
+
+function Test-AnyValueInSet {
+    param([object[]]$Values, [Collections.Generic.HashSet[string]]$Set)
+    foreach ($value in $Values) {
+        if ($Set.Contains(([string]$value).ToLowerInvariant())) { return $true }
+    }
+    return $false
+}
+
+function Get-MedievalSelection {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][object[]]$ActiveRecords,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][object[]]$ReferenceRecords,
+        [Parameter(Mandatory = $true)]$Configuration
+    )
+
+    $protectedIds = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($id in (Get-ConfigurationValues $Configuration 'protected_mod_ids')) { [void]$protectedIds.Add([string]$id) }
+    $excludedIds = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($id in (Get-ConfigurationValues $Configuration 'excluded_mod_ids')) { [void]$excludedIds.Add([string]$id) }
+    $builtInIds = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($id in (Get-ConfigurationValues $Configuration 'built_in_dependency_ids')) { [void]$builtInIds.Add([string]$id) }
+    $referenceIds = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($record in $ReferenceRecords) {
+        foreach ($id in @($record.ModIds)) { [void]$referenceIds.Add([string]$id) }
+    }
+    $preferredNames = @(Get-ConfigurationValues $Configuration 'preferred_filenames')
+    $excludedPatterns = @(Get-ConfigurationValues $Configuration 'excluded_filename_patterns')
+
+    $entries = @($ActiveRecords | Sort-Object @{ Expression = { $_.FileName.ToLowerInvariant() } }, @{ Expression = { $_.FileName } } | ForEach-Object {
+        [pscustomobject]@{
+            Record = $_
+            Decision = $null
+            Reason = $null
+            RequiredBy = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+            PreferredDuplicate = $false
+        }
+    })
+
+    foreach ($hashGroup in @($entries | Group-Object { $_.Record.Sha256 })) {
+        if ($hashGroup.Count -lt 2) { continue }
+        $candidates = @($hashGroup.Group)
+        $winner = $null
+        foreach ($preferredName in $preferredNames) {
+            $winner = @($candidates | Where-Object { $_.Record.FileName -ceq [string]$preferredName }) | Select-Object -First 1
+            if ($null -ne $winner) { break }
+        }
+        if ($null -eq $winner) {
+            $winner = $candidates | Sort-Object @{ Expression = { $_.Record.FileName.Length } }, @{ Expression = { $_.Record.FileName.ToLowerInvariant() } }, @{ Expression = { $_.Record.FileName } } | Select-Object -First 1
+        }
+        $winner.PreferredDuplicate = $true
+        foreach ($candidate in $candidates) {
+            if (-not [object]::ReferenceEquals($candidate, $winner)) {
+                $candidate.Decision = 'quarantine'
+                $candidate.Reason = 'duplicate_sha256'
+            }
+        }
+    }
+
+    foreach ($entry in $entries) {
+        if ($entry.Decision -eq 'quarantine') { continue }
+        $record = $entry.Record
+        if (Test-AnyValueInSet @($record.ModIds) $protectedIds) {
+            $entry.Decision = 'retain'
+            $entry.Reason = 'protected_mod_id'
+            continue
+        }
+        if (Test-AnyValueInSet @($record.ModIds) $excludedIds) {
+            $entry.Decision = 'quarantine'
+            $entry.Reason = 'excluded_mod_id'
+            continue
+        }
+        $isExcludedPattern = $false
+        foreach ($pattern in $excludedPatterns) {
+            if ($record.FileName -match [string]$pattern) {
+                $isExcludedPattern = $true
+                break
+            }
+        }
+        if ($isExcludedPattern) {
+            $entry.Decision = 'quarantine'
+            $entry.Reason = 'excluded_filename_pattern'
+            continue
+        }
+        if (Test-AnyValueInSet @($record.ModIds) $referenceIds) {
+            $entry.Decision = 'retain'
+            $entry.Reason = 'reference_mod_id'
+        }
+    }
+
+    $changed = $true
+    while ($changed) {
+        $changed = $false
+        foreach ($owner in @($entries | Where-Object Decision -eq 'retain')) {
+            foreach ($ownerModId in @($owner.Record.ModIds)) {
+                if (-not $owner.Record.MandatoryDependencies.ContainsKey($ownerModId)) { continue }
+                foreach ($dependencyId in @($owner.Record.MandatoryDependencies[$ownerModId])) {
+                    $normalizedDependencyId = ([string]$dependencyId).ToLowerInvariant()
+                    if ($builtInIds.Contains($normalizedDependencyId)) { continue }
+                    $providers = @($entries | Where-Object {
+                        $_.Decision -ne 'quarantine' -and @($_.Record.ModIds) -contains $normalizedDependencyId
+                    })
+                    if ($providers.Count -eq 0) {
+                        $owner.Decision = 'blocked'
+                        $owner.Reason = 'unresolved_mandatory_dependency'
+                        [void]$owner.RequiredBy.Add($normalizedDependencyId)
+                        $changed = $true
+                        continue
+                    }
+                    $providerHashes = @($providers | ForEach-Object { $_.Record.Sha256 } | Sort-Object -Unique)
+                    if ($providerHashes.Count -gt 1) {
+                        foreach ($provider in $providers) {
+                            $provider.Decision = 'manual_review'
+                            $provider.Reason = 'same_mod_id_conflict'
+                            [void]$provider.RequiredBy.Add($owner.Record.FileName)
+                        }
+                        continue
+                    }
+                    $provider = $providers[0]
+                    [void]$provider.RequiredBy.Add($owner.Record.FileName)
+                    if ($null -eq $provider.Decision) {
+                        $provider.Decision = 'retain'
+                        $provider.Reason = 'mandatory_dependency'
+                        $changed = $true
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($entry in $entries) {
+        if ($null -eq $entry.Decision) {
+            $entry.Decision = 'quarantine'
+            $entry.Reason = 'outside_medieval_reference'
+        }
+    }
+
+    $selectedProviders = @{}
+    foreach ($entry in @($entries | Where-Object { $_.Decision -in @('retain', 'manual_review') })) {
+        foreach ($modId in @($entry.Record.ModIds)) {
+            $normalizedModId = ([string]$modId).ToLowerInvariant()
+            if (-not $selectedProviders.ContainsKey($normalizedModId)) { $selectedProviders[$normalizedModId] = @() }
+            $selectedProviders[$normalizedModId] += $entry
+        }
+    }
+    foreach ($modId in $selectedProviders.Keys) {
+        $providers = @($selectedProviders[$modId])
+        $hashes = @($providers | ForEach-Object { $_.Record.Sha256 } | Sort-Object -Unique)
+        if ($providers.Count -gt 1 -and $hashes.Count -gt 1) {
+            foreach ($provider in $providers) {
+                $provider.Decision = 'manual_review'
+                $provider.Reason = 'same_mod_id_conflict'
+            }
+        }
+    }
+
+    return @($entries | ForEach-Object {
+        [pscustomobject]@{
+            FileName = $_.Record.FileName
+            Sha256 = $_.Record.Sha256
+            Length = $_.Record.Length
+            ModIds = (@($_.Record.ModIds) | Sort-Object -Unique) -join ';'
+            Decision = $_.Decision
+            Reason = $_.Reason
+            RequiredBy = (@($_.RequiredBy) | Sort-Object -Unique) -join ';'
+            PreferredDuplicate = [bool]$_.PreferredDuplicate
+        }
+    })
+}
+
+Export-ModuleMember -Function Assert-PathUnderRoot, Get-ModJarRecord, Get-MedievalSelection

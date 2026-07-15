@@ -40,6 +40,6 @@ class StatProgressNoticeMessageTest {
 
     @Test
     void bookStudyInputUsesTheCurrentWireProtocol() {
-        assertEquals("3", StatModRuntime.NETWORK_PROTOCOL);
+        assertEquals("4", StatModRuntime.NETWORK_PROTOCOL);
     }
 }

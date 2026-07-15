@@ -20,6 +20,11 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("weaponDamageExponent"));
         assertTrue(config.contains("physicalResistanceCap"));
         assertTrue(config.contains("physicalEnduranceCap"));
+        assertTrue(config.contains("builder.push(\"endurance\")"));
+        assertTrue(config.contains("staminaCapacityBonusAt100\", 1.0, 0.0, 5.0"));
+        assertTrue(config.contains("staminaRecoveryBonusAt100\", 0.5, 0.0, 5.0"));
+        assertTrue(config.contains("staminaCapacityBonusAt100()"));
+        assertTrue(config.contains("staminaRecoveryBonusAt100()"));
         assertTrue(config.contains("new CombatScalingRules("));
     }
 }

@@ -9,6 +9,8 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue WEAPON_DAMAGE_EXPONENT;
     private static final ForgeConfigSpec.DoubleValue PHYSICAL_RESISTANCE_CAP;
     private static final ForgeConfigSpec.DoubleValue PHYSICAL_ENDURANCE_CAP;
+    private static final ForgeConfigSpec.DoubleValue STAMINA_CAPACITY_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue STAMINA_RECOVERY_BONUS_AT_100;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -24,6 +26,12 @@ public final class StatModServerConfig {
         PHYSICAL_ENDURANCE_CAP = builder.defineInRange(
                 "physicalEnduranceCap", 0.35, 0.0, 0.95);
         builder.pop();
+        builder.push("endurance");
+        STAMINA_CAPACITY_BONUS_AT_100 = builder.defineInRange(
+                "staminaCapacityBonusAt100", 1.0, 0.0, 5.0);
+        STAMINA_RECOVERY_BONUS_AT_100 = builder.defineInRange(
+                "staminaRecoveryBonusAt100", 0.5, 0.0, 5.0);
+        builder.pop();
         SPEC = builder.build();
     }
 
@@ -37,5 +45,13 @@ public final class StatModServerConfig {
                 WEAPON_DAMAGE_EXPONENT.get(),
                 PHYSICAL_RESISTANCE_CAP.get(),
                 PHYSICAL_ENDURANCE_CAP.get());
+    }
+
+    public static double staminaCapacityBonusAt100() {
+        return STAMINA_CAPACITY_BONUS_AT_100.get();
+    }
+
+    public static double staminaRecoveryBonusAt100() {
+        return STAMINA_RECOVERY_BONUS_AT_100.get();
     }
 }

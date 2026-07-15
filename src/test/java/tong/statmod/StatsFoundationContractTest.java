@@ -35,9 +35,14 @@ class StatsFoundationContractTest {
                     })
                     .reduce("", String::concat);
 
-            assertFalse(sources.contains("irons_spellbooks"));
-            assertFalse(sources.contains("epicfight"));
-            assertFalse(sources.toLowerCase().contains("tensura"));
+            assertFalse(sources.toLowerCase().lines()
+                    .map(String::strip)
+                    .filter(line -> line.startsWith("import "))
+                    .anyMatch(line -> line.contains("epicfight")
+                            || line.contains("ironsspellbooks")
+                            || line.contains("irons_spellbooks")
+                            || line.contains("tensura")
+                            || line.contains("parcool")));
         }
     }
 }

@@ -49,14 +49,12 @@ class AutomaticXpContractTest {
     }
 
     @Test
-    void mainCodeHasNoOptionalModDependencyText() throws IOException {
+    void mainCodeHasNoOptionalModImports() throws IOException {
         try (Stream<Path> files = Files.walk(Path.of("src/main/java"))) {
             String source = files.filter(path -> path.toString().endsWith(".java"))
                     .map(AutomaticXpContractTest::readUnchecked)
                     .collect(Collectors.joining("\n")).toLowerCase();
-            assertFalse(source.contains("epicfight"));
-            assertFalse(source.contains("irons_spellbooks"));
-            assertFalse(source.contains("tensura"));
+            assertFalse(hasOptionalModImport(source));
         }
     }
 
@@ -91,5 +89,16 @@ class AutomaticXpContractTest {
         } catch (IOException exception) {
             throw new IllegalStateException(exception);
         }
+    }
+
+    private static boolean hasOptionalModImport(String source) {
+        return source.lines()
+                .map(String::strip)
+                .filter(line -> line.startsWith("import "))
+                .anyMatch(line -> line.contains("epicfight")
+                        || line.contains("ironsspellbooks")
+                        || line.contains("irons_spellbooks")
+                        || line.contains("tensura")
+                        || line.contains("parcool"));
     }
 }

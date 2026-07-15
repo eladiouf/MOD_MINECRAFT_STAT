@@ -1,6 +1,7 @@
 package tong.statmod.client.stats;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +38,11 @@ class StatsLanguageResourcesTest {
             for (String key : REQUIRED_UI_KEYS) {
                 assertContains(json, key, locale);
             }
+            assertFalse(json.contains("fire_affinity"));
+            assertFalse(json.contains("water_affinity"));
+            assertFalse(json.contains("earth_affinity"));
+            assertFalse(json.contains("air_affinity"));
+            assertFalse(json.contains("elemental_specialization"));
         }
     }
 

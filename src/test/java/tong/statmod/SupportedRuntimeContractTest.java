@@ -18,7 +18,7 @@ class SupportedRuntimeContractTest {
         assertTrue(record.contains("Minecraft | 1.20.1 | verified"));
         assertTrue(record.contains("Forge | 47.4.10 | verified"));
         assertTrue(record.contains("Java | 17 | verified"));
-        assertTrue(record.contains("Iron's Spells 'n Spellbooks | 3.16.2 | prepared"));
+        assertTrue(record.contains("Iron's Spells 'n Spellbooks | 3.16.2 | required"));
         assertTrue(record.contains("Epic Fight | 20.14.17 | required"));
         assertTrue(record.contains("Pufferfish's Attributes | 0.8.2 | required"));
         assertTrue(record.contains("Tensura | excluded | unsupported"));
@@ -26,5 +26,8 @@ class SupportedRuntimeContractTest {
         assertTrue(attributes.contains("epicfight:offhand_attack_speed"));
         assertTrue(attributes.contains("minecraft:generic.movement_speed"));
         assertTrue(attributes.contains("puffish_attributes:sprinting_speed"));
+        assertTrue(attributes.contains("irons_spellbooks:spell_power"));
+        assertTrue(attributes.contains("irons_spellbooks:max_mana"));
+        assertTrue(attributes.contains("irons_spellbooks:spell_resist"));
     }
 }

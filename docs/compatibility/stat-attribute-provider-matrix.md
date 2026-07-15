@@ -138,11 +138,11 @@ scale the same hit.
 | Physical Endurance | **Implemented:** Epic Fight max stamina/regen and ParCool fallback max/recovery | Registry-only transient modifiers; +100% capacity and +50% recovery at level 100 by default. Existing ParCool adapter chooses the active pool. |
 | Tracking | No direct output selected | Fortune is not assumed to represent tracking until loot behavior is designed. |
 | Keen Senses | Optional Apothic dodge chance | Must remain capped and distinct from Agility. |
-| Arcane Power | Iron's Spells spell power | Puffish magic damage is fallback only if a non-Iron magic provider needs it. |
-| Casting Speed | Iron's cast-time and cooldown reduction | Casting move speed is a separate bounded bonus. |
-| Mana Pool | Iron's max mana and mana regeneration | No separate STAT Mod mana pool. |
+| Arcane Power | **Implemented:** Iron's Spells spell power | +100% base at level 100 by default; Puffish magic damage is not stacked. |
+| Casting Speed | **Implemented:** Iron's cast-time and cooldown reduction | +30% cast-time and +20% cooldown attributes at level 100; casting move speed is excluded. |
+| Mana Pool | **Implemented:** Iron's max mana and mana regeneration | +200% capacity and +50% regeneration at level 100; no separate STAT Mod mana pool. |
 | Erudition | No direct output selected | Apothic/Puffish experience bonuses require a progression-economy design. |
-| Magic Resistance | Iron's spell resist | Puffish magic resistance is not stacked on the same incoming spell. |
+| Magic Resistance | **Implemented:** Iron's spell resist | +50% base at level 100; Puffish magic resistance is not stacked. |
 | Intimidation | Epic Fight impact candidate | Execution effects require perk and boss-safety rules. |
 | Willpower | Epic Fight execution resistance candidate | Negative-effect duration still needs its own bounded event rule. |
 | Forging | Puffish repair-cost candidate | Actual forging quality remains owned by STAT Mod recipes/stations. |
@@ -157,8 +157,10 @@ scale the same hit.
 2. **Implemented:** Rapidité and Agility → vanilla plus required-provider
    combat/movement attributes. Jump and fall reduction remain excluded from
    this slice.
-3. Iron's Spells core → mana, spell power/resist, and casting attributes.
+3. **Implemented:** Iron's Spells core → mana, spell power/resist, and casting
+   attributes, with Iron's Spells 3.16.2+ required on both sides.
 4. Mental and crafting candidates only after their gameplay policies exist.
 
 Each step must test absence of every optional provider and verify that switching
-Epic Fight battle mode does not create, refill, or duplicate stamina.
+Epic Fight battle mode does not create, refill, or duplicate stamina. Required
+Iron, Epic Fight, and Puffish versions are enforced by Forge metadata.

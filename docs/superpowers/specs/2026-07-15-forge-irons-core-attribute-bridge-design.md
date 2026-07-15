@@ -124,10 +124,11 @@ mobility targets. For every target it:
 4. adds one transient `MULTIPLY_BASE` modifier only when the computed amount is
    positive.
 
-Repeated refreshes are idempotent. Removing Iron's Spells from a development
-profile cannot cause class resolution failure because the bridge contains no
-direct Iron API reference. Iron remains optional in STAT Mod metadata for this
-slice, although it is present in the supported `test-vrai` profile.
+Repeated refreshes are idempotent. The bridge contains no direct Iron API
+reference, but Iron's Spells is an explicit mandatory runtime dependency for
+the Forge remake. `mods.toml` requires `irons_spellbooks` 3.16.2 or newer on
+both sides and orders STAT Mod after it. Forge therefore rejects a missing or
+unsupported Iron installation before world loading.
 
 ### 6.4 Refresh lifecycle
 
@@ -158,7 +159,8 @@ drives the screen; Iron synchronizes its player attributes through Forge.
 
 ## 8. Error handling and compatibility
 
-- Missing Iron attributes are skipped without logging every refresh.
+- A missing Iron installation is rejected by Forge's mandatory dependency gate.
+- An unexpectedly missing Iron attribute is skipped without logging every refresh.
 - A registry ID mismatch is detected by contract tests against the audited
   3.16.2 identifiers and by the full-profile smoke test.
 - Stable UUIDs are unique across stamina, mobility, and magic targets.

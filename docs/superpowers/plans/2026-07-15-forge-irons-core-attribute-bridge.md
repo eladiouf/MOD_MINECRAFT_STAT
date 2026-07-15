@@ -4,7 +4,7 @@
 
 **Goal:** Retire the four unused affinity statistics and make Arcane Power, Casting Speed, Mana Pool, and Magic Resistance drive the pinned Iron's Spells 3.16.2 attributes.
 
-**Architecture:** Keep Iron optional and resolve its six public attributes only by registry ID. Extend the existing idempotent transient-modifier service, use server-configured linear curves, and migrate the canonical roster from 23/six to 19/five without importing Iron classes or creating a second mana pool.
+**Architecture:** Require Iron's Spells 3.16.2+ at runtime while resolving its six public attributes only by registry ID. Extend the existing idempotent transient-modifier service, use server-configured linear curves, and migrate the canonical roster from 23/six to 19/five without importing Iron classes or creating a second mana pool.
 
 **Tech Stack:** Java 17, Minecraft 1.20.1, Forge 47.4.10, Gradle 8.8, JUnit 5, Iron's Spells 3.16.2 runtime registry IDs.
 
@@ -17,7 +17,8 @@
 - Never import `io.redspace.ironsspellbooks` classes or add an Iron compile/runtime dependency.
 - Never write current mana, refill mana, or create a STAT Mod mana capability.
 - Use stable unique UUIDs and `AttributeModifier.Operation.MULTIPLY_BASE`.
-- Iron's Spells remains optional in `mods.toml`; a missing registry attribute is skipped safely.
+- `mods.toml` requires `irons_spellbooks` version `[3.16.2,)`, ordered `AFTER`, on `BOTH` sides.
+- An unexpectedly missing registry attribute is still skipped safely.
 - Do not add school-specific progression or recreate affinities under another name.
 - Preserve Epic Fight, Puffish Attributes, ParCool, and every user/launcher JAR during deployment.
 
@@ -271,6 +272,54 @@ Expected: `BUILD SUCCESSFUL`.
 ```powershell
 git add src/main/java/tong/statmod/effects/MagicAttributeTarget.java src/test/java/tong/statmod/effects/MagicAttributeTargetTest.java
 git commit -m "feat: model Iron magic attribute targets"
+```
+
+---
+
+### Task 3A: Require the Audited Iron's Spells Runtime
+
+**Files:**
+- Modify: `src/main/resources/META-INF/mods.toml`
+- Modify: `src/test/java/tong/statmod/RequiredProviderMetadataTest.java`
+
+**Interfaces:**
+- Consumes: Forge dependency metadata and pinned Iron's Spells 3.16.2 profile.
+- Produces: a mandatory `irons_spellbooks` `[3.16.2,)` dependency on both sides.
+
+- [ ] **Step 1: Add the failing metadata assertion**
+
+```java
+assertRequired(metadata, "irons_spellbooks", "[3.16.2,)");
+```
+
+- [ ] **Step 2: Run the focused test and confirm RED**
+
+```powershell
+.\gradlew.bat test --tests tong.statmod.RequiredProviderMetadataTest --console=plain
+```
+
+Expected: failure reports missing dependency `irons_spellbooks`.
+
+- [ ] **Step 3: Add the exact dependency block**
+
+```toml
+[[dependencies.${mod_id}]]
+modId="irons_spellbooks"
+mandatory=true
+versionRange="[3.16.2,)"
+ordering="AFTER"
+side="BOTH"
+```
+
+- [ ] **Step 4: Run the focused test and confirm GREEN**
+
+Run the command from Step 2. Expected: `BUILD SUCCESSFUL`.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add src/main/resources/META-INF/mods.toml src/test/java/tong/statmod/RequiredProviderMetadataTest.java docs/superpowers
+git commit -m "feat: require Iron's Spells runtime"
 ```
 
 ---

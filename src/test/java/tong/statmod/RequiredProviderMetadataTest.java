@@ -8,11 +8,12 @@ import org.junit.jupiter.api.Test;
 
 class RequiredProviderMetadataTest {
     @Test
-    void requiresAuditedEpicFightAndPuffishVersions() throws Exception {
+    void requiresAuditedEpicFightPuffishAndIronVersions() throws Exception {
         String metadata = Files.readString(Path.of("src/main/resources/META-INF/mods.toml"));
 
         assertRequired(metadata, "epicfight", "[20.14.17,)");
         assertRequired(metadata, "puffish_attributes", "[0.8.2,)");
+        assertRequired(metadata, "irons_spellbooks", "[3.16.2,)");
     }
 
     private static void assertRequired(String metadata, String modId, String versionRange) {

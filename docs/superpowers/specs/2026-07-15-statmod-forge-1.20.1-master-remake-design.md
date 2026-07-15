@@ -28,7 +28,8 @@ the old implementation line for line.
 
 The current branch already provides:
 
-- 23 stable statistics in six families;
+- 19 stable statistics in five families after retiring the four unused
+  elemental affinities;
 - Forge player capabilities, defensive NBT persistence, lifecycle copying, and
   full client snapshots;
 - operator and player inspection commands;
@@ -92,7 +93,7 @@ player-triggered actions.
 
 ### Milestone 1 — stats that visibly matter
 
-- implement attribute/passive effects for the 23 stats;
+- implement attribute/passive effects for the 19 stats;
 - make curves and caps server-configurable with validated defaults;
 - make application idempotent using stable modifier UUIDs;
 - recalculate on login, respawn, dimension change, stat mutation, and config
@@ -114,9 +115,8 @@ the effect safely.
 ### Milestone 3 — Iron's Spells progression
 
 - target the modpack's pinned Iron's Spells 3.16.2 API first;
-- award magical and elemental XP from validated spell events;
-- map schools to the four affinity stats through data, not hard-coded addon
-  class names;
+- award magical XP from validated spell events without duplicating progression
+  per spell school;
 - scale spell power, casting speed, mana, resistance, and recovery with bounded
   formulas;
 - synchronize one coherent mana/stat snapshot after each accepted mutation;

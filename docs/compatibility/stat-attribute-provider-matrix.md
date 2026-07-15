@@ -88,9 +88,9 @@ The installed public registry exposes:
   `holy`, `ender`, `blood`, `evocation`, `nature`, and `eldritch`.
 
 School attributes follow the installed registry's `<school>_spell_power` and
-`<school>_magic_resist` naming. Elemental affinities will use the dedicated
-school taxonomy rather than assuming that water equals ice or earth equals
-nature in every addon.
+`<school>_magic_resist` naming. STAT Mod deliberately does not map them to
+separate affinity statistics; the four unused affinities are retired from the
+Forge 1.20.1 roster.
 
 ### Apothic Attributes
 
@@ -143,7 +143,6 @@ scale the same hit.
 | Mana Pool | Iron's max mana and mana regeneration | No separate STAT Mod mana pool. |
 | Erudition | No direct output selected | Apothic/Puffish experience bonuses require a progression-economy design. |
 | Magic Resistance | Iron's spell resist | Puffish magic resistance is not stacked on the same incoming spell. |
-| Four affinities | Iron school power/resistance attributes | Exact mapping follows the spell school taxonomy and addon registry audit. |
 | Intimidation | Epic Fight impact candidate | Execution effects require perk and boss-safety rules. |
 | Willpower | Epic Fight execution resistance candidate | Negative-effect duration still needs its own bounded event rule. |
 | Forging | Puffish repair-cost candidate | Actual forging quality remains owned by STAT Mod recipes/stations. |
@@ -159,8 +158,7 @@ scale the same hit.
    combat/movement attributes. Jump and fall reduction remain excluded from
    this slice.
 3. Iron's Spells core → mana, spell power/resist, and casting attributes.
-4. Elemental school taxonomy → exact school attributes and addon schools.
-5. Mental and crafting candidates only after their gameplay policies exist.
+4. Mental and crafting candidates only after their gameplay policies exist.
 
 Each step must test absence of every optional provider and verify that switching
 Epic Fight battle mode does not create, refill, or duplicate stamina.

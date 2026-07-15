@@ -11,12 +11,13 @@
 Make the first four core magical statistics visibly affect the pinned Iron's
 Spells runtime without introducing a second mana system or depending on Iron's
 Java classes. This is the first slice of the Iron's Spells milestone and a
-prerequisite for magical XP, elemental affinities, and Curios grimoire casting.
+prerequisite for magical XP and Curios grimoire casting.
 
 The bridge covers Arcane Power, Casting Speed, Mana Pool, and Magic Resistance.
-Erudition and the four elemental affinities remain synchronized foundations in
-this slice. The screen must describe the newly active effects truthfully after
-the bridge ships.
+Erudition remains a synchronized foundation. Fire, Water, Earth, and Air
+Affinity are removed completely because they do not provide a distinct useful
+progression axis for this modpack. The screen must describe the remaining
+statistics and newly active effects truthfully after the bridge ships.
 
 ## 2. Approaches considered
 
@@ -29,17 +30,17 @@ same proven pattern as Epic Fight, Puffish Attributes, and ParCool attributes.
 
 ### 2.2 Full magical XP and effects in one slice — rejected for now
 
-This would also compile against `SpellOnCastEvent`, classify schools, apply
-anti-farm rules, and alter nine statistics at once. It creates a larger failure
-surface and requires a reproducible Iron API compile dependency before the
-attribute formulas have been validated independently.
+This would also compile against `SpellOnCastEvent`, migrate the roster, apply
+anti-farm rules, and introduce magical rewards in the same change. It creates a
+larger failure surface and requires a reproducible Iron API compile dependency
+before the attribute formulas have been validated independently.
 
 ### 2.3 Curios `V` casting first — rejected for now
 
 This addresses the original casting symptom sooner, but it would build a
 server-side casting coordinator on top of magical statistics that still have
-no runtime meaning. Casting remains the next major integration after the core
-and elemental progression slices.
+no runtime meaning. Casting remains the next major integration after core
+magical progression.
 
 ## 3. Attribute mapping and supported defaults
 
@@ -58,10 +59,30 @@ scaling utility. Amounts below are `MULTIPLY_BASE` modifier amounts.
 
 The bridge deliberately excludes `summon_damage` and `casting_movespeed`.
 Summon damage needs a summoner-specific policy, while casting movement speed
-must not silently duplicate Agility. Elemental school power and resistance
-attributes belong to the separate school-taxonomy slice.
+must not silently duplicate Agility. School-specific power and resistance
+attributes are intentionally excluded: STAT Mod will not recreate elemental
+affinities under another name.
 
-## 4. Server configuration
+## 4. Roster simplification and save compatibility
+
+The same implementation slice removes `FIRE_AFFINITY`, `WATER_AFFINITY`,
+`EARTH_AFFINITY`, and `AIR_AFFINITY` from `StatType`, then removes the now-empty
+`ELEMENTAL_SPECIALIZATION` family. The canonical roster becomes 19 statistics
+in five families.
+
+The player-stat schema increments from 1 to 2. Loading an older save remains
+safe: the deserializer reads only current `StatType` entries, so the four old
+NBT compounds are ignored and every unrelated value is preserved. Saving the
+player again writes only the 19 current entries. No replacement stat, refund,
+conversion, or hidden compatibility field is created because affinities never
+had spendable points or an implemented gameplay effect.
+
+Commands stop accepting the four removed IDs automatically through enum-backed
+parsing. Snapshots, screen sections, presentation catalogs, translations, and
+tests are updated to expect 19 statistics and five families. The elemental
+family button disappears instead of rendering an empty section.
+
+## 5. Server configuration
 
 `StatModServerConfig` gains a `magic` section with six bounded values:
 
@@ -77,22 +98,22 @@ casts, zero cooldowns, or complete immunity. Configuration reload schedules a
 refresh for every connected server player on the server thread. Invalid values
 are handled by Forge's bounded config values and never enter modifier math.
 
-## 5. Components and boundaries
+## 6. Components and boundaries
 
-### 5.1 `MagicAttributeTarget`
+### 6.1 `MagicAttributeTarget`
 
 An enum owns each registry ID, a unique stable modifier UUID, its source stat,
 and its configuration-backed maximum. It exposes a pure amount calculation from
 `PlayerStats`. No Iron class or `RegistryObject` appears in this type.
 
-### 5.2 `AttributeEffectLevels`
+### 6.2 `AttributeEffectLevels`
 
 The level snapshot expands to include the four affected magical statistics.
 `XpAwardService` can therefore detect a magical level change later without a
 second refresh mechanism. Existing physical fields and equality semantics stay
 unchanged.
 
-### 5.3 `PlayerAttributeEffects`
+### 6.3 `PlayerAttributeEffects`
 
 The existing refresh service iterates `MagicAttributeTarget` after stamina and
 mobility targets. For every target it:
@@ -108,7 +129,7 @@ profile cannot cause class resolution failure because the bridge contains no
 direct Iron API reference. Iron remains optional in STAT Mod metadata for this
 slice, although it is present in the supported `test-vrai` profile.
 
-### 5.4 Refresh lifecycle
+### 6.4 Refresh lifecycle
 
 The bridge reuses all existing refresh points:
 
@@ -122,20 +143,20 @@ A small config-reload event handler adds the missing global refresh point. It
 acts only for STAT Mod's server config and schedules one pass over the current
 server player list.
 
-## 6. Client presentation
+## 7. Client presentation
 
 The French and English descriptions for Arcane Power, Casting Speed, Mana Pool,
 and Magic Resistance change from future-foundation language to their actual
 Iron attribute effects. Their `StatDisplayState` becomes `ACTIVE`.
 
-Erudition and Fire, Water, Earth, and Air Affinity remain `FOUNDATION`. The UI
-must not claim school mappings, magical XP, spell unlocks, or Curios casting in
-this slice.
+Erudition remains `FOUNDATION`. The four affinities and their elemental family
+are absent. The UI must not claim school-specific progression, magical XP,
+spell unlocks, or Curios casting in this slice.
 
 No new client packet is required. The authoritative level snapshot already
 drives the screen; Iron synchronizes its player attributes through Forge.
 
-## 7. Error handling and compatibility
+## 8. Error handling and compatibility
 
 - Missing Iron attributes are skipped without logging every refresh.
 - A registry ID mismatch is detected by contract tests against the audited
@@ -145,9 +166,10 @@ drives the screen; Iron synchronizes its player attributes through Forge.
 - The bridge never writes current mana, refills mana on refresh, or creates a
   STAT Mod mana capability.
 - No Puffish magic attribute is applied, preventing duplicate spell scaling.
-- No addon school is classified and no addon compatibility claim is added.
+- No spell school is classified and no addon compatibility claim is added.
+- Schema-1 affinity NBT is ignored without affecting the 19 retained stats.
 
-## 8. Verification
+## 9. Verification
 
 Focused tests cover:
 
@@ -156,8 +178,11 @@ Focused tests cover:
 - all four affected stats in `AttributeEffectLevels`;
 - modifier replacement and `MULTIPLY_BASE` wiring;
 - config bounds and config-reload refresh wiring;
+- exactly 19 stats in five non-empty families, with no affinity IDs;
+- schema-1 loading preserves every retained stat and schema-2 saving omits the
+  four retired affinity keys;
 - `ACTIVE` presentation for the four implemented stats and `FOUNDATION` for
-  Erudition and the four affinities;
+  Erudition;
 - absence of direct `io.redspace.ironsspellbooks` imports in the bridge.
 
 Release gates are the complete JUnit suite, clean Forge build, JAR surface
@@ -167,13 +192,12 @@ with Iron's Spells 3.16.2. In the client, compare Iron attribute values at level
 that bonuses neither disappear nor stack. Current mana must not be refilled by
 any refresh action.
 
-## 9. Explicit exclusions and next slices
+## 10. Explicit exclusions and next slices
 
-This slice does not add magical XP, school-to-affinity mapping, spell perks,
-spell unlock rules, mana spending rules, new HUD elements, or Curios casting.
+This slice does not add magical XP, school progression, spell perks, spell
+unlock rules, mana spending rules, new HUD elements, or Curios casting.
 The next delivery order is:
 
 1. magical XP from validated Iron cast events;
-2. exact elemental school taxonomy and affinity effects;
-3. equipment-independent current-spell casting through the Curios grimoire;
-4. perk and magic-tree gates.
+2. equipment-independent current-spell casting through the Curios grimoire;
+3. perk and magic-tree gates.

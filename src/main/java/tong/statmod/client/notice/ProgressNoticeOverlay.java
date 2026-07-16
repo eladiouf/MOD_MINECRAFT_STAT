@@ -15,9 +15,12 @@ import tong.statmod.client.stats.StatPresentation;
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD,
         value = Dist.CLIENT)
 public final class ProgressNoticeOverlay {
-    private static final int WIDTH = 190;
-    private static final int HEIGHT = 26;
-    private static final int GAP = 4;
+    private static final int WIDTH = 160;
+    private static final int HEIGHT = 20;
+    private static final int GAP = 3;
+    private static final int BACKGROUND_ALPHA = 110;
+    private static final int BORDER_ALPHA = 150;
+    private static final int TEXT_ALPHA = 200;
 
     private ProgressNoticeOverlay() {
     }
@@ -37,19 +40,20 @@ public final class ProgressNoticeOverlay {
         int x = screenWidth - WIDTH - 8;
         int y = 8;
         for (ProgressNotice notice : notices) {
-            int alpha = Math.round(notice.alpha() * 255.0F);
-            int background = alpha << 24 | 0x241A12;
-            int border = alpha << 24 | 0xB18A4A;
+            int backgroundAlpha = Math.round(notice.alpha() * BACKGROUND_ALPHA);
+            int borderAlpha = Math.round(notice.alpha() * BORDER_ALPHA);
+            int textAlpha = Math.round(notice.alpha() * TEXT_ALPHA);
+            int background = backgroundAlpha << 24 | 0x241A12;
+            int border = borderAlpha << 24 | 0xB18A4A;
             graphics.fill(x, y, x + WIDTH, y + HEIGHT, background);
             graphics.fill(x, y, x + 2, y + HEIGHT, border);
 
             Component statName = Component.translatable(
                     StatPresentation.of(notice.stat()).nameKey());
-            Component text = notice.levelsGained() > 0
-                    ? Component.translatable("notice.statmod.level_up", statName, notice.newLevel())
-                    : Component.translatable("notice.statmod.xp", notice.awardedXp(), statName);
-            int foreground = alpha << 24 | 0xF0D89C;
-            graphics.drawString(minecraft.font, text, x + 8, y + 9, foreground, false);
+            Component text = Component.translatable(
+                    "notice.statmod.level_up", statName, notice.newLevel());
+            int foreground = textAlpha << 24 | 0xE2CF9E;
+            graphics.drawString(minecraft.font, text, x + 6, y + 6, foreground, false);
             y += HEIGHT + GAP;
         }
     }

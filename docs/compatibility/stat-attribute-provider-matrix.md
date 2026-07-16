@@ -148,7 +148,7 @@ scale the same hit.
 | Keen Senses | Optional Apothic dodge chance | Must remain capped and distinct from Agility. |
 | Arcane Power | **Implemented:** Iron's Spells spell power | +100% base at level 100 by default; Puffish magic damage is not stacked. |
 | Casting Speed | **Implemented:** Iron's cast-time and cooldown reduction | +30% cast-time and +20% cooldown attributes at level 100; casting move speed is excluded. |
-| Mana Pool | **Implemented:** Iron's max mana and mana regeneration | +200% capacity and +50% regeneration at level 100; no separate STAT Mod mana pool. |
+| Mana Pool | **Implemented:** Iron's max mana and mana regeneration | 500 base mana; +200% capacity at level 100; regen from 1/s to a strict 17/s cap; no separate STAT Mod mana pool. |
 | Erudition | No direct output selected | Apothic/Puffish experience bonuses require a progression-economy design. |
 | Magic Resistance | **Implemented:** Iron's spell resist | +50% base at level 100; Puffish magic resistance is not stacked. |
 | Intimidation | Epic Fight impact candidate | Execution effects require perk and boss-safety rules. |

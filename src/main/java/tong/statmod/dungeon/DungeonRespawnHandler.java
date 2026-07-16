@@ -59,7 +59,7 @@ public final class DungeonRespawnHandler {
         event.setCanceled(true);
 
         // Mort punitive : le joueur perd une partie de ses points de donjon.
-        DungeonPoints.applyDeathPenalty(player);
+        DungeonPoints.applyDeathPenalty(player, floor);
 
         // Règle « 0 point → éjection » : si la mort a vidé les points, on renvoie le joueur à
         // l'overworld AU LIEU de le faire réapparaître dans le donjon (les coins du shop restent
@@ -87,12 +87,12 @@ public final class DungeonRespawnHandler {
         // PURGE l'étage AVANT de réapparaître : sans ça, le joueur renaissait au centre, au milieu
         // de la horde + mini-boss de sa tentative précédente → mort instantanée → boucle infinie
         // (observée à l'étage 3 « thème ORC » avec l'Orc Lord). On repart sur une vague propre.
-        // SAUF en co-op : si un coéquipier vivant est encore sur l'étage, sa vague est SON combat —
-        // on ne la lui vole pas (audit multi 2026-07-09). Le mort réapparaît au pad et le rejoint.
+        // SAUF en multijoueur : si n'importe quel participant vivant est encore sur l'étage, la
+        // vague partagée continue. Le mort réapparaît au pad et rejoint les autres équipes.
         if (player.level() instanceof ServerLevel sl) {
-            boolean teammateStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
+            boolean participantStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
                     .anyMatch(p -> p != player);
-            if (!teammateStillFighting) {
+            if (!participantStillFighting) {
                 DungeonMobSpawner.clearFloorMobs(sl, floor);
             }
         }

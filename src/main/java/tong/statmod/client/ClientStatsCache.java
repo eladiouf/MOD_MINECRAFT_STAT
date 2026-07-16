@@ -21,7 +21,13 @@ public final class ClientStatsCache {
     }
 
     public static void replace(Map<StatType, StatValue> next, List<String> activePerkIds, int dungeonPoints, int dungeonFloorReached) {
-        state = new ClientStatsState(state.revision() + 1, next, activePerkIds, dungeonPoints, dungeonFloorReached);
+        replace(next, activePerkIds, dungeonPoints, dungeonFloorReached, Map.of());
+    }
+
+    public static void replace(Map<StatType, StatValue> next, List<String> activePerkIds,
+            int dungeonPoints, int dungeonFloorReached, Map<String, Integer> learnedSpells) {
+        state = new ClientStatsState(state.revision() + 1, next, activePerkIds,
+                dungeonPoints, dungeonFloorReached, learnedSpells);
     }
 
     public static void clear() {
@@ -41,6 +47,6 @@ public final class ClientStatsCache {
         for (StatType type : StatType.values()) {
             empty.put(type, new StatValue(0, 0));
         }
-        return new ClientStatsState(revision, empty, List.of());
+        return new ClientStatsState(revision, empty, List.of(), 0, 1, Map.of());
     }
 }

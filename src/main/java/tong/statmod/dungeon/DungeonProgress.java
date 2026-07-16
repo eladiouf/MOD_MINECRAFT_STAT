@@ -48,17 +48,10 @@ public final class DungeonProgress {
         if (floor <= 0) return;
         if (player.level() instanceof ServerLevel sl
                 && sl.dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
-            // FTB Teams : seule l'ÉQUIPE du déclencheur conquiert (2026-07-09). Les rivaux
-            // présents sur l'étage ne profitent pas du kill — ils voient la victoire adverse.
+            // Rencontre publique : toutes les équipes présentes combattent la même vague ou le
+            // même boss, donc tous les joueurs présents conquièrent l'étage ensemble.
             for (ServerPlayer present : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
-                if (tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, present)) {
-                    completeForPlayer(present, floor, objective, bossReward);
-                } else if (StatCapabilities.get(present).getDungeonFloorReached() <= floor) {
-                    net.minecraft.network.chat.Component team =
-                            tong.statmod.integration.ftbteams.FTBTeamsBridge.teamName(player);
-                    present.displayClientMessage(Component.translatable("dungeon.coop.rival_conquered",
-                            team != null ? team : player.getDisplayName(), floor), false);
-                }
+                completeForPlayer(present, floor, objective, bossReward);
             }
         } else {
             // Filet de sécurité (déclencheur hors donjon — commandes/tests) : au moins lui.
@@ -85,12 +78,12 @@ public final class DungeonProgress {
             player.displayClientMessage(Component.translatable(
                     "block.statmod.dungeon_portal.boss_kill", gain, statName, floor + 1), false);
             // Gros gain de points pour le boss vaincu.
-            DungeonPoints.awardBoss(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardBoss(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         } else {
             player.displayClientMessage(Component.translatable(
                     "dungeon.floor.conquered", floor, floor + 1), false);
             // Bonus de points pour la conquête d'un étage (remplace la récompense en cristaux).
-            DungeonPoints.awardFloorClear(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardFloorClear(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         }
 
         SyncHelper.syncStats(player);

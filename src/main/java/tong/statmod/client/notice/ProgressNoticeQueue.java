@@ -10,13 +10,13 @@ public final class ProgressNoticeQueue {
     public static final int MAX_NOTICES = 4;
     public static final int MERGE_WINDOW = 20;
     public static final int XP_DURATION = 50;
-    public static final int LEVEL_DURATION = 80;
+    public static final int LEVEL_DURATION = 60;
     public static final int FADE_TICKS = 15;
 
     private final Deque<ProgressNotice> notices = new ArrayDeque<>();
 
     public void offer(StatProgressNoticeMessage message, long tick) {
-        if (!message.valid()) {
+        if (!message.valid() || message.levelsGained() <= 0) {
             return;
         }
         ProgressNotice newest = notices.peekLast();

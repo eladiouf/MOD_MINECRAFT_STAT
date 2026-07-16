@@ -9,15 +9,24 @@ import tong.statmod.stats.StatType;
 
 class ProgressNoticeQueueTest {
     @Test
+    void ignoresXpOnlyMessages() {
+        ProgressNoticeQueue queue = new ProgressNoticeQueue();
+
+        queue.offer(message(StatType.AGILITY, 5, 2, 0), 10);
+
+        assertTrue(queue.snapshot().isEmpty());
+    }
+
+    @Test
     void mergesOnlyWithinWindowForSameStat() {
         ProgressNoticeQueue queue = new ProgressNoticeQueue();
-        queue.offer(message(StatType.AGILITY, 5, 2, 0), 10);
-        queue.offer(message(StatType.AGILITY, 7, 2, 0), 29);
+        queue.offer(message(StatType.AGILITY, 5, 2, 1), 10);
+        queue.offer(message(StatType.AGILITY, 7, 3, 1), 29);
 
         assertEquals(1, queue.snapshot().size());
         assertEquals(12, queue.snapshot().get(0).awardedXp());
 
-        queue.offer(message(StatType.AGILITY, 3, 2, 0), 50);
+        queue.offer(message(StatType.AGILITY, 3, 4, 1), 50);
         assertEquals(2, queue.snapshot().size());
     }
 
@@ -29,7 +38,7 @@ class ProgressNoticeQueueTest {
                 StatType.PRECISION, StatType.TRACKING
         };
         for (int index = 0; index < stats.length; index++) {
-            queue.offer(message(stats[index], 1, 1, 0), index * 30L);
+            queue.offer(message(stats[index], 1, 1, 1), index * 30L);
         }
 
         assertEquals(4, queue.snapshot().size());
@@ -37,14 +46,8 @@ class ProgressNoticeQueueTest {
     }
 
     @Test
-    void durationsFadeAndClearAreBounded() {
-        ProgressNoticeQueue xp = new ProgressNoticeQueue();
-        xp.offer(message(StatType.AGILITY, 5, 2, 0), 0);
-        tick(xp, ProgressNoticeQueue.XP_DURATION - ProgressNoticeQueue.FADE_TICKS);
-        assertEquals(1.0F, xp.snapshot().get(0).alpha());
-        tick(xp, ProgressNoticeQueue.FADE_TICKS);
-        assertTrue(xp.snapshot().isEmpty());
-
+    void levelDurationFadeAndClearAreBounded() {
+        assertEquals(60, ProgressNoticeQueue.LEVEL_DURATION);
         ProgressNoticeQueue level = new ProgressNoticeQueue();
         level.offer(message(StatType.AGILITY, 5, 3, 1), 0);
         tick(level, ProgressNoticeQueue.LEVEL_DURATION - 1);
@@ -52,7 +55,7 @@ class ProgressNoticeQueueTest {
         level.tick();
         assertTrue(level.snapshot().isEmpty());
 
-        level.offer(message(StatType.COOKING, 2, 1, 0), 100);
+        level.offer(message(StatType.COOKING, 2, 1, 1), 100);
         level.clear();
         assertTrue(level.snapshot().isEmpty());
     }

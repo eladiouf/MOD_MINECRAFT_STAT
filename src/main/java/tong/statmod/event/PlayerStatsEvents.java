@@ -16,7 +16,10 @@ import tong.statmod.capability.PlayerXpStateProvider;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.effects.PlayerAttributeEffects;
+import tong.statmod.integration.sdm.SDMEconomyBridge;
+import tong.statmod.integration.sdmshop.MagicShopCommands;
 import tong.statmod.network.StatNetwork;
+import tong.statmod.network.SpellBindingRequestThrottle;
 import tong.statmod.progression.xp.PlayerXpState;
 import tong.statmod.stats.PlayerStats;
 
@@ -66,6 +69,10 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void login(PlayerEvent.PlayerLoggedInEvent event) {
         sync(event.getEntity());
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            serverPlayer.server.execute(() ->
+                    SDMEconomyBridge.ensureStartingBalance(serverPlayer, 1_000L));
+        }
     }
 
     @SubscribeEvent
@@ -81,11 +88,13 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
         EnchantedBookStudySessions.clear(event.getEntity().getUUID());
+        SpellBindingRequestThrottle.clear(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
     public static void commands(RegisterCommandsEvent event) {
         StatsCommands.register(event.getDispatcher());
+        MagicShopCommands.register(event.getDispatcher());
         tong.statmod.dungeon.DungeonCommands.register(event.getDispatcher());
     }
 

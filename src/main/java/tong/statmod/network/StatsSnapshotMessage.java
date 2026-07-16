@@ -16,8 +16,10 @@ import tong.statmod.stats.StatValue;
 
 public record StatsSnapshotMessage(
         Map<StatType, StatValue> values, List<String> activePerkIds,
-        int dungeonPoints, int dungeonFloorReached) {
-    public static final int MAX_PERKS = 39;
+        int dungeonPoints, int dungeonFloorReached,
+        List<LearnedSpellEntry> learnedSpells) {
+    public static final int MAX_PERKS = 45;
+    public static final int MAX_LEARNED_SPELLS = 512;
 
     public StatsSnapshotMessage {
         values = Collections.unmodifiableMap(new EnumMap<>(values));
@@ -27,14 +29,29 @@ public record StatsSnapshotMessage(
                 .filter(requested::contains)
                 .limit(MAX_PERKS)
                 .toList();
+        java.util.TreeMap<String, Integer> highestLevels = new java.util.TreeMap<>();
+        for (LearnedSpellEntry entry : learnedSpells == null ? List.<LearnedSpellEntry>of() : learnedSpells) {
+            highestLevels.merge(entry.id(), entry.level(), Math::max);
+        }
+        if (highestLevels.size() > MAX_LEARNED_SPELLS) {
+            throw new IllegalArgumentException("too many learned spells");
+        }
+        learnedSpells = highestLevels.entrySet().stream()
+                .map(entry -> new LearnedSpellEntry(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     public StatsSnapshotMessage(Map<StatType, StatValue> values) {
-        this(values, List.of(), 0, 1);
+        this(values, List.of(), 0, 1, List.of());
     }
 
     public StatsSnapshotMessage(Map<StatType, StatValue> values, List<String> activePerkIds) {
-        this(values, activePerkIds, 0, 1);
+        this(values, activePerkIds, 0, 1, List.of());
+    }
+
+    public StatsSnapshotMessage(Map<StatType, StatValue> values, List<String> activePerkIds,
+            int dungeonPoints, int dungeonFloorReached) {
+        this(values, activePerkIds, dungeonPoints, dungeonFloorReached, List.of());
     }
 
     public static StatsSnapshotMessage from(PlayerStats stats) {
@@ -43,7 +60,12 @@ public record StatsSnapshotMessage(
         List<String> perkIds = AutomaticPerkResolver.active(levels).stream()
                 .map(AutomaticPerkDefinition::id)
                 .toList();
-        return new StatsSnapshotMessage(stats.snapshot(), perkIds, stats.getDungeonPoints(), stats.getDungeonFloorReached());
+        List<LearnedSpellEntry> learned = stats.learnedSpells().snapshot().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> new LearnedSpellEntry(entry.getKey(), entry.getValue()))
+                .toList();
+        return new StatsSnapshotMessage(stats.snapshot(), perkIds, stats.getDungeonPoints(),
+                stats.getDungeonFloorReached(), learned);
     }
 
     public static void encode(StatsSnapshotMessage message, FriendlyByteBuf buffer) {
@@ -57,6 +79,11 @@ public record StatsSnapshotMessage(
         message.activePerkIds.forEach(id -> buffer.writeUtf(id, 64));
         buffer.writeVarInt(message.dungeonPoints);
         buffer.writeVarInt(message.dungeonFloorReached);
+        buffer.writeVarInt(message.learnedSpells.size());
+        for (LearnedSpellEntry entry : message.learnedSpells) {
+            buffer.writeUtf(entry.id(), tong.statmod.magic.LearnedSpellState.MAX_ID_LENGTH);
+            buffer.writeVarInt(entry.level());
+        }
     }
 
     public static StatsSnapshotMessage decode(FriendlyByteBuf buffer) {
@@ -84,6 +111,16 @@ public record StatsSnapshotMessage(
         }
         int dungeonPoints = buffer.readVarInt();
         int dungeonFloorReached = buffer.readVarInt();
-        return new StatsSnapshotMessage(values, perkIds, dungeonPoints, dungeonFloorReached);
+        int learnedCount = buffer.readVarInt();
+        if (learnedCount < 0 || learnedCount > MAX_LEARNED_SPELLS) {
+            throw new IllegalArgumentException("invalid learned spell count: " + learnedCount);
+        }
+        java.util.ArrayList<LearnedSpellEntry> learned = new java.util.ArrayList<>(learnedCount);
+        for (int index = 0; index < learnedCount; index++) {
+            learned.add(new LearnedSpellEntry(
+                    buffer.readUtf(tong.statmod.magic.LearnedSpellState.MAX_ID_LENGTH),
+                    buffer.readVarInt()));
+        }
+        return new StatsSnapshotMessage(values, perkIds, dungeonPoints, dungeonFloorReached, learned);
     }
 }

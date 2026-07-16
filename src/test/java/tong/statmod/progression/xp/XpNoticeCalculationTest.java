@@ -27,7 +27,7 @@ class XpNoticeCalculationTest {
     }
 
     @Test
-    void omitsZeroAwardsAndUsesStableStatOrder() {
+    void omitsAwardsThatDoNotGainALevel() {
         PlayerStats stats = new PlayerStats();
         Map<StatType, StatValue> before = stats.snapshot();
         stats.addXp(StatType.COOKING, 4);
@@ -40,7 +40,6 @@ class XpNoticeCalculationTest {
         List<XpProgressNotice> notices = XpNoticeCalculation.from(
                 before, stats.snapshot(), accepted);
 
-        assertEquals(List.of(StatType.AGILITY, StatType.COOKING),
-                notices.stream().map(XpProgressNotice::stat).toList());
+        assertEquals(List.of(), notices);
     }
 }

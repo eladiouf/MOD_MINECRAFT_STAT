@@ -51,6 +51,7 @@ public final class AutomaticPerkBonuses {
                     StatModServerConfig.willpowerKnockbackResistancePerMilestone();
             case INTIMIDATION_ARMOR_TOUGHNESS ->
                     StatModServerConfig.intimidationArmorToughnessPerMilestone();
+            case TRACKING_FOCUS, KEEN_SENSES_AWARENESS -> 0.25;
         };
     }
 }

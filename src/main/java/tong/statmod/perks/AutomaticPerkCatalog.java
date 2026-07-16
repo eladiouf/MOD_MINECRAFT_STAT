@@ -40,6 +40,10 @@ public final class AutomaticPerkCatalog {
                 AutomaticPerkEffect.WILLPOWER_KNOCKBACK_RESISTANCE, 0.1);
         addMilestones(definitions, "intimidation", StatType.INTIMIDATION,
                 AutomaticPerkEffect.INTIMIDATION_ARMOR_TOUGHNESS, 1.0);
+        addMilestones(definitions, "tracking", StatType.TRACKING,
+                AutomaticPerkEffect.TRACKING_FOCUS, 0.25);
+        addMilestones(definitions, "keen_senses", StatType.KEEN_SENSES,
+                AutomaticPerkEffect.KEEN_SENSES_AWARENESS, 0.25);
         DEFINITIONS = List.copyOf(definitions);
 
         LinkedHashMap<String, AutomaticPerkDefinition> byId = new LinkedHashMap<>();

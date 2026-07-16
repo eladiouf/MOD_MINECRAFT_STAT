@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import tong.statmod.config.StatModServerConfig;
+import tong.statmod.perks.AutomaticPerkBonuses;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -20,7 +21,6 @@ class MagicAttributeTargetTest {
                 "irons_spellbooks:cast_time_reduction", StatType.CASTING_SPEED,
                 "irons_spellbooks:cooldown_reduction", StatType.CASTING_SPEED,
                 "irons_spellbooks:max_mana", StatType.MANA_POOL,
-                "irons_spellbooks:mana_regen", StatType.MANA_POOL,
                 "irons_spellbooks:spell_resist", StatType.MAGIC_RESISTANCE);
 
         assertEquals(expected, Arrays.stream(MagicAttributeTarget.values())
@@ -30,7 +30,7 @@ class MagicAttributeTargetTest {
 
     @Test
     void givesEveryTargetAUniqueStableUuid() {
-        assertEquals(6, Arrays.stream(MagicAttributeTarget.values())
+        assertEquals(5, Arrays.stream(MagicAttributeTarget.values())
                 .map(MagicAttributeTarget::modifierId)
                 .distinct()
                 .count());
@@ -38,7 +38,7 @@ class MagicAttributeTargetTest {
 
     @Test
     void modifierUuidsAreUniqueAcrossEveryAttributeBridge() {
-        assertEquals(14, Stream.of(
+        assertEquals(13, Stream.of(
                         Arrays.stream(MagicAttributeTarget.values())
                                 .map(MagicAttributeTarget::modifierId),
                         Arrays.stream(MobilityAttributeTarget.values())
@@ -63,6 +63,20 @@ class MagicAttributeTargetTest {
 
         stats.setLevel(StatType.ARCANE_POWER, 100);
         assertEquals(1.0, MagicAttributeTarget.SPELL_POWER.amount(stats));
+    }
+
+    @Test
+    void derivesMaxManaMultiplierFromTheAbsoluteCappedRule() {
+        CommentedConfig config = CommentedConfig.inMemory();
+        StatModServerConfig.SPEC.correct(config);
+        StatModServerConfig.SPEC.setConfig(config);
+        PlayerStats stats = new PlayerStats();
+        AutomaticPerkBonuses none = AutomaticPerkBonuses.from(stats);
+        assertEquals(0.0D, MagicAttributeTarget.MAX_MANA.amount(stats, none), 1.0e-9);
+
+        stats.setLevel(StatType.MANA_POOL, 100);
+        AutomaticPerkBonuses all = AutomaticPerkBonuses.from(stats);
+        assertEquals(2.0D, MagicAttributeTarget.MAX_MANA.amount(stats, all), 1.0e-9);
     }
 
     @Test

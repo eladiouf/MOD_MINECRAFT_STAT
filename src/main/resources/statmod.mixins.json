@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "tong.statmod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "statmod.refmap.json",
+  "mixins": [
+    "IronInscriptionTableMenuMixin"
+  ],
+  "client": [
+    "IronInscriptionTableScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -6,14 +6,14 @@ prepared, optional, or excluded.
 | Component | Version | Status | Notes |
 |---|---:|---|---|
 | Minecraft | 1.20.1 | verified | Compiles and passes the automated suite. The native stats screen targets this client version. |
-| Forge | 47.4.10 | verified | Compiles and passes the automated suite and required-provider GameTest profile. |
+| Forge | 47.4.4 | minimum and verified | Minimum loader used by NightfallCraft; compiles and passes the automated suite. |
 | Java | 17 | verified | Required build and runtime toolchain. |
 | Iron's Spells 'n Spellbooks | 3.16.2 | required | Mandatory provider for spell power, casting, mana, and magic-resistance attributes; successful spellbook casts now award Arcane Power, Casting Speed, and Mana Pool XP. |
 | Epic Fight | 20.14.17 | required | Mandatory provider for stamina and attack-speed attributes. |
 | Pufferfish's Attributes | 0.8.2 | required | Mandatory provider for specialized movement attributes. |
 | ParCool | 3.4.3.3 | prepared | Optional provider for the existing Endurance stamina targets; minimal runtime is server-smoked. |
 | Curios API | 5.14.1 | dependency | Required by Iron's Spells. |
-| GeckoLib | 4.8.4 | dependency | Required by Iron's Spells and Iron's Lib. |
+| GeckoLib | 4.8.3 | dependency | NightfallCraft version; satisfies Iron's Spells' 4.8.2 minimum. |
 | Iron's Lib | 2.1.0 | dependency | Required by Iron's Spells. |
 | Player Animator | 1.0.2-rc1 | dependency | Required by Iron's Spells. |
 | Patchouli | 85 | dependency | Retained because ParCool's guide recipe and loot reference Patchouli resources. |
@@ -90,9 +90,9 @@ loot errors that occur when ParCool is loaded without its guide provider.
 
 Pressing `P` opens STAT Mod's read-only statistics screen. It displays all five
 families and all 19 server-authoritative values, refreshes from revisioned
-snapshots, and closes with `P`, Escape, or the inventory key. Automatic XP
-awards publish bounded, mergeable notifications; administrative mutations
-synchronize the screen without presenting them as gameplay rewards.
+snapshots, and closes with `P`, Escape, or the inventory key. Only actual level gains publish a compact client notice; ordinary XP awards remain silent.
+Administrative mutations synchronize the screen without presenting them as
+gameplay rewards.
 
 Player-stat schema 2 retires the unused Fire, Water, Earth, and Air affinity
 entries. Schema-1 saves retain every remaining stat; retired affinity compounds
@@ -125,10 +125,11 @@ earlier mutable `SpellDamageEvent`, require a kill, or classify a spell school.
 
 ## Automatic perks
 
-The supported runtime contains 33 automatic perks: the original 21 perks for
-the seven mature attribute-backed stats plus 12 classified combat perks for
-Brute Force, Blade Technique, Precision, and Physical Resistance. Three
-cumulative milestones activate at levels 25, 50, and 75.
+The supported runtime contains 45 automatic perks: the original 21 perks for
+the seven mature attribute-backed stats, 12 classified combat perks, 6
+resilience perks for Willpower and Intimidation, and 6 hunter perception perks
+for Tracking and Keen Senses. Three cumulative
+milestones activate at levels 25, 50, and 75.
 Activation is derived from the current server-authoritative levels, so
 lowering a level below a requirement immediately removes the corresponding
 bonus; no separate unlock state is saved.
@@ -139,7 +140,16 @@ default adds 2 physical-reduction percentage points per milestone before the
 0.95 resistance safety cap, then composes multiplicatively with Physical
 Endurance. At level 100 in both defensive stats with all three resistance perks,
 the final multiplier is `0.1885`, for `81.15%` total reduction.
-Tracking and Keen Senses are deferred from this combat batch.
+Tracking gives each player a personal marked-prey contour after committed
+positive damage to a live hostile. Its duration is `60 + level + 40 ×
+milestones` ticks and its range is `12 + 0.12 × level + 4 × milestones` blocks.
+Keen Senses provides a crouched personal threat scan with range `6 + 0.10 ×
+level + 2 × milestones` blocks. It scans every five client ticks and retains at
+most the 64 nearest live hostile entities. The marked prey is amber, other
+threats are red, and precedence belongs to the marked prey. This perception
+feature creates no damage, dodge, loot, or global glowing state, and emits no
+notification, sound, or particle. It has no dungeon-system integration and
+does not change the existing Tracking or Keen Senses XP sources.
 
 There is no tree, perk points, purchases, respecs, or affinities. The server
 synchronizes known IDs for the active-perk list in the native `P` screen.
@@ -147,5 +157,33 @@ Pufferfish's Attributes remains an attribute provider and never owns perk
 progression. Existing stable transient modifier UUIDs combine continuous stat
 scaling and milestone bonuses without stacking.
 
-The bounded snapshot transport uses protocol 6 and accepts at most the 33
-canonical perk IDs in catalog order.
+The bounded snapshot transport uses protocol 9 and accepts at most the 45
+canonical perk IDs in catalog order plus 512 canonical learned-spell entries.
+One bounded personal client packet carries the current marked entity and
+expiry; Keen Senses derives its scan locally from the authoritative synchronized
+stat and perk snapshot.
+
+## Learned spells and inscription binding
+
+Instead of casting directly, right-clicking any compatible scroll learns its spell
+permanently. The server stores only the highest learned level, consumes a
+scroll on a new lesson or upgrade outside Creative, and leaves equal or lower
+levels untouched. Compatibility is capability-based through Iron's `IScroll`
+and live spell registry, so addon namespaces do not require an allowlist.
+
+Pressing `J` opens Iron's inscription binding menu. Its learned-spell panel
+provides search, dynamic school filters, pagination, spell icons, learned levels,
+and bound-slot markers. A learned spell can be bound to a compatible spellbook
+without placing a scroll in the table. Every selection and inscription is
+revalidated server-side against the live registry, saved learned level,
+spellbook container, target slot, and Iron's inscription event.
+
+## Player baseline balance
+
+STAT Mod establishes 100 base health and 5 base attack damage while preserving
+the player's current health percentage whenever the transient maximum changes.
+Iron's Spells remains the sole resource owner, with 500 base mana. Mana Pool
+reaches exactly 1,500 total mana at level 100, including all three `+3%` milestones.
+Regeneration follows one bounded curve: 1 mana per second at level 0,
+`+0.145/s` per level, and `+0.5/s` per milestone, reaching exactly 17 mana per second at level 100.
+Refreshing attributes never directly fills health or mana.

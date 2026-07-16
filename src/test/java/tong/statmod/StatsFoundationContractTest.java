@@ -26,8 +26,13 @@ class StatsFoundationContractTest {
         try (var paths = Files.walk(Path.of("src/main/java"))) {
             String sources = paths
                     .filter(path -> path.toString().endsWith(".java"))
-                    .filter(path -> !path.toString().replace('\\', '/')
-                            .contains("/integration/ironspells/"))
+                    .filter(path -> {
+                        String normalized = path.toString().replace('\\', '/');
+                        return !normalized.contains("/integration/ironspells/")
+                                && !normalized.contains("/integration/sdmshop/")
+                                && !normalized.contains("/mixin/")
+                                && !normalized.contains("/client/inscription/");
+                    })
                     .map(path -> {
                         try {
                             return Files.readString(path);

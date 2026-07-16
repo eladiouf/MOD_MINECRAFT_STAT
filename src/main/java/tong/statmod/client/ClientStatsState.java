@@ -9,7 +9,7 @@ import tong.statmod.stats.StatValue;
 
 public record ClientStatsState(
         long revision, Map<StatType, StatValue> values, List<String> activePerkIds,
-        int dungeonPoints, int dungeonFloorReached) {
+        int dungeonPoints, int dungeonFloorReached, Map<String, Integer> learnedSpells) {
     public ClientStatsState {
         EnumMap<StatType, StatValue> copy = new EnumMap<>(StatType.class);
         Map<StatType, StatValue> source = values == null ? Map.of() : values;
@@ -18,13 +18,20 @@ public record ClientStatsState(
         }
         values = Collections.unmodifiableMap(copy);
         activePerkIds = List.copyOf(activePerkIds == null ? List.of() : activePerkIds);
+        learnedSpells = Collections.unmodifiableMap(new java.util.LinkedHashMap<>(
+                learnedSpells == null ? Map.of() : learnedSpells));
     }
 
     public ClientStatsState(long revision, Map<StatType, StatValue> values) {
-        this(revision, values, List.of(), 0, 1);
+        this(revision, values, List.of(), 0, 1, Map.of());
     }
 
     public ClientStatsState(long revision, Map<StatType, StatValue> values, List<String> activePerkIds) {
-        this(revision, values, activePerkIds, 0, 1);
+        this(revision, values, activePerkIds, 0, 1, Map.of());
+    }
+
+    public ClientStatsState(long revision, Map<StatType, StatValue> values,
+            List<String> activePerkIds, int dungeonPoints, int dungeonFloorReached) {
+        this(revision, values, activePerkIds, dungeonPoints, dungeonFloorReached, Map.of());
     }
 }

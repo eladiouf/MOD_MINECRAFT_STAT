@@ -17,6 +17,7 @@ import tong.statmod.StatModRuntime;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.ClientBookStudyEffects;
+import tong.statmod.client.hunter.ClientHunterPerception;
 import tong.statmod.client.notice.ClientProgressNotices;
 import tong.statmod.event.EnchantedBookStudySessions;
 import tong.statmod.stats.StatType;
@@ -46,7 +47,10 @@ public final class StatNetwork {
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                             () -> () -> ClientStatsCache.replace(
                                     message.values(), message.activePerkIds(),
-                                    message.dungeonPoints(), message.dungeonFloorReached())));
+                                    message.dungeonPoints(), message.dungeonFloorReached(),
+                                    message.learnedSpells().stream().collect(java.util.stream.Collectors.toMap(
+                                            LearnedSpellEntry::id, LearnedSpellEntry::level, Math::max,
+                                            java.util.LinkedHashMap::new)))));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -94,6 +98,21 @@ public final class StatNetwork {
                 OpenExchangeMessage::decode,
                 OpenExchangeMessage::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(6, TrackedPreyMessage.class,
+                TrackedPreyMessage::encode,
+                TrackedPreyMessage::decode,
+                (message, contextSupplier) -> {
+                    var context = contextSupplier.get();
+                    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                            () -> () -> ClientHunterPerception.accept(message)));
+                    context.setPacketHandled(true);
+                },
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(7, OpenSpellBindingMessage.class,
+                OpenSpellBindingMessage::encode,
+                OpenSpellBindingMessage::decode,
+                OpenSpellBindingMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     public static void sendSnapshot(ServerPlayer player) {
@@ -117,6 +136,17 @@ public final class StatNetwork {
                 new BookStudyCompletionMessage(book));
     }
 
+    public static void sendTrackedPrey(
+            ServerPlayer player, int entityId, int durationTicks) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new TrackedPreyMessage(entityId, durationTicks));
+    }
+
+    public static void sendTrackedPreyClear(ServerPlayer player) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                TrackedPreyMessage.clear());
+    }
+
     public static void sendConvertPoints(int amount) {
         CHANNEL.sendToServer(new ConvertPointsMessage(amount));
     }
@@ -124,5 +154,9 @@ public final class StatNetwork {
     public static void sendOpenExchange(ServerPlayer player, int points, long coins, float rate) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 new OpenExchangeMessage(points, coins, rate));
+    }
+
+    public static void sendOpenSpellBinding() {
+        CHANNEL.sendToServer(new OpenSpellBindingMessage());
     }
 }

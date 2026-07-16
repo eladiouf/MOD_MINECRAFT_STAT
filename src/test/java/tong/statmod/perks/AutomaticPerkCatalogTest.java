@@ -10,11 +10,11 @@ import tong.statmod.stats.StatType;
 
 class AutomaticPerkCatalogTest {
     @Test
-    void exposesThirtyThreeStableUniquePerksInPresentationOrder() {
+    void exposesFortyFiveStableUniquePerksInPresentationOrder() {
         List<AutomaticPerkDefinition> definitions = AutomaticPerkCatalog.definitions();
 
-        assertEquals(39, definitions.size());
-        assertEquals(39, definitions.stream().map(AutomaticPerkDefinition::id)
+        assertEquals(45, definitions.size());
+        assertEquals(45, definitions.stream().map(AutomaticPerkDefinition::id)
                 .distinct().count());
         assertEquals("statmod:rapidite_25", definitions.get(0).id());
         assertEquals("statmod:magic_resistance_75", definitions.get(20).id());
@@ -22,6 +22,10 @@ class AutomaticPerkCatalogTest {
         assertEquals("statmod:physical_resistance_75", definitions.get(32).id());
         assertEquals("statmod:willpower_25", definitions.get(33).id());
         assertEquals("statmod:intimidation_75", definitions.get(38).id());
+        assertEquals("statmod:tracking_25", definitions.get(39).id());
+        assertEquals("statmod:tracking_75", definitions.get(41).id());
+        assertEquals("statmod:keen_senses_25", definitions.get(42).id());
+        assertEquals("statmod:keen_senses_75", definitions.get(44).id());
         assertEquals(definitions.stream().map(AutomaticPerkDefinition::order).sorted().toList(),
                 definitions.stream().map(AutomaticPerkDefinition::order).toList());
     }

@@ -73,6 +73,11 @@ $providers = @(
         Source = 'player-animation-lib-forge-1.0.2-rc1+1.20.jar'
         Target = 'playeranimator-1.0.2-rc1.jar'
         LogId = 'playeranimator'
+    },
+    @{
+        Source = 'lootr-forge-1.20-0.7.35.94.jar'
+        Target = 'lootr-0.7.35.94.jar'
+        LogId = 'lootr'
     }
 )
 $createdFiles = [Collections.Generic.List[string]]::new()
@@ -113,6 +118,7 @@ gradle.beforeProject { project ->
         project.dependencies.add('runtimeOnly', fg.deobf('local:curios:5.14.1'))
         project.dependencies.add('runtimeOnly', fg.deobf('local:geckolib:4.8.4'))
         project.dependencies.add('runtimeOnly', fg.deobf('local:playeranimator:1.0.2-rc1'))
+        project.dependencies.add('runtimeOnly', fg.deobf('local:lootr:0.7.35.94'))
         project.minecraft.runs.configureEach {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile',

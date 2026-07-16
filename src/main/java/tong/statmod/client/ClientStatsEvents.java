@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
+import tong.statmod.client.hunter.ClientHunterPerception;
 import tong.statmod.client.notice.ClientProgressNotices;
 
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID, value = Dist.CLIENT)
@@ -15,6 +16,7 @@ public final class ClientStatsEvents {
     @SubscribeEvent
     public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientStatsCache.clear();
+        ClientHunterPerception.clear();
         ClientProgressNotices.clear();
     }
 }

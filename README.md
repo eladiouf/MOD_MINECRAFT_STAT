@@ -1,7 +1,7 @@
 # STAT Mod — Forge 1.20.1
 
 Fondation propre de **STAT Mod** pour Minecraft **1.20.1**, Forge
-**47.4.10** et Java **17**.
+**47.4.4 ou plus récent** et Java **17**.
 
 ## État actuel
 
@@ -41,11 +41,11 @@ dans cinq familles, avec leur niveau, leur XP et leur progression vers le niveau
 suivant. Les cinq statistiques magiques sont actives et reliées aux actions
 d'Iron's Spells ou à l'étude de livres enchantés.
 
-Les gains automatiques affichent une notification discrète en haut à droite.
-Les gains rapprochés de la même statistique sont regroupés et un passage de
-niveau reste affiché plus longtemps. Les commandes administratives continuent
-de synchroniser l'écran, mais ne produisent pas de fausse notification de gain
-de gameplay.
+Les gains d'XP ordinaires n'affichent aucune notification. Seuls les passages
+de niveau produisent une carte compacte et atténuée en haut à droite ; les
+passages rapprochés de la même statistique sont regroupés. Les commandes
+administratives continuent de synchroniser l'écran sans notification de
+gameplay.
 
 ## XP automatique et addons Epic Fight
 
@@ -90,22 +90,53 @@ Arcane Power, Casting Speed, Mana Pool et Magic Resistance renforcent les six
 attributs correspondants d'Iron's Spells. STAT Mod ne crée aucune seconde
 réserve de mana et ne remplit jamais le mana lors d'un rafraîchissement.
 
+La base joueur est équilibrée à 100 PV et 5 dégâts à mains nues. Le pourcentage
+de vie courant est conservé quand le maximum change. Iron's Spells possède
+toujours l'unique réserve : 500 mana au niveau 0, jusqu'à exactement 1 500 mana
+au niveau 100, trois jalons `+3 %` inclus. La régénération passe de 1 mana/s à un
+plafond strict de 17 mana/s au niveau 100 (`+0,145/s` par niveau et `+0,5/s`
+par jalon).
+
 ## Perks automatiques
 
-STAT Mod fournit 33 perks passifs automatiques : les 21 perks d'attributs
-existants, plus 12 perks de combat classifié pour Brute Force, Blade Technique,
-Precision et Physical Resistance. Trois perks cumulatifs s'activent aux niveaux
-25, 50 et 75 de la statistique correspondante. Ils se désactivent
-automatiquement si le niveau repasse sous leur prérequis. Tracking et Keen
-Senses restent reportés à un lot ultérieur.
+STAT Mod fournit 45 perks passifs automatiques : les 21 perks d'attributs
+existants, 12 perks de combat classifié, 6 perks de résilience pour Willpower
+et Intimidation, et 6 perks de perception pour Tracking et Keen Senses. Trois
+perks cumulatifs s'activent aux niveaux 25, 50 et 75 de
+la statistique correspondante et se désactivent si le niveau redescend.
+
+Un coup qui inflige réellement des dégâts à un ennemi marque cette proie pour
+le joueur : Tracking affiche un contour personnel ambre, pendant `60 + niveau
++ 40 × jalons` ticks et jusqu'à `12 + 0,12 × niveau + 4 × jalons` blocs. En
+restant accroupi, Keen Senses effectue toutes les 5 ticks un scan personnel des
+64 ennemis les plus proches dans `6 + 0,10 × niveau + 2 × jalons` blocs et les
+contourne en rouge. Ces effets n'ajoutent ni dégâts, ni esquive, ni butin, ni
+glow global, notification, son ou particule. Ils ne modifient aucune logique de
+donjon.
 
 Il n'existe aucun arbre, point de perk, achat, respec ou affinité. Le serveur
 déduit les perks actifs directement des niveaux et les affiche dans une liste
 non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
 fournisseur d'attributs compatibles.
 
-Le protocole réseau interne est la version `6` et borne la liste synchronisée à
-33 identifiants canoniques.
+Le protocole réseau interne est la version `9`. Il borne les 45 identifiants de
+perks et les 512 sorts appris synchronisés. Un seul paquet personnel synchronise
+la dernière proie marquée ; le scan Keen Senses reste entièrement client.
+
+## Apprentissage et liaison des sorts
+
+Les parchemins compatibles avec l'API `IScroll` d'Iron's Spells et de ses
+addons ne lancent plus directement leur sort. Un clic droit apprend le sort de
+façon permanente, ou augmente son niveau appris si le parchemin est meilleur.
+Une réussite consomme un parchemin hors Créatif ; un niveau identique ou plus
+faible n'est pas consommé.
+
+La touche `J` ouvre le menu d'inscription d'Iron's Spells avec, à gauche, le
+catalogue des sorts appris. La recherche, les filtres d'écoles découverts
+dynamiquement et la pagination restent compatibles avec les addons. Le joueur
+peut lier un sort appris dans un grimoire compatible sans placer de parchemin
+dans la table. Le serveur revalide toujours le sort, son niveau appris, le
+grimoire et l'emplacement ciblé avant toute inscription.
 
 ## Compiler
 

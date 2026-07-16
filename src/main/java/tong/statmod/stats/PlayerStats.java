@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import tong.statmod.StatModRuntime;
+import tong.statmod.magic.LearnedSpellState;
 
 public final class PlayerStats {
     private static final String SCHEMA_KEY = "schema";
@@ -14,6 +15,7 @@ public final class PlayerStats {
     private static final String XP_KEY = "xp";
 
     private final EnumMap<StatType, StatProgress> values = new EnumMap<>(StatType.class);
+    private final LearnedSpellState learnedSpells = new LearnedSpellState();
 
     private int dungeonFloorReached = 1;
     private String lastOverworldDimensionId = "";
@@ -22,6 +24,7 @@ public final class PlayerStats {
     private int dungeonPoints = 0;
     private int dungeonBestCombo = 0;
     private int dungeonBestClearTicks = 0;
+    private boolean shopStartingBalanceReceived;
     private final java.util.Map<Integer, Long> bossCooldowns = new java.util.HashMap<>();
 
     public PlayerStats() {
@@ -59,8 +62,10 @@ public final class PlayerStats {
         this.dungeonPoints = source.dungeonPoints;
         this.dungeonBestCombo = source.dungeonBestCombo;
         this.dungeonBestClearTicks = source.dungeonBestClearTicks;
+        this.shopStartingBalanceReceived = source.shopStartingBalanceReceived;
         this.bossCooldowns.clear();
         this.bossCooldowns.putAll(source.bossCooldowns);
+        this.learnedSpells.copyFrom(source.learnedSpells);
     }
 
     public CompoundTag serializeNbt() {
@@ -82,10 +87,12 @@ public final class PlayerStats {
         root.putInt("dungeonPoints", dungeonPoints);
         root.putInt("dungeonBestCombo", dungeonBestCombo);
         root.putInt("dungeonBestClearTicks", dungeonBestClearTicks);
+        root.putBoolean("shopStartingBalanceReceived", shopStartingBalanceReceived);
 
         CompoundTag cooldownsTag = new CompoundTag();
         bossCooldowns.forEach((floor, cooldown) -> cooldownsTag.putLong(String.valueOf(floor), cooldown));
         root.put("bossCooldowns", cooldownsTag);
+        root.put(LearnedSpellState.NBT_KEY, learnedSpells.save());
 
         return root;
     }
@@ -127,6 +134,7 @@ public final class PlayerStats {
         if (root.contains("dungeonBestClearTicks")) {
             dungeonBestClearTicks = root.getInt("dungeonBestClearTicks");
         }
+        shopStartingBalanceReceived = root.getBoolean("shopStartingBalanceReceived");
 
         bossCooldowns.clear();
         if (root.contains("bossCooldowns", Tag.TAG_COMPOUND)) {
@@ -139,6 +147,7 @@ public final class PlayerStats {
                 } catch (NumberFormatException ignored) {}
             }
         }
+        learnedSpells.load(root);
     }
 
     void load(StatType type, int level, int xp) {
@@ -215,5 +224,17 @@ public final class PlayerStats {
 
     public void setDungeonBestClearTicks(int clearTicks) {
         this.dungeonBestClearTicks = clearTicks;
+    }
+
+    public LearnedSpellState learnedSpells() {
+        return learnedSpells;
+    }
+
+    public boolean hasReceivedShopStartingBalance() {
+        return shopStartingBalanceReceived;
+    }
+
+    public void markShopStartingBalanceReceived() {
+        shopStartingBalanceReceived = true;
     }
 }

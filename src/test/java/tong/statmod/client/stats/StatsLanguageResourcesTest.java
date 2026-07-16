@@ -21,7 +21,12 @@ class StatsLanguageResourcesTest {
             "screen.statmod.status.active",
             "screen.statmod.status.foundation",
             "notice.statmod.xp",
-            "notice.statmod.level_up");
+            "notice.statmod.level_up",
+            "statmod.scroll.learned",
+            "statmod.scroll.upgraded",
+            "statmod.scroll.already_known",
+            "statmod.scroll.library_full",
+            "statmod.scroll.invalid");
 
     @Test
     void bothLanguagesContainEveryRequiredStatsKey() throws Exception {

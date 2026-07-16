@@ -26,11 +26,15 @@ public final class XpNoticeCalculation {
                     || beforeValue.equals(afterValue)) {
                 continue;
             }
+            int levelsGained = Math.max(0, afterValue.level() - beforeValue.level());
+            if (levelsGained == 0) {
+                continue;
+            }
             notices.add(new XpProgressNotice(
                     stat,
                     awardedXp,
                     afterValue.level(),
-                    Math.max(0, afterValue.level() - beforeValue.level())));
+                    levelsGained));
         }
         return List.copyOf(notices);
     }

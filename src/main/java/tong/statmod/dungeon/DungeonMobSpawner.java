@@ -80,25 +80,22 @@ public final class DungeonMobSpawner {
      */
     public static void requestWave(ServerLevel lv, int floor) {
         if (!isCombatFloor(floor)) return; // boss (×10) / trésor (×5) : pas de vague
-        DungeonRoomEncounterDirector.beginFloor(lv, floor);
-    }
-
-    /** Demande uniquement la rencontre de la salle actuellement traversée. */
-    public static boolean requestRoomWave(ServerLevel lv, int floor, int roomIndex) {
-        if (!isCombatFloor(floor)) return false;
-        if (PENDING_FLOORS.contains(floor)) return false;
-        if (countAlive(lv, floor) > 0) return false;
+        if (PENDING_FLOORS.contains(floor)) return;
+        if (countAlive(lv, floor) > 0) return;
 
         int players = Math.max(1, DungeonTeleportHandler.playersOnFloor(lv, floor).size());
-        int roomWave = Math.min(12, 4 + floor / 20 + Math.max(0, players - 1) * 2);
-        int queued = enqueueWave(lv, floor, roomWave, roomIndex);
-        if (queued <= 0) {
-            PENDING_FLOORS.remove(floor);
-            return false;
+        int want = waveSizeForFloor(floor, players);
+        int queued = enqueueWave(lv, floor, want, -1);
+        if (queued > 0) {
+            PENDING_FLOORS.add(floor);
+            StatMod.LOGGER.info("[TrialDungeon] Vague complète étage {} : {} mobs en file ({} joueur(s))",
+                    floor, queued, players);
         }
-        StatMod.LOGGER.info("[TrialDungeon] Rencontre étage {}, salle {} : {} mobs en file ({} joueur(s))",
-                floor, roomIndex, queued, players);
-        return true;
+    }
+
+    /** Demande uniquement la rencontre de la salle actuellement traversée. Dépréciée. */
+    public static boolean requestRoomWave(ServerLevel lv, int floor, int roomIndex) {
+        return false;
     }
 
     /**
@@ -176,15 +173,13 @@ public final class DungeonMobSpawner {
         if (pool.isEmpty()) return 0;
 
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        PENDING_FLOORS.add(floor);
-        // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
-
+        
         // Get combat rooms specifically to map locations to room archetypes
         List<DungeonLayout.Room> combatRooms = new ArrayList<>();
         for (DungeonLayout.Room r : DungeonLayout.rooms()) {
             if (r.isFirst()) continue; // pas de mobs dans la pièce d'apparition
             if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue; // havre de paix
-            if (r.index() != roomIndex) continue;
+            if (roomIndex != -1 && r.index() != roomIndex) continue;
             combatRooms.add(r);
         }
         if (combatRooms.isEmpty()) {

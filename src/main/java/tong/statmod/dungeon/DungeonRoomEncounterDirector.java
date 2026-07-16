@@ -42,25 +42,7 @@ public final class DungeonRoomEncounterDirector {
 
     @SubscribeEvent
     public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
-        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
-        if (++tick % 5 != 0) return;
-        ServerLevel level = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
-        if (level == null) return;
-
-        for (ServerPlayer player : level.players()) {
-            int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
-            if (!isCombatFloor(floor)) continue;
-            RoomEncounterProgress state = STATES.computeIfAbsent(floor,
-                    ignored -> new RoomEncounterProgress(requiredRoomIndices()));
-            if (state.hasActiveRoom()) continue;
-            int room = roomAt(floor, player.blockPosition());
-            if (!requiredRoomIndices().contains(room) || state.isCleared(room)) continue;
-            if (DungeonMobSpawner.requestRoomWave(level, floor, room)) {
-                state.activate(room);
-                player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                        "§6Rencontre " + room + " activée"), true);
-            }
-        }
+        // No-op: all mobs spawn at once when entering the floor
     }
 
     static int roomAt(int floor, BlockPos worldPos) {

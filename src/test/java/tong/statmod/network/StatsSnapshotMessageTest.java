@@ -35,7 +35,7 @@ class StatsSnapshotMessageTest {
         StatsSnapshotMessage.encode(original, buffer);
         StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
 
-        assertEquals(33, StatsSnapshotMessage.MAX_PERKS);
+        assertEquals(39, StatsSnapshotMessage.MAX_PERKS);
         assertEquals(java.util.List.of(
                 "statmod:rapidite_25", "statmod:rapidite_50"),
                 decoded.activePerkIds());
@@ -49,7 +49,8 @@ class StatsSnapshotMessageTest {
                 StatType.CASTING_SPEED, StatType.MANA_POOL,
                 StatType.MAGIC_RESISTANCE, StatType.BRUTE_FORCE,
                 StatType.BLADE_TECHNIQUE, StatType.PRECISION,
-                StatType.PHYSICAL_RESISTANCE}) {
+                StatType.PHYSICAL_RESISTANCE, StatType.TRACKING,
+                StatType.KEEN_SENSES}) {
             stats.setLevel(type, 75);
         }
         StatsSnapshotMessage original = StatsSnapshotMessage.from(stats);
@@ -58,10 +59,10 @@ class StatsSnapshotMessageTest {
         StatsSnapshotMessage.encode(original, buffer);
         StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
 
-        assertEquals(33, decoded.activePerkIds().size());
+        assertEquals(39, decoded.activePerkIds().size());
         assertEquals("statmod:rapidite_25", decoded.activePerkIds().get(0));
-        assertEquals("statmod:physical_resistance_75",
-                decoded.activePerkIds().get(32));
+        assertEquals("statmod:keen_senses_75",
+                decoded.activePerkIds().get(38));
     }
 
     @Test

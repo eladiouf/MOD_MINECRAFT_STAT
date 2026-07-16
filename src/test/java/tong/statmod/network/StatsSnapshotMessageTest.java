@@ -15,6 +15,8 @@ class StatsSnapshotMessageTest {
         PlayerStats stats = new PlayerStats();
         stats.setLevel(StatType.MAGIC_RESISTANCE, 17);
         stats.addXp(StatType.MAGIC_RESISTANCE, 30);
+        stats.learnedSpells().learn("irons_spellbooks:fireball", 4);
+        stats.learnedSpells().learn("addon:wind_blade", 2);
         StatsSnapshotMessage original = StatsSnapshotMessage.from(stats);
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
 
@@ -23,6 +25,10 @@ class StatsSnapshotMessageTest {
 
         assertEquals(original.values(), decoded.values());
         assertEquals(original.activePerkIds(), decoded.activePerkIds());
+        assertEquals(java.util.List.of(
+                new LearnedSpellEntry("addon:wind_blade", 2),
+                new LearnedSpellEntry("irons_spellbooks:fireball", 4)),
+                decoded.learnedSpells());
     }
 
     @Test
@@ -73,6 +79,19 @@ class StatsSnapshotMessageTest {
         buffer.writeVarInt(StatsSnapshotMessage.MAX_PERKS + 1);
         buffer.writeVarInt(0);
         buffer.writeVarInt(1);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> StatsSnapshotMessage.decode(buffer));
+    }
+
+    @Test
+    void rejectsOversizedLearnedSpellPayloadBeforeAllocation() {
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        buffer.writeVarInt(0);
+        buffer.writeVarInt(0);
+        buffer.writeVarInt(0);
+        buffer.writeVarInt(1);
+        buffer.writeVarInt(513);
 
         assertThrows(IllegalArgumentException.class,
                 () -> StatsSnapshotMessage.decode(buffer));

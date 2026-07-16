@@ -47,7 +47,10 @@ public final class StatNetwork {
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                             () -> () -> ClientStatsCache.replace(
                                     message.values(), message.activePerkIds(),
-                                    message.dungeonPoints(), message.dungeonFloorReached())));
+                                    message.dungeonPoints(), message.dungeonFloorReached(),
+                                    message.learnedSpells().stream().collect(java.util.stream.Collectors.toMap(
+                                            LearnedSpellEntry::id, LearnedSpellEntry::level, Math::max,
+                                            java.util.LinkedHashMap::new)))));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));

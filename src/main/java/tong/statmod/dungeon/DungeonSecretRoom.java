@@ -44,13 +44,19 @@ public final class DungeonSecretRoom {
         return Math.floorDiv(floor - 1, 10) % 10;
     }
 
-    /** ID du spawner Qliphoth pour l'arc donné. */
+    /** ID du boss Qliphoth pour l'arc donné (mods disponibles en 1.20.1). */
     private static String qliphothSpawnerId(int arc) {
         return switch (arc) {
-            case 0, 3 -> "fdbosses:geburah_boss_spawner";
-            case 1, 6 -> "fdbosses:netzach_boss_spawner";
-            case 2, 5, 7 -> "fdbosses:malkuth_boss_spawner";
-            default  -> "fdbosses:chesed_boss_spawner";
+            case 0 -> "bosses_of_mass_destruction:lich";
+            case 1 -> "block_factorys_bosses:infernal_dragon";
+            case 2 -> "bosses_of_mass_destruction:obsidilith";
+            case 3 -> "epic_mobs:the_knight";
+            case 4 -> "darkdoppelganger:dark_doppelganger";
+            case 5 -> "bosses_of_mass_destruction:gauntlet";
+            case 6 -> "epic_mobs:phoenix_fight";
+            case 7 -> "block_factorys_bosses:underworld_knight";
+            case 8 -> "bosses_of_mass_destruction:void_blossom";
+            default -> "epic_mobs:micky";
         };
     }
 

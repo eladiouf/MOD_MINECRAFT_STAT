@@ -333,23 +333,23 @@ public final class DungeonMobSpawner {
                 fallback = EntityType.WITCH;
             }
             case 1 -> { // Great Forge (Fire/Industrial)
-                candidates = List.of("born_in_chaos_v1:firelight", "born_in_chaos_v1:withered_corpse", "minecraft:blaze");
+                candidates = List.of("irons_spellbooks:pyromancer", "minecraft:blaze", "minecraft:magma_cube");
                 fallback = EntityType.HUSK;
             }
             case 2 -> { // Crypt (Undead/Skeletons)
-                candidates = List.of("born_in_chaos_v1:bonescaller", "born_in_chaos_v1:decaying_zombie", "minecraft:wither_skeleton");
+                candidates = List.of("irons_spellbooks:necromancer", "slu:hollow_soldier_spear", "minecraft:wither_skeleton");
                 fallback = EntityType.SKELETON;
             }
             case 3 -> { // Prison (Stray/Stalker)
-                candidates = List.of("born_in_chaos_v1:nightmare_stalker", "born_in_chaos_v1:dark_vortex", "minecraft:stray");
+                candidates = List.of("deeperdarker:stalker", "epic_mobs:lost_wanderer", "minecraft:stray");
                 fallback = EntityType.ZOMBIE_VILLAGER;
             }
             case 4 -> { // Greenhouse (Spiders/Beasts)
-                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:centipede_head", "minecraft:cave_spider");
+                candidates = List.of("deeperdarker:sculk_leech", "minecraft:cave_spider", "minecraft:spider");
                 fallback = EntityType.SPIDER;
             }
             default -> { // Treasury (Guards)
-                candidates = List.of("born_in_chaos_v1:lord_of_depths", "minecraft:piglin_brute", "minecraft:vindicator");
+                candidates = List.of("epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
                 fallback = EntityType.PILLAGER;
             }
         }

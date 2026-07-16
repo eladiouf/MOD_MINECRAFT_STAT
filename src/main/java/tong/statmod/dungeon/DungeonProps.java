@@ -29,7 +29,7 @@ public final class DungeonProps {
 
     /** Statues moddées candidates (première présente utilisée) → fallback crâne vanilla sur socle. */
     private static final List<String> STATUES = List.of(
-            "cataclysm:goddess_statue", "irons_spellbooks:tyros_statue", "irons_lib:player_statue",
+            "irons_spellbooks:tyros_statue", "irons_lib:player_statue",
             "quark:myalite_crystal");
     /** Braseros / bougies moddés → fallback lanterne. */
     private static final List<String> BRAZIERS = List.of(
@@ -37,7 +37,7 @@ public final class DungeonProps {
             "block_factorys_bosses:tall_candles", "quark:paper_lantern", "quark:stone_lamp");
     /** Tas d'os/crânes moddés → fallback bloc d'os vanilla. */
     private static final List<String> SKULL_PILES = List.of(
-            "born_in_chaos_v1:pile_of_skulls");
+            "minecraft:skeleton_skull");
 
     /** Loot table vanilla légère pour les coffres épars (moins riche que le trésor de fin d'étage). */
     private static final ResourceLocation MINOR_LOOT = new ResourceLocation("chests/simple_dungeon");

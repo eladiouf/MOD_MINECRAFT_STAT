@@ -152,18 +152,15 @@ public final class DungeonSpawnGuard {
             // Autoriser les mods de notre liste blanche (modId réels, cf. ModdedMobPool)
             // Note : SLU est exclu ici car ses spawns sauvages envahissent l'arène de boss.
             // Il reste spawnable via spawnAuthorized() dans les vagues normales.
+            // Forge 1.20.1 — mods RÉELLEMENT présents dans le dossier client.
             return "irons_spellbooks".equals(namespace) ||
-                   "tensura".equals(namespace) ||
                    "block_factorys_bosses".equals(namespace) ||
-                   "xbbsroaringknightmod".equals(namespace) ||
-                   "cataclysm".equals(namespace) ||
-                   "born_in_chaos_v1".equals(namespace) ||
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
-                   "alexsmobs".equals(namespace) ||
-                    "bosses_of_mass_destruction".equals(namespace) ||
-                    "fdbosses".equals(namespace) ||
-                    "iceandfire".equals(namespace);
+                   "bosses_of_mass_destruction".equals(namespace) ||
+                   "epic_mobs".equals(namespace) ||
+                   "deeperdarker".equals(namespace) ||
+                   "darkdoppelganger".equals(namespace);
 
         } catch (Exception e) {
             return false;

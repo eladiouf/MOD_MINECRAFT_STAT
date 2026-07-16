@@ -28,9 +28,10 @@ public final class DungeonRoomEncounterDirector {
     }
 
     public static boolean onActiveRoomCleared(int floor) {
-        RoomEncounterProgress state = STATES.computeIfAbsent(floor,
-                ignored -> new RoomEncounterProgress(requiredRoomIndices()));
-        return state.clearActiveRoom();
+        // All mobs spawn at once on the floor (no room-by-room progression).
+        // When the last authorized mob dies, the floor is complete.
+        STATES.remove(floor);
+        return true;
     }
 
     public static void resetActiveRoom(int floor) {

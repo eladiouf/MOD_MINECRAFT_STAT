@@ -68,17 +68,6 @@ public final class DungeonBossHandler {
             DungeonPoints.awardMobKill(sp, target, floor);
         }
 
-        // Boss Qliphoth (secret rooms / ultra-vaults) : combat optionnel → points sans conquête
-        var targetKey = target.getType().builtInRegistryHolder().key();
-        if (targetKey != null && "fdbosses".equals(targetKey.location().getNamespace())) {
-            // Points bonus si le tag n'a pas matché (boss spawné par spawner Qliphoth, pas notre tag)
-            if (!target.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)) {
-                DungeonPoints.awardMobKill(sp, target, floor);
-            }
-            sp.displayClientMessage(Component.translatable("dungeon.qliphoth.defeated"), true);
-            return; // ne pas compléter l'étage
-        }
-
         DungeonObjective objective = DungeonObjective.forFloor(floor);
         switch (objective) {
             case SLAY_BOSS -> handleBossFloor(sp, floor, target);

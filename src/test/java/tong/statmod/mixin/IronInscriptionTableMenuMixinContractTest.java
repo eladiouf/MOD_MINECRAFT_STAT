@@ -13,7 +13,8 @@ class IronInscriptionTableMenuMixinContractTest {
         String source = Files.readString(Path.of(
                 "src/main/java/tong/statmod/mixin/IronInscriptionTableMenuMixin.java"));
 
-        assertTrue(source.contains("method = \"clickMenuButton\""));
+        assertTrue(source.contains(
+                "method = {\"clickMenuButton\", \"m_6366_\"}"));
         assertTrue(source.contains("LearnedSpellBindingPolicy.optionFromButton(buttonId)"));
         assertTrue(source.contains("StatCapabilities.get(player)"));
         assertTrue(source.contains("IronLearnedSpellBindingService.bind"));

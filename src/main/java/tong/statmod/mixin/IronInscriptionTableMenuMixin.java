@@ -26,7 +26,8 @@ public abstract class IronInscriptionTableMenuMixin {
     @Unique
     private String statmod$selectedLearnedSpellId;
 
-    @Inject(method = "clickMenuButton", at = @At("HEAD"), cancellable = true)
+    @Inject(method = {"clickMenuButton", "m_6366_"},
+            at = @At("HEAD"), cancellable = true)
     private void statmod$handleLearnedSpellButton(
             Player player, int buttonId, CallbackInfoReturnable<Boolean> cir) {
         int option = LearnedSpellBindingPolicy.optionFromButton(buttonId);

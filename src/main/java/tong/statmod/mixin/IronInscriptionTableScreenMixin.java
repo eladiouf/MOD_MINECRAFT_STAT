@@ -70,7 +70,7 @@ public abstract class IronInscriptionTableScreenMixin
         super(menu, inventory, title);
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
+    @Inject(method = {"init", "m_7856_"}, at = @At("TAIL"))
     private void statmod$addKnownSpellPanel(CallbackInfo ci) {
         statmod$knownButtons.clear();
         for (int index = 0; index < IronKnownSpellIndex.PAGE_SIZE; index++) {
@@ -98,7 +98,7 @@ public abstract class IronInscriptionTableScreenMixin
         statmod$forceRefresh();
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = {"render", "m_88315_"}, at = @At("TAIL"))
     private void statmod$refreshDuringRender(
             net.minecraft.client.gui.GuiGraphics graphics,
             int mouseX, int mouseY, float partialTick, CallbackInfo ci) {

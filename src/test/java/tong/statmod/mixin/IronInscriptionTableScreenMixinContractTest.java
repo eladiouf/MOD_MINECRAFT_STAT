@@ -18,6 +18,8 @@ class IronInscriptionTableScreenMixinContractTest {
         assertTrue(source.contains("IronKnownSpellIndex.visible"));
         assertTrue(source.contains("EditBox"));
         assertTrue(source.contains("LearnedSpellBindingPolicy.buttonForOption"));
+        assertTrue(source.contains("method = {\"init\", \"m_7856_\"}"));
+        assertTrue(source.contains("method = {\"render\", \"m_88315_\"}"));
         assertTrue(source.contains("method = \"isValidInscription\""));
         assertTrue(source.contains("method = \"onInscription\""));
         assertFalse(source.contains("new SchoolFilterSpec(\"fire\""));

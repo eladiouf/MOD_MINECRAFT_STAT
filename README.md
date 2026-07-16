@@ -119,9 +119,24 @@ déduit les perks actifs directement des niveaux et les affiche dans une liste
 non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
 fournisseur d'attributs compatibles.
 
-Le protocole réseau interne est la version `8` et borne la liste synchronisée à
-45 identifiants canoniques. Un seul paquet personnel synchronise la dernière
-proie marquée ; le scan Keen Senses reste entièrement client.
+Le protocole réseau interne est la version `9`. Il borne les 45 identifiants de
+perks et les 512 sorts appris synchronisés. Un seul paquet personnel synchronise
+la dernière proie marquée ; le scan Keen Senses reste entièrement client.
+
+## Apprentissage et liaison des sorts
+
+Les parchemins compatibles avec l'API `IScroll` d'Iron's Spells et de ses
+addons ne lancent plus directement leur sort. Un clic droit apprend le sort de
+façon permanente, ou augmente son niveau appris si le parchemin est meilleur.
+Une réussite consomme un parchemin hors Créatif ; un niveau identique ou plus
+faible n'est pas consommé.
+
+La touche `J` ouvre le menu d'inscription d'Iron's Spells avec, à gauche, le
+catalogue des sorts appris. La recherche, les filtres d'écoles découverts
+dynamiquement et la pagination restent compatibles avec les addons. Le joueur
+peut lier un sort appris dans un grimoire compatible sans placer de parchemin
+dans la table. Le serveur revalide toujours le sort, son niveau appris, le
+grimoire et l'emplacement ciblé avant toute inscription.
 
 ## Compiler
 

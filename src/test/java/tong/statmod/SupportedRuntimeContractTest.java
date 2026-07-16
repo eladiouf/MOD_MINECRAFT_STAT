@@ -33,7 +33,12 @@ class SupportedRuntimeContractTest {
         assertTrue(record.contains("45 automatic perks"));
         assertTrue(record.contains("12 classified combat perks"));
         assertTrue(record.contains("6 hunter perception perks"));
-        assertTrue(record.contains("protocol 8"));
+        assertTrue(record.contains("protocol 9"));
+        assertTrue(record.contains("right-clicking any compatible scroll learns its spell"));
+        assertTrue(record.contains("highest learned level"));
+        assertTrue(record.contains("Pressing `J` opens Iron's inscription binding menu"));
+        assertTrue(record.contains("search, dynamic school filters, pagination"));
+        assertTrue(record.contains("without placing a scroll in the table"));
         assertTrue(record.contains("5% classified damage per milestone"));
         assertTrue(record.contains("2 physical-reduction percentage points per milestone"));
         assertTrue(record.contains("personal marked-prey contour"));

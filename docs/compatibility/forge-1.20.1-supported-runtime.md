@@ -157,10 +157,26 @@ Pufferfish's Attributes remains an attribute provider and never owns perk
 progression. Existing stable transient modifier UUIDs combine continuous stat
 scaling and milestone bonuses without stacking.
 
-The bounded snapshot transport uses protocol 8 and accepts at most the 45
-canonical perk IDs in catalog order. One bounded personal client packet carries
-the current marked entity and expiry; Keen Senses derives its scan locally from
-the authoritative synchronized stat and perk snapshot.
+The bounded snapshot transport uses protocol 9 and accepts at most the 45
+canonical perk IDs in catalog order plus 512 canonical learned-spell entries.
+One bounded personal client packet carries the current marked entity and
+expiry; Keen Senses derives its scan locally from the authoritative synchronized
+stat and perk snapshot.
+
+## Learned spells and inscription binding
+
+Instead of casting directly, right-clicking any compatible scroll learns its spell
+permanently. The server stores only the highest learned level, consumes a
+scroll on a new lesson or upgrade outside Creative, and leaves equal or lower
+levels untouched. Compatibility is capability-based through Iron's `IScroll`
+and live spell registry, so addon namespaces do not require an allowlist.
+
+Pressing `J` opens Iron's inscription binding menu. Its learned-spell panel
+provides search, dynamic school filters, pagination, spell icons, learned levels,
+and bound-slot markers. A learned spell can be bound to a compatible spellbook
+without placing a scroll in the table. Every selection and inscription is
+revalidated server-side against the live registry, saved learned level,
+spellbook container, target slot, and Iron's inscription event.
 
 ## Player baseline balance
 

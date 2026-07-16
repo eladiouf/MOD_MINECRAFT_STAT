@@ -49,7 +49,11 @@ public final class AdventurerPartyHelper {
 
         int yOffset = DungeonRoomChain.roomYOffset(roomIndex, floor);
         BlockPos center = islandSpawn.offset(room.centerX(), yOffset, room.centerZ());
+        spawnPartyAt(level, center, floor);
+    }
 
+    /** Spawn les 4 membres autour d'un centre donné (utilisé par le donjon et le test /statparty). */
+    public static void spawnPartyAt(ServerLevel level, BlockPos center, int floor) {
         int[][] offsets = {{-4, -4}, {4, -4}, {4, 4}, {-4, 4}};
 
         for (int i = 0; i < 4; i++) {

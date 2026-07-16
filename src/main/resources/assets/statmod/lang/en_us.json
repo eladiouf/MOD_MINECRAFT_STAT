@@ -8,6 +8,7 @@
   "command.statmod.stat.updated": "Updated %s for %s: level %s, %s/%s XP",
   "key.categories.statmod": "STAT Mod",
   "key.statmod.open_stats": "Open statistics",
+  "key.statmod.open_spell_binding": "Open spell binding",
   "statmod.scroll.learned": "Learned %s at level %s.",
   "statmod.scroll.upgraded": "Improved %s to level %s.",
   "statmod.scroll.already_known": "%s is already known at this level or higher.",

@@ -20,11 +20,19 @@ public final class ClientKeyMappings {
             GLFW.GLFW_KEY_P,
             "key.categories.statmod");
 
+    public static final KeyMapping OPEN_SPELL_BINDING = new KeyMapping(
+            "key.statmod.open_spell_binding",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_J,
+            "key.categories.statmod");
+
     private ClientKeyMappings() {
     }
 
     @SubscribeEvent
     public static void register(RegisterKeyMappingsEvent event) {
         event.register(OPEN_STATS);
+        event.register(OPEN_SPELL_BINDING);
     }
 }

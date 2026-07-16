@@ -8,6 +8,7 @@
   "command.statmod.stat.updated": "%s modifiée pour %s : niveau %s, %s/%s XP",
   "key.categories.statmod": "STAT Mod",
   "key.statmod.open_stats": "Ouvrir les statistiques",
+  "key.statmod.open_spell_binding": "Ouvrir le binding des sorts",
   "statmod.scroll.learned": "Sort %s appris au niveau %s.",
   "statmod.scroll.upgraded": "Sort %s amélioré au niveau %s.",
   "statmod.scroll.already_known": "Le sort %s est déjà connu à ce niveau ou davantage.",

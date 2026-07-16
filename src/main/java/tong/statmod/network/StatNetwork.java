@@ -108,6 +108,11 @@ public final class StatNetwork {
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(7, OpenSpellBindingMessage.class,
+                OpenSpellBindingMessage::encode,
+                OpenSpellBindingMessage::decode,
+                OpenSpellBindingMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     public static void sendSnapshot(ServerPlayer player) {
@@ -149,5 +154,9 @@ public final class StatNetwork {
     public static void sendOpenExchange(ServerPlayer player, int points, long coins, float rate) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 new OpenExchangeMessage(points, coins, rate));
+    }
+
+    public static void sendOpenSpellBinding() {
+        CHANNEL.sendToServer(new OpenSpellBindingMessage());
     }
 }

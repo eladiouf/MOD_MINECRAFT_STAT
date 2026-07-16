@@ -17,6 +17,7 @@ import tong.statmod.capability.StatCapabilities;
 import tong.statmod.command.StatsCommands;
 import tong.statmod.effects.PlayerAttributeEffects;
 import tong.statmod.network.StatNetwork;
+import tong.statmod.network.SpellBindingRequestThrottle;
 import tong.statmod.progression.xp.PlayerXpState;
 import tong.statmod.stats.PlayerStats;
 
@@ -81,6 +82,7 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
         EnchantedBookStudySessions.clear(event.getEntity().getUUID());
+        SpellBindingRequestThrottle.clear(event.getEntity().getUUID());
     }
 
     @SubscribeEvent

@@ -47,6 +47,10 @@ public final class AutomaticPerkBonuses {
             case PRECISION_DAMAGE -> StatModServerConfig.precisionDamagePerMilestone();
             case PHYSICAL_RESISTANCE ->
                     StatModServerConfig.physicalResistancePerMilestone();
+            case WILLPOWER_KNOCKBACK_RESISTANCE ->
+                    StatModServerConfig.willpowerKnockbackResistancePerMilestone();
+            case INTIMIDATION_ARMOR_TOUGHNESS ->
+                    StatModServerConfig.intimidationArmorToughnessPerMilestone();
         };
     }
 }

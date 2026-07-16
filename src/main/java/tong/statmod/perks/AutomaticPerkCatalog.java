@@ -36,6 +36,10 @@ public final class AutomaticPerkCatalog {
                 AutomaticPerkEffect.PRECISION_DAMAGE, 0.05);
         addMilestones(definitions, "physical_resistance", StatType.PHYSICAL_RESISTANCE,
                 AutomaticPerkEffect.PHYSICAL_RESISTANCE, 0.02);
+        addMilestones(definitions, "willpower", StatType.WILLPOWER,
+                AutomaticPerkEffect.WILLPOWER_KNOCKBACK_RESISTANCE, 0.1);
+        addMilestones(definitions, "intimidation", StatType.INTIMIDATION,
+                AutomaticPerkEffect.INTIMIDATION_ARMOR_TOUGHNESS, 1.0);
         DEFINITIONS = List.copyOf(definitions);
 
         LinkedHashMap<String, AutomaticPerkDefinition> byId = new LinkedHashMap<>();

@@ -16,7 +16,7 @@ import tong.statmod.stats.StatValue;
 
 public record StatsSnapshotMessage(
         Map<StatType, StatValue> values, List<String> activePerkIds) {
-    public static final int MAX_PERKS = 33;
+    public static final int MAX_PERKS = 39;
 
     public StatsSnapshotMessage {
         values = Collections.unmodifiableMap(new EnumMap<>(values));

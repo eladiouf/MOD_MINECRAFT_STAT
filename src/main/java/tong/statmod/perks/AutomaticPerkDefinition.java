@@ -20,7 +20,7 @@ public record AutomaticPerkDefinition(
             throw new IllegalArgumentException("requirements must be non-empty and unique");
         }
         Objects.requireNonNull(effect, "effect");
-        if (!Double.isFinite(defaultAmount) || defaultAmount < 0.0 || defaultAmount > 0.25) {
+        if (!Double.isFinite(defaultAmount) || defaultAmount < 0.0 || defaultAmount > 10.0) {
             throw new IllegalArgumentException("invalid default amount");
         }
     }

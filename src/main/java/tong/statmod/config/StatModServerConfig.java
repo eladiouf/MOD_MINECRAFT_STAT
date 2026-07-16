@@ -31,6 +31,10 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue BLADE_TECHNIQUE_DAMAGE_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue PRECISION_DAMAGE_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue PHYSICAL_RESISTANCE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE;
 
     private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_EARLY_MOBS;
     private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_MID_MOBS;
@@ -80,6 +84,12 @@ public final class StatModServerConfig {
         MAGIC_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
                 "magicResistanceBonusAt100", 0.50, 0.0, 0.90);
         builder.pop();
+        builder.push("resilience");
+        WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
+                "willpowerKnockbackResistanceBonusAt100", 0.50, 0.0, 1.0);
+        INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100 = builder.defineInRange(
+                "intimidationArmorToughnessBonusAt100", 6.00, 0.0, 20.0);
+        builder.pop();
         builder.push("automaticPerks");
         RAPIDITE_ATTACK_SPEED_PER_MILESTONE = builder.defineInRange(
                 "rapiditeAttackSpeedPerMilestone", 0.02, 0.0, 0.25);
@@ -103,6 +113,10 @@ public final class StatModServerConfig {
                 "precisionDamagePerMilestone", 0.05, 0.0, 0.25);
         PHYSICAL_RESISTANCE_PER_MILESTONE = builder.defineInRange(
                 "physicalResistancePerMilestone", 0.02, 0.0, 0.25);
+        WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE = builder.defineInRange(
+                "willpowerKnockbackResistancePerMilestone", 0.10, 0.0, 0.25);
+        INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE = builder.defineInRange(
+                "intimidationArmorToughnessPerMilestone", 1.00, 0.0, 5.0);
         builder.pop();
         builder.push("dungeon");
         DUNGEON_EARLY_MOBS = builder.defineList("earlyMobs",
@@ -242,5 +256,21 @@ public final class StatModServerConfig {
 
     public static double physicalResistancePerMilestone() {
         return PHYSICAL_RESISTANCE_PER_MILESTONE.get();
+    }
+
+    public static double willpowerKnockbackResistanceBonusAt100() {
+        return WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100.get();
+    }
+
+    public static double intimidationArmorToughnessBonusAt100() {
+        return INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100.get();
+    }
+
+    public static double willpowerKnockbackResistancePerMilestone() {
+        return WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE.get();
+    }
+
+    public static double intimidationArmorToughnessPerMilestone() {
+        return INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE.get();
     }
 }

@@ -15,7 +15,7 @@ class PlayerStatsNbtTest {
         PlayerStats loaded = new PlayerStats();
 
         CompoundTag saved = source.serializeNbt();
-        assertEquals(2, PlayerStats.serializedSchema(saved));
+        assertEquals(3, PlayerStats.serializedSchema(saved));
         loaded.deserializeNbt(saved);
 
         assertEquals(source.snapshot(), loaded.snapshot());
@@ -90,7 +90,22 @@ class PlayerStatsNbtTest {
 
         assertEquals(new StatValue(17, 12), loaded.get(StatType.AGILITY));
         assertEquals(19, loaded.snapshot().size());
-        assertEquals(2, PlayerStats.serializedSchema(loaded.serializeNbt()));
+        assertEquals(3, PlayerStats.serializedSchema(loaded.serializeNbt()));
         assertFalse(loaded.serializeNbt().getCompound("stats").contains("fire_affinity"));
+    }
+
+    @Test
+    void learnedSpellsRoundTripAndCopyWithoutAliasing() {
+        PlayerStats source = new PlayerStats();
+        source.learnedSpells().learn("irons_spellbooks:fireball", 4);
+        PlayerStats restored = new PlayerStats();
+
+        restored.deserializeNbt(source.serializeNbt());
+
+        assertEquals(4, restored.learnedSpells().level("irons_spellbooks:fireball"));
+        PlayerStats copy = new PlayerStats();
+        copy.copyFrom(restored);
+        restored.learnedSpells().learn("addon:wind_blade", 2);
+        assertEquals(0, copy.learnedSpells().level("addon:wind_blade"));
     }
 }

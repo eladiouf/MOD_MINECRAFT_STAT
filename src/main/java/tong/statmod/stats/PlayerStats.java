@@ -24,6 +24,7 @@ public final class PlayerStats {
     private int dungeonPoints = 0;
     private int dungeonBestCombo = 0;
     private int dungeonBestClearTicks = 0;
+    private boolean shopStartingBalanceReceived;
     private final java.util.Map<Integer, Long> bossCooldowns = new java.util.HashMap<>();
 
     public PlayerStats() {
@@ -61,6 +62,7 @@ public final class PlayerStats {
         this.dungeonPoints = source.dungeonPoints;
         this.dungeonBestCombo = source.dungeonBestCombo;
         this.dungeonBestClearTicks = source.dungeonBestClearTicks;
+        this.shopStartingBalanceReceived = source.shopStartingBalanceReceived;
         this.bossCooldowns.clear();
         this.bossCooldowns.putAll(source.bossCooldowns);
         this.learnedSpells.copyFrom(source.learnedSpells);
@@ -85,6 +87,7 @@ public final class PlayerStats {
         root.putInt("dungeonPoints", dungeonPoints);
         root.putInt("dungeonBestCombo", dungeonBestCombo);
         root.putInt("dungeonBestClearTicks", dungeonBestClearTicks);
+        root.putBoolean("shopStartingBalanceReceived", shopStartingBalanceReceived);
 
         CompoundTag cooldownsTag = new CompoundTag();
         bossCooldowns.forEach((floor, cooldown) -> cooldownsTag.putLong(String.valueOf(floor), cooldown));
@@ -131,6 +134,7 @@ public final class PlayerStats {
         if (root.contains("dungeonBestClearTicks")) {
             dungeonBestClearTicks = root.getInt("dungeonBestClearTicks");
         }
+        shopStartingBalanceReceived = root.getBoolean("shopStartingBalanceReceived");
 
         bossCooldowns.clear();
         if (root.contains("bossCooldowns", Tag.TAG_COMPOUND)) {
@@ -224,5 +228,13 @@ public final class PlayerStats {
 
     public LearnedSpellState learnedSpells() {
         return learnedSpells;
+    }
+
+    public boolean hasReceivedShopStartingBalance() {
+        return shopStartingBalanceReceived;
+    }
+
+    public void markShopStartingBalanceReceived() {
+        shopStartingBalanceReceived = true;
     }
 }

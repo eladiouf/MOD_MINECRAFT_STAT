@@ -2,6 +2,7 @@ package tong.statmod.stats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.minecraft.nbt.CompoundTag;
 import org.junit.jupiter.api.Test;
@@ -107,5 +108,28 @@ class PlayerStatsNbtTest {
         copy.copyFrom(restored);
         restored.learnedSpells().learn("addon:wind_blade", 2);
         assertEquals(0, copy.learnedSpells().level("addon:wind_blade"));
+    }
+
+    @Test
+    void startingBalanceMarkerDefaultsFalseAndRoundTrips() {
+        PlayerStats source = new PlayerStats();
+        assertFalse(source.hasReceivedShopStartingBalance());
+        source.markShopStartingBalanceReceived();
+
+        PlayerStats restored = new PlayerStats();
+        restored.deserializeNbt(source.serializeNbt());
+
+        assertTrue(restored.hasReceivedShopStartingBalance());
+    }
+
+    @Test
+    void startingBalanceMarkerSurvivesPlayerClone() {
+        PlayerStats source = new PlayerStats();
+        source.markShopStartingBalanceReceived();
+        PlayerStats clone = new PlayerStats();
+
+        clone.copyFrom(source);
+
+        assertTrue(clone.hasReceivedShopStartingBalance());
     }
 }

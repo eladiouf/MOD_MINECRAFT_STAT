@@ -237,11 +237,15 @@ final class CityDistrictBuilder {
 
     private static void hall(ServerLevel lv, BlockPos c, int rx, int rz, int height,
                              Block wall, Block roof, Block window) {
+        // Baies seedées par bâtiment : espacement variable + décalage → plus de damier (x+z)%5.
+        long seed = ((long) c.getX() * 73856093L) ^ ((long) c.getZ() * 19349663L);
+        int spacing = 4 + (int) Math.floorMod(seed, 3); // 4, 5 ou 6 selon le bâtiment
         for (int x = -rx; x <= rx; x++) for (int z = -rz; z <= rz; z++) {
             boolean edge = Math.abs(x) == rx || Math.abs(z) == rz;
             set(lv, c.offset(x, 0, z), Blocks.POLISHED_ANDESITE);
             if (edge) for (int y = 1; y <= height; y++) {
-                boolean glazed = y >= 3 && y <= 5 && ((x + z) % 5 == 0);
+                boolean bay = Math.floorMod(x + z + (int) seed, spacing) == 0;
+                boolean glazed = y >= 2 && y <= 4 && bay;
                 set(lv, c.offset(x, y, z), glazed ? window : wall);
             }
         }

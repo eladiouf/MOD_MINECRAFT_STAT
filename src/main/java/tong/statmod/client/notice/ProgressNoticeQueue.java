@@ -16,7 +16,7 @@ public final class ProgressNoticeQueue {
     private final Deque<ProgressNotice> notices = new ArrayDeque<>();
 
     public void offer(StatProgressNoticeMessage message, long tick) {
-        if (!message.valid()) {
+        if (!message.valid() || message.levelsGained() <= 0) {
             return;
         }
         ProgressNotice newest = notices.peekLast();

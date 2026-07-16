@@ -6,6 +6,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
 
 /**
  * Mission M6 — Le Trial Dungeon est <b>indestructible</b>, par les joueurs COMME par les mobs
@@ -26,6 +28,7 @@ import net.minecraftforge.event.level.ExplosionEvent;
  *       incendiaires (briquet, boule de feu) bloqués en survie.</li>
  * </ol>
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonProtectionHandler {
 
     private DungeonProtectionHandler() {}

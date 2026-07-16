@@ -8,6 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
 
 import java.util.function.Supplier;
 
@@ -29,6 +31,7 @@ import java.util.function.Supplier;
  * <p>L'ancien système de <i>fenêtre temporelle</i> laissait passer un flux continu de mobs pendant
  * 10–45 s à chaque entrée (et sans limite pendant un combat de boss) → « invasion ». Supprimé.
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonSpawnGuard {
 
     public static final String AUTHORIZED_TAG = "statmod_dungeon_authorized";

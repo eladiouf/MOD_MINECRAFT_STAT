@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
  *
  * <p>La récompense et la célébration sont centralisées dans {@link DungeonProgress}. Idempotent.
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonBossHandler {
 
     /** Cooldown d'un boss de palier (×10) : 2 heures de game ticks. */

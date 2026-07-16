@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.integration.l2hostility.L2HostilityBridge;
 
@@ -35,6 +36,7 @@ import java.util.Set;
  * <p>Garde anti-doublon : {@link #requestWave} ne fait rien si des mobs autorisés sont encore
  * vivants sur l'étage, ou si une vague est déjà en attente pour cet étage.
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonMobSpawner {
 
     /** Délai avant spawn effectif : le joueur est déjà présent, un court délai suffit. */

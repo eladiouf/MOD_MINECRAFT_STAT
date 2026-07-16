@@ -78,12 +78,12 @@ public final class DungeonProgress {
             player.displayClientMessage(Component.translatable(
                     "block.statmod.dungeon_portal.boss_kill", gain, statName, floor + 1), false);
             // Gros gain de points pour le boss vaincu.
-            DungeonPoints.awardBoss(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardBoss(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         } else {
             player.displayClientMessage(Component.translatable(
                     "dungeon.floor.conquered", floor, floor + 1), false);
             // Bonus de points pour la conquête d'un étage (remplace la récompense en cristaux).
-            DungeonPoints.awardFloorClear(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardFloorClear(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         }
 
         SyncHelper.syncStats(player);

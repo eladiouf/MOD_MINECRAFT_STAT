@@ -59,7 +59,7 @@ public final class DungeonRespawnHandler {
         event.setCanceled(true);
 
         // Mort punitive : le joueur perd une partie de ses points de donjon.
-        DungeonPoints.applyDeathPenalty(player);
+        DungeonPoints.applyDeathPenalty(player, floor);
 
         // Règle « 0 point → éjection » : si la mort a vidé les points, on renvoie le joueur à
         // l'overworld AU LIEU de le faire réapparaître dans le donjon (les coins du shop restent

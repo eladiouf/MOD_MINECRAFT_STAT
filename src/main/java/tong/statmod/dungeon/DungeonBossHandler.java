@@ -122,14 +122,10 @@ public final class DungeonBossHandler {
 
     private static void setBossCooldown(ServerPlayer sp, int floor) {
         long unlockTick = sp.serverLevel().getGameTime() + BOSS_COOLDOWN_TICKS;
-        for (ServerPlayer p : sp.serverLevel().getEntitiesOfClass(
-                ServerPlayer.class,
-                new AABB(DungeonTeleportHandler.floorSpawnPos(floor))
-                        .inflate(DungeonMobSpawner.FLOOR_SCAN_RADIUS),
-                pl -> pl.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON))) {
+        for (ServerPlayer p : tong.statmod.integration.ftbteams.FTBTeamsBridge
+                .teammatesOnFloor(sp, sp.serverLevel(), floor)) {
             StatCapabilities.get(p).setBossCooldown(floor, unlockTick);
         }
-        StatCapabilities.get(sp).setBossCooldown(floor, unlockTick);
     }
 
     private static ServerPlayer findAttacker(LivingDeathEvent event, LivingEntity target) {

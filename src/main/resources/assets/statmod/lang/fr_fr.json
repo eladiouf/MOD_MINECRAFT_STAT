@@ -498,5 +498,7 @@
   "forge_shop.purchased": "%s acheté pour %s FDP",
   "forge_shop.insufficient_funds": "Solde FDP insuffisant",
   "forge_shop.invalid_session": "Rapproche-toi du Marchand de Forge.",
-  "forge_shop.npc": "Marchand de Forge"
+  "forge_shop.npc": "Marchand de Forge",
+  "dungeon.floor.occupied_by_other_team": "Cet étage est actuellement occupé par une autre équipe FTB.",
+  "dungeon.floor.ftb_teams_unavailable": "FTB Teams n'est pas prêt. L'entrée du donjon est refusée."
 }

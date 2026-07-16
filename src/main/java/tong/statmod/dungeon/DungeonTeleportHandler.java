@@ -167,6 +167,20 @@ public final class DungeonTeleportHandler {
                 return false;
             }
 
+            if (floor > 0) {
+                java.util.List<ServerPlayer> occupants = playersOnFloor(dungeon, floor);
+                occupants.removeIf(p -> p.getUUID().equals(player.getUUID()));
+                boolean managerReady = tong.statmod.integration.ftbteams.FTBTeamsBridge.loaded();
+                if (!DungeonFloorAdmission.canEnter(floor, player, occupants,
+                        tong.statmod.integration.ftbteams.FTBTeamsBridge::sameTeam, managerReady)) {
+                    player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                            managerReady
+                                    ? "dungeon.floor.occupied_by_other_team"
+                                    : "dungeon.floor.ftb_teams_unavailable"), true);
+                    return false;
+                }
+            }
+
             ResourceKey<Level> currentDim = player.level().dimension();
             if (!currentDim.equals(DungeonDimensions.TRIAL_DUNGEON)) {
                 data.setLastOverworldDimensionId(currentDim.location().toString());

@@ -562,5 +562,7 @@
   "forge_shop.purchased": "Purchased %s for %s FDP",
   "forge_shop.insufficient_funds": "Insufficient FDP balance",
   "forge_shop.invalid_session": "Move closer to the Forge Merchant.",
-  "forge_shop.npc": "Forge Merchant"
+  "forge_shop.npc": "Forge Merchant",
+  "dungeon.floor.occupied_by_other_team": "This floor is currently occupied by another FTB team.",
+  "dungeon.floor.ftb_teams_unavailable": "FTB Teams is not ready. Dungeon entry was refused."
 }

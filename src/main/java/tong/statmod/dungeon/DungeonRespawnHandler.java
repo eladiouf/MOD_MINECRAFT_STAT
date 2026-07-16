@@ -90,7 +90,8 @@ public final class DungeonRespawnHandler {
         // SAUF en co-op : si un coéquipier vivant est encore sur l'étage, sa vague est SON combat —
         // on ne la lui vole pas (audit multi 2026-07-09). Le mort réapparaît au pad et le rejoint.
         if (player.level() instanceof ServerLevel sl) {
-            boolean teammateStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
+            boolean teammateStillFighting = tong.statmod.integration.ftbteams.FTBTeamsBridge
+                    .teammatesOnFloor(player, sl, floor).stream()
                     .anyMatch(p -> p != player);
             if (!teammateStillFighting) {
                 DungeonMobSpawner.clearFloorMobs(sl, floor);

@@ -133,9 +133,9 @@ public final class DungeonPoints {
         if (player.level() instanceof net.minecraft.server.level.ServerLevel sl) {
             int share = assistShare(base);
             if (share > 0) {
-                for (ServerPlayer mate : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
+                for (ServerPlayer mate : tong.statmod.integration.ftbteams.FTBTeamsBridge
+                        .teammatesOnFloor(player, sl, floor)) {
                     if (mate == player) continue;
-                    if (!tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, mate)) continue;
                     int mateTotal = StatCapabilities.get(mate).addDungeonPoints(share);
                     SyncHelper.syncStats(mate);
                     mate.displayClientMessage(Component.translatable(

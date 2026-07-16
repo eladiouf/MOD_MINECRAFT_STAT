@@ -50,10 +50,14 @@ public final class DungeonProgress {
                 && sl.dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
             // FTB Teams : seule l'ÉQUIPE du déclencheur conquiert (2026-07-09). Les rivaux
             // présents sur l'étage ne profitent pas du kill — ils voient la victoire adverse.
+            java.util.List<ServerPlayer> teammates =
+                    tong.statmod.integration.ftbteams.FTBTeamsBridge.teammatesOnFloor(player, sl, floor);
+            for (ServerPlayer teammate : teammates) {
+                completeForPlayer(teammate, floor, objective, bossReward);
+            }
             for (ServerPlayer present : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
-                if (tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, present)) {
-                    completeForPlayer(present, floor, objective, bossReward);
-                } else if (StatCapabilities.get(present).getDungeonFloorReached() <= floor) {
+                if (!teammates.contains(present)
+                        && StatCapabilities.get(present).getDungeonFloorReached() <= floor) {
                     net.minecraft.network.chat.Component team =
                             tong.statmod.integration.ftbteams.FTBTeamsBridge.teamName(player);
                     present.displayClientMessage(Component.translatable("dungeon.coop.rival_conquered",

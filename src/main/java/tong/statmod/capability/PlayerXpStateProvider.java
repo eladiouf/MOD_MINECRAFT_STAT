@@ -11,14 +11,19 @@ import tong.statmod.progression.xp.PlayerXpState;
 
 public final class PlayerXpStateProvider implements ICapabilitySerializable<CompoundTag> {
     private final PlayerXpState state = new PlayerXpState();
-    private final LazyOptional<PlayerXpState> optional = LazyOptional.of(() -> state);
+    private LazyOptional<PlayerXpState> optional = LazyOptional.of(() -> state);
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(
             @NotNull Capability<T> capability, @Nullable Direction side) {
-        return capability == StatCapabilities.PLAYER_XP_STATE
-                ? optional.cast()
-                : LazyOptional.empty();
+        if (capability != StatCapabilities.PLAYER_XP_STATE) {
+            return LazyOptional.empty();
+        }
+        // Recréer le LazyOptional après invalidation (changement de dimension) — voir PlayerStatsProvider.
+        if (!optional.isPresent()) {
+            optional = LazyOptional.of(() -> state);
+        }
+        return optional.cast();
     }
 
     @Override

@@ -1,8 +1,12 @@
 package tong.statmod.integration.sdmshop;
 
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
+import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
+import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.spells.ISpellContainer;
+import io.redspace.ironsspellbooks.api.spells.SchoolType;
+import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import io.redspace.ironsspellbooks.registries.ItemRegistry;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -74,7 +78,7 @@ public final class MagicShopGenerator {
         for (SpellSpec spec : spells) {
             ShopTab tab = tabs.computeIfAbsent(spec.schoolId(), id -> {
                 ShopTab created = new ShopTab(shop, MagicShopIds.tab(id));
-                created.title = spec.spell().getSchoolType().getDisplayName();
+                created.title = spec.schoolTitle();
                 shop.addTab(created);
                 return created;
             });
@@ -96,11 +100,19 @@ public final class MagicShopGenerator {
                     continue;
                 }
                 ResourceLocation spellId = SpellRegistry.REGISTRY.get().getKey(spell);
-                ResourceLocation schoolId = spell.getSchoolType().getId();
-                if (spellId == null || schoolId == null) {
+                DefaultConfig defaults = spell.getDefaultConfig();
+                ResourceLocation schoolId = defaults.schoolResource;
+                if (spellId == null || schoolId == null || defaults.minRarity == null) {
                     throw new IllegalStateException("missing registry or school id");
                 }
-                spells.add(new SpellSpec(spell, spellId.toString(), schoolId.toString()));
+                int maximumLevel = defaults.maxLevel;
+                int minimumRarity = defaults.minRarity.getValue();
+                int maximumRarity = spell.getMaxRarity();
+                SchoolType school = SchoolRegistry.getSchool(schoolId);
+                Component schoolTitle = school == null
+                        ? Component.literal(schoolId.toString()) : school.getDisplayName();
+                spells.add(new SpellSpec(spell, spellId.toString(), schoolId.toString(),
+                        schoolTitle, maximumLevel, minimumRarity, maximumRarity));
             } catch (RuntimeException exception) {
                 report.recordSkipped(fallbackId, conciseReason(exception));
             }
@@ -113,13 +125,14 @@ public final class MagicShopGenerator {
     private static void addSpellLevels(
             BaseShop shop, ShopTab tab, SpellSpec spec, MagicShopReport report) {
         AbstractSpell spell = spec.spell();
-        int minimum = spell.getMinLevel();
-        int maximum = spell.getMaxLevel();
+        int minimum = 1;
+        int maximum = spec.maximumLevel();
         if (minimum < 1 || maximum < minimum) {
             throw new IllegalStateException("invalid level range " + minimum + ".." + maximum);
         }
         for (int level = minimum; level <= maximum; level++) {
-            String rarity = spell.getRarity(level).name();
+            String rarity = RarityBandPolicy.rarity(spec.minimumRarity(),
+                    spec.maximumRarity(), maximum, level, SpellRarity.getRawRarityConfig());
             long price = MagicShopPricing.scrollPrice(rarity, level);
             ItemStack scroll = new ItemStack(ItemRegistry.SCROLL.get());
             ISpellContainer.createScrollContainer(spell, level, scroll);
@@ -204,7 +217,9 @@ public final class MagicShopGenerator {
                 + (message == null || message.isBlank() ? "" : ": " + message);
     }
 
-    private record SpellSpec(AbstractSpell spell, String spellId, String schoolId) {
+    private record SpellSpec(AbstractSpell spell, String spellId, String schoolId,
+                             Component schoolTitle, int maximumLevel,
+                             int minimumRarity, int maximumRarity) {
     }
 
     public record GenerationResult(int spells, int scrollEntries, int saleEntries,

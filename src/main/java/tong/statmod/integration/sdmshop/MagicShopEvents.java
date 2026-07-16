@@ -19,10 +19,13 @@ public final class MagicShopEvents {
             StatMod.LOGGER.error("[Shop] Required shop stack is incomplete; catalog not generated");
             return;
         }
-        try {
-            MagicShopGenerator.regenerate(event.getServer());
-        } catch (Exception exception) {
-            StatMod.LOGGER.error("[Shop] Catalog generation failed", exception);
-        }
+        var server = event.getServer();
+        server.execute(() -> {
+            try {
+                MagicShopGenerator.regenerate(server);
+            } catch (Exception exception) {
+                StatMod.LOGGER.error("[Shop] Catalog generation failed", exception);
+            }
+        });
     }
 }

@@ -11,12 +11,13 @@ class MagicShopGeneratorContractTest {
     void scansEveryEnabledSpellAndCreatesExactScrollLevels() throws Exception {
         String source = source();
         assertTrue(source.contains("SpellRegistry.getEnabledSpells()"));
-        assertTrue(source.contains("spell.getMinLevel()"));
-        assertTrue(source.contains("spell.getMaxLevel()"));
+        assertTrue(source.contains("spell.getDefaultConfig()"));
+        assertTrue(source.contains("defaults.maxLevel"));
+        assertTrue(source.contains("defaults.schoolResource"));
+        assertTrue(source.contains("defaults.minRarity.getValue()"));
         assertTrue(source.contains("ItemRegistry.SCROLL.get()"));
         assertTrue(source.contains("ISpellContainer.createScrollContainer(spell, level, scroll)"));
-        assertTrue(source.contains("spell.getRarity(level).name()"));
-        assertTrue(source.contains("spell.getSchoolType().getId()"));
+        assertTrue(source.contains("RarityBandPolicy.rarity"));
     }
 
     @Test

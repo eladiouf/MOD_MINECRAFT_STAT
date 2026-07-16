@@ -12,7 +12,8 @@ class MagicShopEventsContractTest {
         String source = Files.readString(Path.of(
                 "src/main/java/tong/statmod/integration/sdmshop/MagicShopEvents.java"));
         assertTrue(source.contains("ServerStartedEvent"));
-        assertTrue(source.contains("MagicShopGenerator.regenerate(event.getServer())"));
+        assertTrue(source.contains("server.execute"));
+        assertTrue(source.contains("MagicShopGenerator.regenerate(server)"));
         assertTrue(source.contains("isLoaded(\"sdmshop\")"));
         assertTrue(source.contains("isLoaded(\"sdmeconomy\")"));
         assertTrue(source.contains("isLoaded(\"irons_spellbooks\")"));

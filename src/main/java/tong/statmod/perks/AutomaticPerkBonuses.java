@@ -47,6 +47,7 @@ public final class AutomaticPerkBonuses {
             case PRECISION_DAMAGE -> StatModServerConfig.precisionDamagePerMilestone();
             case PHYSICAL_RESISTANCE ->
                     StatModServerConfig.physicalResistancePerMilestone();
+            case TRACKING_FOCUS, KEEN_SENSES_AWARENESS -> 0.25;
         };
     }
 }

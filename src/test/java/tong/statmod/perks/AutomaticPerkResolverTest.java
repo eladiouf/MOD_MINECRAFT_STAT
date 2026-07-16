@@ -33,6 +33,12 @@ class AutomaticPerkResolverTest {
     }
 
     @Test
+    void activatesHunterPerksAtTheSameMilestoneBoundaries() {
+        assertMilestones(StatType.TRACKING, "tracking");
+        assertMilestones(StatType.KEEN_SENSES, "keen_senses");
+    }
+
+    @Test
     void supportsCombinedRequirementsWithoutPersistedUnlockState() {
         AutomaticPerkDefinition combined = new AutomaticPerkDefinition(
                 "statmod:combined_test", 0,

@@ -61,6 +61,18 @@ class AutomaticPerkBonusesTest {
                 .amount(AutomaticPerkEffect.PHYSICAL_RESISTANCE), 1.0e-9);
     }
 
+    @Test
+    void accumulatesNormalizedHunterMilestoneScores() {
+        assertEquals(0.25, bonusesAt(StatType.TRACKING, 25)
+                .amount(AutomaticPerkEffect.TRACKING_FOCUS), 1.0e-9);
+        assertEquals(0.50, bonusesAt(StatType.TRACKING, 50)
+                .amount(AutomaticPerkEffect.TRACKING_FOCUS), 1.0e-9);
+        assertEquals(0.75, bonusesAt(StatType.TRACKING, 75)
+                .amount(AutomaticPerkEffect.TRACKING_FOCUS), 1.0e-9);
+        assertEquals(0.75, bonusesAt(StatType.KEEN_SENSES, 75)
+                .amount(AutomaticPerkEffect.KEEN_SENSES_AWARENESS), 1.0e-9);
+    }
+
     private static AutomaticPerkBonuses bonusesAt(StatType type, int level) {
         PlayerStats stats = new PlayerStats();
         stats.setLevel(type, level);

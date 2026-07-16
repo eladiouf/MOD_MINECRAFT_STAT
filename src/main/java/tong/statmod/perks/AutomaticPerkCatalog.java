@@ -36,6 +36,10 @@ public final class AutomaticPerkCatalog {
                 AutomaticPerkEffect.PRECISION_DAMAGE, 0.05);
         addMilestones(definitions, "physical_resistance", StatType.PHYSICAL_RESISTANCE,
                 AutomaticPerkEffect.PHYSICAL_RESISTANCE, 0.02);
+        addMilestones(definitions, "tracking", StatType.TRACKING,
+                AutomaticPerkEffect.TRACKING_FOCUS, 0.25);
+        addMilestones(definitions, "keen_senses", StatType.KEEN_SENSES,
+                AutomaticPerkEffect.KEEN_SENSES_AWARENESS, 0.25);
         DEFINITIONS = List.copyOf(definitions);
 
         LinkedHashMap<String, AutomaticPerkDefinition> byId = new LinkedHashMap<>();

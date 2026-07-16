@@ -86,6 +86,7 @@ public final class PlayerStatsEvents {
     @SubscribeEvent
     public static void commands(RegisterCommandsEvent event) {
         StatsCommands.register(event.getDispatcher());
+        tong.statmod.dungeon.DungeonCommands.register(event.getDispatcher());
     }
 
     private static void sync(Player player) {

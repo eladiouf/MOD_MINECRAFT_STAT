@@ -106,10 +106,10 @@ public final class DungeonMobSpawner {
      * (S'y ajoute le mini-boss de thème.)
      */
     static int waveSizeForFloor(int floor, int players) {
-        int n = 30 + floor / 5;         // base 30, +1 mob tous les 5 étages
-        int solo = Math.min(48, Math.max(30, n));
+        int n = 60 + floor / 2;         // base 60, +1 mob tous les 2 étages
+        int solo = Math.min(100, Math.max(60, n));
         double coopMult = 1.0 + 0.5 * Math.max(0, players - 1);
-        return (int) Math.min(72, Math.round(solo * coopMult));
+        return (int) Math.min(150, Math.round(solo * coopMult));
     }
 
     /** {@code true} si l'étage a une vague de combat (ni boss ni trésor). */

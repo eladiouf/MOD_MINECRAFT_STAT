@@ -147,8 +147,17 @@ public class DungeonBossAltarBlock extends Block {
 
     private static EntityType<?> resolveType(String id) {
         ResourceLocation loc = ResourceLocation.tryParse(id);
-        if (loc == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(loc)) return null;
-        return BuiltInRegistries.ENTITY_TYPE.get(loc);
+        if (loc != null && BuiltInRegistries.ENTITY_TYPE.containsKey(loc)) {
+            return BuiltInRegistries.ENTITY_TYPE.get(loc);
+        }
+        tong.statmod.StatMod.LOGGER.info("[TrialDungeon] Custom boss '{}' is not registered (missing mod). Using vanilla fallback.", id);
+        if (id.contains("wither") || id.contains("lich") || id.contains("demon") || id.contains("watcher") || id.contains("lord") || id.contains("gundyr")) {
+            return BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation("minecraft:wither"));
+        } else if (id.contains("dragon") || id.contains("harbinger") || id.contains("yeti") || id.contains("smough") || id.contains("radahn") || id.contains("beast") || id.contains("titan")) {
+            return BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation("minecraft:warden"));
+        } else {
+            return BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation("minecraft:elder_guardian"));
+        }
     }
 
     private static String firstBossName(String entry) {

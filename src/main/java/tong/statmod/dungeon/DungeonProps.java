@@ -92,12 +92,8 @@ public final class DungeonProps {
         BlockPos chestPos = O(sp, x, 0, z);
         boolean trapped = lv.random.nextFloat() < 0.3f;
         if (trapped) {
-            BlockPos cbPos = chestPos.below();
-            S(lv, cbPos, B(Blocks.COMMAND_BLOCK));
-            if (lv.getBlockEntity(cbPos) instanceof net.minecraft.world.level.block.entity.CommandBlockEntity cbe) {
-                cbe.getCommandBlock().setCommand("effect give @p[distance=..4] minecraft:poison 6 1");
-                cbe.getCommandBlock().setTrackOutput(false);
-            }
+            // Coffre piégé en code (plus de command block) : nuage toxique à l'ouverture.
+            DungeonTraps.armChest(chestPos, DungeonTraps.TrapKind.POISON_GAS);
             LootrBridge.placeIndividualTrappedChest(lv, chestPos, MINOR_LOOT);
         } else {
             LootrBridge.placeIndividualChest(lv, chestPos, MINOR_LOOT);

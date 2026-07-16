@@ -35,6 +35,7 @@ public final class IslandGenerator {
         }
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         if (!lv.getBlockState(sp.below()).isAir()) return false;
+        DungeonTraps.clearFloor(floor); // registre de pièges neuf à chaque (re)génération
         FloorPalette tier = FloorPalette.forFloor(floor);
         ThemePalette theme = ThemePalette.forFloor(floor); // identité matérielle par thème/arc
 

@@ -4,15 +4,15 @@
 
 **Goal:** Make the Forge 1.20.1 Trial Dungeon use FTB Teams as its mandatory and authoritative cooperative party system.
 
-**Architecture:** Add the real FTB Teams API to the development classpath and required mod metadata. Centralize strict server-team resolution in `FTBTeamsBridge`, then use a pure admission policy plus team-filtered recipient selection throughout dungeon entry, progression, rewards, death handling, and boss cooldowns.
+**Architecture:** Keep FTB Teams mandatory for team identity and assist rewards, while treating each physical floor as one public shared encounter. Entry and completion operate on all players present; only assists use `FTBTeamsBridge.teammatesOnFloor`.
 
 **Tech Stack:** Java 17, Forge 47.4.10, Minecraft 1.20.1, FTB Teams Forge 2001.3.2, JUnit Jupiter 5.10.2.
 
 ## Global Constraints
 
 - FTB Teams is mandatory on both logical sides.
-- Missing/unready FTB Teams fails closed for dungeon cooperation.
-- Floor 0 stays public; challenge floors admit one team only.
+- Missing/unready FTB Teams never blocks dungeon entry.
+- Floor 0 and challenge floors admit multiple teams.
 - No forced group teleportation.
 - Existing dungeon scaling, loot, geometry, and persistent progression remain unchanged.
 
@@ -27,22 +27,22 @@
 - [ ] Add FTB Teams/FTB Library dependencies and implement the direct bridge.
 - [ ] Run focused tests and confirm GREEN.
 
-### Task 2: Exclusive team admission
+### Task 2: Public multi-team admission
 
 **Files:** `DungeonFloorAdmission.java`, its test, `DungeonTeleportHandler.java`, and language JSON.
 
-- [ ] Write admission tests for empty, same-team, rival-team, and unavailable-manager cases.
+- [ ] Rewrite admission tests so rival teams and an unavailable manager never block entry.
 - [ ] Run them and confirm RED.
-- [ ] Implement the policy and enforce it before challenge-floor generation.
+- [ ] Remove team admission enforcement and obsolete refusal translations.
 - [ ] Run focused tests and confirm GREEN.
 
-### Task 3: Team-filter all cooperative effects
+### Task 3: Share encounters while keeping team-only assists
 
 **Files:** `DungeonProgress.java`, `DungeonPoints.java`, `DungeonRespawnHandler.java`, and `DungeonBossHandler.java`.
 
-- [ ] Add contract tests asserting every cooperative recipient path uses `FTBTeamsBridge.sameTeam` or `teammatesOnFloor`.
+- [ ] Add contract tests asserting completion, death continuity, and boss cooldowns use all floor players while assists use `teammatesOnFloor`.
 - [ ] Run them and confirm RED.
-- [ ] Filter completion, assists, death retry protection, and boss cooldown recipients.
+- [ ] Share completion and boss cooldowns with all present players, preserve a wave while anyone remains, and retain team-filtered assists.
 - [ ] Run focused tests and confirm GREEN.
 
 ### Task 4: Verify and document
@@ -53,4 +53,3 @@
 - [ ] Run the complete test suite.
 - [ ] Run `clean build` and inspect the produced JAR metadata.
 - [ ] Record the required FTB Teams co-op behavior in the changelog and commit the completed work.
-

@@ -3,6 +3,6 @@
 ## Unreleased
 
 - Trial Dungeon cooperation now requires FTB Teams Forge 2001.3.2 or newer.
-- Challenge floors are reserved for one real FTB team; rival teams are refused while the floor is occupied.
-- Floor completion, boss rewards, assist points, death/retry protection, and boss cooldowns are shared only with present FTB teammates.
-- The public dungeon city remains shared and team members still enter challenge floors voluntarily.
+- Multiple FTB teams may share the same challenge floor and fight the same encounter.
+- Floor completion, boss rewards, death/retry protection, and boss cooldowns are shared with every player present.
+- Kill points remain personal and assist points remain limited to present FTB teammates.

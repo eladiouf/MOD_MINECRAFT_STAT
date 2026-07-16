@@ -6,12 +6,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 import java.util.EnumSet;
 
@@ -97,6 +101,9 @@ public class MageRangedGoal extends Goal {
         if (castCooldown <= 0) {
             if (dist < POTION_DIST * POTION_DIST) {
                 throwHarmPotion();
+            } else if (nearbyFoes(target.position(), 5.0) >= 2) {
+                // Joueurs regroupés → nappe de crocs balayante (AoE) vers le centre du groupe.
+                castFangLine(clusterCentroid(target.position(), 6.0));
             } else {
                 castFangs(dist < 20 * 20 ? 3 : 2);
             }
@@ -104,6 +111,42 @@ public class MageRangedGoal extends Goal {
         } else {
             castCooldown--;
         }
+    }
+
+    private int nearbyFoes(Vec3 center, double radius) {
+        return mage.level().getEntitiesOfClass(Player.class,
+                new AABB(center.x - radius, center.y - 3, center.z - radius,
+                        center.x + radius, center.y + 3, center.z + radius),
+                p -> p.isAlive() && !p.isSpectator() && !p.isCreative()).size();
+    }
+
+    private Vec3 clusterCentroid(Vec3 center, double radius) {
+        List<Player> players = mage.level().getEntitiesOfClass(Player.class,
+                new AABB(center.x - radius, center.y - 3, center.z - radius,
+                        center.x + radius, center.y + 3, center.z + radius),
+                p -> p.isAlive() && !p.isSpectator() && !p.isCreative());
+        if (players.isEmpty()) return center;
+        double x = 0, z = 0;
+        for (Player p : players) {
+            x += p.getX();
+            z += p.getZ();
+        }
+        return new Vec3(x / players.size(), center.y, z / players.size());
+    }
+
+    /** Ligne d'EvokerFangs qui jaillit du mage vers {@code toward} (balayage, comme l'évocateur). */
+    private void castFangLine(Vec3 toward) {
+        if (!(mage.level() instanceof ServerLevel level)) return;
+        double angle = Math.atan2(toward.z - mage.getZ(), toward.x - mage.getX());
+        for (int i = 0; i < 16; i++) {
+            double d = 1.25 * (i + 1);
+            double fx = mage.getX() + Math.cos(angle) * d;
+            double fz = mage.getZ() + Math.sin(angle) * d;
+            var fangs = new net.minecraft.world.entity.projectile.EvokerFangs(
+                    level, fx, mage.getY(), fz, (float) angle, i, mage);
+            level.addFreshEntity(fangs);
+        }
+        mage.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
     }
 
     private void castFangs(int count) {

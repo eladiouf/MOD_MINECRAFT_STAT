@@ -11,7 +11,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
-import tong.statmod.dungeon.DungeonMobSpawner;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import java.util.Set;
 public final class PartyCoordinator {
 
     private static final int PERIOD = 10;
+    /** Aligné sur DungeonMobSpawner.FLOOR_SCAN_RADIUS (package-private là-bas). */
+    private static final double SCAN_RADIUS = 85.0;
     private static int tick;
 
     private PartyCoordinator() {}
@@ -63,7 +64,7 @@ public final class PartyCoordinator {
 
     private static void coordinateFloor(ServerLevel lv, int floor, List<ServerPlayer> active) {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        AABB box = new AABB(sp).inflate(DungeonMobSpawner.FLOOR_SCAN_RADIUS);
+        AABB box = new AABB(sp).inflate(SCAN_RADIUS);
 
         List<Mob> party = lv.getEntitiesOfClass(Mob.class, box,
                 m -> m.isAlive() && m.getPersistentData().contains(PartyRole.TAG));
@@ -124,14 +125,23 @@ public final class PartyCoordinator {
         LivingEntity isolatedP = foes.get(isolated);
         LivingEntity backP = foes.get(backThreat);
 
+        // Mode EXECUTE : la cible focus est presque morte → tout le monde se rabat dessus pour
+        // sécuriser le kill (au lieu d'étaler les cibles). Comportement d'équipe « finish ».
+        boolean execute = hp[focus] < 0.30;
+
         for (Mob m : party) {
             String r = m.getPersistentData().getString(PartyRole.TAG);
-            LivingEntity want = switch (r) {
-                case "TANK" -> backP;        // intercepte la menace qui vise le backline
-                case "ASSASSIN" -> isolatedP; // pique la proie isolée
-                case "MAGE" -> focusP;        // concentre le burst sur le focus
-                default -> null;              // HEALER : ne cible pas, il soigne (HealPartyGoal)
-            };
+            LivingEntity want;
+            if (execute && !"HEALER".equals(r)) {
+                want = focusP;
+            } else {
+                want = switch (r) {
+                    case "TANK" -> backP;         // intercepte la menace qui vise le backline
+                    case "ASSASSIN" -> isolatedP; // pique la proie isolée
+                    case "MAGE" -> focusP;        // concentre le burst sur le focus
+                    default -> null;              // HEALER : ne cible pas, il soigne (HealPartyGoal)
+                };
+            }
             if (want != null && m.getTarget() != want) {
                 m.setTarget(want);
             }

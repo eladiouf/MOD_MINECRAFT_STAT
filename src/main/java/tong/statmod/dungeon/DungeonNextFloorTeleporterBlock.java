@@ -51,7 +51,7 @@ public class DungeonNextFloorTeleporterBlock extends Block {
         sp.getCapability(StatCapabilities.PLAYER_STATS).ifPresent(data -> {
             // Bypass lock if in creative mode (instabuild)
             if (sp.getAbilities().instabuild || nextFloor <= data.getDungeonFloorReached()) {
-                DungeonTeleportHandler.enterFloor(sp, nextFloor);
+                DungeonTeleportHandler.enterFloor(sp, nextFloor, true);
             } else {
                 if (isRightClick || (now - lastMsg > 60L)) {
                     MSG_COOLDOWN.put(sp.getUUID(), now);

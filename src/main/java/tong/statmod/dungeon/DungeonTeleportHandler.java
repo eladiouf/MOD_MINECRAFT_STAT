@@ -142,85 +142,95 @@ public final class DungeonTeleportHandler {
      *   <li>l'étage demandé dépasse {@code floorReached},</li>
      *   <li>le serveur ne peut pas résoudre la dimension (datapack absent).</li>
      * </ul>
-     *
-     * @return {@code true} si le tp a bien eu lieu, {@code false} sinon.
      */
-    public static boolean enterFloor(ServerPlayer player, int floor) {
-        MinecraftServer server = player.getServer();
-        if (server == null) return false;
+    public static boolean enterFloor(ServerPlayer player, int floor, boolean bypassLock) {
+        try {
+            MinecraftServer server = player.getServer();
+            if (server == null) return false;
 
-        PlayerStats data = StatCapabilities.get(player);
-        if (floor < 0 || floor > data.getDungeonFloorReached()) {
-            StatMod.LOGGER.info("[TrialDungeon] Refus tp: floor={} reached={}", floor, data.getDungeonFloorReached());
+            PlayerStats data = StatCapabilities.get(player);
+            if (data == null) {
+                StatMod.LOGGER.error("[TrialDungeon] PlayerStats capability is missing for player {}", player.getScoreboardName());
+                return false;
+            }
+
+            if (!bypassLock) {
+                if (floor < 0 || floor > data.getDungeonFloorReached()) {
+                    StatMod.LOGGER.info("[TrialDungeon] Refus tp: floor={} reached={}", floor, data.getDungeonFloorReached());
+                    return false;
+                }
+            }
+
+            ServerLevel dungeon = server.getLevel(DungeonDimensions.TRIAL_DUNGEON);
+            if (dungeon == null) {
+                StatMod.LOGGER.warn("[TrialDungeon] Dimension statmod:trial_dungeon introuvable — datapack ok ?");
+                return false;
+            }
+
+            ResourceKey<Level> currentDim = player.level().dimension();
+            if (!currentDim.equals(DungeonDimensions.TRIAL_DUNGEON)) {
+                data.setLastOverworldDimensionId(currentDim.location().toString());
+                data.setLastOverworldPos(player.blockPosition().asLong());
+            }
+
+            IslandGenerator.generateFloor(dungeon, floor);
+            // Spawn au centre de la pièce d'apparition (combat/trésor) ou au bord sud de la plateforme (boss).
+            BlockPos spawn = safeSpawn(dungeon, floorPlayerSpawnPos(floor));
+
+            // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
+            // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la
+            // sortie vers l'étage suivant. Le donjon n'est plus un couloir.
+
+            player.teleportTo(dungeon, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
+                    Set.of(), player.getYRot(), player.getXRot());
+
+            // Les mécaniques de combat n'ont pas de sens dans la cité (étage 0, zone sûre).
+            if (floor > 0) {
+                // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
+                // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
+                // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
+                DungeonMobSpawner.requestWave(dungeon, floor);
+
+                // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
+                // la récompense de conquête.
+                DungeonRush.beginFloor(player.getUUID());
+                // Records : le chrono de nettoyage de l'étage démarre maintenant.
+                DungeonRecords.onFloorEnter(player, floor, dungeon.getGameTime());
+            }
+
+            // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
+            // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
+            tong.statmod.network.SyncHelper.syncStats(player);
+
+            // Bounties « atteindre l'étage » : accorde les advancements de palier mérités selon
+            // l'étage le plus profond atteint (rétroactif + idempotent — award ne re-déclenche pas).
+            awardDelveMilestones(player, data.getDungeonFloorReached());
+
+            if (floor > 0) {
+                // Annonce du thème de l'étage (chaque étage a le sien).
+                DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
+                player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                        theme.displayName()), false);
+                // Objectif de l'étage en barre d'action (le joueur sait quoi faire dès l'entrée).
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                        "dungeon.enter.objective",
+                        net.minecraft.network.chat.Component.translatable(
+                                DungeonObjective.forFloor(floor).translationKey())), true);
+            } else {
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                        "dungeon.city.welcome"), false);
+            }
+
+            // Tutoriel d'accueil, une seule fois par joueur (onboarding des mécaniques).
+            sendIntroIfFirstTime(player);
+
+            StatMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
+                    player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());
+            return true;
+        } catch (Exception e) {
+            StatMod.LOGGER.error("[TrialDungeon] Exception occurred during teleportation of player " + player.getScoreboardName() + " to floor " + floor, e);
             return false;
         }
-
-        ServerLevel dungeon = server.getLevel(DungeonDimensions.TRIAL_DUNGEON);
-        if (dungeon == null) {
-            StatMod.LOGGER.warn("[TrialDungeon] Dimension statmod:trial_dungeon introuvable — datapack ok ?");
-            return false;
-        }
-
-        ResourceKey<Level> currentDim = player.level().dimension();
-        if (!currentDim.equals(DungeonDimensions.TRIAL_DUNGEON)) {
-            data.setLastOverworldDimensionId(currentDim.location().toString());
-            data.setLastOverworldPos(player.blockPosition().asLong());
-        }
-
-        IslandGenerator.generateFloor(dungeon, floor);
-        // Spawn au centre de la pièce d'apparition (combat/trésor) ou au bord sud de la plateforme (boss).
-        BlockPos spawn = safeSpawn(dungeon, floorPlayerSpawnPos(floor));
-
-        // NOTE (« vraie aventure », 2026-07-04) : plus d'auto-unlock à l'entrée. Chaque étage doit
-        // être CONQUIS (objectif accompli — cf. DungeonObjective/DungeonProgress) pour débloquer la
-        // sortie vers l'étage suivant. Le donjon n'est plus un couloir.
-
-        player.teleportTo(dungeon, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
-                Set.of(), player.getYRot(), player.getXRot());
-
-        // Les mécaniques de combat n'ont pas de sens dans la cité (étage 0, zone sûre).
-        if (floor > 0) {
-            // Spawn de la vague de combat MAINTENANT que le joueur est dans le donjon et suit les
-            // chunks → les mobs sont trackés dès leur apparition → visibles. Une seule vague par
-            // étage : elle est le défi à nettoyer pour conquérir l'étage (pas de réalimentation).
-            DungeonMobSpawner.requestWave(dungeon, floor);
-
-            // Dungeon Rush : l'étage démarre « sans-faute » — le conquérir sans un coup reçu double
-            // la récompense de conquête.
-            DungeonRush.beginFloor(player.getUUID());
-            // Records : le chrono de nettoyage de l'étage démarre maintenant.
-            DungeonRecords.onFloorEnter(player, floor, dungeon.getGameTime());
-        }
-
-        // Sync des données donjon (points + max floor) au client dès l'entrée, pour que le HUD
-        // affiche les bonnes valeurs immédiatement (l'attachment n'est pas auto-synchronisé).
-        tong.statmod.network.SyncHelper.syncStats(player);
-
-        // Bounties « atteindre l'étage » : accorde les advancements de palier mérités selon
-        // l'étage le plus profond atteint (rétroactif + idempotent — award ne re-déclenche pas).
-        awardDelveMilestones(player, data.getDungeonFloorReached());
-
-        if (floor > 0) {
-            // Annonce du thème de l'étage (chaque étage a le sien).
-            DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
-            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                    theme.displayName()), false);
-            // Objectif de l'étage en barre d'action (le joueur sait quoi faire dès l'entrée).
-            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
-                    "dungeon.enter.objective",
-                    net.minecraft.network.chat.Component.translatable(
-                            DungeonObjective.forFloor(floor).translationKey())), true);
-        } else {
-            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
-                    "dungeon.city.welcome"), false);
-        }
-
-        // Tutoriel d'accueil, une seule fois par joueur (onboarding des mécaniques).
-        sendIntroIfFirstTime(player);
-
-        StatMod.LOGGER.info("[TrialDungeon] {} entre à l'étage {} (X={} Z={})",
-                player.getGameProfile().getName(), floor, spawn.getX(), spawn.getZ());
-        return true;
     }
 
     /** Accorde les advancements de palier « Plongée » (ciblés par les bounties de donjon). */

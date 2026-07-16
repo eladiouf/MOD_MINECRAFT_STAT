@@ -98,7 +98,7 @@ public final class DungeonRespawnHandler {
         }
 
         // Réapparition au début du MÊME étage (régénéré, nouvelle vague) — on réessaie l'étage.
-        DungeonTeleportHandler.enterFloor(player, floor);
+        DungeonTeleportHandler.enterFloor(player, floor, true);
 
         // Grâce de réapparition : brève invulnérabilité + résistance/lenteur des mobs autour, le
         // temps de reprendre pied (5 s d'invuln vanilla + résistance forte).

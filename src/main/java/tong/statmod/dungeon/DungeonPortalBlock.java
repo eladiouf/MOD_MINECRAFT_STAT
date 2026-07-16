@@ -36,7 +36,7 @@ public class DungeonPortalBlock extends Block {
             data.setLastOverworldPos(pos.asLong());
         });
 
-        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0);
+        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0, true);
         if (ok) {
             serverPlayer.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.7f, 1.3f);
             serverPlayer.displayClientMessage(

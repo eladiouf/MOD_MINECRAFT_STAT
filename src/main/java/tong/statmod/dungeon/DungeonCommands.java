@@ -45,7 +45,7 @@ public final class DungeonCommands {
                                 .executes(ctx -> {
                                     int floor = IntegerArgumentType.getInteger(ctx, "floor");
                                     if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                        boolean ok = DungeonTeleportHandler.enterFloor(player, floor);
+                                        boolean ok = DungeonTeleportHandler.enterFloor(player, floor, true);
                                         if (ok) {
                                             ctx.getSource().sendSuccess(() -> Component.literal(
                                                     "Teleported to floor " + floor), true);

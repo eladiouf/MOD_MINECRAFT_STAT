@@ -70,6 +70,8 @@ class StatsSnapshotMessageTest {
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         buffer.writeVarInt(0);
         buffer.writeVarInt(StatsSnapshotMessage.MAX_PERKS + 1);
+        buffer.writeVarInt(0);
+        buffer.writeVarInt(1);
 
         assertThrows(IllegalArgumentException.class,
                 () -> StatsSnapshotMessage.decode(buffer));

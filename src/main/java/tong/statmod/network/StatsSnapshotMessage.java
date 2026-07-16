@@ -15,7 +15,8 @@ import tong.statmod.stats.StatType;
 import tong.statmod.stats.StatValue;
 
 public record StatsSnapshotMessage(
-        Map<StatType, StatValue> values, List<String> activePerkIds) {
+        Map<StatType, StatValue> values, List<String> activePerkIds,
+        int dungeonPoints, int dungeonFloorReached) {
     public static final int MAX_PERKS = 39;
 
     public StatsSnapshotMessage {
@@ -29,7 +30,11 @@ public record StatsSnapshotMessage(
     }
 
     public StatsSnapshotMessage(Map<StatType, StatValue> values) {
-        this(values, List.of());
+        this(values, List.of(), 0, 1);
+    }
+
+    public StatsSnapshotMessage(Map<StatType, StatValue> values, List<String> activePerkIds) {
+        this(values, activePerkIds, 0, 1);
     }
 
     public static StatsSnapshotMessage from(PlayerStats stats) {
@@ -38,7 +43,7 @@ public record StatsSnapshotMessage(
         List<String> perkIds = AutomaticPerkResolver.active(levels).stream()
                 .map(AutomaticPerkDefinition::id)
                 .toList();
-        return new StatsSnapshotMessage(stats.snapshot(), perkIds);
+        return new StatsSnapshotMessage(stats.snapshot(), perkIds, stats.getDungeonPoints(), stats.getDungeonFloorReached());
     }
 
     public static void encode(StatsSnapshotMessage message, FriendlyByteBuf buffer) {
@@ -50,6 +55,8 @@ public record StatsSnapshotMessage(
         });
         buffer.writeVarInt(message.activePerkIds.size());
         message.activePerkIds.forEach(id -> buffer.writeUtf(id, 64));
+        buffer.writeVarInt(message.dungeonPoints);
+        buffer.writeVarInt(message.dungeonFloorReached);
     }
 
     public static StatsSnapshotMessage decode(FriendlyByteBuf buffer) {
@@ -75,6 +82,8 @@ public record StatsSnapshotMessage(
                 perkIds.add(id);
             }
         }
-        return new StatsSnapshotMessage(values, perkIds);
+        int dungeonPoints = buffer.readVarInt();
+        int dungeonFloorReached = buffer.readVarInt();
+        return new StatsSnapshotMessage(values, perkIds, dungeonPoints, dungeonFloorReached);
     }
 }

@@ -45,7 +45,8 @@ public final class StatNetwork {
                     var context = contextSupplier.get();
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                             () -> () -> ClientStatsCache.replace(
-                                    message.values(), message.activePerkIds())));
+                                    message.values(), message.activePerkIds(),
+                                    message.dungeonPoints(), message.dungeonFloorReached())));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));

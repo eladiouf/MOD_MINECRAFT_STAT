@@ -163,7 +163,7 @@ Object result = add.invoke(data, player, "sdm_coin", (double) amount);
 
 ```java
 ItemStack scroll = new ItemStack(ItemRegistry.SCROLL.get());
-ISpellContainer.createScrollContainer(spell, level, scroll).save(scroll);
+ISpellContainer.createScrollContainer(spell, level, scroll);
 ```
 
 - [ ] **Step 3: Sort spells by school registry ID, spell registry ID, then level.** For each school create `ShopTab(shop, MagicShopIds.tab(schoolId))`; for each spell level create `ShopEntry(shop, stableEntryId, tabId, new MoneySellerType(price))`, attach `StrictItemEntryType`, set count 1, price, and type `Buy`.

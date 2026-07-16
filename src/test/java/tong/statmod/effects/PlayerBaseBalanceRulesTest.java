@@ -14,11 +14,14 @@ class PlayerBaseBalanceRulesTest {
     }
 
     @Test
-    void scalesManaCapacityWithLevelAndMilestones() {
-        assertEquals(765.0D, PlayerBaseBalanceRules.maxMana(25, 1), 1.0e-9);
-        assertEquals(1030.0D, PlayerBaseBalanceRules.maxMana(50, 2), 1.0e-9);
-        assertEquals(1545.0D, PlayerBaseBalanceRules.maxMana(100, 3), 1.0e-9);
-        assertEquals(1545.0D, PlayerBaseBalanceRules.maxMana(500, 50), 1.0e-9);
+    void scalesManaCapacityToAnAbsoluteFifteenHundredCapIncludingMilestones() {
+        assertEquals(500.0D, PlayerBaseBalanceRules.maxMana(0, 0), 1.0e-9);
+        assertEquals(753.75D, PlayerBaseBalanceRules.maxMana(25, 1), 1.0e-9);
+        assertEquals(1007.5D, PlayerBaseBalanceRules.maxMana(50, 2), 1.0e-9);
+        assertEquals(1261.25D, PlayerBaseBalanceRules.maxMana(75, 3), 1.0e-9);
+        assertEquals(1500.0D, PlayerBaseBalanceRules.maxMana(100, 3), 1.0e-9);
+        assertEquals(1500.0D, PlayerBaseBalanceRules.maxMana(500, 50), 1.0e-9);
+        assertEquals(500.0D, PlayerBaseBalanceRules.maxMana(-1, -1), 1.0e-9);
     }
 
     @Test

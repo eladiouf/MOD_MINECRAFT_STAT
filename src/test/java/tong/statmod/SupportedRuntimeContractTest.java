@@ -1,5 +1,6 @@
 package tong.statmod;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -47,5 +48,8 @@ class SupportedRuntimeContractTest {
         assertTrue(record.contains("500 base mana"));
         assertTrue(record.contains("1 mana per second at level 0"));
         assertTrue(record.contains("17 mana per second at level 100"));
+        assertTrue(record.contains("exactly 1,500 total mana at level 100"));
+        assertTrue(record.contains("including all three `+3%` milestones"));
+        assertFalse(record.contains("1,545"));
     }
 }

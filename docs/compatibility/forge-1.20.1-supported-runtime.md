@@ -167,7 +167,7 @@ the authoritative synchronized stat and perk snapshot.
 STAT Mod establishes 100 base health and 5 base attack damage while preserving
 the player's current health percentage whenever the transient maximum changes.
 Iron's Spells remains the sole resource owner, with 500 base mana. Mana Pool
-scales capacity to 1,500 at level 100 before its three `+3%` milestones, for
-1,545 total mana. Regeneration follows one bounded curve: 1 mana per second at level 0,
+reaches exactly 1,500 total mana at level 100, including all three `+3%` milestones.
+Regeneration follows one bounded curve: 1 mana per second at level 0,
 `+0.145/s` per level, and `+0.5/s` per milestone, reaching exactly 17 mana per second at level 100.
 Refreshing attributes never directly fills health or mana.

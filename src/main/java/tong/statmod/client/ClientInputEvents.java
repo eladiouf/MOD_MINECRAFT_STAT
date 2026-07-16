@@ -6,6 +6,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
+import tong.statmod.client.hunter.ClientHunterPerception;
 import tong.statmod.client.notice.ClientProgressNotices;
 import tong.statmod.client.stats.StatsOverviewScreen;
 
@@ -21,6 +22,7 @@ public final class ClientInputEvents {
         }
         ClientProgressNotices.tick();
         Minecraft minecraft = Minecraft.getInstance();
+        ClientHunterPerception.tick(minecraft);
         ClientBookStudyInput.tick(minecraft);
         while (ClientKeyMappings.OPEN_STATS.consumeClick()) {
             if (minecraft.player != null && minecraft.screen == null) {

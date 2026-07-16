@@ -56,6 +56,18 @@ public final class SDMEconomyBridge {
                 Field currField = customCls.getField("CURRENCIES");
                 customCurrenciesMap = currField.get(null);
                 currenciesGet = customCurrenciesMap.getClass().getMethod("get", Object.class);
+                
+                @SuppressWarnings("unchecked")
+                java.util.Map<String, java.util.function.Supplier<Object>> currencies = 
+                        (java.util.Map<String, java.util.function.Supplier<Object>>) customCurrenciesMap;
+                currencies.putIfAbsent("FDP_cfa", () -> {
+                    try {
+                        Class<?> currencyCls = Class.forName("net.sixik.sdmeconomy.economy.Currency");
+                        return currencyCls.getConstructor(String.class).newInstance("FDP_cfa");
+                    } catch (Exception e) {
+                        return null;
+                    }
+                });
             } catch (Throwable t) {
                 LOGGER.warn("[Shop] CustomCurrencies non résolu: {}", t.toString());
             }

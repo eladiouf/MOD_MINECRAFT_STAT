@@ -150,8 +150,7 @@ public final class CityGenerator {
                     c.getZ() + CityPlan.RADIUS);
             for (Entity entity : lv.getEntities((Entity) null, city, e ->
                     e instanceof ArmorStand
-                            || e.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
-                            || e.getPersistentData().getBoolean(CityTrainingDummies.TAG))) {
+                            || e.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG))) {
                 entity.discard();
             }
         });

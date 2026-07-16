@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
+import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.integration.l2hostility.L2HostilityBridge;
 
 import java.util.ArrayList;
@@ -319,6 +320,12 @@ public final class DungeonMobSpawner {
                 }
             }
         }
+
+        // Groupe d'aventuriers : ~1 étage/5, une pièce contient un groupe de 4 (tank, assassin, mage, soigneur)
+        if (AdventurerPartyHelper.isPartyFloor(floor)) {
+            AdventurerPartyHelper.spawnParty(lv, sp, floor);
+        }
+
         return spawned;
     }
 

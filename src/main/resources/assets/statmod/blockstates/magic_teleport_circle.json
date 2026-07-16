@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "part=north_west": { "model": "statmod:block/magic_teleport_circle_north_west" },
+    "part=north":      { "model": "statmod:block/magic_teleport_circle_north" },
+    "part=north_east": { "model": "statmod:block/magic_teleport_circle_north_east" },
+    "part=west":       { "model": "statmod:block/magic_teleport_circle_west" },
+    "part=center":     { "model": "statmod:block/magic_teleport_circle_center" },
+    "part=east":       { "model": "statmod:block/magic_teleport_circle_east" },
+    "part=south_west": { "model": "statmod:block/magic_teleport_circle_south_west" },
+    "part=south":      { "model": "statmod:block/magic_teleport_circle_south" },
+    "part=south_east": { "model": "statmod:block/magic_teleport_circle_south_east" }
+  }
+}

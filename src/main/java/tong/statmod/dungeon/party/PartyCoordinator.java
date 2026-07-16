@@ -14,9 +14,12 @@ import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Cerveau du groupe d'aventuriers : à intervalle fixe, coordonne le ciblage des membres face au(x)
@@ -33,6 +36,8 @@ public final class PartyCoordinator {
     /** Clés persistentData de l'ancre de formation, lues par les goals du backline. */
     public static final String ANCHOR_X = "statmod_party_anchor_x";
     public static final String ANCHOR_Z = "statmod_party_anchor_z";
+    /** Focus retenu par étage (hystérésis anti-thrashing + continuité de la concentration). */
+    private static final Map<Integer, UUID> LAST_FOCUS = new HashMap<>();
     private static int tick;
 
     private PartyCoordinator() {}
@@ -124,6 +129,32 @@ public final class PartyCoordinator {
         int isolated = clamp(PartyTargeting.isolatedIndex(pos), n);
         int backThreat = clamp(PartyTargeting.nearestToPoint(pos, bx, bz), n);
 
+        // PUNISH : un joueur qui boit/mange/bloque/charge un arc est vulnérable → on l'achève
+        // (interrompre un heal/potion vaut plus que le PV brut). Sinon HYSTÉRÉSIS : on reste sur
+        // le focus précédent tant qu'il n'est pas nettement plus sain → ciblage délibéré, non erratique.
+        int channeling = -1;
+        double channelingHp = Double.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (foes.get(i).isUsingItem() && hp[i] < channelingHp) {
+                channelingHp = hp[i];
+                channeling = i;
+            }
+        }
+        if (channeling >= 0) {
+            focus = channeling;
+        } else {
+            UUID prev = LAST_FOCUS.get(floor);
+            if (prev != null) {
+                for (int i = 0; i < n; i++) {
+                    if (foes.get(i).getUUID().equals(prev) && hp[i] <= hp[focus] + 0.15) {
+                        focus = i;
+                        break;
+                    }
+                }
+            }
+        }
+        LAST_FOCUS.put(floor, foes.get(focus).getUUID());
+
         LivingEntity focusP = foes.get(focus);
         LivingEntity isolatedP = foes.get(isolated);
         LivingEntity backP = foes.get(backThreat);
@@ -158,7 +189,8 @@ public final class PartyCoordinator {
             } else {
                 want = switch (r) {
                     case "TANK" -> backP;         // intercepte la menace qui vise le backline
-                    case "ASSASSIN" -> isolatedP; // pique la proie isolée
+                    // pique la proie isolée — mais si quelqu'un channelle (heal/potion), va l'interrompre.
+                    case "ASSASSIN" -> channeling >= 0 ? foes.get(channeling) : isolatedP;
                     case "MAGE" -> focusP;        // concentre le burst sur le focus
                     default -> null;              // HEALER : ne cible pas, il soigne (HealPartyGoal)
                 };

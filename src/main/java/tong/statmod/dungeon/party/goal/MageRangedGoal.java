@@ -3,6 +3,8 @@ package tong.statmod.dungeon.party.goal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -32,6 +34,7 @@ public class MageRangedGoal extends Goal {
     private int castCooldown;
     private int strafeTimer;
     private int stuckTicks;
+    private int hexCooldown;
 
     public MageRangedGoal(Mob mage) {
         this.mage = mage;
@@ -96,6 +99,15 @@ public class MageRangedGoal extends Goal {
                     target.getX() - mage.getX()).normalize();
             Vec3 strafePos = mage.position().add(left.scale(3));
             mage.getNavigation().moveTo(strafePos.x, strafePos.y, strafePos.z, 0.8);
+        }
+
+        // Entrave : ralentit un ennemi qui kite/fuit → le tank et l'assassin le rattrapent (combo CC).
+        if (hexCooldown <= 0 && dist > FLEE_DIST * FLEE_DIST && dist < 24 * 24) {
+            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50, 1, false, true));
+            mage.swing(net.minecraft.world.InteractionHand.OFF_HAND);
+            hexCooldown = 140 + mage.getRandom().nextInt(40);
+        } else if (hexCooldown > 0) {
+            hexCooldown--;
         }
 
         if (castCooldown <= 0) {

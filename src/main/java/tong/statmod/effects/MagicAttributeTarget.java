@@ -54,10 +54,19 @@ public enum MagicAttributeTarget {
     }
 
     public double amount(PlayerStats stats) {
+        if (this == MAX_MANA) {
+            int level = stats.get(StatType.MANA_POOL).level();
+            double target = PlayerBaseBalanceRules.maxMana(
+                    level, PlayerBaseBalanceRules.manaMilestones(level));
+            return target / PlayerBaseBalanceRules.BASE_MAX_MANA - 1.0D;
+        }
         return LinearStatScaling.bonus(stats.get(stat).level(), bonusKind.maximumAt100());
     }
 
     public double amount(PlayerStats stats, AutomaticPerkBonuses bonuses) {
+        if (this == MAX_MANA) {
+            return amount(stats);
+        }
         return amount(stats) + bonuses.amount(perkEffect());
     }
 
@@ -83,7 +92,7 @@ public enum MagicAttributeTarget {
                 case SPELL_POWER -> StatModServerConfig.arcanePowerSpellPowerBonusAt100();
                 case CAST_TIME -> StatModServerConfig.castingSpeedCastTimeBonusAt100();
                 case COOLDOWN -> StatModServerConfig.castingSpeedCooldownBonusAt100();
-                case MANA_CAPACITY -> StatModServerConfig.manaPoolCapacityBonusAt100();
+                case MANA_CAPACITY -> 1.91D;
                 case SPELL_RESIST -> StatModServerConfig.magicResistanceBonusAt100();
             };
         }

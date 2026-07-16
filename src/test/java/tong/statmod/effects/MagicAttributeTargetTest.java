@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import tong.statmod.config.StatModServerConfig;
+import tong.statmod.perks.AutomaticPerkBonuses;
 import tong.statmod.stats.PlayerStats;
 import tong.statmod.stats.StatType;
 
@@ -62,6 +63,20 @@ class MagicAttributeTargetTest {
 
         stats.setLevel(StatType.ARCANE_POWER, 100);
         assertEquals(1.0, MagicAttributeTarget.SPELL_POWER.amount(stats));
+    }
+
+    @Test
+    void derivesMaxManaMultiplierFromTheAbsoluteCappedRule() {
+        CommentedConfig config = CommentedConfig.inMemory();
+        StatModServerConfig.SPEC.correct(config);
+        StatModServerConfig.SPEC.setConfig(config);
+        PlayerStats stats = new PlayerStats();
+        AutomaticPerkBonuses none = AutomaticPerkBonuses.from(stats);
+        assertEquals(0.0D, MagicAttributeTarget.MAX_MANA.amount(stats, none), 1.0e-9);
+
+        stats.setLevel(StatType.MANA_POOL, 100);
+        AutomaticPerkBonuses all = AutomaticPerkBonuses.from(stats);
+        assertEquals(2.0D, MagicAttributeTarget.MAX_MANA.amount(stats, all), 1.0e-9);
     }
 
     @Test

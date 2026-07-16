@@ -34,13 +34,12 @@ class StatModServerConfigContractTest {
         assertTrue(config.contains("arcanePowerSpellPowerBonusAt100\", 1.00, 0.0, 10.0"));
         assertTrue(config.contains("castingSpeedCastTimeBonusAt100\", 0.30, 0.0, 0.90"));
         assertTrue(config.contains("castingSpeedCooldownBonusAt100\", 0.20, 0.0, 0.90"));
-        assertTrue(config.contains("manaPoolCapacityBonusAt100\", 2.00, 0.0, 20.0"));
+        assertFalse(config.contains("manaPoolCapacityBonusAt100"));
         assertFalse(config.contains("manaPoolRegenBonusAt100"));
         assertTrue(config.contains("magicResistanceBonusAt100\", 0.50, 0.0, 0.90"));
         assertTrue(config.contains("arcanePowerSpellPowerBonusAt100()"));
         assertTrue(config.contains("castingSpeedCastTimeBonusAt100()"));
         assertTrue(config.contains("castingSpeedCooldownBonusAt100()"));
-        assertTrue(config.contains("manaPoolCapacityBonusAt100()"));
         assertTrue(config.contains("magicResistanceBonusAt100()"));
         assertTrue(config.contains("builder.push(\"automaticPerks\")"));
         assertTrue(config.contains("rapiditeAttackSpeedPerMilestone\", 0.02, 0.0, 0.25"));

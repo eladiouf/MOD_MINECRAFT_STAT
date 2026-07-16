@@ -17,7 +17,6 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue ARCANE_POWER_SPELL_POWER_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_CAST_TIME_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue CASTING_SPEED_COOLDOWN_BONUS_AT_100;
-    private static final ForgeConfigSpec.DoubleValue MANA_POOL_CAPACITY_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE_BONUS_AT_100;
     private static final ForgeConfigSpec.DoubleValue RAPIDITE_ATTACK_SPEED_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue AGILITY_MOVEMENT_PER_MILESTONE;
@@ -76,8 +75,6 @@ public final class StatModServerConfig {
                 "castingSpeedCastTimeBonusAt100", 0.30, 0.0, 0.90);
         CASTING_SPEED_COOLDOWN_BONUS_AT_100 = builder.defineInRange(
                 "castingSpeedCooldownBonusAt100", 0.20, 0.0, 0.90);
-        MANA_POOL_CAPACITY_BONUS_AT_100 = builder.defineInRange(
-                "manaPoolCapacityBonusAt100", 2.00, 0.0, 20.0);
         MAGIC_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
                 "magicResistanceBonusAt100", 0.50, 0.0, 0.90);
         builder.pop();
@@ -247,10 +244,6 @@ public final class StatModServerConfig {
 
     public static double castingSpeedCooldownBonusAt100() {
         return CASTING_SPEED_COOLDOWN_BONUS_AT_100.get();
-    }
-
-    public static double manaPoolCapacityBonusAt100() {
-        return MANA_POOL_CAPACITY_BONUS_AT_100.get();
     }
 
     public static double magicResistanceBonusAt100() {

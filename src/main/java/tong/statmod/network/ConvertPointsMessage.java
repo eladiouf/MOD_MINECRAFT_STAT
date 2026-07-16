@@ -38,13 +38,21 @@ public final class ConvertPointsMessage {
                     double rate = Config.getPointToCoinRate();
                     PointExchange.Result r = PointExchange.compute(message.amount, points, rate);
                     if (r.converted() > 0) {
-                        net.minecraft.world.item.ItemStack emeralds = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD, (int) r.coins());
-                        boolean added = sender.getInventory().add(emeralds);
-                        if (!added || emeralds.getCount() > 0) {
-                            sender.drop(emeralds, false);
+                        boolean credited;
+                        if (SDMEconomyBridge.available()) {
+                            credited = SDMEconomyBridge.addCoins(sender, r.coins());
+                        } else {
+                            net.minecraft.world.item.ItemStack emeralds = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD, (int) r.coins());
+                            boolean added = sender.getInventory().add(emeralds);
+                            if (!added || emeralds.getCount() > 0) {
+                                sender.drop(emeralds, false);
+                            }
+                            credited = true;
                         }
-                        data.addDungeonPoints(-r.converted());
-                        SyncHelper.syncStats(sender);
+                        if (credited) {
+                            data.addDungeonPoints(-r.converted());
+                            SyncHelper.syncStats(sender);
+                        }
                     }
                 }
             });

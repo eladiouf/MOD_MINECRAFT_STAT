@@ -91,10 +91,14 @@ public class PointExchangeScreen extends Screen {
         g.fill(left - 1, top, left, bottom, borderColor);
         g.fill(right, top, right + 1, bottom, borderColor);
 
+        boolean sdm = net.minecraftforge.fml.ModList.get().isLoaded("sdmeconomy");
+        String coinsKey = sdm ? "shop.exchange.coins.sdm" : "shop.exchange.coins.emerald";
+        String rateKey = sdm ? "shop.exchange.rate.sdm" : "shop.exchange.rate.emerald";
+
         g.drawCenteredString(this.font, this.title, cx, top + 10, 0xFFFFFF);
         g.drawCenteredString(this.font, Component.translatable("shop.exchange.points", points), cx, top + 26, 0xFFE066);
-        g.drawCenteredString(this.font, Component.translatable("shop.exchange.coins", coins), cx, top + 38, 0x66FF66);
-        g.drawCenteredString(this.font, Component.translatable("shop.exchange.rate", String.format("%.2f", rate)), cx, top + 50, 0xAAAAAA);
+        g.drawCenteredString(this.font, Component.translatable(coinsKey, coins), cx, top + 38, 0x66FF66);
+        g.drawCenteredString(this.font, Component.translatable(rateKey, String.format("%.2f", rate)), cx, top + 50, 0xAAAAAA);
 
         super.render(g, mouseX, mouseY, partialTick);
     }

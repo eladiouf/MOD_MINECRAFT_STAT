@@ -75,11 +75,16 @@ public final class DungeonExchanger {
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         authorize(sp, event.getTarget());
         int points = StatCapabilities.get(sp).getDungeonPoints();
-        long emeraldsCount = sp.getInventory().items.stream()
-                .filter(stack -> stack.is(net.minecraft.world.item.Items.EMERALD))
-                .mapToLong(net.minecraft.world.item.ItemStack::getCount)
-                .sum();
-        tong.statmod.network.StatNetwork.sendOpenExchange(sp, points, emeraldsCount,
+        long coins;
+        if (SDMEconomyBridge.available()) {
+            coins = SDMEconomyBridge.getCoins(sp);
+        } else {
+            coins = sp.getInventory().items.stream()
+                    .filter(stack -> stack.is(net.minecraft.world.item.Items.EMERALD))
+                    .mapToLong(net.minecraft.world.item.ItemStack::getCount)
+                    .sum();
+        }
+        tong.statmod.network.StatNetwork.sendOpenExchange(sp, points, coins,
                 (float) tong.statmod.config.Config.getPointToCoinRate());
     }
 

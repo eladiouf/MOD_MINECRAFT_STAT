@@ -29,7 +29,7 @@
 
 ### Task 2: Public multi-team admission
 
-**Files:** `DungeonFloorAdmission.java`, its test, `DungeonTeleportHandler.java`, and language JSON.
+**Files:** `DungeonTeleportHandler.java`, `DungeonFtbTeamsWiringContractTest.java`, and language JSON.
 
 - [ ] Rewrite admission tests so rival teams and an unavailable manager never block entry.
 - [ ] Run them and confirm RED.

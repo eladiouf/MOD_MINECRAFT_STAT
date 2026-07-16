@@ -122,8 +122,7 @@ public final class DungeonBossHandler {
 
     private static void setBossCooldown(ServerPlayer sp, int floor) {
         long unlockTick = sp.serverLevel().getGameTime() + BOSS_COOLDOWN_TICKS;
-        for (ServerPlayer p : tong.statmod.integration.ftbteams.FTBTeamsBridge
-                .teammatesOnFloor(sp, sp.serverLevel(), floor)) {
+        for (ServerPlayer p : DungeonTeleportHandler.playersOnFloor(sp.serverLevel(), floor)) {
             StatCapabilities.get(p).setBossCooldown(floor, unlockTick);
         }
     }

@@ -1,7 +1,6 @@
 package tong.statmod.integration.ftbteams;
 
 import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -25,17 +24,6 @@ public final class FTBTeamsBridge {
             return FTBTeamsAPI.api().getManager().arePlayersInSameTeam(a.getUUID(), b.getUUID());
         } catch (RuntimeException | LinkageError ignored) {
             return false;
-        }
-    }
-
-    public static Component teamName(ServerPlayer player) {
-        if (!loaded()) return null;
-        try {
-            return FTBTeamsAPI.api().getManager().getTeamForPlayer(player)
-                    .map(team -> team.getColoredName())
-                    .orElse(null);
-        } catch (RuntimeException | LinkageError ignored) {
-            return null;
         }
     }
 

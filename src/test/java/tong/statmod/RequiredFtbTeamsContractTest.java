@@ -23,8 +23,6 @@ class RequiredFtbTeamsContractTest {
         assertRequired(metadata, "ftbteams", "[2001.3.2,)");
         assertTrue(bridge.contains("import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;"));
         assertTrue(bridge.contains("arePlayersInSameTeam"));
-        assertTrue(bridge.contains("getTeamForPlayer"));
-        assertTrue(bridge.contains("getColoredName"));
         assertTrue(bridge.contains("return false;"), "manager failure must fail closed");
     }
 

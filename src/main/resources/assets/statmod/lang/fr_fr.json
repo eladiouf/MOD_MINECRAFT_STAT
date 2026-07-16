@@ -396,7 +396,6 @@
   "dungeon.rush.jackpot": "§6✦ JACKPOT ! +%1$s pts §7(total %2$s)",
   "dungeon.rush.combo_broken": "§c✖ Combo ×%s brisé !",
   "dungeon.rush.assist": "§b+%s pts d'assist §7(total %s)",
-  "dungeon.coop.rival_conquered": "§7L'équipe §c%s§7 a conquis l'étage %s avant vous — l'objectif reste à accomplir pour votre équipe.",
   "dungeon.record.title": "§6★ NOUVEAU RECORD",
   "dungeon.record.combo": "§7Meilleur combo : §6×%s",
   "dungeon.record.clear": "§7Étage nettoyé en §6%s",
@@ -498,7 +497,5 @@
   "forge_shop.purchased": "%s acheté pour %s FDP",
   "forge_shop.insufficient_funds": "Solde FDP insuffisant",
   "forge_shop.invalid_session": "Rapproche-toi du Marchand de Forge.",
-  "forge_shop.npc": "Marchand de Forge",
-  "dungeon.floor.occupied_by_other_team": "Cet étage est actuellement occupé par une autre équipe FTB.",
-  "dungeon.floor.ftb_teams_unavailable": "FTB Teams n'est pas prêt. L'entrée du donjon est refusée."
+  "forge_shop.npc": "Marchand de Forge"
 }

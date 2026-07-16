@@ -460,7 +460,6 @@
   "dungeon.rush.jackpot": "§6✦ JACKPOT! +%1$s pts §7(total %2$s)",
   "dungeon.rush.combo_broken": "§c✖ Combo ×%s broken!",
   "dungeon.rush.assist": "§b+%s assist pts §7(total %s)",
-  "dungeon.coop.rival_conquered": "§7Team §c%s§7 conquered floor %s before you — your team still has to complete the objective.",
   "dungeon.record.title": "§6★ NEW RECORD",
   "dungeon.record.combo": "§7Best combo: §6×%s",
   "dungeon.record.clear": "§7Floor cleared in §6%s",
@@ -562,7 +561,5 @@
   "forge_shop.purchased": "Purchased %s for %s FDP",
   "forge_shop.insufficient_funds": "Insufficient FDP balance",
   "forge_shop.invalid_session": "Move closer to the Forge Merchant.",
-  "forge_shop.npc": "Forge Merchant",
-  "dungeon.floor.occupied_by_other_team": "This floor is currently occupied by another FTB team.",
-  "dungeon.floor.ftb_teams_unavailable": "FTB Teams is not ready. Dungeon entry was refused."
+  "forge_shop.npc": "Forge Merchant"
 }

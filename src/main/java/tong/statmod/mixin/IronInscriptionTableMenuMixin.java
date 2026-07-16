@@ -15,7 +15,7 @@ import tong.statmod.integration.ironspells.IronLearnedSpellBindingService;
 import tong.statmod.integration.ironspells.LearnedSpellBindingPolicy;
 import tong.statmod.stats.PlayerStats;
 
-@Mixin(InscriptionTableMenu.class)
+@Mixin(value = InscriptionTableMenu.class, remap = false)
 public abstract class IronInscriptionTableMenuMixin {
     @Shadow
     private int selectedSpellIndex;

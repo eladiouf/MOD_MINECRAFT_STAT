@@ -206,6 +206,7 @@
   "statmod.magic.irons_not_loaded": "Iron's Spellbooks is not installed",
   "statmod.menu.virtual_inscription": "Spell Codex",
   "statmod.spell.tooltip.school": "School: %s",
+  "statmod.spell.tooltip.learned_level": "Learned level: %s",
   "statmod.spell.tooltip.rarity": "Rarity: %s",
   "statmod.spell.tooltip.mana": "Mana: %d",
   "statmod.spell.tooltip.cooldown": "Cooldown: %s",

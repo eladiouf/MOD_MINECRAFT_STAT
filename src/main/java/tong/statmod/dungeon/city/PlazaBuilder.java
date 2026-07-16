@@ -30,6 +30,10 @@ final class PlazaBuilder {
         buildGuardianCrystal(lv, c);
         buildLeaderboardWall(lv, c.offset(18, 0, 0));
 
+        // Flèche-repère : skyline de la cité, montée vers le plafond (au nord, hors spawn sud).
+        BlockPos spireBase = new BlockPos(CityPlan.CENTER_X, CityPlan.GROUND_Y + 1, CityPlan.CENTER_Z - 10);
+        CityRoofs.spire(lv, spireBase, 2, 34, Blocks.POLISHED_DEEPSLATE, Blocks.DEEPSLATE_TILES);
+
         // Services fonctionnels (aucune régression vs l'ancien temple).
         WaystonesBridge.placeCheckpoint(lv, c.offset(0, 0, 12), FloorPalette.forFloor(10), 0);
         lv.setBlock(c.offset(-3, 0, 12), DungeonBlocks.RETURN_BEACON.get().defaultBlockState(), 3);

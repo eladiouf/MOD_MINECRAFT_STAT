@@ -125,8 +125,9 @@ earlier mutable `SpellDamageEvent`, require a kill, or classify a spell school.
 
 ## Automatic perks
 
-The supported runtime contains 39 automatic perks: the original 21 perks for
-the seven mature attribute-backed stats, 12 classified combat perks, and 6 hunter perception perks
+The supported runtime contains 45 automatic perks: the original 21 perks for
+the seven mature attribute-backed stats, 12 classified combat perks, 6
+resilience perks for Willpower and Intimidation, and 6 hunter perception perks
 for Tracking and Keen Senses. Three cumulative
 milestones activate at levels 25, 50, and 75.
 Activation is derived from the current server-authoritative levels, so
@@ -156,7 +157,7 @@ Pufferfish's Attributes remains an attribute provider and never owns perk
 progression. Existing stable transient modifier UUIDs combine continuous stat
 scaling and milestone bonuses without stacking.
 
-The bounded snapshot transport uses protocol 7 and accepts at most the 39
+The bounded snapshot transport uses protocol 8 and accepts at most the 45
 canonical perk IDs in catalog order. One bounded personal client packet carries
 the current marked entity and expiry; Keen Senses derives its scan locally from
 the authoritative synchronized stat and perk snapshot.

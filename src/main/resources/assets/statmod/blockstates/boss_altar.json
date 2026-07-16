@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "active=true": { "model": "statmod:block/boss_altar_active" },
+    "active=false": { "model": "statmod:block/boss_altar" }
+  }
+}

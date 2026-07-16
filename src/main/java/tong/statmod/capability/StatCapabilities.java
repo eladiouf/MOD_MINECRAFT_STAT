@@ -22,4 +22,8 @@ public final class StatCapabilities {
         event.register(PlayerStats.class);
         event.register(PlayerXpState.class);
     }
+
+    public static PlayerStats get(net.minecraft.world.entity.LivingEntity entity) {
+        return entity.getCapability(PLAYER_STATS).orElse(null);
+    }
 }

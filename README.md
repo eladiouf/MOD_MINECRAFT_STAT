@@ -99,9 +99,10 @@ par jalon).
 
 ## Perks automatiques
 
-STAT Mod fournit 39 perks passifs automatiques : les 21 perks d'attributs
-existants, 12 perks de combat classifié et 6 perks de perception pour Tracking
-et Keen Senses. Trois perks cumulatifs s'activent aux niveaux 25, 50 et 75 de
+STAT Mod fournit 45 perks passifs automatiques : les 21 perks d'attributs
+existants, 12 perks de combat classifié, 6 perks de résilience pour Willpower
+et Intimidation, et 6 perks de perception pour Tracking et Keen Senses. Trois
+perks cumulatifs s'activent aux niveaux 25, 50 et 75 de
 la statistique correspondante et se désactivent si le niveau redescend.
 
 Un coup qui inflige réellement des dégâts à un ennemi marque cette proie pour
@@ -118,8 +119,8 @@ déduit les perks actifs directement des niveaux et les affiche dans une liste
 non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
 fournisseur d'attributs compatibles.
 
-Le protocole réseau interne est la version `7` et borne la liste synchronisée à
-39 identifiants canoniques. Un seul paquet personnel synchronise la dernière
+Le protocole réseau interne est la version `8` et borne la liste synchronisée à
+45 identifiants canoniques. Un seul paquet personnel synchronise la dernière
 proie marquée ; le scan Keen Senses reste entièrement client.
 
 ## Compiler

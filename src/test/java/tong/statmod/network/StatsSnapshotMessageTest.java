@@ -35,7 +35,7 @@ class StatsSnapshotMessageTest {
         StatsSnapshotMessage.encode(original, buffer);
         StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
 
-        assertEquals(39, StatsSnapshotMessage.MAX_PERKS);
+        assertEquals(45, StatsSnapshotMessage.MAX_PERKS);
         assertEquals(java.util.List.of(
                 "statmod:rapidite_25", "statmod:rapidite_50"),
                 decoded.activePerkIds());
@@ -49,7 +49,8 @@ class StatsSnapshotMessageTest {
                 StatType.CASTING_SPEED, StatType.MANA_POOL,
                 StatType.MAGIC_RESISTANCE, StatType.BRUTE_FORCE,
                 StatType.BLADE_TECHNIQUE, StatType.PRECISION,
-                StatType.PHYSICAL_RESISTANCE, StatType.TRACKING,
+                StatType.PHYSICAL_RESISTANCE, StatType.WILLPOWER,
+                StatType.INTIMIDATION, StatType.TRACKING,
                 StatType.KEEN_SENSES}) {
             stats.setLevel(type, 75);
         }
@@ -59,10 +60,10 @@ class StatsSnapshotMessageTest {
         StatsSnapshotMessage.encode(original, buffer);
         StatsSnapshotMessage decoded = StatsSnapshotMessage.decode(buffer);
 
-        assertEquals(39, decoded.activePerkIds().size());
+        assertEquals(45, decoded.activePerkIds().size());
         assertEquals("statmod:rapidite_25", decoded.activePerkIds().get(0));
         assertEquals("statmod:keen_senses_75",
-                decoded.activePerkIds().get(38));
+                decoded.activePerkIds().get(44));
     }
 
     @Test
@@ -70,6 +71,8 @@ class StatsSnapshotMessageTest {
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         buffer.writeVarInt(0);
         buffer.writeVarInt(StatsSnapshotMessage.MAX_PERKS + 1);
+        buffer.writeVarInt(0);
+        buffer.writeVarInt(1);
 
         assertThrows(IllegalArgumentException.class,
                 () -> StatsSnapshotMessage.decode(buffer));

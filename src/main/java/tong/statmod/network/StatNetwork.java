@@ -46,7 +46,8 @@ public final class StatNetwork {
                     var context = contextSupplier.get();
                     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                             () -> () -> ClientStatsCache.replace(
-                                    message.values(), message.activePerkIds())));
+                                    message.values(), message.activePerkIds(),
+                                    message.dungeonPoints(), message.dungeonFloorReached())));
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -84,7 +85,17 @@ public final class StatNetwork {
                     context.setPacketHandled(true);
                 },
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        CHANNEL.registerMessage(4, TrackedPreyMessage.class,
+        CHANNEL.registerMessage(4, ConvertPointsMessage.class,
+                ConvertPointsMessage::encode,
+                ConvertPointsMessage::decode,
+                ConvertPointsMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(5, OpenExchangeMessage.class,
+                OpenExchangeMessage::encode,
+                OpenExchangeMessage::decode,
+                OpenExchangeMessage::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(6, TrackedPreyMessage.class,
                 TrackedPreyMessage::encode,
                 TrackedPreyMessage::decode,
                 (message, contextSupplier) -> {
@@ -126,5 +137,14 @@ public final class StatNetwork {
     public static void sendTrackedPreyClear(ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 TrackedPreyMessage.clear());
+    }
+
+    public static void sendConvertPoints(int amount) {
+        CHANNEL.sendToServer(new ConvertPointsMessage(amount));
+    }
+
+    public static void sendOpenExchange(ServerPlayer player, int points, long coins, float rate) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new OpenExchangeMessage(points, coins, rate));
     }
 }

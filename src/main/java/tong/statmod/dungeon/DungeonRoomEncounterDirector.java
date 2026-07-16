@@ -1,0 +1,72 @@
+package tong.statmod.dungeon;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+/** Runtime progression through the existing DungeonRoomChain, one encounter at a time. */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
+public final class DungeonRoomEncounterDirector {
+    private static final Map<Integer, RoomEncounterProgress> STATES = new HashMap<>();
+    private static int tick;
+
+    private DungeonRoomEncounterDirector() {}
+
+    public static void beginFloor(ServerLevel level, int floor) {
+        if (!isCombatFloor(floor)) return;
+        STATES.compute(floor, (ignored, current) -> current == null || current.isComplete()
+                ? new RoomEncounterProgress(requiredRoomIndices()) : current);
+    }
+
+    public static boolean onActiveRoomCleared(int floor) {
+        // All mobs spawn at once on the floor (no room-by-room progression).
+        // When the last authorized mob dies, the floor is complete.
+        STATES.remove(floor);
+        return true;
+    }
+
+    public static void resetActiveRoom(int floor) {
+        RoomEncounterProgress state = STATES.get(floor);
+        if (state != null) state.resetActiveRoom();
+    }
+
+
+
+    @SubscribeEvent
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        // No-op: all mobs spawn at once when entering the floor
+    }
+
+    static int roomAt(int floor, BlockPos worldPos) {
+        BlockPos origin = DungeonTeleportHandler.floorSpawnPos(floor);
+        int x = worldPos.getX() - origin.getX();
+        int z = worldPos.getZ() - origin.getZ();
+        for (DungeonLayout.Room room : DungeonLayout.rooms()) {
+            if (x >= room.minX() && x <= room.maxX() && z >= room.minZ() && z <= room.maxZ()) {
+                return room.index();
+            }
+        }
+        return -1;
+    }
+
+    static Set<Integer> requiredRoomIndices() {
+        Set<Integer> rooms = new HashSet<>();
+        for (DungeonLayout.Room room : DungeonLayout.rooms()) {
+            if (!room.isFirst() && room.index() != DungeonLayout.ROOM_COUNT / 2) rooms.add(room.index());
+        }
+        return Set.copyOf(rooms);
+    }
+
+    private static boolean isCombatFloor(int floor) {
+        return floor > 0 && floor % 5 != 0;
+    }
+}

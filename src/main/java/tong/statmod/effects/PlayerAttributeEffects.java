@@ -77,6 +77,10 @@ public final class PlayerAttributeEffects {
             replaceModifier(player, target.id(), target.modifierId(),
                     "STAT Mod " + target.stat().id(), target.amount(stats, bonuses));
         }
+        for (ResilienceAttributeTarget target : ResilienceAttributeTarget.values()) {
+            replaceModifier(player, target.id(), target.modifierId(),
+                    "STAT Mod " + target.stat().id(), target.amount(stats, bonuses));
+        }
         preserveHealthRatio(player, previousHealth, previousMaxHealth);
     }
 

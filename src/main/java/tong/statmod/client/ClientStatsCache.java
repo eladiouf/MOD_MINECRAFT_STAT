@@ -13,11 +13,15 @@ public final class ClientStatsCache {
     }
 
     public static void replace(Map<StatType, StatValue> next) {
-        replace(next, List.of());
+        replace(next, List.of(), 0, 1);
     }
 
     public static void replace(Map<StatType, StatValue> next, List<String> activePerkIds) {
-        state = new ClientStatsState(state.revision() + 1, next, activePerkIds);
+        replace(next, activePerkIds, 0, 1);
+    }
+
+    public static void replace(Map<StatType, StatValue> next, List<String> activePerkIds, int dungeonPoints, int dungeonFloorReached) {
+        state = new ClientStatsState(state.revision() + 1, next, activePerkIds, dungeonPoints, dungeonFloorReached);
     }
 
     public static void clear() {

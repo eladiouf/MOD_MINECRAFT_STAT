@@ -8,7 +8,8 @@ import tong.statmod.stats.StatType;
 import tong.statmod.stats.StatValue;
 
 public record ClientStatsState(
-        long revision, Map<StatType, StatValue> values, List<String> activePerkIds) {
+        long revision, Map<StatType, StatValue> values, List<String> activePerkIds,
+        int dungeonPoints, int dungeonFloorReached) {
     public ClientStatsState {
         EnumMap<StatType, StatValue> copy = new EnumMap<>(StatType.class);
         Map<StatType, StatValue> source = values == null ? Map.of() : values;
@@ -20,6 +21,10 @@ public record ClientStatsState(
     }
 
     public ClientStatsState(long revision, Map<StatType, StatValue> values) {
-        this(revision, values, List.of());
+        this(revision, values, List.of(), 0, 1);
+    }
+
+    public ClientStatsState(long revision, Map<StatType, StatValue> values, List<String> activePerkIds) {
+        this(revision, values, activePerkIds, 0, 1);
     }
 }

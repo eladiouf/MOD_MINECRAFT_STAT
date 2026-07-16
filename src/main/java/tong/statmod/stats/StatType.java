@@ -32,10 +32,14 @@ public enum StatType {
 
     private final String id;
     private final StatFamily family;
+    public final String displayName;
 
     StatType(String id, StatFamily family) {
         this.id = id;
         this.family = family;
+        this.displayName = java.util.Arrays.stream(id.split("_"))
+                .map(word -> word.substring(0, 1).toUpperCase(java.util.Locale.ROOT) + word.substring(1))
+                .collect(java.util.stream.Collectors.joining(" "));
     }
 
     public String id() {
@@ -48,5 +52,10 @@ public enum StatType {
 
     public static Optional<StatType> fromId(String id) {
         return Optional.ofNullable(BY_ID.get(id));
+    }
+
+    public static StatType byIndex(int index) {
+        if (index < 0 || index >= values().length) return null;
+        return values()[index];
     }
 }

@@ -30,6 +30,16 @@ public final class StatModServerConfig {
     private static final ForgeConfigSpec.DoubleValue BLADE_TECHNIQUE_DAMAGE_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue PRECISION_DAMAGE_PER_MILESTONE;
     private static final ForgeConfigSpec.DoubleValue PHYSICAL_RESISTANCE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100;
+    private static final ForgeConfigSpec.DoubleValue WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE;
+    private static final ForgeConfigSpec.DoubleValue INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE;
+
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_EARLY_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_MID_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_LATE_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_ABYSS_MOBS;
+    private static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> DUNGEON_BOSS_ROSTER;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -71,6 +81,12 @@ public final class StatModServerConfig {
         MAGIC_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
                 "magicResistanceBonusAt100", 0.50, 0.0, 0.90);
         builder.pop();
+        builder.push("resilience");
+        WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100 = builder.defineInRange(
+                "willpowerKnockbackResistanceBonusAt100", 0.50, 0.0, 1.0);
+        INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100 = builder.defineInRange(
+                "intimidationArmorToughnessBonusAt100", 6.00, 0.0, 20.0);
+        builder.pop();
         builder.push("automaticPerks");
         RAPIDITE_ATTACK_SPEED_PER_MILESTONE = builder.defineInRange(
                 "rapiditeAttackSpeedPerMilestone", 0.02, 0.0, 0.25);
@@ -94,6 +110,97 @@ public final class StatModServerConfig {
                 "precisionDamagePerMilestone", 0.05, 0.0, 0.25);
         PHYSICAL_RESISTANCE_PER_MILESTONE = builder.defineInRange(
                 "physicalResistancePerMilestone", 0.02, 0.0, 0.25);
+        WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE = builder.defineInRange(
+                "willpowerKnockbackResistancePerMilestone", 0.10, 0.0, 0.25);
+        INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE = builder.defineInRange(
+                "intimidationArmorToughnessPerMilestone", 1.00, 0.0, 5.0);
+        builder.pop();
+        builder.push("dungeon");
+        DUNGEON_EARLY_MOBS = builder.defineList("earlyMobs",
+                java.util.List.of(
+                        // Vanilla
+                        "minecraft:zombie", "minecraft:skeleton", "minecraft:spider", "minecraft:creeper",
+                        // SLU — bas-étages
+                        "slu:hollow", "slu:armed_hollow", "slu:thief",
+                        // Mowzie's — faciles
+                        "mowziesmobs:foliaath", "mowziesmobs:grottol",
+                        // Block Factory — faciles
+                        "block_factorys_bosses:frozen_skeleton"
+                ),
+                obj -> obj instanceof String);
+        DUNGEON_MID_MOBS = builder.defineList("midMobs",
+                java.util.List.of(
+                        // Vanilla
+                        "minecraft:husk", "minecraft:stray", "minecraft:vindicator", "minecraft:pillager",
+                        // SLU — soldats
+                        "slu:hollow_soldier_sword", "slu:hollow_soldier_spear", "slu:castle_guard",
+                        "slu:dungeon_knight", "slu:knight",
+                        // Deeper Darker
+                        "deeperdarker:sculk_leech", "deeperdarker:shattered",
+                        // Epic Mobs — moyens
+                        "epic_mobs:nameless_knight", "epic_mobs:lost_wanderer",
+                        // Iron's Spellbooks — cultistes
+                        "irons_spellbooks:cultist",
+                        // Block Factory — pirates & squelettes
+                        "block_factorys_bosses:frozen_skeleton", "block_factorys_bosses:crossbow_pirate"
+                ),
+                obj -> obj instanceof String);
+        DUNGEON_LATE_MOBS = builder.defineList("lateMobs",
+                java.util.List.of(
+                        // Vanilla
+                        "minecraft:wither_skeleton", "minecraft:blaze", "minecraft:piglin_brute",
+                        // SLU — élites
+                        "slu:elite_knight", "slu:nightmare_knight", "slu:ghost_samurai",
+                        "slu:dark_knight", "slu:noble_knight",
+                        // Bosses of Mass Destruction
+                        "bosses_of_mass_destruction:obsidilith", "bosses_of_mass_destruction:void_blossom",
+                        // Epic Mobs — élites
+                        "epic_mobs:shadow_guard", "epic_mobs:crystal_guardian",
+                        // Mutant Monsters
+                        "mutantmonsters:mutant_skeleton", "mutantmonsters:mutant_zombie",
+                        // Iron's Spellbooks — mages
+                        "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer",
+                        "irons_spellbooks:necromancer",
+                        // Mowzie's — chevalier de fer
+                        "mowziesmobs:ferrous_wroughtnaut"
+                ),
+                obj -> obj instanceof String);
+        DUNGEON_ABYSS_MOBS = builder.defineList("abyssMobs",
+                java.util.List.of(
+                        // Vanilla
+                        "minecraft:enderman", "minecraft:evoker", "minecraft:shulker",
+                        // SLU — boss-tier
+                        "slu:monster_crucible_knight", "slu:monster_blasphemy_knight",
+                        "slu:ringed_knight", "slu:mad_knight", "slu:shadow_assassin",
+                        "slu:wither_skeleton_knight",
+                        // Bosses of Mass Destruction
+                        "bosses_of_mass_destruction:lich", "bosses_of_mass_destruction:gauntlet",
+                        // Epic Mobs — infernaux
+                        "epic_mobs:the_knight", "epic_mobs:phoenix_fight",
+                        // Mutant Monsters
+                        "mutantmonsters:mutant_enderman", "mutantmonsters:mutant_creeper",
+                        // Dark Doppelganger
+                        "darkdoppelganger:dark_doppelganger",
+                        // Deeper Darker
+                        "deeperdarker:stalker"
+                ),
+                obj -> obj instanceof String);
+        DUNGEON_BOSS_ROSTER = builder.defineList("bossRoster",
+                java.util.List.of(
+                        // Bosses of Mass Destruction
+                        "bosses_of_mass_destruction:lich", "bosses_of_mass_destruction:obsidilith",
+                        "bosses_of_mass_destruction:gauntlet", "bosses_of_mass_destruction:void_blossom",
+                        // Epic Mobs
+                        "epic_mobs:the_knight", "epic_mobs:phoenix_fight", "epic_mobs:micky",
+                        "epic_mobs:karin", "epic_mobs:pillager_king",
+                        // SLU
+                        "slu:bad_omen_giant",
+                        // Mutant Monsters
+                        "mutantmonsters:mutant_creeper",
+                        // Dark Doppelganger
+                        "darkdoppelganger:dark_doppelganger"
+                ),
+                obj -> obj instanceof String);
         builder.pop();
         SPEC = builder.build();
     }
@@ -178,6 +285,26 @@ public final class StatModServerConfig {
         return MAGIC_RESISTANCE_PER_MILESTONE.get();
     }
 
+    public static java.util.List<? extends String> dungeonEarlyMobs() {
+        return DUNGEON_EARLY_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonMidMobs() {
+        return DUNGEON_MID_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonLateMobs() {
+        return DUNGEON_LATE_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonAbyssMobs() {
+        return DUNGEON_ABYSS_MOBS.get();
+    }
+
+    public static java.util.List<? extends String> dungeonBossRoster() {
+        return DUNGEON_BOSS_ROSTER.get();
+    }
+
     public static double bruteForceDamagePerMilestone() {
         return BRUTE_FORCE_DAMAGE_PER_MILESTONE.get();
     }
@@ -192,5 +319,21 @@ public final class StatModServerConfig {
 
     public static double physicalResistancePerMilestone() {
         return PHYSICAL_RESISTANCE_PER_MILESTONE.get();
+    }
+
+    public static double willpowerKnockbackResistanceBonusAt100() {
+        return WILLPOWER_KNOCKBACK_RESISTANCE_BONUS_AT_100.get();
+    }
+
+    public static double intimidationArmorToughnessBonusAt100() {
+        return INTIMIDATION_ARMOR_TOUGHNESS_BONUS_AT_100.get();
+    }
+
+    public static double willpowerKnockbackResistancePerMilestone() {
+        return WILLPOWER_KNOCKBACK_RESISTANCE_PER_MILESTONE.get();
+    }
+
+    public static double intimidationArmorToughnessPerMilestone() {
+        return INTIMIDATION_ARMOR_TOUGHNESS_PER_MILESTONE.get();
     }
 }

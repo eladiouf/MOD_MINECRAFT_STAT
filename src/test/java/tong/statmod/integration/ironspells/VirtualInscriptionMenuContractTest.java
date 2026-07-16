@@ -16,6 +16,11 @@ class VirtualInscriptionMenuContractTest {
 
         assertTrue(menu.contains("extends InscriptionTableMenu"));
         assertTrue(menu.contains("return !player.isRemoved()"));
+        assertTrue(menu.contains("private final boolean openedWithCurio"));
+        assertTrue(menu.contains("public void removed(Player player)"));
+        assertTrue(menu.contains("clearContainer(player, scrollContainer)"));
+        assertTrue(menu.contains("Utils.setPlayerSpellbookStack"));
+        assertTrue(menu.contains("clearContainer(player, spellbookContainer)"));
         assertTrue(provider.contains("ContainerLevelAccess.NULL"));
         assertTrue(provider.contains("statmod.menu.virtual_inscription"));
     }

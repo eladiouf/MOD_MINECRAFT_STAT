@@ -200,7 +200,7 @@ public abstract class IronInscriptionTableScreenMixin
         statmod$lastUiSignature = signature;
         statmod$lastRevision = ClientStatsCache.state().revision();
 
-        int baseX = leftPos - 122;
+        int baseX = Math.max(4, leftPos - 122);
         int top = topPos + 8;
         statmod$search.setX(baseX);
         statmod$search.setY(top);

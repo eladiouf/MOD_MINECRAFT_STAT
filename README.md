@@ -90,6 +90,13 @@ Arcane Power, Casting Speed, Mana Pool et Magic Resistance renforcent les six
 attributs correspondants d'Iron's Spells. STAT Mod ne crée aucune seconde
 réserve de mana et ne remplit jamais le mana lors d'un rafraîchissement.
 
+La base joueur est équilibrée à 100 PV et 5 dégâts à mains nues. Le pourcentage
+de vie courant est conservé quand le maximum change. Iron's Spells possède
+toujours l'unique réserve : 500 mana au niveau 0, jusqu'à 1 545 au niveau 100
+avec les trois jalons. La régénération passe de 1 mana/s au niveau 0 à un
+plafond strict de 17 mana/s au niveau 100 (`+0,145/s` par niveau et `+0,5/s`
+par jalon).
+
 ## Perks automatiques
 
 STAT Mod fournit 39 perks passifs automatiques : les 21 perks d'attributs

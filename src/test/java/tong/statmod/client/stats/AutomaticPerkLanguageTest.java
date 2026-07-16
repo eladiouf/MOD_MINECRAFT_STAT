@@ -56,5 +56,9 @@ class AutomaticPerkLanguageTest {
                 "\"perk.statmod.keen_senses_25.description\": \"+2 blocks"));
         assertTrue(french.contains(
                 "\"perk.statmod.keen_senses_25.description\": \"+2 blocs"));
+        assertTrue(english.contains("\"perk.statmod.mana_pool_25.description\""
+                + ": \"+3% maximum mana and +0.5 mana/s regeneration.\""));
+        assertTrue(french.contains("\"perk.statmod.mana_pool_25.description\""
+                + ": \"+3 % de mana maximal et +0,5 mana/s de régénération.\""));
     }
 }

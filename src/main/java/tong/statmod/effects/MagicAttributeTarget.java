@@ -21,9 +21,6 @@ public enum MagicAttributeTarget {
     MAX_MANA(
             "max_mana", "8c82cb39-5ca4-4f14-b0e1-34cc2c9d98ba",
             StatType.MANA_POOL, BonusKind.MANA_CAPACITY),
-    MANA_REGEN(
-            "mana_regen", "4192f4b8-0799-4a2c-b32b-9eb5e457b1cb",
-            StatType.MANA_POOL, BonusKind.MANA_REGEN),
     SPELL_RESIST(
             "spell_resist", "e57b31fc-563c-4191-a680-02301fd82869",
             StatType.MAGIC_RESISTANCE, BonusKind.SPELL_RESIST);
@@ -79,7 +76,6 @@ public enum MagicAttributeTarget {
         CAST_TIME,
         COOLDOWN,
         MANA_CAPACITY,
-        MANA_REGEN,
         SPELL_RESIST;
 
         double maximumAt100() {
@@ -88,7 +84,6 @@ public enum MagicAttributeTarget {
                 case CAST_TIME -> StatModServerConfig.castingSpeedCastTimeBonusAt100();
                 case COOLDOWN -> StatModServerConfig.castingSpeedCooldownBonusAt100();
                 case MANA_CAPACITY -> StatModServerConfig.manaPoolCapacityBonusAt100();
-                case MANA_REGEN -> StatModServerConfig.manaPoolRegenBonusAt100();
                 case SPELL_RESIST -> StatModServerConfig.magicResistanceBonusAt100();
             };
         }

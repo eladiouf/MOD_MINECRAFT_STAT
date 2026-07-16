@@ -20,7 +20,6 @@ class MagicAttributeTargetTest {
                 "irons_spellbooks:cast_time_reduction", StatType.CASTING_SPEED,
                 "irons_spellbooks:cooldown_reduction", StatType.CASTING_SPEED,
                 "irons_spellbooks:max_mana", StatType.MANA_POOL,
-                "irons_spellbooks:mana_regen", StatType.MANA_POOL,
                 "irons_spellbooks:spell_resist", StatType.MAGIC_RESISTANCE);
 
         assertEquals(expected, Arrays.stream(MagicAttributeTarget.values())
@@ -30,7 +29,7 @@ class MagicAttributeTargetTest {
 
     @Test
     void givesEveryTargetAUniqueStableUuid() {
-        assertEquals(6, Arrays.stream(MagicAttributeTarget.values())
+        assertEquals(5, Arrays.stream(MagicAttributeTarget.values())
                 .map(MagicAttributeTarget::modifierId)
                 .distinct()
                 .count());
@@ -38,7 +37,7 @@ class MagicAttributeTargetTest {
 
     @Test
     void modifierUuidsAreUniqueAcrossEveryAttributeBridge() {
-        assertEquals(14, Stream.of(
+        assertEquals(13, Stream.of(
                         Arrays.stream(MagicAttributeTarget.values())
                                 .map(MagicAttributeTarget::modifierId),
                         Arrays.stream(MobilityAttributeTarget.values())

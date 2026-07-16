@@ -42,5 +42,10 @@ class SupportedRuntimeContractTest {
         assertTrue(record.contains("no tree, perk points, purchases, respecs, or affinities"));
         assertTrue(record.contains("Pufferfish's Attributes remains an attribute provider"));
         assertTrue(record.contains("active-perk list in the native `P` screen"));
+        assertTrue(record.contains("100 base health"));
+        assertTrue(record.contains("5 base attack damage"));
+        assertTrue(record.contains("500 base mana"));
+        assertTrue(record.contains("1 mana per second at level 0"));
+        assertTrue(record.contains("17 mana per second at level 100"));
     }
 }

@@ -18,20 +18,20 @@ public final class CityPlan {
     public static final int CENTER_Z = -500;
     /** Y du bloc de sol : le joueur marche à GROUND_Y+1. */
     public static final int GROUND_Y = 100;
-    /** Rayon extérieur de la caverne-cité. */
-    public static final int RADIUS = 300;
+    /** Rayon extérieur de la caverne-cité (resserré : refonte visuelle 2026-07-16). */
+    public static final int RADIUS = 160;
     /** Rayon intérieur du rempart périmétral (épaisseur RADIUS-WALL_INNER). */
-    public static final int WALL_INNER = 292;
+    public static final int WALL_INNER = 152;
     /** Sommet du rempart. */
-    public static final int WALL_TOP_Y = 140;
-    /** Plafond de la caverne (dalle + cristaux suspendus dessous). */
+    public static final int WALL_TOP_Y = 128;
+    /** Plafond max de la caverne (peak au centre ; ondulé par CityCeiling). */
     public static final int CEILING_Y = 170;
     /** Rayon de la Grande Place. */
-    public static final int PLAZA_RADIUS = 45;
+    public static final int PLAZA_RADIUS = 28;
     /** Demi-largeur des avenues radiales. */
     public static final double AVENUE_HALF_WIDTH = 3.5;
-    public static final int INNER_RING_RADIUS = 100;
-    public static final int OUTER_RING_RADIUS = 205;
+    public static final int INNER_RING_RADIUS = 62;
+    public static final int OUTER_RING_RADIUS = 118;
     private static final double RING_HALF_WIDTH = 4.0;
 
     private CityPlan() {}
@@ -48,9 +48,9 @@ public final class CityPlan {
         return new BlockPos(CENTER_X, GROUND_Y, CENTER_Z + WALL_INNER - 12);
     }
 
-    /** Cour des Portails : à l'ouest de la place. */
+    /** Cour des Portails : créneau libre à l'est de la place (le sud est saturé). */
     public static BlockPos portalCourt() {
-        return new BlockPos(CENTER_X + 100, GROUND_Y, CENTER_Z + 220);
+        return new BlockPos(CENTER_X + 62, GROUND_Y, CENTER_Z);
     }
 
     /** Camp des artisans (provisoire, plan A) : à l'est de la place. */
@@ -58,37 +58,40 @@ public final class CityPlan {
         return artisanDistrict();
     }
 
-    public static BlockPos guild() { return new BlockPos(CENTER_X, GROUND_Y, CENTER_Z - 220); }
-    public static BlockPos humanQuarter() { return new BlockPos(CENTER_X - 185, GROUND_Y, CENTER_Z - 20); }
-    public static BlockPos elvenQuarter() { return new BlockPos(CENTER_X + 165, GROUND_Y, CENTER_Z - 150); }
-    public static BlockPos dwarvenQuarter() { return new BlockPos(CENTER_X - 155, GROUND_Y, CENTER_Z + 110); }
-    public static BlockPos beastQuarter() { return new BlockPos(CENTER_X + 155, GROUND_Y, CENTER_Z + 110); }
-    public static BlockPos market() { return new BlockPos(CENTER_X, GROUND_Y, CENTER_Z + 150); }
-    public static BlockPos artisanDistrict() { return new BlockPos(CENTER_X + 105, GROUND_Y, CENTER_Z); }
-    public static BlockPos arena() { return new BlockPos(CENTER_X - 110, GROUND_Y, CENTER_Z + 215); }
-    public static BlockPos trainingGround() { return new BlockPos(CENTER_X + 210, GROUND_Y, CENTER_Z - 30); }
-    public static BlockPos sanctuary() { return new BlockPos(CENTER_X - 110, GROUND_Y, CENTER_Z - 120); }
-    public static BlockPos hangingGardens() { return new BlockPos(CENTER_X - 205, GROUND_Y, CENTER_Z - 140); }
-    public static BlockPos hallOfHeroes() { return new BlockPos(CENTER_X - 200, GROUND_Y, CENTER_Z + 170); }
+    // Layout 2 anneaux (refonte 2026-07-16, +z = sud vers la porte).
+    // Extérieur R=118 : guilde, 4 quartiers, marché, arène, entraînement.
+    public static BlockPos guild() { return new BlockPos(CENTER_X + 45, GROUND_Y, CENTER_Z - 109); }
+    public static BlockPos humanQuarter() { return new BlockPos(CENTER_X - 109, GROUND_Y, CENTER_Z + 45); }
+    public static BlockPos elvenQuarter() { return new BlockPos(CENTER_X - 109, GROUND_Y, CENTER_Z - 45); }
+    public static BlockPos dwarvenQuarter() { return new BlockPos(CENTER_X - 45, GROUND_Y, CENTER_Z + 109); }
+    public static BlockPos beastQuarter() { return new BlockPos(CENTER_X + 45, GROUND_Y, CENTER_Z + 109); }
+    public static BlockPos market() { return new BlockPos(CENTER_X + 109, GROUND_Y, CENTER_Z + 45); }
+    public static BlockPos arena() { return new BlockPos(CENTER_X + 109, GROUND_Y, CENTER_Z - 45); }
+    public static BlockPos trainingGround() { return new BlockPos(CENTER_X - 45, GROUND_Y, CENTER_Z - 109); }
+    // Intérieur R=62 (tourné 45°) : artisans, sanctuaire, jardins, hall des héros.
+    public static BlockPos artisanDistrict() { return new BlockPos(CENTER_X + 44, GROUND_Y, CENTER_Z + 44); }
+    public static BlockPos sanctuary() { return new BlockPos(CENTER_X - 44, GROUND_Y, CENTER_Z + 44); }
+    public static BlockPos hangingGardens() { return new BlockPos(CENTER_X - 44, GROUND_Y, CENTER_Z - 44); }
+    public static BlockPos hallOfHeroes() { return new BlockPos(CENTER_X + 44, GROUND_Y, CENTER_Z - 44); }
 
     public record CitySite(String id, BlockPos center, int radius) {}
 
     public static List<CitySite> sites() {
         return List.of(
                 new CitySite("plaza", center(), PLAZA_RADIUS),
-                new CitySite("guild", guild(), 35),
-                new CitySite("human", humanQuarter(), 38),
-                new CitySite("elven", elvenQuarter(), 40),
-                new CitySite("dwarven", dwarvenQuarter(), 40),
-                new CitySite("beast", beastQuarter(), 40),
-                new CitySite("market", market(), 38),
-                new CitySite("artisans", artisanDistrict(), 34),
-                new CitySite("arena", arena(), 42),
-                new CitySite("training", trainingGround(), 40),
-                new CitySite("sanctuary", sanctuary(), 32),
-                new CitySite("gardens", hangingGardens(), 28),
-                new CitySite("heroes", hallOfHeroes(), 25),
-                new CitySite("portals", portalCourt(), 24),
+                new CitySite("guild", guild(), 30),
+                new CitySite("human", humanQuarter(), 30),
+                new CitySite("elven", elvenQuarter(), 30),
+                new CitySite("dwarven", dwarvenQuarter(), 30),
+                new CitySite("beast", beastQuarter(), 30),
+                new CitySite("market", market(), 30),
+                new CitySite("artisans", artisanDistrict(), 22),
+                new CitySite("arena", arena(), 30),
+                new CitySite("training", trainingGround(), 30),
+                new CitySite("sanctuary", sanctuary(), 20),
+                new CitySite("gardens", hangingGardens(), 20),
+                new CitySite("heroes", hallOfHeroes(), 20),
+                new CitySite("portals", portalCourt(), 16),
                 new CitySite("gate", gateCenter(), 0));
     }
 

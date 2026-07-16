@@ -90,9 +90,9 @@ loot errors that occur when ParCool is loaded without its guide provider.
 
 Pressing `P` opens STAT Mod's read-only statistics screen. It displays all five
 families and all 19 server-authoritative values, refreshes from revisioned
-snapshots, and closes with `P`, Escape, or the inventory key. Automatic XP
-awards publish bounded, mergeable notifications; administrative mutations
-synchronize the screen without presenting them as gameplay rewards.
+snapshots, and closes with `P`, Escape, or the inventory key. Only actual level gains publish a compact client notice; ordinary XP awards remain silent.
+Administrative mutations synchronize the screen without presenting them as
+gameplay rewards.
 
 Player-stat schema 2 retires the unused Fire, Water, Earth, and Air affinity
 entries. Schema-1 saves retain every remaining stat; retired affinity compounds

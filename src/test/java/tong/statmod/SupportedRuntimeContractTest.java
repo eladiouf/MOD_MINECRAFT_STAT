@@ -34,6 +34,7 @@ class SupportedRuntimeContractTest {
         assertTrue(record.contains("12 classified combat perks"));
         assertTrue(record.contains("6 hunter perception perks"));
         assertTrue(record.contains("protocol 9"));
+        assertTrue(record.contains("Only actual level gains publish a compact client notice"));
         assertTrue(record.contains("right-clicking any compatible scroll learns its spell"));
         assertTrue(record.contains("highest learned level"));
         assertTrue(record.contains("Pressing `J` opens Iron's inscription binding menu"));

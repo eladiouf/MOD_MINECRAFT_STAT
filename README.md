@@ -41,11 +41,11 @@ dans cinq familles, avec leur niveau, leur XP et leur progression vers le niveau
 suivant. Les cinq statistiques magiques sont actives et reliées aux actions
 d'Iron's Spells ou à l'étude de livres enchantés.
 
-Les gains automatiques affichent une notification discrète en haut à droite.
-Les gains rapprochés de la même statistique sont regroupés et un passage de
-niveau reste affiché plus longtemps. Les commandes administratives continuent
-de synchroniser l'écran, mais ne produisent pas de fausse notification de gain
-de gameplay.
+Les gains d'XP ordinaires n'affichent aucune notification. Seuls les passages
+de niveau produisent une carte compacte et atténuée en haut à droite ; les
+passages rapprochés de la même statistique sont regroupés. Les commandes
+administratives continuent de synchroniser l'écran sans notification de
+gameplay.
 
 ## XP automatique et addons Epic Fight
 

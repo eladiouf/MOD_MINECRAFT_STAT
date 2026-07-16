@@ -15,15 +15,20 @@ final class CityRoofs {
 
     private CityRoofs() {}
 
-    /** Toit à deux pentes (pignon sur l'axe X) au-dessus d'un bâtiment rx×rz, base à baseY. */
+    /**
+     * Toit à deux pentes (pignon sur l'axe X) au-dessus d'un bâtiment rx×rz, base à baseY.
+     * Pente plafonnée (cap) pour éviter les toits démesurés sur les halls larges : au-delà du cap,
+     * bande de faîtage plate en blocs pleins (aspect grange/hippé-plat).
+     */
     static void gableRoof(ServerLevel lv, BlockPos c, int rx, int rz, int baseY, Block stair, Block ridge) {
+        int cap = Math.min(rz, 6);
         for (int z = -rz; z <= rz; z++) {
-            int rise = rz - Math.abs(z);
-            int y = baseY + Math.min(rise, rz);
+            int rise = Math.min(rz - Math.abs(z), cap);
+            int y = baseY + rise;
+            boolean atTop = rise == cap;
             Direction face = z < 0 ? Direction.SOUTH : Direction.NORTH;
             for (int x = -rx; x <= rx; x++) {
-                if (z == 0) { set(lv, c.offset(x, baseY + rz, 0), ridge.defaultBlockState()); continue; }
-                set(lv, c.offset(x, y, z), stairState(stair, face));
+                set(lv, c.offset(x, y, z), atTop ? ridge.defaultBlockState() : stairState(stair, face));
                 set(lv, c.offset(x, y - 1, z), Blocks.POLISHED_ANDESITE.defaultBlockState()); // sous-toit plein
             }
         }

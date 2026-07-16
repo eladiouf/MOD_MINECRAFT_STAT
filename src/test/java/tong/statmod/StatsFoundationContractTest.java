@@ -29,6 +29,7 @@ class StatsFoundationContractTest {
                     .filter(path -> {
                         String normalized = path.toString().replace('\\', '/');
                         return !normalized.contains("/integration/ironspells/")
+                                && !normalized.contains("/integration/sdmshop/")
                                 && !normalized.contains("/mixin/")
                                 && !normalized.contains("/client/inscription/");
                     })

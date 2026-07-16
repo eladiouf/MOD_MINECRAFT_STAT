@@ -51,10 +51,19 @@ final class CityShell {
 
                 // Sol : soubassement + surface (pavage sur place/avenues, pierre ailleurs).
                 lv.setBlock(new BlockPos(x, CityPlan.GROUND_Y - 1, z), deep, FLAG);
-                BlockState surface = CityPlan.inPlaza(x, z) ? plazaPave
-                        : CityPlan.onAvenue(x, z) || CityPlan.onRingRoad(x, z)
-                        || CityPlan.onDistrictConnector(x, z) ? pave
-                        : stone;
+                BlockState surface;
+                if (CityPlan.inPlaza(x, z)) {
+                    surface = plazaPave;
+                } else if (CityPlan.onAvenue(x, z) || CityPlan.onRingRoad(x, z)
+                        || CityPlan.onDistrictConnector(x, z)) {
+                    surface = pave;
+                } else {
+                    // Mélange seedé (fin du damier uniforme) : pierre / cobble / gravier.
+                    int h = Math.floorMod(x * 31 + z * 17 + (x >> 2) * (z >> 2), 7);
+                    surface = h < 4 ? stone
+                            : h < 6 ? Blocks.COBBLESTONE.defaultBlockState()
+                            : Blocks.GRAVEL.defaultBlockState();
+                }
                 lv.setBlock(new BlockPos(x, CityPlan.GROUND_Y, z), surface, FLAG);
 
                 // Rempart périmétral plein (sauf couloir de la porte).

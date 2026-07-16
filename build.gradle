@@ -72,6 +72,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly fg.deobf("maven.modrinth:irons-spells-n-spellbooks:${irons_spellbooks_version}")
+    compileOnly fg.deobf("maven.modrinth:sdm-shop:${sdmshop_version}")
     implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${ftb_library_version}")
     implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${ftb_teams_version}")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

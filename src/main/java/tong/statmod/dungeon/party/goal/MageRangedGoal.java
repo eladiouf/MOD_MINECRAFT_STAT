@@ -224,6 +224,16 @@ public class MageRangedGoal extends Goal {
     private void flee(LivingEntity threat) {
         Vec3 away = mage.position().subtract(threat.position()).normalize();
         Vec3 fleePos = mage.position().add(away.scale(12));
+        fleePos = blendTowardAnchor(fleePos);
         mage.getNavigation().moveTo(fleePos.x, fleePos.y, fleePos.z, 1.3);
+    }
+
+    /** Mélange la destination de repli avec l'ancre de formation (rester derrière le tank). */
+    private Vec3 blendTowardAnchor(Vec3 base) {
+        var data = mage.getPersistentData();
+        if (!data.contains(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_X)) return base;
+        double ax = data.getDouble(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_X);
+        double az = data.getDouble(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_Z);
+        return new Vec3(base.x * 0.6 + ax * 0.4, base.y, base.z * 0.6 + az * 0.4);
     }
 }

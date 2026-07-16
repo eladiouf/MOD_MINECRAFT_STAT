@@ -30,6 +30,9 @@ public final class PartyCoordinator {
     private static final int PERIOD = 10;
     /** Aligné sur DungeonMobSpawner.FLOOR_SCAN_RADIUS (package-private là-bas). */
     private static final double SCAN_RADIUS = 85.0;
+    /** Clés persistentData de l'ancre de formation, lues par les goals du backline. */
+    public static final String ANCHOR_X = "statmod_party_anchor_x";
+    public static final String ANCHOR_Z = "statmod_party_anchor_z";
     private static int tick;
 
     private PartyCoordinator() {}
@@ -124,6 +127,24 @@ public final class PartyCoordinator {
         LivingEntity focusP = foes.get(focus);
         LivingEntity isolatedP = foes.get(isolated);
         LivingEntity backP = foes.get(backThreat);
+
+        // Ancre de formation : le backline (mage/soigneur) reste près du tank (ou du centre du
+        // groupe s'il n'y en a pas) → il recule vers la protection au lieu de fuir dans un coin.
+        double anchorX = cx, anchorZ = cz;
+        for (Mob m : party) {
+            if ("TANK".equals(m.getPersistentData().getString(PartyRole.TAG))) {
+                anchorX = m.getX();
+                anchorZ = m.getZ();
+                break;
+            }
+        }
+        for (Mob m : party) {
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            if ("MAGE".equals(r) || "HEALER".equals(r)) {
+                m.getPersistentData().putDouble(ANCHOR_X, anchorX);
+                m.getPersistentData().putDouble(ANCHOR_Z, anchorZ);
+            }
+        }
 
         // Mode EXECUTE : la cible focus est presque morte → tout le monde se rabat dessus pour
         // sécuriser le kill (au lieu d'étaler les cibles). Comportement d'équipe « finish ».

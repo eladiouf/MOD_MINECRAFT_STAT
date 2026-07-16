@@ -136,6 +136,12 @@ public class HealPartyGoal extends Goal {
     private void flee(LivingEntity threat) {
         Vec3 away = healer.position().subtract(threat.position()).normalize();
         Vec3 fleePos = healer.position().add(away.scale(FLEE_RANGE));
+        var data = healer.getPersistentData();
+        if (data.contains(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_X)) {
+            double ax = data.getDouble(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_X);
+            double az = data.getDouble(tong.statmod.dungeon.party.PartyCoordinator.ANCHOR_Z);
+            fleePos = new Vec3(fleePos.x * 0.6 + ax * 0.4, fleePos.y, fleePos.z * 0.6 + az * 0.4);
+        }
         healer.getNavigation().moveTo(fleePos.x, fleePos.y, fleePos.z, 1.3);
     }
 

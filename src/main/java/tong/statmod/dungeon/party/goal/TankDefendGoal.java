@@ -103,7 +103,9 @@ public class TankDefendGoal extends Goal {
             }
         }
 
-        if (dist >= SHIELD_DIST * SHIELD_DIST && dist < 3.5 * 3.5) {
+        // Coup de mêlée dès que la cible est réellement à portée (la borne >= SHIELD_DIST²
+        // rendait cette condition impossible : SHIELD_DIST²=16 > 3.5²=12.25 → code mort).
+        if (dist < 3.5 * 3.5) {
             tank.doHurtTarget(target);
         }
     }

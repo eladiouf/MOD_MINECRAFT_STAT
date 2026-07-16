@@ -77,7 +77,7 @@ public final class AdventurerPartyHelper {
                 return entity;
             });
 
-            applyRoleAi(entity, role);
+            ensureRoleAi(entity);
         }
     }
 
@@ -117,7 +117,30 @@ public final class AdventurerPartyHelper {
         };
     }
 
-    private static void applyRoleAi(Mob entity, PartyRole role) {
+    /**
+     * (Ré)attache le goal d'IA correspondant au rôle taggé sur l'entité, de façon idempotente.
+     * Les goals ajoutés par code ne sont PAS sérialisés en NBT : après un reload / déchargement de
+     * chunk, un mob party garde son tag mais perd son IA. Appelé au spawn ET à chaque cycle du
+     * {@link tong.statmod.dungeon.party.PartyCoordinator} → l'IA se réattache automatiquement.
+     */
+    public static void ensureRoleAi(Mob entity) {
+        String roleName = entity.getPersistentData().getString(PartyRole.TAG);
+        if (roleName.isEmpty()) return;
+        PartyRole role;
+        try {
+            role = PartyRole.valueOf(roleName);
+        } catch (IllegalArgumentException ignored) {
+            return;
+        }
+        Class<? extends net.minecraft.world.entity.ai.goal.Goal> goalClass = switch (role) {
+            case HEALER -> HealPartyGoal.class;
+            case MAGE -> MageRangedGoal.class;
+            case ASSASSIN -> AssassinAttackGoal.class;
+            case TANK -> TankDefendGoal.class;
+        };
+        boolean present = entity.goalSelector.getAvailableGoals().stream()
+                .anyMatch(w -> goalClass.isInstance(w.getGoal()));
+        if (present) return;
         switch (role) {
             case HEALER -> entity.goalSelector.addGoal(1, new HealPartyGoal(entity));
             case MAGE -> entity.goalSelector.addGoal(3, new MageRangedGoal(entity));

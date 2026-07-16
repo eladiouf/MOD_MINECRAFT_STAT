@@ -125,10 +125,10 @@ earlier mutable `SpellDamageEvent`, require a kill, or classify a spell school.
 
 ## Automatic perks
 
-The supported runtime contains 33 automatic perks: the original 21 perks for
-the seven mature attribute-backed stats plus 12 classified combat perks for
-Brute Force, Blade Technique, Precision, and Physical Resistance. Three
-cumulative milestones activate at levels 25, 50, and 75.
+The supported runtime contains 39 automatic perks: the original 21 perks for
+the seven mature attribute-backed stats, 12 classified combat perks, and 6 hunter perception perks
+for Tracking and Keen Senses. Three cumulative
+milestones activate at levels 25, 50, and 75.
 Activation is derived from the current server-authoritative levels, so
 lowering a level below a requirement immediately removes the corresponding
 bonus; no separate unlock state is saved.
@@ -139,7 +139,16 @@ default adds 2 physical-reduction percentage points per milestone before the
 0.95 resistance safety cap, then composes multiplicatively with Physical
 Endurance. At level 100 in both defensive stats with all three resistance perks,
 the final multiplier is `0.1885`, for `81.15%` total reduction.
-Tracking and Keen Senses are deferred from this combat batch.
+Tracking gives each player a personal marked-prey contour after committed
+positive damage to a live hostile. Its duration is `60 + level + 40 ×
+milestones` ticks and its range is `12 + 0.12 × level + 4 × milestones` blocks.
+Keen Senses provides a crouched personal threat scan with range `6 + 0.10 ×
+level + 2 × milestones` blocks. It scans every five client ticks and retains at
+most the 64 nearest live hostile entities. The marked prey is amber, other
+threats are red, and precedence belongs to the marked prey. This perception
+feature creates no damage, dodge, loot, or global glowing state, and emits no
+notification, sound, or particle. It has no dungeon-system integration and
+does not change the existing Tracking or Keen Senses XP sources.
 
 There is no tree, perk points, purchases, respecs, or affinities. The server
 synchronizes known IDs for the active-perk list in the native `P` screen.
@@ -147,5 +156,7 @@ Pufferfish's Attributes remains an attribute provider and never owns perk
 progression. Existing stable transient modifier UUIDs combine continuous stat
 scaling and milestone bonuses without stacking.
 
-The bounded snapshot transport uses protocol 6 and accepts at most the 33
-canonical perk IDs in catalog order.
+The bounded snapshot transport uses protocol 7 and accepts at most the 39
+canonical perk IDs in catalog order. One bounded personal client packet carries
+the current marked entity and expiry; Keen Senses derives its scan locally from
+the authoritative synchronized stat and perk snapshot.

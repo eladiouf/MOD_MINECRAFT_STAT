@@ -92,20 +92,28 @@ réserve de mana et ne remplit jamais le mana lors d'un rafraîchissement.
 
 ## Perks automatiques
 
-STAT Mod fournit 33 perks passifs automatiques : les 21 perks d'attributs
-existants, plus 12 perks de combat classifié pour Brute Force, Blade Technique,
-Precision et Physical Resistance. Trois perks cumulatifs s'activent aux niveaux
-25, 50 et 75 de la statistique correspondante. Ils se désactivent
-automatiquement si le niveau repasse sous leur prérequis. Tracking et Keen
-Senses restent reportés à un lot ultérieur.
+STAT Mod fournit 39 perks passifs automatiques : les 21 perks d'attributs
+existants, 12 perks de combat classifié et 6 perks de perception pour Tracking
+et Keen Senses. Trois perks cumulatifs s'activent aux niveaux 25, 50 et 75 de
+la statistique correspondante et se désactivent si le niveau redescend.
+
+Un coup qui inflige réellement des dégâts à un ennemi marque cette proie pour
+le joueur : Tracking affiche un contour personnel ambre, pendant `60 + niveau
++ 40 × jalons` ticks et jusqu'à `12 + 0,12 × niveau + 4 × jalons` blocs. En
+restant accroupi, Keen Senses effectue toutes les 5 ticks un scan personnel des
+64 ennemis les plus proches dans `6 + 0,10 × niveau + 2 × jalons` blocs et les
+contourne en rouge. Ces effets n'ajoutent ni dégâts, ni esquive, ni butin, ni
+glow global, notification, son ou particule. Ils ne modifient aucune logique de
+donjon.
 
 Il n'existe aucun arbre, point de perk, achat, respec ou affinité. Le serveur
 déduit les perks actifs directement des niveaux et les affiche dans une liste
 non interactive sur l'écran `P`. Puffish Attributes reste uniquement un
 fournisseur d'attributs compatibles.
 
-Le protocole réseau interne est la version `6` et borne la liste synchronisée à
-33 identifiants canoniques.
+Le protocole réseau interne est la version `7` et borne la liste synchronisée à
+39 identifiants canoniques. Un seul paquet personnel synchronise la dernière
+proie marquée ; le scan Keen Senses reste entièrement client.
 
 ## Compiler
 

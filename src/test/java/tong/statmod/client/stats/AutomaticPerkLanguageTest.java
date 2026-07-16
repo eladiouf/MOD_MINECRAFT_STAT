@@ -48,5 +48,13 @@ class AutomaticPerkLanguageTest {
                 + ": \"+2 physical-damage reduction percentage points."));
         assertTrue(french.contains("\"perk.statmod.physical_resistance_25.description\""
                 + ": \"+2 points de pourcentage de réduction des dégâts physiques."));
+        assertTrue(english.contains(
+                "\"perk.statmod.tracking_25.description\": \"+2 seconds and +4 blocks"));
+        assertTrue(french.contains(
+                "\"perk.statmod.tracking_25.description\": \"+2 secondes et +4 blocs"));
+        assertTrue(english.contains(
+                "\"perk.statmod.keen_senses_25.description\": \"+2 blocks"));
+        assertTrue(french.contains(
+                "\"perk.statmod.keen_senses_25.description\": \"+2 blocs"));
     }
 }

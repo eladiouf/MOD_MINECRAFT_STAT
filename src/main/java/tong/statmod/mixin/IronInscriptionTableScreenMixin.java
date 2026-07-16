@@ -79,7 +79,7 @@ public abstract class IronInscriptionTableScreenMixin
                     0, 0, () -> statmod$selectVisible(visibleIndex))));
         }
         statmod$search = addRenderableWidget(new EditBox(
-                font, 0, 0, 116, 14,
+                font, 0, 0, 112, 14,
                 Component.translatable("statmod.spell.search.placeholder")));
         statmod$search.setMaxLength(64);
         statmod$search.setHint(Component.translatable("statmod.spell.search.placeholder"));

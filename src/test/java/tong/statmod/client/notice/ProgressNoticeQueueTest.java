@@ -47,6 +47,7 @@ class ProgressNoticeQueueTest {
 
     @Test
     void levelDurationFadeAndClearAreBounded() {
+        assertEquals(60, ProgressNoticeQueue.LEVEL_DURATION);
         ProgressNoticeQueue level = new ProgressNoticeQueue();
         level.offer(message(StatType.AGILITY, 5, 3, 1), 0);
         tick(level, ProgressNoticeQueue.LEVEL_DURATION - 1);

@@ -6,14 +6,14 @@ prepared, optional, or excluded.
 | Component | Version | Status | Notes |
 |---|---:|---|---|
 | Minecraft | 1.20.1 | verified | Compiles and passes the automated suite. The native stats screen targets this client version. |
-| Forge | 47.4.10 | verified | Compiles and passes the automated suite and required-provider GameTest profile. |
+| Forge | 47.4.4 | minimum and verified | Minimum loader used by NightfallCraft; compiles and passes the automated suite. |
 | Java | 17 | verified | Required build and runtime toolchain. |
 | Iron's Spells 'n Spellbooks | 3.16.2 | required | Mandatory provider for spell power, casting, mana, and magic-resistance attributes; successful spellbook casts now award Arcane Power, Casting Speed, and Mana Pool XP. |
 | Epic Fight | 20.14.17 | required | Mandatory provider for stamina and attack-speed attributes. |
 | Pufferfish's Attributes | 0.8.2 | required | Mandatory provider for specialized movement attributes. |
 | ParCool | 3.4.3.3 | prepared | Optional provider for the existing Endurance stamina targets; minimal runtime is server-smoked. |
 | Curios API | 5.14.1 | dependency | Required by Iron's Spells. |
-| GeckoLib | 4.8.4 | dependency | Required by Iron's Spells and Iron's Lib. |
+| GeckoLib | 4.8.3 | dependency | NightfallCraft version; satisfies Iron's Spells' 4.8.2 minimum. |
 | Iron's Lib | 2.1.0 | dependency | Required by Iron's Spells. |
 | Player Animator | 1.0.2-rc1 | dependency | Required by Iron's Spells. |
 | Patchouli | 85 | dependency | Retained because ParCool's guide recipe and loot reference Patchouli resources. |

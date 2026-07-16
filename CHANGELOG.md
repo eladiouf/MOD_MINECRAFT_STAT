@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Forge 47.4.4 is now the verified minimum runtime so Stat Mod can join the NightfallCraft 1.20.1 profile.
 - Trial Dungeon cooperation now requires FTB Teams Forge 2001.3.2 or newer.
 - Multiple FTB teams may share the same challenge floor and fight the same encounter.
 - Floor completion, boss rewards, death/retry protection, and boss cooldowns are shared with every player present.

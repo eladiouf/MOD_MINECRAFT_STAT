@@ -15,9 +15,12 @@ class SupportedRuntimeContractTest {
                 "docs/compatibility/forge-1.20.1-supported-runtime.md"));
         String attributes = Files.readString(Path.of(
                 "docs/compatibility/stat-attribute-provider-matrix.md"));
+        String gradleProperties = Files.readString(Path.of("gradle.properties"));
 
         assertTrue(record.contains("Minecraft | 1.20.1 | verified"));
-        assertTrue(record.contains("Forge | 47.4.10 | verified"));
+        assertTrue(record.contains("Forge | 47.4.4 | minimum and verified"));
+        assertTrue(gradleProperties.contains("forge_version=47.4.4"));
+        assertTrue(gradleProperties.contains("forge_version_range=[47.4.4,)"));
         assertTrue(record.contains("Java | 17 | verified"));
         assertTrue(record.contains("Iron's Spells 'n Spellbooks | 3.16.2 | required"));
         assertTrue(record.contains("Epic Fight | 20.14.17 | required"));

@@ -1,7 +1,7 @@
 # STAT Mod — Forge 1.20.1
 
 Fondation propre de **STAT Mod** pour Minecraft **1.20.1**, Forge
-**47.4.10** et Java **17**.
+**47.4.4 ou plus récent** et Java **17**.
 
 ## État actuel
 

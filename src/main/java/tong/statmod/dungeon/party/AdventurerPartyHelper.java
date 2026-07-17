@@ -280,12 +280,8 @@ public final class AdventurerPartyHelper {
     }
 
     private static void equipAssassin(Mob mob, int floor) {
-        mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
-        mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
-        mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
-        mob.setItemSlot(EquipmentSlot.FEET, bootsForTier(floor));
+        equipIronsSet(mob, "cultist", 0x202028); // tenue de l'ombre (fallback cuir noir)
         mob.setItemSlot(EquipmentSlot.MAINHAND, meleeWeapon(mob, floor));
-        mob.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
         var speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -324,18 +320,19 @@ public final class AdventurerPartyHelper {
         // Pas qu'un mage de feu : élément aléatoire → robe teintée + sorts assortis.
         String element = MAGE_ELEMENTS[mob.getRandom().nextInt(MAGE_ELEMENTS.length)];
         mob.getPersistentData().putString("statmod_mage_element", element);
-        int color = switch (element) {
-            case "FIRE" -> 0xB31A1A;
-            case "FROST" -> 0x37A6E6;
-            case "STORM" -> 0xE0C020;
-            case "NECRO" -> 0x1E1E28;
-            default -> 0x8A28C8; // ARCANE
-        };
-        mob.setItemSlot(EquipmentSlot.HEAD, dyedLeather(Items.LEATHER_HELMET, color));
-        mob.setItemSlot(EquipmentSlot.CHEST, dyedLeather(Items.LEATHER_CHESTPLATE, color));
-        mob.setItemSlot(EquipmentSlot.LEGS, dyedLeather(Items.LEATHER_LEGGINGS, color));
-        mob.setItemSlot(EquipmentSlot.FEET, dyedLeather(Items.LEATHER_BOOTS, color));
-        mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
+        // Set d'armure thématique Iron's Spellbooks par école (fallback cuir teinté) + staff générique.
+        String setPrefix;
+        String staffId;
+        int color;
+        switch (element) {
+            case "FIRE" -> { setPrefix = "pyromancer"; staffId = "irons_spellbooks:pyrium_staff"; color = 0xB31A1A; }
+            case "FROST" -> { setPrefix = "cryomancer"; staffId = "irons_spellbooks:ice_staff"; color = 0x37A6E6; }
+            case "STORM" -> { setPrefix = "electromancer"; staffId = "irons_spellbooks:graybeard_staff"; color = 0xE0C020; }
+            case "NECRO" -> { setPrefix = "plagued"; staffId = "irons_spellbooks:blood_staff"; color = 0x1E1E28; }
+            default -> { setPrefix = "archevoker"; staffId = "irons_spellbooks:graybeard_staff"; color = 0x8A28C8; }
+        }
+        equipIronsSet(mob, setPrefix, color);
+        mob.setItemSlot(EquipmentSlot.MAINHAND, resolveItem(new String[]{staffId}, mageWeapon()));
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
         double baseHp = 30.0 + floor * 0.4;
@@ -357,14 +354,34 @@ public final class AdventurerPartyHelper {
         return stack;
     }
 
-    private static void equipHealer(Mob mob, int floor) {
-        mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
-        mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
-        mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
-        mob.setItemSlot(EquipmentSlot.FEET, bootsForTier(floor));
+    /** Premier item existant parmi les ids (mods installés), sinon le fallback. */
+    private static ItemStack resolveItem(String[] ids, ItemStack fallback) {
+        for (String id : ids) {
+            net.minecraft.resources.ResourceLocation loc = net.minecraft.resources.ResourceLocation.tryParse(id);
+            if (loc != null && net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(loc)) {
+                return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc));
+            }
+        }
+        return fallback;
+    }
 
-        // Bâton de soin (visuel) — le soin est fait en code, plus de potion peu fiable.
-        mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
+    /** Équipe un set d'armure Iron's Spellbooks par préfixe (fallback cuir teinté par pièce). */
+    private static void equipIronsSet(Mob mob, String prefix, int leatherColor) {
+        mob.setItemSlot(EquipmentSlot.HEAD, resolveItem(
+                new String[]{"irons_spellbooks:" + prefix + "_helmet"}, dyedLeather(Items.LEATHER_HELMET, leatherColor)));
+        mob.setItemSlot(EquipmentSlot.CHEST, resolveItem(
+                new String[]{"irons_spellbooks:" + prefix + "_chestplate"}, dyedLeather(Items.LEATHER_CHESTPLATE, leatherColor)));
+        mob.setItemSlot(EquipmentSlot.LEGS, resolveItem(
+                new String[]{"irons_spellbooks:" + prefix + "_leggings"}, dyedLeather(Items.LEATHER_LEGGINGS, leatherColor)));
+        mob.setItemSlot(EquipmentSlot.FEET, resolveItem(
+                new String[]{"irons_spellbooks:" + prefix + "_boots"}, dyedLeather(Items.LEATHER_BOOTS, leatherColor)));
+    }
+
+    private static void equipHealer(Mob mob, int floor) {
+        // Set de prêtre Iron's (fallback cuir clair) + bâton (soin fait en code).
+        equipIronsSet(mob, "priest", 0xF0EAD0);
+        mob.setItemSlot(EquipmentSlot.MAINHAND, resolveItem(
+                new String[]{"irons_spellbooks:graybeard_staff"}, mageWeapon()));
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
         double baseHp = 40.0 + floor * 0.4;

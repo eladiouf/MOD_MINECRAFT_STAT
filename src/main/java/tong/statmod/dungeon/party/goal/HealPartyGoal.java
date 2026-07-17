@@ -24,10 +24,10 @@ import java.util.List;
  */
 public class HealPartyGoal extends Goal {
 
-    private static final double SUPPORT_RANGE = 16.0;
-    private static final double CAST_RANGE = 7.0;
+    private static final double SUPPORT_RANGE = 18.0;
+    private static final double CAST_RANGE = 9.0;
     private static final double FLEE_RANGE = 6.0;
-    private static final int HEAL_COOLDOWN = 30;   // 1,5 s entre deux soins
+    private static final int HEAL_COOLDOWN = 20;   // 1 s entre deux soins
     private static final int BUFF_INTERVAL = 180;  // buff de groupe toutes les 9 s
 
     private final Mob healer;
@@ -111,9 +111,15 @@ public class HealPartyGoal extends Goal {
     /** Soin direct (aucune potion → jamais raté, marche même sur les morts-vivants). */
     private void castHeal(LivingEntity target) {
         if (healCooldown > 0) return;
-        float amount = 5.0f + healer.getMaxHealth() * 0.04f;
+        float amount = 8.0f + healer.getMaxHealth() * 0.08f;
         target.heal(amount);
-        target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 0, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 1, false, true));
+        // Éclaboussure de soin aux camarades proches du patient (soigne vraiment le groupe).
+        for (Mob ally : allies(SUPPORT_RANGE, false)) {
+            if (ally != target && ally.distanceToSqr(target) < 25.0 && ally.getHealth() < ally.getMaxHealth()) {
+                ally.heal(amount * 0.5f);
+            }
+        }
         healer.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
         if (healer.level() instanceof ServerLevel lv) {
             lv.sendParticles(ParticleTypes.HEART, target.getX(), target.getEyeY(), target.getZ(),

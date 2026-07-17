@@ -30,6 +30,16 @@ public final class AdventurerPartyHelper {
     private static final boolean EPIC_FIGHT = ModList.get().isLoaded("epicfight");
     private static final java.util.Random RNG = new java.util.Random();
 
+    /** Une entité au hasard parmi celles qui existent (mods installés), sinon null. */
+    private static EntityType<?> resolveAny(String[] ids) {
+        java.util.List<EntityType<?>> found = new java.util.ArrayList<>();
+        for (String id : ids) {
+            EntityType<?> t = ModdedMobPool.resolve(id);
+            if (t != null) found.add(t);
+        }
+        return found.isEmpty() ? null : found.get(RNG.nextInt(found.size()));
+    }
+
     /** True si l'entité est un caster natif Iron's (il lance ses vrais sorts tout seul). */
     private static boolean isIronsCaster(Mob mob) {
         return net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType())
@@ -109,29 +119,27 @@ public final class AdventurerPartyHelper {
     private static EntityType<?> entityTypeForRole(PartyRole role) {
         return switch (role) {
             case TANK -> {
-                if (EPIC_FIGHT) yield EntityType.VINDICATOR; // patché Epic Fight : combos + esquive
-                if (ModList.get().isLoaded("slu")) {
-                    EntityType<?> t = ModdedMobPool.resolve("slu:knight");
-                    if (t != null) yield t;
-                }
+                // SLU d'abord (chevaliers stylés, IA Souls + patch Epic Fight via MobsPlus-EFM).
+                EntityType<?> slu = resolveAny(new String[]{
+                        "slu:elite_knight", "slu:noble_knight", "slu:dark_knight", "slu:ringed_knight",
+                        "slu:dungeon_knight", "slu:knight", "slu:castle_guard", "slu:temple_guard", "slu:mad_knight"});
+                if (slu != null) yield slu;
+                if (EPIC_FIGHT) yield EntityType.VINDICATOR;
                 yield EntityType.ZOMBIE;
             }
             case ASSASSIN -> {
+                EntityType<?> slu = resolveAny(new String[]{
+                        "slu:shadow_assassin", "slu:thief", "slu:armed_hollow", "slu:hollow_soldier_sword"});
+                if (slu != null) yield slu;
                 if (EPIC_FIGHT) yield EntityType.VINDICATOR;
-                if (ModList.get().isLoaded("slu")) {
-                    EntityType<?> t = ModdedMobPool.resolve("slu:thief");
-                    if (t != null) yield t;
-                }
                 yield EntityType.VINDICATOR;
             }
             case MAGE -> {
                 // Vraie entité caster Iron's aléatoire → vrais sorts variés (plus « que du feu »).
-                String[] casters = {
+                EntityType<?> t = resolveAny(new String[]{
                         "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer",
                         "irons_spellbooks:electromancer", "irons_spellbooks:necromancer",
-                        "irons_spellbooks:archevoker"
-                };
-                EntityType<?> t = ModdedMobPool.resolve(casters[RNG.nextInt(casters.length)]);
+                        "irons_spellbooks:archevoker", "irons_spellbooks:cultist"});
                 if (t != null) yield t;
                 yield EntityType.WITCH;
             }
@@ -183,7 +191,7 @@ public final class AdventurerPartyHelper {
         // Esquive maison pour les rôles À DISTANCE (mage/archer/soigneur). La mêlée (tank/assassin)
         // esquive via Epic Fight quand il est présent — on ne lui marche pas dessus.
         boolean rangedRole = role == PartyRole.MAGE || role == PartyRole.ARCHER || role == PartyRole.HEALER;
-        if (rangedRole || (!EPIC_FIGHT && role == PartyRole.ASSASSIN)) {
+        if ((rangedRole && !isIronsCaster(entity)) || (!EPIC_FIGHT && role == PartyRole.ASSASSIN)) {
             boolean dodgePresent = entity.goalSelector.getAvailableGoals().stream()
                     .anyMatch(w -> w.getGoal() instanceof DodgeGoal);
             if (!dodgePresent) entity.goalSelector.addGoal(0, new DodgeGoal(entity));

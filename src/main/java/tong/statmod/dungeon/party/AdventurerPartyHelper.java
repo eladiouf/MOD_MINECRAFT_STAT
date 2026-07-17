@@ -26,6 +26,9 @@ import tong.statmod.dungeon.party.goal.TankDefendGoal;
 
 public final class AdventurerPartyHelper {
 
+    /** Epic Fight présent → on utilise des bases humanoïdes qu'il patche (combos + esquives d'arme). */
+    private static final boolean EPIC_FIGHT = ModList.get().isLoaded("epicfight");
+
     private AdventurerPartyHelper() {}
 
     public static boolean isPartyFloor(int floor) {
@@ -99,6 +102,7 @@ public final class AdventurerPartyHelper {
     private static EntityType<?> entityTypeForRole(PartyRole role) {
         return switch (role) {
             case TANK -> {
+                if (EPIC_FIGHT) yield EntityType.VINDICATOR; // patché Epic Fight : combos + esquive
                 if (ModList.get().isLoaded("slu")) {
                     EntityType<?> t = ModdedMobPool.resolve("slu:knight");
                     if (t != null) yield t;
@@ -106,6 +110,7 @@ public final class AdventurerPartyHelper {
                 yield EntityType.ZOMBIE;
             }
             case ASSASSIN -> {
+                if (EPIC_FIGHT) yield EntityType.VINDICATOR;
                 if (ModList.get().isLoaded("slu")) {
                     EntityType<?> t = ModdedMobPool.resolve("slu:thief");
                     if (t != null) yield t;
@@ -164,8 +169,10 @@ public final class AdventurerPartyHelper {
                 case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
             }
         }
-        // Esquive réactive pour les rôles mobiles/fragiles (le tank encaisse, lui).
-        if (role != PartyRole.TANK) {
+        // Esquive maison pour les rôles À DISTANCE (mage/archer/soigneur). La mêlée (tank/assassin)
+        // esquive via Epic Fight quand il est présent — on ne lui marche pas dessus.
+        boolean rangedRole = role == PartyRole.MAGE || role == PartyRole.ARCHER || role == PartyRole.HEALER;
+        if (rangedRole || (!EPIC_FIGHT && role == PartyRole.ASSASSIN)) {
             boolean dodgePresent = entity.goalSelector.getAvailableGoals().stream()
                     .anyMatch(w -> w.getGoal() instanceof DodgeGoal);
             if (!dodgePresent) entity.goalSelector.addGoal(0, new DodgeGoal(entity));
@@ -182,7 +189,12 @@ public final class AdventurerPartyHelper {
         }
     }
 
+    private static final String[] ARROW_TYPES = {"NORMAL", "FIRE", "POISON", "FROST"};
+
     private static void equipArcher(Mob mob, int floor) {
+        // Type de flèche varié (feu/poison/gel), lu par ArcherGoal.
+        mob.getPersistentData().putString("statmod_archer_arrow",
+                ARROW_TYPES[mob.getRandom().nextInt(ARROW_TYPES.length)]);
         mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
         mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
         mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));

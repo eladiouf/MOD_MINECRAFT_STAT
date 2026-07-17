@@ -143,8 +143,19 @@ public class ArcherGoal extends Goal {
         arrow.setBaseDamage(3.0 + archer.getMaxHealth() * 0.02);
         arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
         arrow.shoot(dx, dy + horiz * 0.06, dz, 2.2f, 1.0f);
+        applyArrowType(arrow);
         archer.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
         archer.playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.1f);
         level.addFreshEntity(arrow);
+    }
+
+    /** Applique le type de flèche (feu/poison/gel) tiré au sort au spawn. */
+    private void applyArrowType(Arrow arrow) {
+        switch (archer.getPersistentData().getString("statmod_archer_arrow")) {
+            case "FIRE" -> arrow.setSecondsOnFire(100);
+            case "POISON" -> arrow.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
+            case "FROST" -> arrow.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+            default -> { }
+        }
     }
 }

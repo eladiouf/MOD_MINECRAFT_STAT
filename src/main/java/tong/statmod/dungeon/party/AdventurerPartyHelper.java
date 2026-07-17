@@ -28,6 +28,13 @@ public final class AdventurerPartyHelper {
 
     /** Epic Fight présent → on utilise des bases humanoïdes qu'il patche (combos + esquives d'arme). */
     private static final boolean EPIC_FIGHT = ModList.get().isLoaded("epicfight");
+    private static final java.util.Random RNG = new java.util.Random();
+
+    /** True si l'entité est un caster natif Iron's (il lance ses vrais sorts tout seul). */
+    private static boolean isIronsCaster(Mob mob) {
+        return net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType())
+                .getNamespace().equals("irons_spellbooks");
+    }
 
     private AdventurerPartyHelper() {}
 
@@ -118,10 +125,14 @@ public final class AdventurerPartyHelper {
                 yield EntityType.VINDICATOR;
             }
             case MAGE -> {
-                if (ModList.get().isLoaded("irons_spellbooks")) {
-                    EntityType<?> t = ModdedMobPool.resolve("irons_spellbooks:pyromancer");
-                    if (t != null) yield t;
-                }
+                // Vraie entité caster Iron's aléatoire → vrais sorts variés (plus « que du feu »).
+                String[] casters = {
+                        "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer",
+                        "irons_spellbooks:electromancer", "irons_spellbooks:necromancer",
+                        "irons_spellbooks:archevoker"
+                };
+                EntityType<?> t = ModdedMobPool.resolve(casters[RNG.nextInt(casters.length)]);
+                if (t != null) yield t;
                 yield EntityType.WITCH;
             }
             case HEALER -> EntityType.WITCH;
@@ -163,7 +174,7 @@ public final class AdventurerPartyHelper {
         if (!rolePresent) {
             switch (role) {
                 case HEALER -> entity.goalSelector.addGoal(1, new HealPartyGoal(entity));
-                case MAGE -> entity.goalSelector.addGoal(3, new MageRangedGoal(entity));
+                case MAGE -> { if (!isIronsCaster(entity)) entity.goalSelector.addGoal(3, new MageRangedGoal(entity)); }
                 case ASSASSIN -> entity.goalSelector.addGoal(2, new AssassinAttackGoal(entity));
                 case TANK -> entity.goalSelector.addGoal(2, new TankDefendGoal(entity));
                 case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
@@ -329,33 +340,35 @@ public final class AdventurerPartyHelper {
     private static final String[] MAGE_ELEMENTS = {"FIRE", "FROST", "STORM", "NECRO", "ARCANE"};
 
     private static void equipMage(Mob mob, int floor) {
-        // Pas qu'un mage de feu : élément aléatoire → robe teintée + sorts assortis.
-        String element = MAGE_ELEMENTS[mob.getRandom().nextInt(MAGE_ELEMENTS.length)];
-        mob.getPersistentData().putString("statmod_mage_element", element);
-        // Set d'armure thématique Iron's Spellbooks par école (fallback cuir teinté) + staff générique.
-        String setPrefix;
-        String staffId;
-        int color;
-        switch (element) {
-            case "FIRE" -> { setPrefix = "pyromancer"; staffId = "irons_spellbooks:pyrium_staff"; color = 0xB31A1A; }
-            case "FROST" -> { setPrefix = "cryomancer"; staffId = "irons_spellbooks:ice_staff"; color = 0x37A6E6; }
-            case "STORM" -> { setPrefix = "electromancer"; staffId = "irons_spellbooks:graybeard_staff"; color = 0xE0C020; }
-            case "NECRO" -> { setPrefix = "plagued"; staffId = "irons_spellbooks:blood_staff"; color = 0x1E1E28; }
-            default -> { setPrefix = "archevoker"; staffId = "irons_spellbooks:graybeard_staff"; color = 0x8A28C8; }
-        }
-        equipIronsSet(mob, setPrefix, color);
-        mob.setItemSlot(EquipmentSlot.MAINHAND, resolveItem(new String[]{staffId}, mageWeapon()));
-        for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
-
         double baseHp = 30.0 + floor * 0.4;
         var hp = mob.getAttribute(Attributes.MAX_HEALTH);
         if (hp != null) hp.setBaseValue(baseHp);
-
-        double baseArmor = Math.min(20.0, 6.0 + floor * 0.15);
-        var armor = mob.getAttribute(Attributes.ARMOR);
-        if (armor != null) armor.setBaseValue(baseArmor);
-
         mob.setHealth((float) baseHp);
+
+        if (isIronsCaster(mob)) {
+            // Caster Iron's natif : il lance ses VRAIS sorts et porte son armure d'origine.
+            for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
+            return;
+        }
+
+        // Fallback (Iron's absent) : witch en robe teintée, sorts custom via MageRangedGoal.
+        String element = MAGE_ELEMENTS[mob.getRandom().nextInt(MAGE_ELEMENTS.length)];
+        mob.getPersistentData().putString("statmod_mage_element", element);
+        int color = switch (element) {
+            case "FIRE" -> 0xB31A1A;
+            case "FROST" -> 0x37A6E6;
+            case "STORM" -> 0xE0C020;
+            case "NECRO" -> 0x1E1E28;
+            default -> 0x8A28C8;
+        };
+        mob.setItemSlot(EquipmentSlot.HEAD, dyedLeather(Items.LEATHER_HELMET, color));
+        mob.setItemSlot(EquipmentSlot.CHEST, dyedLeather(Items.LEATHER_CHESTPLATE, color));
+        mob.setItemSlot(EquipmentSlot.LEGS, dyedLeather(Items.LEATHER_LEGGINGS, color));
+        mob.setItemSlot(EquipmentSlot.FEET, dyedLeather(Items.LEATHER_BOOTS, color));
+        mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
+        for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
+        var armor = mob.getAttribute(Attributes.ARMOR);
+        if (armor != null) armor.setBaseValue(Math.min(20.0, 6.0 + floor * 0.15));
     }
 
     private static ItemStack dyedLeather(net.minecraft.world.item.Item item, int color) {

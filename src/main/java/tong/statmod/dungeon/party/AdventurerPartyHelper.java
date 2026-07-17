@@ -17,6 +17,7 @@ import tong.statmod.dungeon.DungeonLayout;
 import tong.statmod.dungeon.DungeonRoomChain;
 import tong.statmod.dungeon.DungeonSpawnGuard;
 import tong.statmod.dungeon.ModdedMobPool;
+import tong.statmod.dungeon.party.goal.ArcherGoal;
 import tong.statmod.dungeon.party.goal.AssassinAttackGoal;
 import tong.statmod.dungeon.party.goal.HealPartyGoal;
 import tong.statmod.dungeon.party.goal.MageRangedGoal;
@@ -54,9 +55,9 @@ public final class AdventurerPartyHelper {
 
     /** Spawn les 4 membres autour d'un centre donné (utilisé par le donjon et le test /statparty). */
     public static void spawnPartyAt(ServerLevel level, BlockPos center, int floor) {
-        int[][] offsets = {{-4, -4}, {4, -4}, {4, 4}, {-4, 4}};
+        int[][] offsets = {{-4, -4}, {4, -4}, {4, 4}, {-4, 4}, {0, 6}};
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < PartyRole.values().length; i++) {
             PartyRole role = PartyRole.byIndex(i);
             BlockPos pos = center.offset(offsets[i][0], 0, offsets[i][1]);
             EntityType<?> type = entityTypeForRole(role);
@@ -118,6 +119,14 @@ public final class AdventurerPartyHelper {
                 yield EntityType.WITCH;
             }
             case HEALER -> EntityType.WITCH;
+            case ARCHER -> {
+                // Base pillager (humanoïde, non naturellement archer → seul notre ArcherGoal tire).
+                if (ModList.get().isLoaded("slu")) {
+                    EntityType<?> t = ModdedMobPool.resolve("slu:crossbow_hollow");
+                    if (t != null) yield t;
+                }
+                yield EntityType.PILLAGER;
+            }
         };
     }
 
@@ -141,6 +150,7 @@ public final class AdventurerPartyHelper {
             case MAGE -> MageRangedGoal.class;
             case ASSASSIN -> AssassinAttackGoal.class;
             case TANK -> TankDefendGoal.class;
+            case ARCHER -> ArcherGoal.class;
         };
         boolean present = entity.goalSelector.getAvailableGoals().stream()
                 .anyMatch(w -> goalClass.isInstance(w.getGoal()));
@@ -150,6 +160,7 @@ public final class AdventurerPartyHelper {
             case MAGE -> entity.goalSelector.addGoal(3, new MageRangedGoal(entity));
             case ASSASSIN -> entity.goalSelector.addGoal(2, new AssassinAttackGoal(entity));
             case TANK -> entity.goalSelector.addGoal(2, new TankDefendGoal(entity));
+            case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
         }
     }
 
@@ -159,7 +170,25 @@ public final class AdventurerPartyHelper {
             case ASSASSIN -> equipAssassin(mob, floor);
             case MAGE -> equipMage(mob, floor);
             case HEALER -> equipHealer(mob, floor);
+            case ARCHER -> equipArcher(mob, floor);
         }
+    }
+
+    private static void equipArcher(Mob mob, int floor) {
+        mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
+        mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
+        mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
+        mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW)); // visuel : les tirs sont codés
+        for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
+
+        double baseHp = 26.0 + floor * 0.3;
+        var hp = mob.getAttribute(Attributes.MAX_HEALTH);
+        if (hp != null) hp.setBaseValue(baseHp);
+
+        var speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.setBaseValue(0.32); // mobile pour kiter
+
+        mob.setHealth((float) baseHp);
     }
 
     private static ItemStack swordForTier(int floor) {
@@ -254,10 +283,26 @@ public final class AdventurerPartyHelper {
         mob.setHealth((float) baseHp);
     }
 
+    /** Vrai staff / spellbook (Iron's & co., soft-resolus) au lieu du livre vanilla ; fallback baguette. */
+    private static ItemStack mageWeapon() {
+        String[] ids = {
+                "irons_spellbooks:blank_staff", "irons_spellbooks:ancient_staff",
+                "irons_spellbooks:netherite_spell_book", "irons_spellbooks:diamond_spell_book",
+                "gtbcs_spell_lib:gsl_example_crit_staff", "wind_spellbooks:blank_staff"
+        };
+        for (String id : ids) {
+            net.minecraft.resources.ResourceLocation loc = net.minecraft.resources.ResourceLocation.tryParse(id);
+            if (loc != null && net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(loc)) {
+                return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc));
+            }
+        }
+        return new ItemStack(Items.BLAZE_ROD); // fallback : ressemble à un bâton
+    }
+
     private static void equipMage(Mob mob, int floor) {
         mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
         mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
-        mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOOK));
+        mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
         double baseHp = 30.0 + floor * 0.4;
@@ -277,9 +322,8 @@ public final class AdventurerPartyHelper {
         mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
         mob.setItemSlot(EquipmentSlot.FEET, bootsForTier(floor));
 
-        ItemStack healPotion = PotionUtils.setPotion(
-                new ItemStack(Items.SPLASH_POTION), Potions.STRONG_HEALING);
-        mob.setItemSlot(EquipmentSlot.MAINHAND, healPotion);
+        // Bâton de soin (visuel) — le soin est fait en code, plus de potion peu fiable.
+        mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
         double baseHp = 40.0 + floor * 0.4;
@@ -289,6 +333,10 @@ public final class AdventurerPartyHelper {
         double baseArmor = Math.min(20.0, 8.0 + floor * 0.15);
         var armor = mob.getAttribute(Attributes.ARMOR);
         if (armor != null) armor.setBaseValue(baseArmor);
+
+        // Ne traîne plus derrière : suit le groupe et rejoint vite les blessés.
+        var speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.setBaseValue(0.30);
 
         mob.setHealth((float) baseHp);
     }

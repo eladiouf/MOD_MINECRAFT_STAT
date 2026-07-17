@@ -45,7 +45,7 @@ public class MageRangedGoal extends Goal {
     public boolean canUse() {
         target = mage.getTarget();
         return target != null && target.isAlive()
-                && mage.distanceToSqr(target) < 36 * 36;
+                && mage.distanceToSqr(target) < 48 * 48; // engage de plus loin (agressif)
     }
 
     @Override
@@ -80,6 +80,11 @@ public class MageRangedGoal extends Goal {
             Vec3 away = mage.position().subtract(target.position()).normalize();
             Vec3 dest = mage.position().add(away.scale(6));
             mage.getNavigation().moveTo(dest.x, dest.y, dest.z, 1.0);
+        } else if (dist > PREFERRED_DIST * PREFERRED_DIST) {
+            // Trop loin pour bien lancer → se rapproche à portée de sort (ne reste pas neutre).
+            Vec3 toward = target.position().subtract(mage.position()).normalize();
+            Vec3 dest = mage.position().add(toward.scale(4));
+            mage.getNavigation().moveTo(dest.x, dest.y, dest.z, 1.1);
         } else {
             mage.getNavigation().stop();
         }

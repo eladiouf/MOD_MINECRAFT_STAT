@@ -1,5 +1,8 @@
 package tong.statmod.dungeon.party.goal;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +24,7 @@ public class TankDefendGoal extends Goal {
     private LivingEntity target;
     private int pathRecalcTimer;
     private int shieldTicks;
+    private int tpCooldown;
     private LivingEntity guardedAlly;
 
     public TankDefendGoal(Mob tank) {
@@ -49,6 +53,15 @@ public class TankDefendGoal extends Goal {
         if (target == null) return;
         double dist = tank.distanceToSqr(target);
         tank.getLookControl().setLookAt(target, 30.0f, 30.0f);
+
+        // Intervention d'urgence : l'allié protégé se fait frapper et le tank est trop loin →
+        // téléportation entre l'allié et sa menace pour intercepter immédiatement.
+        if (tpCooldown > 0) tpCooldown--;
+        if (tpCooldown <= 0 && guardedAlly != null && guardedAlly.isAlive()
+                && guardedAlly.hurtTime > 0 && tank.distanceToSqr(guardedAlly) > 12 * 12) {
+            teleportToProtect();
+            tpCooldown = 160; // 8 s
+        }
 
         if (guardedAlly != null && guardedAlly.isAlive()
                 && guardedAlly.hurtTime > 0
@@ -123,6 +136,26 @@ public class TankDefendGoal extends Goal {
         target.setDeltaMovement(
                 pushDir.x * 1.5, 0.3, pushDir.z * 1.5);
         target.hurtMarked = true;
+    }
+
+    /** Se téléporte sur le point d'interception : entre l'allié gardé et sa menace. */
+    private void teleportToProtect() {
+        if (!(tank.level() instanceof ServerLevel level) || guardedAlly == null || target == null) return;
+        Vec3 base = guardedAlly.position();
+        Vec3 toThreat = target.position().subtract(base).normalize();
+        Vec3 dest = base.add(toThreat.scale(2.5));
+        BlockPos p = BlockPos.containing(dest.x, base.y, dest.z);
+        for (int dy = 1; dy >= -3; dy--) {
+            BlockPos c = p.offset(0, dy, 0);
+            if (level.getBlockState(c).isAir() && level.getBlockState(c.above()).isAir()
+                    && !level.getBlockState(c.below()).isAir()) {
+                tank.teleportTo(c.getX() + 0.5, c.getY(), c.getZ() + 0.5);
+                tank.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0f, 0.6f);
+                return;
+            }
+        }
+        tank.teleportTo(dest.x, base.y, dest.z);
+        tank.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0f, 0.6f);
     }
 
     private LivingEntity findHealer() {

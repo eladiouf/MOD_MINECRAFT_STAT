@@ -31,8 +31,8 @@ import java.util.UUID;
 public final class PartyCoordinator {
 
     private static final int PERIOD = 10;
-    /** Aligné sur DungeonMobSpawner.FLOOR_SCAN_RADIUS (package-private là-bas). */
-    private static final double SCAN_RADIUS = 85.0;
+    /** Couvre tout l'étage (bien sous FLOOR_SPACING=300) pour coordonner où que soit le combat. */
+    private static final double SCAN_RADIUS = 160.0;
     /** Clés persistentData de l'ancre de formation, lues par les goals du backline. */
     public static final String ANCHOR_X = "statmod_party_anchor_x";
     public static final String ANCHOR_Z = "statmod_party_anchor_z";
@@ -89,7 +89,10 @@ public final class PartyCoordinator {
                 foes.add(p);
             }
         }
-        if (foes.isEmpty()) return;
+        if (foes.isEmpty()) {
+            regroup(party); // hors combat : rester groupés autour du leader (fin de la dispersion)
+            return;
+        }
 
         // Centre du groupe et centre du backline (mage + soigneur) à protéger.
         double cx = 0, cz = 0;
@@ -191,12 +194,30 @@ public final class PartyCoordinator {
                     case "TANK" -> backP;         // intercepte la menace qui vise le backline
                     // pique la proie isolée — mais si quelqu'un channelle (heal/potion), va l'interrompre.
                     case "ASSASSIN" -> channeling >= 0 ? foes.get(channeling) : isolatedP;
-                    case "MAGE" -> focusP;        // concentre le burst sur le focus
+                    case "MAGE", "ARCHER" -> focusP; // feu à distance concentré sur le focus
                     default -> null;              // HEALER : ne cible pas, il soigne (HealPartyGoal)
                 };
             }
             if (want != null && m.getTarget() != want) {
                 m.setTarget(want);
+            }
+        }
+    }
+
+    /** Hors combat : les membres qui traînent reviennent vers le leader (le tank). */
+    private static void regroup(List<Mob> party) {
+        Mob leader = null;
+        for (Mob m : party) {
+            if ("TANK".equals(m.getPersistentData().getString(PartyRole.TAG))) {
+                leader = m;
+                break;
+            }
+        }
+        if (leader == null) leader = party.get(0);
+        for (Mob m : party) {
+            if (m == leader || m.getTarget() != null) continue;
+            if (m.distanceToSqr(leader) > 7 * 7) {
+                m.getNavigation().moveTo(leader, 1.0);
             }
         }
     }

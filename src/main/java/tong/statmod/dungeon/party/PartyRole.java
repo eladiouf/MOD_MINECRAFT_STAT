@@ -4,7 +4,8 @@ public enum PartyRole {
     TANK,
     ASSASSIN,
     MAGE,
-    HEALER;
+    HEALER,
+    ARCHER;
 
     public static final String TAG = "statmod_party_role";
 

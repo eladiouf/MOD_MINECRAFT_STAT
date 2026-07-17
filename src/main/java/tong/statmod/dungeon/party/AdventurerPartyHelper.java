@@ -19,6 +19,7 @@ import tong.statmod.dungeon.DungeonSpawnGuard;
 import tong.statmod.dungeon.ModdedMobPool;
 import tong.statmod.dungeon.party.goal.ArcherGoal;
 import tong.statmod.dungeon.party.goal.AssassinAttackGoal;
+import tong.statmod.dungeon.party.goal.DodgeGoal;
 import tong.statmod.dungeon.party.goal.HealPartyGoal;
 import tong.statmod.dungeon.party.goal.MageRangedGoal;
 import tong.statmod.dungeon.party.goal.TankDefendGoal;
@@ -152,15 +153,22 @@ public final class AdventurerPartyHelper {
             case TANK -> TankDefendGoal.class;
             case ARCHER -> ArcherGoal.class;
         };
-        boolean present = entity.goalSelector.getAvailableGoals().stream()
+        boolean rolePresent = entity.goalSelector.getAvailableGoals().stream()
                 .anyMatch(w -> goalClass.isInstance(w.getGoal()));
-        if (present) return;
-        switch (role) {
-            case HEALER -> entity.goalSelector.addGoal(1, new HealPartyGoal(entity));
-            case MAGE -> entity.goalSelector.addGoal(3, new MageRangedGoal(entity));
-            case ASSASSIN -> entity.goalSelector.addGoal(2, new AssassinAttackGoal(entity));
-            case TANK -> entity.goalSelector.addGoal(2, new TankDefendGoal(entity));
-            case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
+        if (!rolePresent) {
+            switch (role) {
+                case HEALER -> entity.goalSelector.addGoal(1, new HealPartyGoal(entity));
+                case MAGE -> entity.goalSelector.addGoal(3, new MageRangedGoal(entity));
+                case ASSASSIN -> entity.goalSelector.addGoal(2, new AssassinAttackGoal(entity));
+                case TANK -> entity.goalSelector.addGoal(2, new TankDefendGoal(entity));
+                case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
+            }
+        }
+        // Esquive réactive pour les rôles mobiles/fragiles (le tank encaisse, lui).
+        if (role != PartyRole.TANK) {
+            boolean dodgePresent = entity.goalSelector.getAvailableGoals().stream()
+                    .anyMatch(w -> w.getGoal() instanceof DodgeGoal);
+            if (!dodgePresent) entity.goalSelector.addGoal(0, new DodgeGoal(entity));
         }
     }
 

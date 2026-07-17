@@ -28,6 +28,7 @@ public class ArcherGoal extends Goal {
     private LivingEntity target;
     private int shootCooldown;
     private int markCooldown;
+    private int ultCooldown;
     private int strafe;
 
     public ArcherGoal(Mob archer) {
@@ -75,11 +76,38 @@ public class ArcherGoal extends Goal {
             markCooldown = MARK_INTERVAL;
         }
 
+        if (ultCooldown > 0) ultCooldown--;
+        else if (dist < 40 * 40) {
+            volley();
+            ultCooldown = 300; // 15 s
+        }
+
         if (shootCooldown > 0) shootCooldown--;
         else if (dist < 40 * 40) {
             shootArrow();
             shootCooldown = SHOOT_INTERVAL + archer.getRandom().nextInt(15);
         }
+    }
+
+    /** ULTIME — pluie de flèches sur la zone de la cible. */
+    private void volley() {
+        if (!(archer.level() instanceof ServerLevel level)) return;
+        Vec3 tp = target.position();
+        for (int i = 0; i < 12; i++) {
+            double ox = (archer.getRandom().nextDouble() - 0.5) * 5.0;
+            double oz = (archer.getRandom().nextDouble() - 0.5) * 5.0;
+            Arrow arrow = new Arrow(level, archer);
+            arrow.setPos(archer.getX(), archer.getEyeY() + 2.0, archer.getZ());
+            arrow.setBaseDamage(2.5);
+            arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+            double dx = tp.x + ox - arrow.getX();
+            double dy = tp.y - arrow.getY();
+            double dz = tp.z + oz - arrow.getZ();
+            double horiz = Math.sqrt(dx * dx + dz * dz);
+            arrow.shoot(dx, dy + horiz * 0.35, dz, 1.4f, 6.0f);
+            level.addFreshEntity(arrow);
+        }
+        archer.playSound(SoundEvents.SKELETON_SHOOT, 1.3f, 0.8f);
     }
 
     private void shootArrow() {

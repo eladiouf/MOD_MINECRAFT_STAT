@@ -34,6 +34,7 @@ public class HealPartyGoal extends Goal {
     private LivingEntity patient;
     private int healCooldown;
     private int buffTimer;
+    private int ultCooldown;
 
     public HealPartyGoal(Mob healer) {
         this.healer = healer;
@@ -60,6 +61,13 @@ public class HealPartyGoal extends Goal {
     public void tick() {
         if (healCooldown > 0) healCooldown--;
         if (buffTimer > 0) buffTimer--;
+        if (ultCooldown > 0) ultCooldown--;
+
+        // ULTIME — Sanctuaire : si au moins 2 alliés sont critiques (<40%), gros soin de groupe.
+        if (ultCooldown <= 0 && countCritical() >= 2) {
+            massHeal();
+            ultCooldown = 400; // 20 s
+        }
 
         // Menace de mêlée → repli vers l'ancre (rester protégé derrière le tank).
         LivingEntity threat = healer.getTarget();
@@ -158,6 +166,30 @@ public class HealPartyGoal extends Goal {
             fleePos = new Vec3(fleePos.x * 0.55 + ax * 0.45, fleePos.y, fleePos.z * 0.55 + az * 0.45);
         }
         healer.getNavigation().moveTo(fleePos.x, fleePos.y, fleePos.z, 1.35);
+    }
+
+    private int countCritical() {
+        int n = 0;
+        if (healer.getHealth() < healer.getMaxHealth() * 0.40) n++;
+        for (Mob ally : allies(SUPPORT_RANGE, false)) {
+            if (ally.getHealth() < ally.getMaxHealth() * 0.40) n++;
+        }
+        return n;
+    }
+
+    /** ULTIME — gros soin instantané + régén/résistance sur tout le groupe. */
+    private void massHeal() {
+        for (Mob ally : allies(SUPPORT_RANGE, true)) {
+            ally.heal(ally.getMaxHealth() * 0.5f);
+            ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 120, 1, false, true));
+            ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 120, 0, false, true));
+        }
+        if (healer.level() instanceof ServerLevel lv) {
+            lv.sendParticles(ParticleTypes.HEART, healer.getX(), healer.getY() + 1.5, healer.getZ(),
+                    40, 3.0, 1.0, 3.0, 0.0);
+            lv.playSound(null, healer.getX(), healer.getY(), healer.getZ(),
+                    SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 1.2f, 1.4f);
+        }
     }
 
     /** Membres du groupe autour du soigneur ({@code includeSelf} pour les buffs). */

@@ -1,6 +1,7 @@
 package tong.statmod.dungeon.party.goal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -8,6 +9,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import tong.statmod.dungeon.party.PartyRole;
 
@@ -25,6 +28,7 @@ public class TankDefendGoal extends Goal {
     private int pathRecalcTimer;
     private int shieldTicks;
     private int tpCooldown;
+    private int ultCooldown;
     private LivingEntity guardedAlly;
 
     public TankDefendGoal(Mob tank) {
@@ -53,6 +57,15 @@ public class TankDefendGoal extends Goal {
         if (target == null) return;
         double dist = tank.distanceToSqr(target);
         tank.getLookControl().setLookAt(target, 30.0f, 30.0f);
+
+        // ULTIME — Choc de bouclier : entouré (2+ joueurs proches) ou en danger (<50% PV) → nova
+        // qui repousse et ralentit tout autour, et blinde le tank.
+        if (ultCooldown > 0) ultCooldown--;
+        if (ultCooldown <= 0 && (tank.getHealth() < tank.getMaxHealth() * 0.5
+                || nearbyPlayers(4.5).size() >= 2)) {
+            shieldSlam();
+            ultCooldown = 300; // 15 s
+        }
 
         // Intervention d'urgence : l'allié protégé se fait frapper et le tank est trop loin →
         // téléportation entre l'allié et sa menace pour intercepter immédiatement.
@@ -136,6 +149,28 @@ public class TankDefendGoal extends Goal {
         target.setDeltaMovement(
                 pushDir.x * 1.5, 0.3, pushDir.z * 1.5);
         target.hurtMarked = true;
+    }
+
+    /** Choc de bouclier : repousse + ralentit les joueurs autour, blinde le tank. */
+    private void shieldSlam() {
+        if (!(tank.level() instanceof ServerLevel level)) return;
+        for (Player pl : nearbyPlayers(4.5)) {
+            Vec3 push = pl.position().subtract(tank.position()).normalize();
+            pl.setDeltaMovement(push.x * 1.4, 0.5, push.z * 1.4);
+            pl.hurtMarked = true;
+            pl.hurt(tank.damageSources().mobAttack(tank), 4.0f);
+            pl.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+        }
+        tank.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 140, 1));
+        tank.playSound(SoundEvents.ANVIL_LAND, 1.2f, 0.7f);
+        level.sendParticles(ParticleTypes.EXPLOSION, tank.getX(), tank.getY() + 0.5, tank.getZ(),
+                4, 1.6, 0.2, 1.6, 0.0);
+    }
+
+    private List<Player> nearbyPlayers(double radius) {
+        AABB box = tank.getBoundingBox().inflate(radius);
+        return tank.level().getEntitiesOfClass(Player.class, box,
+                p -> p.isAlive() && !p.isCreative() && !p.isSpectator());
     }
 
     /** Se téléporte sur le point d'interception : entre l'allié gardé et sa menace. */

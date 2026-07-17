@@ -208,6 +208,16 @@ public final class AdventurerPartyHelper {
         };
     }
 
+    /** Arme de mêlée variée (épée ou hache) selon le tier — variété d'équipement. */
+    private static ItemStack meleeWeapon(Mob mob, int floor) {
+        boolean axe = mob.getRandom().nextBoolean();
+        return switch (tierPrefix(floor)) {
+            case "IRON" -> new ItemStack(axe ? Items.STONE_AXE : Items.STONE_SWORD);
+            case "DIAMOND" -> new ItemStack(axe ? Items.IRON_AXE : Items.IRON_SWORD);
+            default -> new ItemStack(axe ? Items.DIAMOND_AXE : Items.DIAMOND_SWORD);
+        };
+    }
+
     private static ItemStack helmetForTier(int floor) {
         String tier = tierPrefix(floor);
         return switch (tier) {
@@ -249,7 +259,7 @@ public final class AdventurerPartyHelper {
         mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
         mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
         mob.setItemSlot(EquipmentSlot.FEET, bootsForTier(floor));
-        mob.setItemSlot(EquipmentSlot.MAINHAND, swordForTier(floor));
+        mob.setItemSlot(EquipmentSlot.MAINHAND, meleeWeapon(mob, floor));
         mob.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
@@ -274,7 +284,7 @@ public final class AdventurerPartyHelper {
         mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
         mob.setItemSlot(EquipmentSlot.LEGS, legsForTier(floor));
         mob.setItemSlot(EquipmentSlot.FEET, bootsForTier(floor));
-        mob.setItemSlot(EquipmentSlot.MAINHAND, swordForTier(floor));
+        mob.setItemSlot(EquipmentSlot.MAINHAND, meleeWeapon(mob, floor));
         mob.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
@@ -307,9 +317,24 @@ public final class AdventurerPartyHelper {
         return new ItemStack(Items.BLAZE_ROD); // fallback : ressemble à un bâton
     }
 
+    /** Écoles de mage : chacune a une couleur de robe + un jeu de sorts (voir MageRangedGoal). */
+    private static final String[] MAGE_ELEMENTS = {"FIRE", "FROST", "STORM", "NECRO", "ARCANE"};
+
     private static void equipMage(Mob mob, int floor) {
-        mob.setItemSlot(EquipmentSlot.HEAD, helmetForTier(floor));
-        mob.setItemSlot(EquipmentSlot.CHEST, chestForTier(floor));
+        // Pas qu'un mage de feu : élément aléatoire → robe teintée + sorts assortis.
+        String element = MAGE_ELEMENTS[mob.getRandom().nextInt(MAGE_ELEMENTS.length)];
+        mob.getPersistentData().putString("statmod_mage_element", element);
+        int color = switch (element) {
+            case "FIRE" -> 0xB31A1A;
+            case "FROST" -> 0x37A6E6;
+            case "STORM" -> 0xE0C020;
+            case "NECRO" -> 0x1E1E28;
+            default -> 0x8A28C8; // ARCANE
+        };
+        mob.setItemSlot(EquipmentSlot.HEAD, dyedLeather(Items.LEATHER_HELMET, color));
+        mob.setItemSlot(EquipmentSlot.CHEST, dyedLeather(Items.LEATHER_CHESTPLATE, color));
+        mob.setItemSlot(EquipmentSlot.LEGS, dyedLeather(Items.LEATHER_LEGGINGS, color));
+        mob.setItemSlot(EquipmentSlot.FEET, dyedLeather(Items.LEATHER_BOOTS, color));
         mob.setItemSlot(EquipmentSlot.MAINHAND, mageWeapon());
         for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
 
@@ -322,6 +347,14 @@ public final class AdventurerPartyHelper {
         if (armor != null) armor.setBaseValue(baseArmor);
 
         mob.setHealth((float) baseHp);
+    }
+
+    private static ItemStack dyedLeather(net.minecraft.world.item.Item item, int color) {
+        ItemStack stack = new ItemStack(item);
+        if (item instanceof net.minecraft.world.item.DyeableLeatherItem dye) {
+            dye.setColor(stack, color);
+        }
+        return stack;
     }
 
     private static void equipHealer(Mob mob, int floor) {

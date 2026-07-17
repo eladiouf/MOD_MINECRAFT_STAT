@@ -1,10 +1,13 @@
 package tong.statmod.dungeon.party.goal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -44,8 +47,23 @@ public class MageRangedGoal extends Goal {
     @Override
     public boolean canUse() {
         target = mage.getTarget();
-        return target != null && target.isAlive()
-                && mage.distanceToSqr(target) < 48 * 48; // engage de plus loin (agressif)
+        if (target == null || !target.isAlive() || mage.distanceToSqr(target) > 48 * 48) {
+            target = nearestPlayer(); // acquiert une proie TOUT SEUL — n'attend pas d'être attaqué
+            if (target != null) mage.setTarget(target);
+        }
+        return target != null && target.isAlive() && mage.distanceToSqr(target) < 48 * 48;
+    }
+
+    private LivingEntity nearestPlayer() {
+        AABB box = mage.getBoundingBox().inflate(48.0);
+        LivingEntity best = null;
+        double bd = Double.MAX_VALUE;
+        for (Player p : mage.level().getEntitiesOfClass(Player.class, box,
+                pl -> pl.isAlive() && !pl.isCreative() && !pl.isSpectator())) {
+            double d = mage.distanceToSqr(p);
+            if (d < bd) { bd = d; best = p; }
+        }
+        return best;
     }
 
     @Override
@@ -122,7 +140,7 @@ public class MageRangedGoal extends Goal {
                 // Joueurs regroupés → nappe de crocs balayante (AoE) vers le centre du groupe.
                 castFangLine(clusterCentroid(target.position(), 6.0));
             } else {
-                castFangs(dist < 20 * 20 ? 3 : 2);
+                castElemental(dist);
             }
             castCooldown = CAST_INTERVAL + mage.getRandom().nextInt(20);
         } else {
@@ -164,6 +182,63 @@ public class MageRangedGoal extends Goal {
             level.addFreshEntity(fangs);
         }
         mage.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+    }
+
+    /** Sort selon l'élément du mage (feu/glace/foudre/nécro/arcane) lu sur le mob. */
+    private void castElemental(double dist) {
+        switch (mage.getPersistentData().getString("statmod_mage_element")) {
+            case "FROST" -> frostBolt();
+            case "STORM" -> stormStrike();
+            case "NECRO" -> necroCast();
+            case "FIRE" -> fireCast(dist);
+            default -> castFangs(dist < 20 * 20 ? 3 : 2); // ARCANE
+        }
+    }
+
+    private void fireCast(double dist) {
+        castFangs(dist < 20 * 20 ? 3 : 2);
+        if (target != null) target.setSecondsOnFire(4);
+        if (target != null && mage.level() instanceof ServerLevel lv) {
+            lv.sendParticles(ParticleTypes.FLAME, target.getX(), target.getY() + 0.5, target.getZ(),
+                    22, 0.4, 0.5, 0.4, 0.02);
+        }
+    }
+
+    private void frostBolt() {
+        if (target == null) return;
+        target.hurt(mage.damageSources().magic(), 4.0f + mage.getMaxHealth() * 0.03f);
+        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 2));
+        target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 80, 1));
+        mage.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+        if (mage.level() instanceof ServerLevel lv) {
+            lv.sendParticles(ParticleTypes.SNOWFLAKE, target.getX(), target.getY() + 0.6, target.getZ(),
+                    26, 0.4, 0.6, 0.4, 0.03);
+        }
+    }
+
+    private void stormStrike() {
+        if (target == null || !(mage.level() instanceof ServerLevel lv)) return;
+        LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(lv);
+        if (bolt != null) {
+            bolt.moveTo(target.getX(), target.getY(), target.getZ());
+            bolt.setVisualOnly(true); // pas de feu sur le décor ; dégâts appliqués à la main
+            lv.addFreshEntity(bolt);
+        }
+        target.hurt(mage.damageSources().lightningBolt(), 5.0f + mage.getMaxHealth() * 0.03f);
+        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+        mage.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+    }
+
+    private void necroCast() {
+        castFangs(2);
+        if (target != null) {
+            target.addEffect(new MobEffectInstance(MobEffects.WITHER, 80, 1));
+            target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 0));
+            if (mage.level() instanceof ServerLevel lv) {
+                lv.sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY() + 0.5, target.getZ(),
+                        20, 0.4, 0.5, 0.4, 0.02);
+            }
+        }
     }
 
     private void castFangs(int count) {

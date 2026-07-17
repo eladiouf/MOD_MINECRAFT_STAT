@@ -7,8 +7,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -39,7 +41,23 @@ public class ArcherGoal extends Goal {
     @Override
     public boolean canUse() {
         target = archer.getTarget();
+        if (target == null || !target.isAlive() || archer.distanceToSqr(target) > 50 * 50) {
+            target = nearestPlayer(); // tire tout seul, sans attendre d'être attaqué
+            if (target != null) archer.setTarget(target);
+        }
         return target != null && target.isAlive() && archer.distanceToSqr(target) < 50 * 50;
+    }
+
+    private LivingEntity nearestPlayer() {
+        AABB box = archer.getBoundingBox().inflate(50.0);
+        LivingEntity best = null;
+        double bd = Double.MAX_VALUE;
+        for (Player p : archer.level().getEntitiesOfClass(Player.class, box,
+                pl -> pl.isAlive() && !pl.isCreative() && !pl.isSpectator())) {
+            double d = archer.distanceToSqr(p);
+            if (d < bd) { bd = d; best = p; }
+        }
+        return best;
     }
 
     @Override

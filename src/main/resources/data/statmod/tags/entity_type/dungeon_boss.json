@@ -44,14 +44,12 @@
     { "id": "slu:boss_wukong", "required": false },
     { "id": "irons_spellbooks:dead_king", "required": false },
     { "id": "irons_spellbooks:citadel_keeper", "required": false },
-    { "id": "block_factorys_bosses:infernal_dragon", "required": false },
-    { "id": "block_factorys_bosses:yeti", "required": false },
-    { "id": "block_factorys_bosses:sandworm", "required": false },
-    { "id": "block_factorys_bosses:underworld_knight", "required": false },
-    { "id": "block_factorys_bosses:kraken", "required": false },
-    { "id": "block_factorys_bosses:pirate_captain", "required": false },
-    { "id": "block_factorys_bosses:pirate_rook", "required": false },
-    { "id": "block_factorys_bosses:crossbow_pirate", "required": false },
+    { "id": "cataclysm:the_prowler", "required": false },
+    { "id": "cataclysm:ender_golem", "required": false },
+    { "id": "cataclysm:netherite_monstrosity", "required": false },
+    { "id": "cataclysm:the_leviathan", "required": false },
+    { "id": "cataclysm:the_harbinger", "required": false },
+    { "id": "cataclysm:ignited_berserker", "required": false },
     { "id": "bosses_of_mass_destruction:lich", "required": false },
     { "id": "bosses_of_mass_destruction:obsidilith", "required": false },
     { "id": "bosses_of_mass_destruction:gauntlet", "required": false },
@@ -60,8 +58,6 @@
     { "id": "epic_mobs:phoenix_fight", "required": false },
     { "id": "epic_mobs:micky", "required": false },
     { "id": "epic_mobs:karin", "required": false },
-    { "id": "epic_mobs:pillager_king", "required": false },
-    { "id": "deeperdarker:stalker", "required": false },
-    { "id": "darkdoppelganger:dark_doppelganger", "required": false }
+    { "id": "epic_mobs:pillager_king", "required": false }
   ]
 }

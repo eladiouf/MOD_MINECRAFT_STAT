@@ -91,6 +91,10 @@ public final class AdventurerPartyHelper {
             entity.getPersistentData().putString(PartyRole.TAG, role.name());
             entity.setPersistenceRequired();
 
+            if (entity instanceof tong.statmod.entity.AdventurerEntity adv) {
+                adv.setSkin(RNG.nextInt(tong.statmod.entity.AdventurerEntity.SKIN_COUNT));
+            }
+
             equipForRole(entity, role, floor);
 
             var followRange = entity.getAttribute(Attributes.FOLLOW_RANGE);
@@ -117,42 +121,10 @@ public final class AdventurerPartyHelper {
     }
 
     private static EntityType<?> entityTypeForRole(PartyRole role) {
-        return switch (role) {
-            case TANK -> {
-                // SLU d'abord (chevaliers stylés, IA Souls + patch Epic Fight via MobsPlus-EFM).
-                EntityType<?> slu = resolveAny(new String[]{
-                        "slu:elite_knight", "slu:noble_knight", "slu:dark_knight", "slu:ringed_knight",
-                        "slu:dungeon_knight", "slu:knight", "slu:castle_guard", "slu:temple_guard", "slu:mad_knight"});
-                if (slu != null) yield slu;
-                if (EPIC_FIGHT) yield EntityType.VINDICATOR;
-                yield EntityType.ZOMBIE;
-            }
-            case ASSASSIN -> {
-                EntityType<?> slu = resolveAny(new String[]{
-                        "slu:shadow_assassin", "slu:thief", "slu:armed_hollow", "slu:hollow_soldier_sword"});
-                if (slu != null) yield slu;
-                if (EPIC_FIGHT) yield EntityType.VINDICATOR;
-                yield EntityType.VINDICATOR;
-            }
-            case MAGE -> {
-                // Vraie entité caster Iron's aléatoire → vrais sorts variés (plus « que du feu »).
-                EntityType<?> t = resolveAny(new String[]{
-                        "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer",
-                        "irons_spellbooks:electromancer", "irons_spellbooks:necromancer",
-                        "irons_spellbooks:archevoker", "irons_spellbooks:cultist"});
-                if (t != null) yield t;
-                yield EntityType.WITCH;
-            }
-            case HEALER -> EntityType.WITCH;
-            case ARCHER -> {
-                // Base pillager (humanoïde, non naturellement archer → seul notre ArcherGoal tire).
-                if (ModList.get().isLoaded("slu")) {
-                    EntityType<?> t = ModdedMobPool.resolve("slu:crossbow_hollow");
-                    if (t != null) yield t;
-                }
-                yield EntityType.PILLAGER;
-            }
-        };
+        // Tous les membres du groupe sont des aventuriers humanoïdes rendus avec un modèle + skin
+        // de JOUEUR (voir AdventurerRenderer). Leur rôle est porté par le tag + les goals d'IA,
+        // pas par l'espèce. Le mage garde ses vrais sorts Iron's (cast via onCast dans MageRangedGoal).
+        return tong.statmod.entity.AdventurerEntities.ADVENTURER.get();
     }
 
     /**
@@ -182,7 +154,7 @@ public final class AdventurerPartyHelper {
         if (!rolePresent) {
             switch (role) {
                 case HEALER -> entity.goalSelector.addGoal(1, new HealPartyGoal(entity));
-                case MAGE -> { if (!isIronsCaster(entity)) entity.goalSelector.addGoal(3, new MageRangedGoal(entity)); }
+                case MAGE -> entity.goalSelector.addGoal(1, new MageRangedGoal(entity));
                 case ASSASSIN -> entity.goalSelector.addGoal(2, new AssassinAttackGoal(entity));
                 case TANK -> entity.goalSelector.addGoal(2, new TankDefendGoal(entity));
                 case ARCHER -> entity.goalSelector.addGoal(3, new ArcherGoal(entity));
@@ -191,7 +163,7 @@ public final class AdventurerPartyHelper {
         // Esquive maison pour les rôles À DISTANCE (mage/archer/soigneur). La mêlée (tank/assassin)
         // esquive via Epic Fight quand il est présent — on ne lui marche pas dessus.
         boolean rangedRole = role == PartyRole.MAGE || role == PartyRole.ARCHER || role == PartyRole.HEALER;
-        if ((rangedRole && !isIronsCaster(entity)) || (!EPIC_FIGHT && role == PartyRole.ASSASSIN)) {
+        if (rangedRole || (!EPIC_FIGHT && role == PartyRole.ASSASSIN)) {
             boolean dodgePresent = entity.goalSelector.getAvailableGoals().stream()
                     .anyMatch(w -> w.getGoal() instanceof DodgeGoal);
             if (!dodgePresent) entity.goalSelector.addGoal(0, new DodgeGoal(entity));
@@ -347,6 +319,16 @@ public final class AdventurerPartyHelper {
     /** Écoles de mage : chacune a une couleur de robe + un jeu de sorts (voir MageRangedGoal). */
     private static final String[] MAGE_ELEMENTS = {"FIRE", "FROST", "STORM", "NECRO", "ARCANE"};
 
+    /** École déduite du type de caster Iron's (pyromancer→FIRE, cryomancer→FROST, …). */
+    private static String ironsCasterElement(Mob mob) {
+        String path = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getPath();
+        if (path.contains("pyro")) return "FIRE";
+        if (path.contains("cryo")) return "FROST";
+        if (path.contains("electro")) return "STORM";
+        if (path.contains("necro")) return "NECRO";
+        return "ARCANE";
+    }
+
     private static void equipMage(Mob mob, int floor) {
         double baseHp = 30.0 + floor * 0.4;
         var hp = mob.getAttribute(Attributes.MAX_HEALTH);
@@ -354,7 +336,10 @@ public final class AdventurerPartyHelper {
         mob.setHealth((float) baseHp);
 
         if (isIronsCaster(mob)) {
-            // Caster Iron's natif : il lance ses VRAIS sorts et porte son armure d'origine.
+            // Modèle caster Iron's (belle apparence + armure d'origine) MAIS piloté par notre
+            // MageRangedGoal fiable (les casters Iron's spawnés à la main ne reçoivent pas leurs
+            // sorts natifs → ils restaient plantés). École déduite du type de caster.
+            mob.getPersistentData().putString("statmod_mage_element", ironsCasterElement(mob));
             for (EquipmentSlot s : EquipmentSlot.values()) mob.setDropChance(s, 0.0f);
             return;
         }

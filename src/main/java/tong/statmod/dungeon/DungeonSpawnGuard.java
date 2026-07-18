@@ -154,13 +154,12 @@ public final class DungeonSpawnGuard {
             // Il reste spawnable via spawnAuthorized() dans les vagues normales.
             // Forge 1.20.1 — mods RÉELLEMENT présents dans le dossier client.
             return "irons_spellbooks".equals(namespace) ||
-                   "block_factorys_bosses".equals(namespace) ||
+                   "slu".equals(namespace) ||
+                   "cataclysm".equals(namespace) ||
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
                    "bosses_of_mass_destruction".equals(namespace) ||
-                   "epic_mobs".equals(namespace) ||
-                   "deeperdarker".equals(namespace) ||
-                   "darkdoppelganger".equals(namespace);
+                   "epic_mobs".equals(namespace);
 
         } catch (Exception e) {
             return false;

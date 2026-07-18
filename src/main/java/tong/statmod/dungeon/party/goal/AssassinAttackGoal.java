@@ -1,6 +1,7 @@
 package tong.statmod.dungeon.party.goal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,6 +23,9 @@ public class AssassinAttackGoal extends Goal {
     private LivingEntity target;
     private int flankTimer;
     private int vanishCooldown;
+    private int markCharge = -1;
+    private int markCooldown;
+    private static final int MARK_WINDUP = 16;
 
     public AssassinAttackGoal(Mob assassin) {
         this.assassin = assassin;
@@ -53,6 +57,30 @@ public class AssassinAttackGoal extends Goal {
         if (target == null) return;
         double dist = assassin.distanceToSqr(target);
         assassin.getLookControl().setLookAt(target, 30.0f, 30.0f);
+
+        PartyTelegraph.maybeEnrage(assassin);
+
+        // MARQUE DE MORT télégraphiée : la cible est marquée (particules + son), puis l'assassin
+        // fond derrière elle pour une exécution. Le joueur peut casser le combo en se déplaçant.
+        if (assassin.level() instanceof ServerLevel markLevel) {
+            if (markCharge >= 0) {
+                markLevel.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1.0, target.getZ(),
+                        5, 0.3, 0.5, 0.3, 0.0);
+                PartyTelegraph.chargeSound(assassin, markCharge, MARK_WINDUP);
+                if (++markCharge >= MARK_WINDUP) {
+                    executeMark();
+                    markCharge = -1;
+                    markCooldown = 260;
+                }
+                return;
+            }
+            if (markCooldown > 0) markCooldown--;
+            if (markCooldown <= 0 && dist < 12 * 12 && dist > 4 * 4) {
+                markCharge = 0;
+                assassin.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.6f, 1.7f);
+                return;
+            }
+        }
 
         --vanishCooldown;
 
@@ -87,6 +115,28 @@ public class AssassinAttackGoal extends Goal {
                 flankTimer = FLANK_INTERVAL - 3;
             }
         }
+    }
+
+    /** Exécution télégraphiée : dash derrière la cible + coup lourd. */
+    private void executeMark() {
+        if (!(assassin.level() instanceof ServerLevel level) || target == null) return;
+        Vec3 behind = findBehindPosition();
+        if (behind != null) {
+            BlockPos d = BlockPos.containing(behind);
+            for (int dy = 1; dy >= -3; dy--) {
+                BlockPos c = d.offset(0, dy, 0);
+                if (level.getBlockState(c).isAir() && level.getBlockState(c.above()).isAir()
+                        && !level.getBlockState(c.below()).isAir()) { d = c; break; }
+            }
+            level.broadcastEntityEvent(assassin, (byte) 56);
+            assassin.teleportTo(d.getX() + 0.5, d.getY(), d.getZ() + 0.5);
+            level.broadcastEntityEvent(assassin, (byte) 56);
+        }
+        assassin.getLookControl().setLookAt(target, 30f, 30f);
+        target.hurt(assassin.damageSources().mobAttack(assassin), 22.0f);
+        assassin.playSound(SoundEvents.PLAYER_ATTACK_CRIT, 1.0f, 0.8f);
+        level.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1.0, target.getZ(),
+                24, 0.3, 0.5, 0.3, 0.3);
     }
 
     private boolean isBehindTarget() {

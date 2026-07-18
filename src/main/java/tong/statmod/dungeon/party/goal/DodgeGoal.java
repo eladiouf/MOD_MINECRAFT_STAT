@@ -3,6 +3,7 @@ package tong.statmod.dungeon.party.goal;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -35,13 +36,38 @@ public class DodgeGoal extends Goal {
             return false;
         }
         Projectile threat = incomingProjectile();
-        if (threat == null) return false;
-        Vec3 v = threat.getDeltaMovement();
-        Vec3 perp = new Vec3(-v.z, 0, v.x).normalize();
-        Vec3 toMob = mob.position().subtract(threat.position());
-        if (perp.dot(toMob) < 0) perp = perp.scale(-1); // esquive du côté où on est déjà
-        dodgeDir = perp;
-        return true;
+        if (threat != null) {
+            Vec3 v = threat.getDeltaMovement();
+            Vec3 perp = new Vec3(-v.z, 0, v.x).normalize();
+            Vec3 toMob = mob.position().subtract(threat.position());
+            if (perp.dot(toMob) < 0) perp = perp.scale(-1); // esquive du côté où on est déjà
+            dodgeDir = perp;
+            return true;
+        }
+        // Esquive au corps-à-corps : un joueur tout proche en train de frapper → roulade latérale
+        // (perpendiculaire à son regard) → très dur à toucher au contact.
+        Player swinger = closeSwingingFoe();
+        if (swinger != null) {
+            Vec3 look = swinger.getLookAngle();
+            Vec3 perp = new Vec3(-look.z, 0, look.x).normalize();
+            Vec3 toMob = mob.position().subtract(swinger.position());
+            if (perp.dot(toMob) < 0) perp = perp.scale(-1);
+            dodgeDir = perp;
+            return true;
+        }
+        return false;
+    }
+
+    private Player closeSwingingFoe() {
+        AABB box = mob.getBoundingBox().inflate(3.2);
+        Player best = null;
+        double bd = Double.MAX_VALUE;
+        for (Player p : mob.level().getEntitiesOfClass(Player.class, box,
+                pl -> pl.isAlive() && !pl.isCreative() && !pl.isSpectator() && pl.swinging)) {
+            double d = mob.distanceToSqr(p);
+            if (d < bd) { bd = d; best = p; }
+        }
+        return best;
     }
 
     @Override

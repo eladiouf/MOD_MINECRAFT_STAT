@@ -30,18 +30,27 @@ public class MageRangedGoal extends Goal {
     private static final double FLEE_DIST = 5.0;
     private static final double CORNERED_DIST = 3.0;
     private static final double POTION_DIST = 6.0;
-    private static final int CAST_INTERVAL = 60;
+    private static final int CAST_INTERVAL = 28; // cadence rapide → barrage de sorts
 
     private final Mob mage;
+    private final boolean issCaster; // vrai caster Iron's → lance ses VRAIS sorts (projectiles variés)
     private LivingEntity target;
     private int castCooldown;
     private int strafeTimer;
     private int stuckTicks;
     private int hexCooldown;
+    private int meteorCharge = -1;
+    private int meteorCooldown;
+    private Vec3 meteorCenter;
+    private static final int METEOR_WINDUP = 30;
+    private static final double METEOR_RADIUS = 3.5;
 
     public MageRangedGoal(Mob mage) {
         this.mage = mage;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        // Iron's présent → le mage lance de VRAIS sorts ISS (onCast marche sur n'importe quel mob,
+        // pas besoin que l'entité soit un caster natif). Les aventuriers castent donc de vrais sorts.
+        this.issCaster = net.minecraftforge.fml.ModList.get().isLoaded("irons_spellbooks");
     }
 
     @Override
@@ -75,6 +84,8 @@ public class MageRangedGoal extends Goal {
     public void tick() {
         if (target == null) return;
         double dist = mage.distanceToSqr(target);
+
+        PartyTelegraph.maybeEnrage(mage);
 
         if (dist < CORNERED_DIST * CORNERED_DIST) {
             if (mage.getNavigation().isDone()) {
@@ -133,14 +144,48 @@ public class MageRangedGoal extends Goal {
             hexCooldown--;
         }
 
+        // MÉTÉORE télégraphié : cercle d'avertissement au sol sous le joueur, puis impact enflammé
+        // AoE. Esquivable en quittant le cercle pendant la charge.
+        if (mage.level() instanceof ServerLevel meteorLevel) {
+            if (meteorCharge >= 0) {
+                PartyTelegraph.warningRing(meteorLevel, meteorCenter, METEOR_RADIUS, meteorCharge, METEOR_WINDUP);
+                PartyTelegraph.chargeSound(mage, meteorCharge, METEOR_WINDUP);
+                if (++meteorCharge >= METEOR_WINDUP) {
+                    meteorLevel.sendParticles(ParticleTypes.FLAME, meteorCenter.x, meteorCenter.y + 0.5, meteorCenter.z,
+                            40, 1.4, 0.4, 1.4, 0.05);
+                    PartyTelegraph.aoeImpact(mage, meteorCenter, METEOR_RADIUS, 8.0f, 0.5, 40);
+                    for (Player p : PartyTelegraph.playersIn(meteorLevel, meteorCenter, METEOR_RADIUS)) {
+                        p.setSecondsOnFire(4);
+                    }
+                    meteorCharge = -1;
+                    meteorCooldown = 240 + mage.getRandom().nextInt(80);
+                }
+                return;
+            }
+            if (meteorCooldown > 0) meteorCooldown--;
+            if (meteorCooldown <= 0 && dist > FLEE_DIST * FLEE_DIST && dist < 24 * 24) {
+                meteorCenter = target.position();
+                meteorCharge = 0;
+                return;
+            }
+        }
+
         if (castCooldown <= 0) {
-            if (dist < POTION_DIST * POTION_DIST) {
-                throwHarmPotion();
-            } else if (nearbyFoes(target.position(), 5.0) >= 2) {
-                // Joueurs regroupés → nappe de crocs balayante (AoE) vers le centre du groupe.
-                castFangLine(clusterCentroid(target.position(), 6.0));
-            } else {
-                castElemental(dist);
+            boolean cast = false;
+            // Priorité : VRAIS sorts Iron's Spellbooks (projectiles + sorts variés selon l'école).
+            if (issCaster) {
+                cast = tong.statmod.integration.ironspells.IronsCasterSpells.cast(
+                        mage, target, mage.getPersistentData().getString("statmod_mage_element"));
+            }
+            if (!cast) {
+                // Fallback (Iron's absent ou sort raté) : sorts maison.
+                if (dist < POTION_DIST * POTION_DIST) {
+                    throwHarmPotion();
+                } else if (nearbyFoes(target.position(), 5.0) >= 2) {
+                    castFangLine(clusterCentroid(target.position(), 6.0));
+                } else {
+                    castElemental(dist);
+                }
             }
             castCooldown = CAST_INTERVAL + mage.getRandom().nextInt(20);
         } else {

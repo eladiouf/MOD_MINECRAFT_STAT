@@ -33,8 +33,8 @@ public final class DungeonProps {
             "quark:myalite_crystal");
     /** Braseros / bougies moddés → fallback lanterne. */
     private static final List<String> BRAZIERS = List.of(
-            "irons_spellbooks:brazier", "block_factorys_bosses:underworld_tall_candles",
-            "block_factorys_bosses:tall_candles", "quark:paper_lantern", "quark:stone_lamp");
+            "irons_spellbooks:brazier", "minecraft:soul_lantern",
+            "minecraft:candle", "quark:paper_lantern", "quark:stone_lamp");
     /** Tas d'os/crânes moddés → fallback bloc d'os vanilla. */
     private static final List<String> SKULL_PILES = List.of(
             "minecraft:skeleton_skull");

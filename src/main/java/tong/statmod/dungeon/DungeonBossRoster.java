@@ -6,10 +6,11 @@ import java.util.List;
  * Mission M6 — Roster de boss pour Forge 1.20.1.
  *
  * <p>10 arcs, basés sur les mods RÉELLEMENT disponibles :
- * slu, irons_spellbooks, block_factorys_bosses, bosses_of_mass_destruction,
- * epic_mobs, deeperdarker, darkdoppelganger.
+ * slu, irons_spellbooks, bosses_of_mass_destruction, epic_mobs, cataclysm,
+ * mowziesmobs, mutantmonsters.
  *
- * <p>Mods RETIRÉS (absents en 1.20.1) : iceandfire, cataclysm.
+ * <p>Mods RETIRÉS du pack : block_factorys_bosses, deeperdarker,
+ * darkdoppelganger, born_in_chaos, iceandfire (remplacés ci-dessous).
  */
 public final class DungeonBossRoster {
 
@@ -49,13 +50,13 @@ public final class DungeonBossRoster {
         return List.of(
             s("minecraft:warden"),
             s("bosses_of_mass_destruction:void_blossom"),
-            s("block_factorys_bosses:yeti"),
-            s("block_factorys_bosses:sandworm"),
-            s("block_factorys_bosses:kraken"),
+            s("cataclysm:ender_golem"),
+            s("cataclysm:the_leviathan"),
+            s("cataclysm:netherite_monstrosity"),
             s("slu:boss_aatrox"),
             s("slu:boss_jax"),
             s("epic_mobs:phoenix_fight"),
-            s("deeperdarker:stalker"),
+            s("mowziesmobs:ferrous_wroughtnaut"),
             s("slu:boss_radahn")
         );
     }
@@ -83,9 +84,9 @@ public final class DungeonBossRoster {
             s("slu:boss_elemer"),
             d("slu:boss_godfrey","slu:boss_hoarah_loux"),
             d("irons_spellbooks:dead_king","irons_spellbooks:citadel_keeper"),
-            s("block_factorys_bosses:underworld_knight"),
+            s("cataclysm:the_harbinger"),
             s("slu:boss_pantheon"),
-            s("darkdoppelganger:dark_doppelganger"),
+            s("slu:boss_nameless_king"),
             s("bosses_of_mass_destruction:lich")
         );
     }
@@ -96,9 +97,9 @@ public final class DungeonBossRoster {
             s("bosses_of_mass_destruction:obsidilith"),
             s("epic_mobs:pillager_king"),
             s("epic_mobs:the_knight"),
-            s("block_factorys_bosses:kraken"),
-            d("block_factorys_bosses:pirate_captain","block_factorys_bosses:pirate_rook"),
-            s("deeperdarker:stalker"),
+            s("cataclysm:the_leviathan"),
+            d("epic_mobs:the_knight","epic_mobs:pillager_king"),
+            s("cataclysm:the_prowler"),
             s("epic_mobs:micky"),
             s("epic_mobs:karin"),
             w("slu:boss_gael","slu:boss_radagon","slu:boss_elden_beast")
@@ -113,7 +114,7 @@ public final class DungeonBossRoster {
             s("irons_spellbooks:citadel_keeper"),
             s("slu:boss_soul_of_cinder"),
             s("slu:boss_wukong"),
-            s("darkdoppelganger:dark_doppelganger"),
+            s("cataclysm:the_prowler"),
             d("slu:boss_malenia","slu:boss_malenia_2"),
             s("epic_mobs:phoenix_fight"),
             w("slu:boss_gael","slu:boss_soul_of_cinder","slu:boss_artorias")
@@ -124,14 +125,14 @@ public final class DungeonBossRoster {
         return List.of(
             s("slu:boss_malenia"),
             s("slu:boss_malenia_2"),
-            s("block_factorys_bosses:infernal_dragon"),
+            s("cataclysm:the_harbinger"),
             d("slu:boss_nameless_king","slu:boss_wukong"),
             s("slu:boss_godskin_apostle"),
             s("slu:boss_godskin_noble"),
             w("slu:boss_gundyr","slu:boss_abyss_watcher"),
             s("epic_mobs:pillager_king"),
             d("slu:boss_margit","slu:boss_morgott"),
-            s("deeperdarker:stalker")
+            s("mowziesmobs:ferrous_wroughtnaut")
         );
     }
 
@@ -139,7 +140,7 @@ public final class DungeonBossRoster {
         return List.of(
             s("slu:boss_radahn"),
             s("slu:boss_radahn_2"),
-            s("block_factorys_bosses:infernal_dragon"),
+            s("cataclysm:netherite_monstrosity"),
             s("epic_mobs:the_knight"),
             s("bosses_of_mass_destruction:gauntlet"),
             s("slu:boss_aatrox"),
@@ -157,7 +158,7 @@ public final class DungeonBossRoster {
             s("slu:boss_pantheon"),
             s("slu:boss_mohg"),
             s("epic_mobs:micky"),
-            s("darkdoppelganger:dark_doppelganger"),
+            s("cataclysm:ender_golem"),
             d("slu:boss_fallen_lord","slu:boss_ancient_warrior"),
             s("slu:boss_dragon_slayer_armour"),
             d("slu:boss_count_robert","slu:boss_crucible_knight"),
@@ -175,7 +176,7 @@ public final class DungeonBossRoster {
             d("slu:boss_notch","slu:boss_minecraft_lord"),
             s("epic_mobs:karin"),
             w("slu:boss_radahn_2","slu:boss_malenia_2","slu:boss_elden_beast"),
-            s("deeperdarker:stalker"),
+            s("cataclysm:the_prowler"),
             s("slu:boss_artorias")
         );
     }

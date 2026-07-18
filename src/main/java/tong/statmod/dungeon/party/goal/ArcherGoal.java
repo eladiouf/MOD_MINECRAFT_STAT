@@ -1,5 +1,6 @@
 package tong.statmod.dungeon.party.goal;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -32,6 +33,9 @@ public class ArcherGoal extends Goal {
     private int markCooldown;
     private int ultCooldown;
     private int strafe;
+    private int powerCharge = -1;
+    private int powerCooldown;
+    private static final int POWER_WINDUP = 22;
 
     public ArcherGoal(Mob archer) {
         this.archer = archer;
@@ -70,6 +74,36 @@ public class ArcherGoal extends Goal {
         if (target == null) return;
         double dist = archer.distanceToSqr(target);
         archer.getLookControl().setLookAt(target, 30.0f, 30.0f);
+
+        PartyTelegraph.maybeEnrage(archer);
+
+        // TIR PUISSANT télégraphié : ligne de particules sur la trajectoire, puis flèche rapide,
+        // perçante, à gros dégâts. Dur à esquiver → punit le joueur immobile ou à découvert.
+        if (archer.level() instanceof ServerLevel psLevel) {
+            if (powerCharge >= 0) {
+                archer.getNavigation().stop();
+                archer.getLookControl().setLookAt(target, 30.0f, 30.0f);
+                Vec3 from = archer.position().add(0, archer.getEyeHeight(), 0);
+                Vec3 dir = target.position().add(0, target.getBbHeight() * 0.5, 0).subtract(from).normalize();
+                for (int i = 1; i <= 7; i++) {
+                    Vec3 pp = from.add(dir.scale(i * 1.6));
+                    psLevel.sendParticles(ParticleTypes.CRIT, pp.x, pp.y, pp.z, 1, 0.0, 0.0, 0.0, 0.0);
+                }
+                PartyTelegraph.chargeSound(archer, powerCharge, POWER_WINDUP);
+                if (++powerCharge >= POWER_WINDUP) {
+                    powerShot();
+                    powerCharge = -1;
+                    powerCooldown = 200;
+                }
+                return;
+            }
+            if (powerCooldown > 0) powerCooldown--;
+            if (powerCooldown <= 0 && dist > FLEE * FLEE && dist < 40 * 40) {
+                powerCharge = 0;
+                archer.playSound(SoundEvents.SKELETON_SHOOT, 0.6f, 0.55f);
+                return;
+            }
+        }
 
         if (dist < FLEE * FLEE) {
             Vec3 away = archer.position().subtract(target.position()).normalize();
@@ -126,6 +160,26 @@ public class ArcherGoal extends Goal {
             level.addFreshEntity(arrow);
         }
         archer.playSound(SoundEvents.SKELETON_SHOOT, 1.3f, 0.8f);
+    }
+
+    /** Tir puissant perçant (télégraphié) : flèche rapide, gros dégâts, transperce l'armure légère. */
+    private void powerShot() {
+        if (!(archer.level() instanceof ServerLevel level) || target == null) return;
+        Arrow arrow = new Arrow(level, archer);
+        Vec3 tPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
+        arrow.setPos(archer.getX(), archer.getEyeY(), archer.getZ());
+        double dx = tPos.x - arrow.getX();
+        double dy = tPos.y - arrow.getY();
+        double dz = tPos.z - arrow.getZ();
+        arrow.setBaseDamage(10.0 + archer.getMaxHealth() * 0.05);
+        arrow.setPierceLevel((byte) 3);
+        arrow.setCritArrow(true);
+        arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+        arrow.shoot(dx, dy, dz, 3.2f, 0.35f); // tendu et rapide
+        applyArrowType(arrow);
+        archer.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+        archer.playSound(SoundEvents.SKELETON_SHOOT, 1.4f, 0.7f);
+        level.addFreshEntity(arrow);
     }
 
     private void shootArrow() {

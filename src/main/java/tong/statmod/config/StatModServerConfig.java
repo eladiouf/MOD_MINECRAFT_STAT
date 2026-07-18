@@ -122,7 +122,10 @@ public final class StatModServerConfig {
                         // Mowzie's — faciles
                         "mowziesmobs:foliaath", "mowziesmobs:grottol",
                         // Block Factory — faciles
-                        "block_factorys_bosses:frozen_skeleton"
+                        "minecraft:stray",
+                        // Born in Chaos — faciles
+                        "minecraft:zombie", "minecraft:husk",
+                        "minecraft:skeleton", "minecraft:drowned"
                 ),
                 obj -> obj instanceof String);
         DUNGEON_MID_MOBS = builder.defineList("midMobs",
@@ -133,13 +136,20 @@ public final class StatModServerConfig {
                         "slu:hollow_soldier_sword", "slu:hollow_soldier_spear", "slu:castle_guard",
                         "slu:dungeon_knight", "slu:knight",
                         // Deeper Darker
-                        "deeperdarker:sculk_leech", "deeperdarker:shattered",
+                        "minecraft:silverfish", "cataclysm:aptrgangr",
                         // Epic Mobs — moyens
                         "epic_mobs:nameless_knight", "epic_mobs:lost_wanderer",
                         // Iron's Spellbooks — cultistes
                         "irons_spellbooks:cultist",
                         // Block Factory — pirates & squelettes
-                        "block_factorys_bosses:frozen_skeleton", "block_factorys_bosses:crossbow_pirate"
+                        "minecraft:stray", "minecraft:pillager",
+                        // Born in Chaos — moyens
+                        "cataclysm:draugr", "minecraft:husk",
+                        "minecraft:skeleton",
+                        // Cataclysm — moyens
+                        "cataclysm:draugr", "cataclysm:deepling", "cataclysm:koboleton",
+                        // Alex's Mobs
+                        "alexsmobs:komodo_dragon"
                 ),
                 obj -> obj instanceof String);
         DUNGEON_LATE_MOBS = builder.defineList("lateMobs",
@@ -159,7 +169,15 @@ public final class StatModServerConfig {
                         "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer",
                         "irons_spellbooks:necromancer",
                         // Mowzie's — chevalier de fer
-                        "mowziesmobs:ferrous_wroughtnaut"
+                        "mowziesmobs:ferrous_wroughtnaut",
+                        // Born in Chaos — élites
+                        "cataclysm:royal_draugr", "cataclysm:elite_draugr",
+                        "cataclysm:elite_draugr",
+                        // Cataclysm — élites
+                        "cataclysm:elite_draugr", "cataclysm:ignited_berserker",
+                        "cataclysm:deepling_brute", "cataclysm:deepling_warlock",
+                        // Alex's Mobs
+                        "alexsmobs:tarantula_hawk", "alexsmobs:centipede_head"
                 ),
                 obj -> obj instanceof String);
         DUNGEON_ABYSS_MOBS = builder.defineList("abyssMobs",
@@ -177,9 +195,15 @@ public final class StatModServerConfig {
                         // Mutant Monsters
                         "mutantmonsters:mutant_enderman", "mutantmonsters:mutant_creeper",
                         // Dark Doppelganger
-                        "darkdoppelganger:dark_doppelganger",
+                        "slu:boss_nameless_king",
                         // Deeper Darker
-                        "deeperdarker:stalker"
+                        "cataclysm:royal_draugr",
+                        // Born in Chaos — abyss
+                        "minecraft:blaze", "slu:dark_knight",
+                        "epic_mobs:shadow_guard",
+                        // Cataclysm — abyss
+                        "cataclysm:royal_draugr", "cataclysm:endermaptera", "cataclysm:aptrgangr",
+                        "cataclysm:deepling_priest"
                 ),
                 obj -> obj instanceof String);
         DUNGEON_BOSS_ROSTER = builder.defineList("bossRoster",
@@ -195,7 +219,13 @@ public final class StatModServerConfig {
                         // Mutant Monsters
                         "mutantmonsters:mutant_creeper",
                         // Dark Doppelganger
-                        "darkdoppelganger:dark_doppelganger"
+                        "slu:boss_nameless_king",
+                        // Born in Chaos
+                        "cataclysm:the_harbinger",
+                        // Cataclysm
+                        "cataclysm:the_prowler", "cataclysm:netherite_monstrosity",
+                        "cataclysm:the_leviathan", "cataclysm:ender_golem",
+                        "cataclysm:the_harbinger"
                 ),
                 obj -> obj instanceof String);
         builder.pop();

@@ -30,6 +30,11 @@ public class TankDefendGoal extends Goal {
     private int tpCooldown;
     private int ultCooldown;
     private LivingEntity guardedAlly;
+    private int slamCharge = -1;
+    private int slamCooldown;
+    private Vec3 slamCenter;
+    private static final int SLAM_WINDUP = 26;
+    private static final double SLAM_RADIUS = 4.5;
 
     public TankDefendGoal(Mob tank) {
         this.tank = tank;
@@ -57,6 +62,32 @@ public class TankDefendGoal extends Goal {
         if (target == null) return;
         double dist = tank.distanceToSqr(target);
         tank.getLookControl().setLookAt(target, 30.0f, 30.0f);
+
+        PartyTelegraph.maybeEnrage(tank);
+
+        // SÉISME télégraphié : anneau rouge au sol qui grossit, puis onde de choc AoE. Le joueur
+        // peut esquiver en quittant l'anneau pendant la charge (combat « épique » lisible).
+        if (tank.level() instanceof ServerLevel slamLevel) {
+            if (slamCharge >= 0) {
+                tank.getNavigation().stop();
+                PartyTelegraph.warningRing(slamLevel, slamCenter, SLAM_RADIUS, slamCharge, SLAM_WINDUP);
+                PartyTelegraph.chargeSound(tank, slamCharge, SLAM_WINDUP);
+                if (++slamCharge >= SLAM_WINDUP) {
+                    PartyTelegraph.aoeImpact(tank, slamCenter, SLAM_RADIUS, 9.0f, 0.75, 60);
+                    tank.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 1));
+                    slamCharge = -1;
+                    slamCooldown = 320;
+                }
+                return;
+            }
+            if (slamCooldown > 0) slamCooldown--;
+            if (slamCooldown <= 0 && dist < SLAM_RADIUS * SLAM_RADIUS * 1.6 && tank.onGround()) {
+                slamCenter = tank.position();
+                slamCharge = 0;
+                tank.playSound(SoundEvents.ANVIL_LAND, 0.7f, 0.4f);
+                return;
+            }
+        }
 
         // ULTIME — Choc de bouclier : entouré (2+ joueurs proches) ou en danger (<50% PV) → nova
         // qui repousse et ralentit tout autour, et blinde le tank.
@@ -142,6 +173,7 @@ public class TankDefendGoal extends Goal {
         target = null;
         guardedAlly = null;
         shieldTicks = 0;
+        slamCharge = -1;
     }
 
     private void knockbackEnemy() {

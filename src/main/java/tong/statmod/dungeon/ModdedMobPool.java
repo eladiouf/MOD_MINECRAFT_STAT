@@ -13,13 +13,12 @@ import java.util.List;
 /**
  * Pool de mobs moddés pour le Trial Dungeon (Forge 1.20.1).
  *
- * <p>Basé sur les mods RÉELLEMENT présents dans le dossier client test-vrai.
+ * <p>Basé sur les mods RÉELLEMENT présents dans le pack.
  * Mods disponibles : slu, irons_spellbooks, epic_mobs, mutantmonsters,
- * mowziesmobs, block_factorys_bosses, deeperdarker, darkdoppelganger,
- * bosses_of_mass_destruction.
+ * mowziesmobs, cataclysm, bosses_of_mass_destruction.
  *
- * <p>Mods RETIRÉS (absents en 1.20.1) : tensura, cataclysm, born_in_chaos_v1,
- * alexsmobs, fdbosses, iceandfire.
+ * <p>Mods RETIRÉS du pack : block_factorys_bosses, deeperdarker,
+ * darkdoppelganger, born_in_chaos_v1, tensura, iceandfire.
  */
 public final class ModdedMobPool {
 
@@ -34,9 +33,7 @@ public final class ModdedMobPool {
         addEpicMobs(modded, tier);
         addMutantMobs(modded, tier);
         addMowzieMobs(modded, tier);
-        addBfbMobs(modded, tier);
-        addDeeperDarkerMobs(modded, tier);
-        addDarkDoppelgangerMobs(modded, tier);
+        addCataclysmMobs(modded, tier);
 
         return modded;
     }
@@ -227,57 +224,27 @@ public final class ModdedMobPool {
         }
     }
 
-    private static void addBfbMobs(List<EntityType<?>> pool, FloorPalette tier) {
-        if (!ModList.get().isLoaded("block_factorys_bosses")) return;
+    /** L'Ender's Cataclysm — draugr, deeplings, koboletons (remplace les mods retirés). */
+    private static void addCataclysmMobs(List<EntityType<?>> pool, FloorPalette tier) {
+        if (!ModList.get().isLoaded("cataclysm")) return;
 
         switch (tier) {
             case EARLY, MID -> {
-                addIfAvailable(pool, "block_factorys_bosses:soul_skeleton");
-                addIfAvailable(pool, "block_factorys_bosses:crossbow_pirate");
-                addIfAvailable(pool, "block_factorys_bosses:frozen_skeleton");
+                addIfAvailable(pool, "cataclysm:draugr");
+                addIfAvailable(pool, "cataclysm:koboleton");
+                addIfAvailable(pool, "cataclysm:deepling");
             }
             case LATE -> {
-                addIfAvailable(pool, "block_factorys_bosses:pirate_rook");
-                addIfAvailable(pool, "block_factorys_bosses:soul_knight_wither_skeleton");
-                addIfAvailable(pool, "block_factorys_bosses:flaming_skeleton_guard_sword");
+                addIfAvailable(pool, "cataclysm:elite_draugr");
+                addIfAvailable(pool, "cataclysm:ignited_berserker");
+                addIfAvailable(pool, "cataclysm:deepling_brute");
             }
             case ABYSS -> {
-                addIfAvailable(pool, "block_factorys_bosses:pirate_captain");
-                addIfAvailable(pool, "block_factorys_bosses:dragon_guard_sword");
-                addIfAvailable(pool, "block_factorys_bosses:underworld_knight");
+                addIfAvailable(pool, "cataclysm:royal_draugr");
+                addIfAvailable(pool, "cataclysm:aptrgangr");
+                addIfAvailable(pool, "cataclysm:deepling_warlock");
+                addIfAvailable(pool, "cataclysm:endermaptera");
             }
-        }
-    }
-
-    /** Deeper and Darker — mobs sculk (centipèdes, sludge, shriek worm). */
-    private static void addDeeperDarkerMobs(List<EntityType<?>> pool, FloorPalette tier) {
-        if (!ModList.get().isLoaded("deeperdarker")) return;
-
-        switch (tier) {
-            case EARLY, MID -> {
-                addIfAvailable(pool, "deeperdarker:sculk_leech");
-                addIfAvailable(pool, "deeperdarker:sculk_centipede");
-                addIfAvailable(pool, "deeperdarker:sculk_snapper");
-                addIfAvailable(pool, "deeperdarker:sludge");
-            }
-            case LATE -> {
-                addIfAvailable(pool, "deeperdarker:shattered");
-                addIfAvailable(pool, "deeperdarker:shriek_worm");
-            }
-            case ABYSS -> {
-                addIfAvailable(pool, "deeperdarker:shattered");
-                addIfAvailable(pool, "deeperdarker:shriek_worm");
-                addIfAvailable(pool, "deeperdarker:stalker");
-            }
-        }
-    }
-
-    /** Dark Doppelganger — mob miroir (minions LATE/ABYSS). */
-    private static void addDarkDoppelgangerMobs(List<EntityType<?>> pool, FloorPalette tier) {
-        if (!ModList.get().isLoaded("darkdoppelganger")) return;
-
-        if (tier == FloorPalette.LATE || tier == FloorPalette.ABYSS) {
-            addIfAvailable(pool, "darkdoppelganger:dark_doppelganger_minion");
         }
     }
 

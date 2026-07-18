@@ -809,7 +809,7 @@ public final class DungeonRoomChain {
         DungeonHealHandler.registerHealSpot(lv.dimension(), campfirePos);
 
         // Cooking pot on the campfire (Farmer's Delight cooking pot if available)
-        Block cookingPot = QuarkDungeonDecorator.resolve("farmersdelight:cooking_pot");
+        Block cookingPot = QuarkDungeonDecorator.resolve("minecraft:cauldron");
         S(lv, campfirePos.above(), cookingPot != null ? cookingPot.defaultBlockState() : Blocks.CAULDRON.defaultBlockState());
 
         Block macawChair = MacawDungeonDecorator.oakChair();
@@ -836,11 +836,11 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx - 3, 0, cz + 3), Blocks.LODESTONE.defaultBlockState());
         S(lv, O(sp, cx - 3, 1, cz + 3), Blocks.SOUL_LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
 
-        Block cuttingBoard = QuarkDungeonDecorator.resolve("farmersdelight:cutting_board");
+        Block cuttingBoard = QuarkDungeonDecorator.resolve("minecraft:smithing_table");
         if (cuttingBoard != null) {
             S(lv, O(sp, cx + 3, 0, cz + 1), cuttingBoard.defaultBlockState());
         }
-        Block basket = QuarkDungeonDecorator.resolve("farmersdelight:basket");
+        Block basket = QuarkDungeonDecorator.resolve("minecraft:barrel");
         if (basket != null) {
             S(lv, O(sp, cx + 3, 0, cz - 1), basket.defaultBlockState());
         }

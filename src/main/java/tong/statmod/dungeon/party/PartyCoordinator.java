@@ -180,6 +180,21 @@ public final class PartyCoordinator {
             }
         }
 
+        // PEEL : si un joueur frappe le backline (soigneur/mage), le tank se rabat dessus pour le
+        // protéger — impossible de « rush le heal » tranquillement.
+        LivingEntity backlineThreat = null;
+        for (Mob m : party) {
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            if ("HEALER".equals(r) || "MAGE".equals(r)) {
+                LivingEntity a = m.getLastHurtByMob();
+                if (a != null && a.isAlive() && (m.tickCount - m.getLastHurtByMobTimestamp()) < 60
+                        && foes.contains(a)) {
+                    backlineThreat = a;
+                    if ("HEALER".equals(r)) break; // priorité absolue au soigneur
+                }
+            }
+        }
+
         // Mode EXECUTE : la cible focus est presque morte → tout le monde se rabat dessus pour
         // sécuriser le kill (au lieu d'étaler les cibles). Comportement d'équipe « finish ».
         boolean execute = hp[focus] < 0.30;
@@ -187,7 +202,9 @@ public final class PartyCoordinator {
         for (Mob m : party) {
             String r = m.getPersistentData().getString(PartyRole.TAG);
             LivingEntity want;
-            if (execute && !"HEALER".equals(r)) {
+            if ("TANK".equals(r) && backlineThreat != null) {
+                want = backlineThreat; // peel : protéger le backline avant tout
+            } else if (execute && !"HEALER".equals(r)) {
                 want = focusP;
             } else {
                 want = switch (r) {

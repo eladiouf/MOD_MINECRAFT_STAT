@@ -9,6 +9,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import tong.statmod.config.StatModServerConfig;
 import tong.statmod.dungeon.DungeonBlocks;
+import tong.statmod.entity.AdventurerEntities;
 import tong.statmod.network.StatNetwork;
 import tong.statmod.sound.ModSounds;
 
@@ -26,6 +27,7 @@ public final class StatMod {
         StatNetwork.register();
         ModSounds.register(modEventBus);
         DungeonBlocks.register(modEventBus);
+        AdventurerEntities.register(modEventBus);
         LOGGER.info("Initializing {} for Forge 1.20.1", MOD_NAME);
     }
 }

@@ -354,23 +354,23 @@ public final class DungeonMobSpawner {
                 fallback = EntityType.WITCH;
             }
             case 1 -> {
-                candidates = List.of("irons_spellbooks:pyromancer", "minecraft:blaze", "minecraft:magma_cube");
+                candidates = List.of("minecraft:blaze", "minecraft:zombie", "irons_spellbooks:pyromancer", "minecraft:blaze", "minecraft:magma_cube");
                 fallback = EntityType.HUSK;
             }
             case 2 -> {
-                candidates = List.of("irons_spellbooks:necromancer", "slu:hollow_soldier_spear", "minecraft:wither_skeleton");
+                candidates = List.of("minecraft:skeleton", "minecraft:zombie", "irons_spellbooks:necromancer", "slu:hollow_soldier_spear", "minecraft:wither_skeleton");
                 fallback = EntityType.SKELETON;
             }
             case 3 -> {
-                candidates = List.of("deeperdarker:stalker", "epic_mobs:lost_wanderer", "minecraft:stray");
+                candidates = List.of("cataclysm:royal_draugr", "minecraft:vex", "cataclysm:royal_draugr", "epic_mobs:lost_wanderer", "minecraft:stray");
                 fallback = EntityType.ZOMBIE_VILLAGER;
             }
             case 4 -> {
-                candidates = List.of("deeperdarker:sculk_leech", "minecraft:cave_spider", "minecraft:spider");
+                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:centipede_head", "minecraft:silverfish", "minecraft:cave_spider", "minecraft:spider");
                 fallback = EntityType.SPIDER;
             }
             default -> {
-                candidates = List.of("epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
+                candidates = List.of("cataclysm:the_leviathan", "epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
                 fallback = EntityType.PILLAGER;
             }
         }

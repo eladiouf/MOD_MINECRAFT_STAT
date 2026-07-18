@@ -35,6 +35,8 @@ public class HealPartyGoal extends Goal {
     private int healCooldown;
     private int buffTimer;
     private int ultCooldown;
+    private int shieldTimer;
+    private static final int SHIELD_INTERVAL = 160; // bouclier + purge toutes les 8 s
 
     public HealPartyGoal(Mob healer) {
         this.healer = healer;
@@ -62,6 +64,20 @@ public class HealPartyGoal extends Goal {
         if (healCooldown > 0) healCooldown--;
         if (buffTimer > 0) buffTimer--;
         if (ultCooldown > 0) ultCooldown--;
+        if (shieldTimer > 0) shieldTimer--;
+
+        PartyTelegraph.maybeEnrage(healer);
+
+        // BOUCLIER DE GROUPE + PURGE : absorption (cœurs jaunes) sur tout le monde et retrait des
+        // debuffs du joueur (slow/poison/wither/faiblesse/cécité). Rend le groupe bien plus dur à
+        // abattre et neutralise ton contrôle.
+        if (shieldTimer <= 0) {
+            List<Mob> squad = allies(SUPPORT_RANGE, true);
+            if (!squad.isEmpty()) {
+                shieldAndCleanse(squad);
+                shieldTimer = SHIELD_INTERVAL;
+            }
+        }
 
         // ULTIME — Sanctuaire : si au moins 2 alliés sont critiques (<40%), gros soin de groupe.
         if (ultCooldown <= 0 && countCritical() >= 2) {
@@ -145,6 +161,29 @@ public class HealPartyGoal extends Goal {
                     30, 2.0, 0.8, 2.0, 0.02);
             lv.playSound(null, healer.getX(), healer.getY(), healer.getZ(),
                     SoundEvents.BEACON_POWER_SELECT, SoundSource.HOSTILE, 1.0f, 1.2f);
+        }
+    }
+
+    /** Bouclier d'absorption sur tout le groupe + purge des debuffs infligés par le joueur. */
+    private void shieldAndCleanse(List<Mob> squad) {
+        for (Mob ally : squad) {
+            MobEffectInstance abs = ally.getEffect(MobEffects.ABSORPTION);
+            if (abs == null || abs.getDuration() < 40) {
+                ally.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 300, 1, false, true));
+            }
+            ally.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+            ally.removeEffect(MobEffects.WEAKNESS);
+            ally.removeEffect(MobEffects.POISON);
+            ally.removeEffect(MobEffects.WITHER);
+            ally.removeEffect(MobEffects.BLINDNESS);
+            ally.removeEffect(MobEffects.DIG_SLOWDOWN);
+        }
+        healer.swing(net.minecraft.world.InteractionHand.OFF_HAND);
+        if (healer.level() instanceof ServerLevel lv) {
+            lv.sendParticles(ParticleTypes.END_ROD, healer.getX(), healer.getY() + 1.2, healer.getZ(),
+                    26, 2.2, 0.8, 2.2, 0.01);
+            lv.playSound(null, healer.getX(), healer.getY(), healer.getZ(),
+                    SoundEvents.BEACON_ACTIVATE, SoundSource.HOSTILE, 0.9f, 1.5f);
         }
     }
 

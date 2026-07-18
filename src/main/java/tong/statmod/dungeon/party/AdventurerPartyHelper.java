@@ -88,27 +88,28 @@ public final class AdventurerPartyHelper {
             if (entity == null) continue;
 
             entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            entity.getPersistentData().putString(PartyRole.TAG, role.name());
-            entity.setPersistenceRequired();
-
             if (entity instanceof tong.statmod.entity.AdventurerEntity adv) {
                 adv.setSkin(RNG.nextInt(tong.statmod.entity.AdventurerEntity.SKIN_COUNT));
             }
 
-            equipForRole(entity, role, floor);
-
-            var followRange = entity.getAttribute(Attributes.FOLLOW_RANGE);
-            if (followRange != null) followRange.setBaseValue(48.0);
-
-            applySpawnEffects(entity, role);
+            configureRole(entity, role, floor);
 
             DungeonSpawnGuard.spawnAuthorized(() -> {
                 level.addFreshEntity(entity);
                 return entity;
             });
 
-            ensureRoleAi(entity);
         }
+    }
+
+    public static void configureRole(Mob entity, PartyRole role, int floor) {
+        entity.getPersistentData().putString(PartyRole.TAG, role.name());
+        entity.setPersistenceRequired();
+        equipForRole(entity, role, floor);
+        var followRange = entity.getAttribute(Attributes.FOLLOW_RANGE);
+        if (followRange != null) followRange.setBaseValue(48.0);
+        applySpawnEffects(entity, role);
+        ensureRoleAi(entity);
     }
 
     private static void applySpawnEffects(Mob entity, PartyRole role) {

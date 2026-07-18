@@ -13,6 +13,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
+import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
+import tong.statmod.dungeon.party.PartyRole;
 import tong.statmod.integration.l2hostility.L2HostilityBridge;
 
 import java.util.ArrayList;
@@ -412,6 +414,15 @@ public final class DungeonMobSpawner {
                     entity.getPersistentData().putString(DungeonMobScaling.ROLE_TAG, p.role().id());
                     if (p.roomIndex() >= 0) {
                         entity.getPersistentData().putInt("statmod_dungeon_room", p.roomIndex());
+                    }
+                    if (entity instanceof tong.statmod.entity.AdventurerEntity adventurer) {
+                        long positionKey = p.pos().asLong();
+                        int ordinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                PartyRole.values().length);
+                        PartyRole role = DungeonAdventurerRolePolicy.roleFor(
+                                p.floor(), p.roomIndex(), ordinal,
+                                p.role() == DungeonMobScaling.MobRole.BOSS);
+                        AdventurerPartyHelper.configureRole(adventurer, role, p.floor());
                     }
                     if (entity instanceof Mob mob && p.originalId != null) {
                         mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);

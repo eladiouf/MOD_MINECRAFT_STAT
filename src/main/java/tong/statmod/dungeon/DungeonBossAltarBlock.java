@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.dungeon.party.AdventurerPartyHelper;
+import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.sound.ModSounds;
 
 import java.util.List;
@@ -110,6 +112,10 @@ public class DungeonBossAltarBlock extends Block {
                 var spawnedEntity = DungeonSpawnGuard.spawnAuthorized(
                         () -> type.spawn(sl, spawnPos, MobSpawnType.STRUCTURE));
                 if (spawnedEntity != null) {
+                    if (spawnedEntity instanceof tong.statmod.entity.AdventurerEntity adventurer) {
+                        AdventurerPartyHelper.configureRole(adventurer,
+                                DungeonAdventurerRolePolicy.roleFor(floor, 0, spawned, true), floor);
+                    }
                     spawned++;
                     spawnedEntity.getPersistentData().putString(
                             DungeonMobScaling.ROLE_TAG, DungeonMobScaling.MobRole.BOSS.id());

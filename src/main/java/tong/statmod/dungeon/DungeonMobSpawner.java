@@ -30,7 +30,7 @@ import java.util.Set;
 public final class DungeonMobSpawner {
 
     private static final int SPAWN_DELAY_TICKS = 10;
-    static final int FLOOR_SCAN_RADIUS = 85;
+    public static final int FLOOR_SCAN_RADIUS = 85;
     private static final int L2_APPLY_DELAY_TICKS = 12;
 
     private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, String originalId,

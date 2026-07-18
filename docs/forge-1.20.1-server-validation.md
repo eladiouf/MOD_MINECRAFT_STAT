@@ -84,3 +84,20 @@ Dungeon casters now select one of seven tactical intentions before resolving a r
 The new caster goal is limited to the actor's exact `statmod_ai_squad` identifier. Ordinary room squads keep the `floor:room:roomIndex` form, so healing, critical-ally checks, summon counts, telegraphs, and spell decisions never cross chamber boundaries. Area and summon actions use a 20-tick warning, intent categories have independent cooldowns, and living summons are capped at two per squad. Existing rival-party mage/healer goals are not duplicated; rival mages use the same tactical intent policy through the backwards-compatible Iron's Spells bridge.
 
 This section records build validation only. Dedicated-server deployment and runtime smoke testing remain part of the final AI deployment phase.
+
+## Living dungeon AI build validation — 2026-07-18
+
+- Validated source commit: `771aba3`
+- Full verification: `.\gradlew.bat clean test build --console=plain`
+- Result: `BUILD SUCCESSFUL in 32s`; 14 actionable tasks executed.
+- Tests: 269 executed, 0 failed, 0 errors.
+- Active Cataclysm scan: zero matches.
+- Artifact: `build/libs/statmod-0.1.0+1.20.1.jar`
+- Artifact size: 959148 bytes
+- Artifact SHA-256: `74F51CB0A4A123B9BFFEB426FB07FE04BF4DE535A7BF2C53F841AE0682E3F7C9`
+
+Combat safehouses now contain a deterministic population of one to four non-combat inhabitants: wounded survivor, merchant, scavenger and prisoner. Their persistent non-combat tag excludes them from initial-wave checks, active-room completion and retry cleanup. `INHABITANTS` never receive player aggro from the encounter director. A prisoner is released only by explicit player interaction, stores that player's UUID and follows only that rescuer after chunk reload.
+
+Deep combat rooms gain three bounded hostile living roles without increasing wave size. The rival explorer replaces slot 0 in room 4 from floor 31, the ritualist replaces slot 0 in room 12 from floor 51, and the engineer replaces slot 0 in room 15 from floor 71. Each uses the existing deferred room queue, authorization, scaling and exact `floor:room:roomIndex` squad. The slot-0 invariant prevents mage escort insertion from consuming the specialist slot.
+
+Living goals are idempotently recovered by the occupied-floor director. Scavengers approach dropped items without deleting them; engineers repair only damaged `DUNGEON_CONSTRUCTS` actors in the exact same squad on a 100-tick budget. This remains build validation; dedicated-server deployment and runtime smoke testing follow in the final deployment phase.

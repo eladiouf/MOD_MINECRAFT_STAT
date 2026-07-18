@@ -155,7 +155,6 @@ public final class DungeonSpawnGuard {
             // Forge 1.20.1 — mods RÉELLEMENT présents dans le dossier client.
             return "irons_spellbooks".equals(namespace) ||
                    "slu".equals(namespace) ||
-                   "cataclysm".equals(namespace) ||
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
                    "bosses_of_mass_destruction".equals(namespace) ||

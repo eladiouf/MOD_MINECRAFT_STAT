@@ -364,7 +364,8 @@ public final class DungeonMobSpawner {
                 fallback = EntityType.SKELETON;
             }
             case 3 -> {
-                candidates = List.of("cataclysm:royal_draugr", "minecraft:vex", "cataclysm:royal_draugr", "epic_mobs:lost_wanderer", "minecraft:stray");
+                candidates = List.of("statmod:adventurer", "irons_spellbooks:necromancer",
+                        "epic_mobs:lost_wanderer", "minecraft:stray");
                 fallback = EntityType.ZOMBIE_VILLAGER;
             }
             case 4 -> {
@@ -372,7 +373,8 @@ public final class DungeonMobSpawner {
                 fallback = EntityType.SPIDER;
             }
             default -> {
-                candidates = List.of("cataclysm:the_leviathan", "epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
+                candidates = List.of("statmod:adventurer", "irons_spellbooks:magehunter_vindicator",
+                        "epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
                 fallback = EntityType.PILLAGER;
             }
         }

@@ -135,19 +135,19 @@ public final class StatModServerConfig {
                         // SLU — soldats
                         "slu:hollow_soldier_sword", "slu:hollow_soldier_spear", "slu:castle_guard",
                         "slu:dungeon_knight", "slu:knight",
-                        // Deeper Darker
-                        "minecraft:silverfish", "cataclysm:aptrgangr",
+                        // Gardiens tactiques
+                        "minecraft:silverfish", "statmod:adventurer",
                         // Epic Mobs — moyens
                         "epic_mobs:nameless_knight", "epic_mobs:lost_wanderer",
                         // Iron's Spellbooks — cultistes
                         "irons_spellbooks:cultist",
                         // Block Factory — pirates & squelettes
                         "minecraft:stray", "minecraft:pillager",
-                        // Born in Chaos — moyens
-                        "cataclysm:draugr", "minecraft:husk",
+                        // Morts et soldats — moyens
+                        "slu:armed_hollow", "minecraft:husk",
                         "minecraft:skeleton",
-                        // Cataclysm — moyens
-                        "cataclysm:draugr", "cataclysm:deepling", "cataclysm:koboleton",
+                        // Escouade tactique et marais
+                        "statmod:adventurer", "minecraft:drowned", "statmod:adventurer",
                         // Alex's Mobs
                         "alexsmobs:komodo_dragon"
                 ),
@@ -170,12 +170,11 @@ public final class StatModServerConfig {
                         "irons_spellbooks:necromancer",
                         // Mowzie's — chevalier de fer
                         "mowziesmobs:ferrous_wroughtnaut",
-                        // Born in Chaos — élites
-                        "cataclysm:royal_draugr", "cataclysm:elite_draugr",
-                        "cataclysm:elite_draugr",
-                        // Cataclysm — élites
-                        "cataclysm:elite_draugr", "cataclysm:ignited_berserker",
-                        "cataclysm:deepling_brute", "cataclysm:deepling_warlock",
+                        // Escouades tactiques — élites
+                        "statmod:adventurer", "slu:elite_knight", "statmod:adventurer",
+                        // Mages et gardiens — élites
+                        "slu:elite_knight", "irons_spellbooks:pyromancer",
+                        "minecraft:guardian", "irons_spellbooks:cryomancer",
                         // Alex's Mobs
                         "alexsmobs:tarantula_hawk", "alexsmobs:centipede_head"
                 ),
@@ -196,14 +195,14 @@ public final class StatModServerConfig {
                         "mutantmonsters:mutant_enderman", "mutantmonsters:mutant_creeper",
                         // Dark Doppelganger
                         "slu:boss_nameless_king",
-                        // Deeper Darker
-                        "cataclysm:royal_draugr",
+                        // Commandant tactique
+                        "statmod:adventurer",
                         // Born in Chaos — abyss
                         "minecraft:blaze", "slu:dark_knight",
                         "epic_mobs:shadow_guard",
-                        // Cataclysm — abyss
-                        "cataclysm:royal_draugr", "cataclysm:endermaptera", "cataclysm:aptrgangr",
-                        "cataclysm:deepling_priest"
+                        // Escouade abyssale et lanceurs Iron's
+                        "statmod:adventurer", "minecraft:endermite", "slu:dark_knight",
+                        "irons_spellbooks:necromancer"
                 ),
                 obj -> obj instanceof String);
         DUNGEON_BOSS_ROSTER = builder.defineList("bossRoster",
@@ -220,12 +219,9 @@ public final class StatModServerConfig {
                         "mutantmonsters:mutant_creeper",
                         // Dark Doppelganger
                         "slu:boss_nameless_king",
-                        // Born in Chaos
-                        "cataclysm:the_harbinger",
-                        // Cataclysm
-                        "cataclysm:the_prowler", "cataclysm:netherite_monstrosity",
-                        "cataclysm:the_leviathan", "cataclysm:ender_golem",
-                        "cataclysm:the_harbinger"
+                        // Iron's Spells et champions tactiques
+                        "irons_spellbooks:dead_king", "irons_spellbooks:citadel_keeper",
+                        "statmod:adventurer", "slu:magma_giant", "statmod:adventurer"
                 ),
                 obj -> obj instanceof String);
         builder.pop();

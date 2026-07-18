@@ -48,13 +48,13 @@ public final class DungeonSecretRoom {
     private static String qliphothSpawnerId(int arc) {
         return switch (arc) {
             case 0 -> "bosses_of_mass_destruction:lich";
-            case 1 -> "cataclysm:the_harbinger";
+            case 1 -> "irons_spellbooks:dead_king";
             case 2 -> "bosses_of_mass_destruction:obsidilith";
             case 3 -> "epic_mobs:the_knight";
             case 4 -> "slu:boss_nameless_king";
             case 5 -> "bosses_of_mass_destruction:gauntlet";
             case 6 -> "epic_mobs:phoenix_fight";
-            case 7 -> "cataclysm:the_prowler";
+            case 7 -> "statmod:adventurer";
             case 8 -> "bosses_of_mass_destruction:void_blossom";
             default -> "epic_mobs:micky";
         };

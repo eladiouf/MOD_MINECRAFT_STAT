@@ -15,7 +15,7 @@ import java.util.List;
  *
  * <p>Basé sur les mods RÉELLEMENT présents dans le pack.
  * Mods disponibles : slu, irons_spellbooks, epic_mobs, mutantmonsters,
- * mowziesmobs, cataclysm, bosses_of_mass_destruction.
+ * mowziesmobs, bosses_of_mass_destruction et les aventuriers STAT Mod.
  *
  * <p>Mods RETIRÉS du pack : block_factorys_bosses, deeperdarker,
  * darkdoppelganger, born_in_chaos_v1, tensura, iceandfire.
@@ -33,21 +33,25 @@ public final class ModdedMobPool {
         addEpicMobs(modded, tier);
         addMutantMobs(modded, tier);
         addMowzieMobs(modded, tier);
-        addCataclysmMobs(modded, tier);
 
         return modded;
     }
 
     private static void addDungeonMages(List<EntityType<?>> pool, FloorPalette tier) {
         switch (tier) {
-            case EARLY -> addIfAvailable(pool, "statmod:pyromancer_mob");
+            case EARLY -> {
+                addIfAvailable(pool, "statmod:adventurer");
+                addIfAvailable(pool, "statmod:pyromancer_mob");
+            }
             case MID -> {
+                addIfAvailable(pool, "statmod:adventurer");
                 addIfAvailable(pool, "statmod:pyromancer_mob");
                 addIfAvailable(pool, "statmod:cryomancer_mob");
                 addIfAvailable(pool, "statmod:electromancer_mob");
                 addIfAvailable(pool, "statmod:cleric_mob");
             }
             case LATE -> {
+                addIfAvailable(pool, "statmod:adventurer");
                 addIfAvailable(pool, "statmod:pyromancer_mob");
                 addIfAvailable(pool, "statmod:cryomancer_mob");
                 addIfAvailable(pool, "statmod:electromancer_mob");
@@ -57,6 +61,7 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "statmod:mage_knight_mob");
             }
             case ABYSS -> {
+                addIfAvailable(pool, "statmod:adventurer");
                 addIfAvailable(pool, "statmod:pyromancer_mob");
                 addIfAvailable(pool, "statmod:cryomancer_mob");
                 addIfAvailable(pool, "statmod:electromancer_mob");
@@ -220,30 +225,6 @@ public final class ModdedMobPool {
                 addIfAvailable(pool, "mowziesmobs:umvuthi");
                 addIfAvailable(pool, "mowziesmobs:elokosa");
                 addIfAvailable(pool, "mowziesmobs:elokosa_howler");
-            }
-        }
-    }
-
-    /** L'Ender's Cataclysm — draugr, deeplings, koboletons (remplace les mods retirés). */
-    private static void addCataclysmMobs(List<EntityType<?>> pool, FloorPalette tier) {
-        if (!ModList.get().isLoaded("cataclysm")) return;
-
-        switch (tier) {
-            case EARLY, MID -> {
-                addIfAvailable(pool, "cataclysm:draugr");
-                addIfAvailable(pool, "cataclysm:koboleton");
-                addIfAvailable(pool, "cataclysm:deepling");
-            }
-            case LATE -> {
-                addIfAvailable(pool, "cataclysm:elite_draugr");
-                addIfAvailable(pool, "cataclysm:ignited_berserker");
-                addIfAvailable(pool, "cataclysm:deepling_brute");
-            }
-            case ABYSS -> {
-                addIfAvailable(pool, "cataclysm:royal_draugr");
-                addIfAvailable(pool, "cataclysm:aptrgangr");
-                addIfAvailable(pool, "cataclysm:deepling_warlock");
-                addIfAvailable(pool, "cataclysm:endermaptera");
             }
         }
     }

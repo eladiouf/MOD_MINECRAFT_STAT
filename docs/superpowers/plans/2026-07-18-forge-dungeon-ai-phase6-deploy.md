@@ -48,4 +48,4 @@
 
 - [x] Append exact hashes, rollback paths, readiness time and smoke evidence to `docs/forge-1.20.1-server-validation.md`.
 - [x] Run a final Git status/diff audit and preserve the user's unrelated untracked files.
-- [ ] Commit `docs: verify dungeon AI deployment`, push `forge-1.20.1`, and verify local/remote commit equality.
+- [x] Commit `docs: verify dungeon AI deployment`, push `forge-1.20.1`, and verify local/remote commit equality.

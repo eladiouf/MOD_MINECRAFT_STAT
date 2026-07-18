@@ -12,15 +12,22 @@ public final class DungeonAiActor {
     public static final String LAST_SEEN_Y = "statmod_ai_last_seen_y";
     public static final String LAST_SEEN_Z = "statmod_ai_last_seen_z";
     public static final String LAST_SEEN_TICK = "statmod_ai_last_seen_tick";
+    public static final String TACTICAL_ROLE_TAG = "statmod_ai_tactical_role";
 
     private DungeonAiActor() {}
 
     public static void initialize(Mob mob, DungeonFaction faction, int floor, String squadId) {
+        initialize(mob, faction, floor, squadId, DungeonTacticalRole.WARDEN);
+    }
+
+    public static void initialize(Mob mob, DungeonFaction faction, int floor, String squadId,
+                                  DungeonTacticalRole role) {
         CompoundTag data = mob.getPersistentData();
         data.putString(FACTION_TAG, faction.name());
         data.putString(ALERT_TAG, DungeonAlertState.IDLE.name());
         data.putInt(FLOOR_TAG, floor);
         data.putString(SQUAD_TAG, squadId == null ? "" : squadId);
+        data.putString(TACTICAL_ROLE_TAG, role.name());
     }
 
     public static DungeonFaction faction(Mob mob) {
@@ -36,6 +43,15 @@ public final class DungeonAiActor {
             return DungeonAlertState.valueOf(mob.getPersistentData().getString(ALERT_TAG));
         } catch (IllegalArgumentException ignored) {
             return DungeonAlertState.IDLE;
+        }
+    }
+
+    public static DungeonTacticalRole tacticalRole(Mob mob) {
+        try {
+            return DungeonTacticalRole.valueOf(
+                    mob.getPersistentData().getString(TACTICAL_ROLE_TAG));
+        } catch (IllegalArgumentException ignored) {
+            return DungeonTacticalRole.WARDEN;
         }
     }
 

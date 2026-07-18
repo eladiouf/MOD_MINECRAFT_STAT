@@ -93,9 +93,17 @@ public final class AdventurerPartyHelper {
             }
 
             configureRole(entity, role, floor);
+            var tacticalRole = switch (role) {
+                case TANK -> tong.statmod.dungeon.ai.DungeonTacticalRole.SHIELD_CAPTAIN;
+                case ASSASSIN -> tong.statmod.dungeon.ai.DungeonTacticalRole.HUNTER;
+                case MAGE -> tong.statmod.dungeon.ai.DungeonTacticalRole.ELEMENTAL_CASTER;
+                case HEALER -> tong.statmod.dungeon.ai.DungeonTacticalRole.BATTLE_CLERIC;
+                case ARCHER -> tong.statmod.dungeon.ai.DungeonTacticalRole.SPEAR_KEEPER;
+            };
             tong.statmod.dungeon.ai.DungeonAiActor.initialize(entity,
                     tong.statmod.dungeon.ai.DungeonFaction.ADVENTURER_RIVALS,
-                    floor, floor + ":rivals");
+                    floor, floor + ":rivals", tacticalRole);
+            tong.statmod.dungeon.ai.DungeonTacticalGoals.ensureAttached(entity);
 
             DungeonSpawnGuard.spawnAuthorized(() -> {
                 level.addFreshEntity(entity);

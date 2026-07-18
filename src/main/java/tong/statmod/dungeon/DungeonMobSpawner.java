@@ -13,6 +13,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.dungeon.ai.DungeonAiActor;
+import tong.statmod.dungeon.ai.DungeonTacticalGoals;
+import tong.statmod.dungeon.ai.DungeonTacticalRole;
+import tong.statmod.dungeon.ai.DungeonTacticalRolePolicy;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.dungeon.party.PartyRole;
@@ -433,8 +436,16 @@ public final class DungeonMobSpawner {
                     if (entity instanceof Mob mob) {
                         String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
                                 .getKey(mob.getType()).toString();
-                        DungeonAiActor.initialize(mob, DungeonAiActor.factionFor(entityId), p.floor(),
-                                p.floor() + ":room:" + p.roomIndex());
+                        var faction = DungeonAiActor.factionFor(entityId);
+                        long positionKey = p.pos().asLong();
+                        int tacticalOrdinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                DungeonTacticalRole.values().length);
+                        var tacticalRole = DungeonTacticalRolePolicy.roleFor(
+                                faction, p.floor(), p.roomIndex(), tacticalOrdinal,
+                                p.role() == DungeonMobScaling.MobRole.BOSS);
+                        DungeonAiActor.initialize(mob, faction, p.floor(),
+                                p.floor() + ":room:" + p.roomIndex(), tacticalRole);
+                        DungeonTacticalGoals.ensureAttached(mob);
                     }
                 }
             } catch (RuntimeException e) {

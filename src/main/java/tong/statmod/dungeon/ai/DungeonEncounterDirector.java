@@ -57,6 +57,7 @@ public final class DungeonEncounterDirector {
                 .stream().limit(MAX_ACTORS_PER_FLOOR).toList();
         MANAGED_COUNTS.put(floor, actors.size());
         if (actors.isEmpty()) return;
+        for (Mob actor : actors) DungeonTacticalGoals.ensureAttached(actor);
 
         List<ServerPlayer> players = level.players().stream()
                 .filter(player -> player.isAlive() && !player.isCreative() && !player.isSpectator())

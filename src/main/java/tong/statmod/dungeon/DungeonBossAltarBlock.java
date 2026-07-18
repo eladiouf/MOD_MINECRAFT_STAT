@@ -25,6 +25,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import tong.statmod.capability.StatCapabilities;
 import tong.statmod.dungeon.ai.DungeonAiActor;
+import tong.statmod.dungeon.ai.DungeonTacticalGoals;
+import tong.statmod.dungeon.ai.DungeonTacticalRolePolicy;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.sound.ModSounds;
@@ -122,8 +124,12 @@ public class DungeonBossAltarBlock extends Block {
                             DungeonMobScaling.ROLE_TAG, DungeonMobScaling.MobRole.BOSS.id());
                     if (spawnedEntity instanceof Mob bossMob) {
                         String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(bossMob.getType()).toString();
-                        DungeonAiActor.initialize(bossMob, DungeonAiActor.factionFor(entityId),
-                                floor, floor + ":boss");
+                        var faction = DungeonAiActor.factionFor(entityId);
+                        var tacticalRole = DungeonTacticalRolePolicy.roleFor(
+                                faction, floor, 0, spawned, true);
+                        DungeonAiActor.initialize(bossMob, faction,
+                                floor, floor + ":boss", tacticalRole);
+                        DungeonTacticalGoals.ensureAttached(bossMob);
                     }
                     DungeonBossTracker.register(floor, spawnedEntity.getUUID());
                 }

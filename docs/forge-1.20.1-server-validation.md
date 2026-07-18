@@ -51,3 +51,17 @@ Two consecutive starts with the same JAR and mod set produced the same shop and 
 - Report: `config/statmod/shop-generation-report.json`
 
 The server EULA, offline-mode setting, OP list, worlds, and unrelated pack configuration were not changed by the shop implementation.
+
+## Cataclysm-free dungeon AI baseline — 2026-07-18
+
+- Validated source commit: `add0d4c`
+- Forbidden-identifier scan: `rg -n -i "cataclysm:" src/main/java/tong/statmod/config src/main/java/tong/statmod/dungeon src/main/resources/data/statmod`
+- Scan result: zero matches (ripgrep exit code 1).
+- Contract tests: dungeon themes 1–100, boss selection through floor 1000, active-source exclusion, and deterministic adventurer role selection all passed.
+- Full verification: `.\gradlew.bat clean test build --console=plain`
+- Result: `BUILD SUCCESSFUL in 30s`; 14 actionable tasks executed.
+- Artifact: `build/libs/statmod-0.1.0+1.20.1.jar`
+- Artifact size: 892755 bytes
+- Artifact SHA-256: `EAD7C8139B2D451DA4EE8A558CEED3E92FF66E587806B6B99DCB6E1C87A884F7`
+
+Cataclysm remains available to the modpack for third-party dependency compatibility, but no active STAT Mod dungeon roster, theme, scripted encounter, boss tag, mob pool, or server default selects a `cataclysm:*` entity. Replacements use tactical `statmod:adventurer` squads, Iron's Spells casters, and compatible non-Cataclysm mobs.

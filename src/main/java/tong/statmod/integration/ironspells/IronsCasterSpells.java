@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import tong.statmod.dungeon.ai.DungeonAiActor;
 
 /** Runtime bridge for real Iron's Spells casts by managed dungeon mobs. */
@@ -17,8 +18,15 @@ public final class IronsCasterSpells {
     /** Backwards-compatible entry point used by existing rival-party mages. */
     public static boolean cast(Mob mage, LivingEntity target, String element) {
         int floor = Math.max(1, mage.getPersistentData().getInt(DungeonAiActor.FLOOR_TAG));
-        return cast(mage, target, IronSpellProfile.fromElement(element),
-                IronSpellIntent.DIRECT_DAMAGE, floor);
+        float health = mage.getHealth() / Math.max(1.0f, mage.getMaxHealth());
+        int enemies = target == null ? 0 : mage.level().getEntitiesOfClass(Player.class,
+                target.getBoundingBox().inflate(5.0), player -> player.isAlive()
+                        && !player.isCreative() && !player.isSpectator()).size();
+        IronSpellIntent intent = IronSpellIntentPolicy.choose(new IronSpellTacticalContext(
+                DungeonAiActor.tacticalRole(mage), health, sameSquadCriticalAlly(mage), enemies,
+                target == null ? Double.MAX_VALUE : mage.distanceTo(target), false,
+                target != null));
+        return cast(mage, target, IronSpellProfile.fromElement(element), intent, floor);
     }
 
     /** Casts one enabled registry spell matching the requested tactical intent. */
@@ -81,6 +89,16 @@ public final class IronsCasterSpells {
         return intent == IronSpellIntent.DIRECT_DAMAGE
                 || intent == IronSpellIntent.AREA_DAMAGE
                 || intent == IronSpellIntent.CONTROL;
+    }
+
+    private static boolean sameSquadCriticalAlly(Mob caster) {
+        String squadId = caster.getPersistentData().getString(DungeonAiActor.SQUAD_TAG);
+        if (squadId.isEmpty()) return false;
+        return caster.level().getEntitiesOfClass(Mob.class,
+                caster.getBoundingBox().inflate(18.0), mob -> mob != caster && mob.isAlive()
+                        && squadId.equals(mob.getPersistentData().getString(
+                                DungeonAiActor.SQUAD_TAG)))
+                .stream().anyMatch(mob -> mob.getHealth() < mob.getMaxHealth() * 0.40f);
     }
 
     private static void faceTarget(Mob caster, LivingEntity target) {

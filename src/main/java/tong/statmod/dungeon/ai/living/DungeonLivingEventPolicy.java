@@ -21,10 +21,10 @@ public final class DungeonLivingEventPolicy {
         if (floor >= 31 && roomIndex == 4 && ordinal == 0) {
             return Optional.of(DungeonLivingRole.RIVAL_EXPLORER);
         }
-        if (floor >= 51 && roomIndex == 12 && ordinal == 1) {
+        if (floor >= 51 && roomIndex == 12 && ordinal == 0) {
             return Optional.of(DungeonLivingRole.RITUALIST);
         }
-        if (floor >= 71 && roomIndex == 15 && ordinal == 2) {
+        if (floor >= 71 && roomIndex == 15 && ordinal == 0) {
             return Optional.of(DungeonLivingRole.ENGINEER);
         }
         return Optional.empty();

@@ -17,10 +17,14 @@ import tong.statmod.dungeon.ai.DungeonTacticalGoals;
 import tong.statmod.dungeon.ai.DungeonTacticalRole;
 import tong.statmod.dungeon.ai.DungeonTacticalRolePolicy;
 import tong.statmod.dungeon.ai.living.DungeonLivingActor;
+import tong.statmod.dungeon.ai.living.DungeonLivingEventPolicy;
+import tong.statmod.dungeon.ai.living.DungeonLivingGoals;
+import tong.statmod.dungeon.ai.living.DungeonLivingRole;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.dungeon.party.PartyRole;
 import tong.statmod.integration.l2hostility.L2HostilityBridge;
+import tong.statmod.entity.AdventurerEntities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -311,6 +315,13 @@ public final class DungeonMobSpawner {
                 }
             }
 
+            var livingRole = DungeonLivingEventPolicy.combatRole(
+                    floor, room.index(), spawned);
+            if (livingRole.isPresent()) {
+                type = AdventurerEntities.ADVENTURER.get();
+                originalId = DungeonLivingActor.marker(livingRole.get());
+            }
+
             QUEUE.add(new Pending(lv, targetPos, type, originalId, floor,
                     serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL, roomIndex));
             spawned++;
@@ -421,34 +432,47 @@ public final class DungeonMobSpawner {
                         () -> p.type.spawn(p.level, p.pos, MobSpawnType.STRUCTURE));
                 if (entity != null) {
                     spawned++;
+                    DungeonLivingRole livingRole = DungeonLivingActor.fromMarker(
+                            p.originalId()).orElse(null);
                     entity.getPersistentData().putString(DungeonMobScaling.ROLE_TAG, p.role().id());
                     if (p.roomIndex() >= 0) {
                         entity.getPersistentData().putInt("statmod_dungeon_room", p.roomIndex());
                     }
                     if (entity instanceof tong.statmod.entity.AdventurerEntity adventurer) {
-                        long positionKey = p.pos().asLong();
-                        int ordinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
-                                PartyRole.values().length);
-                        PartyRole role = DungeonAdventurerRolePolicy.roleFor(
-                                p.floor(), p.roomIndex(), ordinal,
-                                p.role() == DungeonMobScaling.MobRole.BOSS);
+                        PartyRole role;
+                        if (livingRole != null) {
+                            role = DungeonLivingActor.partyRole(livingRole);
+                        } else {
+                            long positionKey = p.pos().asLong();
+                            int ordinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                    PartyRole.values().length);
+                            role = DungeonAdventurerRolePolicy.roleFor(
+                                    p.floor(), p.roomIndex(), ordinal,
+                                    p.role() == DungeonMobScaling.MobRole.BOSS);
+                        }
                         AdventurerPartyHelper.configureRole(adventurer, role, p.floor());
                     }
-                    if (entity instanceof Mob mob && p.originalId != null) {
+                    if (entity instanceof Mob mob && p.originalId != null && livingRole == null) {
                         mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);
                     }
                     if (entity instanceof Mob mob) {
-                        String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
-                                .getKey(mob.getType()).toString();
-                        var faction = DungeonAiActor.factionFor(entityId);
-                        long positionKey = p.pos().asLong();
-                        int tacticalOrdinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
-                                DungeonTacticalRole.values().length);
-                        var tacticalRole = DungeonTacticalRolePolicy.roleFor(
-                                faction, p.floor(), p.roomIndex(), tacticalOrdinal,
-                                p.role() == DungeonMobScaling.MobRole.BOSS);
-                        DungeonAiActor.initialize(mob, faction, p.floor(),
-                                p.floor() + ":room:" + p.roomIndex(), tacticalRole);
+                        if (livingRole != null) {
+                            DungeonLivingActor.initializeCombat(
+                                    mob, livingRole, p.floor(), p.roomIndex());
+                            DungeonLivingGoals.ensureAttached(mob);
+                        } else {
+                            String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                                    .getKey(mob.getType()).toString();
+                            var faction = DungeonAiActor.factionFor(entityId);
+                            long positionKey = p.pos().asLong();
+                            int tacticalOrdinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                    DungeonTacticalRole.values().length);
+                            var tacticalRole = DungeonTacticalRolePolicy.roleFor(
+                                    faction, p.floor(), p.roomIndex(), tacticalOrdinal,
+                                    p.role() == DungeonMobScaling.MobRole.BOSS);
+                            DungeonAiActor.initialize(mob, faction, p.floor(),
+                                    p.floor() + ":room:" + p.roomIndex(), tacticalRole);
+                        }
                         DungeonTacticalGoals.ensureAttached(mob);
                     }
                 }

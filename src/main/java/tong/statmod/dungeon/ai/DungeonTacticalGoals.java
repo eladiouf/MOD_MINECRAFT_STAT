@@ -17,8 +17,11 @@ public final class DungeonTacticalGoals {
     public static void ensureAttached(Mob mob) {
         DungeonTacticalRole role = DungeonAiActor.tacticalRole(mob);
         boolean partyCaster = mob.getPersistentData().contains(PartyRole.TAG)
-                && (role == DungeonTacticalRole.ELEMENTAL_CASTER
-                || role == DungeonTacticalRole.BATTLE_CLERIC);
+                && switch (role) {
+                    case ELEMENTAL_CASTER, BATTLE_CLERIC, NECROMANCER, HEXER,
+                            ARCANE_ARTILLERY -> true;
+                    default -> false;
+                };
         if (partyCaster) return;
         Class<? extends Goal> goalClass = switch (role) {
             case SCOUT, AMBUSHER -> ScoutGoal.class;

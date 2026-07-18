@@ -26,9 +26,10 @@ class DungeonLivingEventPolicyTest {
         assertEquals(Optional.of(DungeonLivingRole.RIVAL_EXPLORER),
                 DungeonLivingEventPolicy.combatRole(31, 4, 0));
         assertEquals(Optional.of(DungeonLivingRole.RITUALIST),
-                DungeonLivingEventPolicy.combatRole(51, 12, 1));
+                DungeonLivingEventPolicy.combatRole(51, 12, 0));
         assertEquals(Optional.of(DungeonLivingRole.ENGINEER),
-                DungeonLivingEventPolicy.combatRole(71, 15, 2));
+                DungeonLivingEventPolicy.combatRole(71, 15, 0));
+        assertEquals(Optional.empty(), DungeonLivingEventPolicy.combatRole(90, 12, 1));
         assertEquals(Optional.empty(), DungeonLivingEventPolicy.combatRole(90, 15, 3));
     }
 

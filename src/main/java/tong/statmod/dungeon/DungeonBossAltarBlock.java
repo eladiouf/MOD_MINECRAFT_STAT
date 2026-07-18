@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import tong.statmod.capability.StatCapabilities;
+import tong.statmod.dungeon.ai.DungeonAiActor;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.sound.ModSounds;
@@ -119,6 +120,11 @@ public class DungeonBossAltarBlock extends Block {
                     spawned++;
                     spawnedEntity.getPersistentData().putString(
                             DungeonMobScaling.ROLE_TAG, DungeonMobScaling.MobRole.BOSS.id());
+                    if (spawnedEntity instanceof Mob bossMob) {
+                        String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(bossMob.getType()).toString();
+                        DungeonAiActor.initialize(bossMob, DungeonAiActor.factionFor(entityId),
+                                floor, floor + ":boss");
+                    }
                     DungeonBossTracker.register(floor, spawnedEntity.getUUID());
                 }
             }

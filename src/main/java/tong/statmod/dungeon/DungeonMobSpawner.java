@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
+import tong.statmod.dungeon.ai.DungeonAiActor;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.dungeon.party.PartyRole;
@@ -428,6 +429,12 @@ public final class DungeonMobSpawner {
                     }
                     if (entity instanceof Mob mob && p.originalId != null) {
                         mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);
+                    }
+                    if (entity instanceof Mob mob) {
+                        String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                                .getKey(mob.getType()).toString();
+                        DungeonAiActor.initialize(mob, DungeonAiActor.factionFor(entityId), p.floor(),
+                                p.floor() + ":room:" + p.roomIndex());
                     }
                 }
             } catch (RuntimeException e) {

@@ -93,6 +93,9 @@ public final class AdventurerPartyHelper {
             }
 
             configureRole(entity, role, floor);
+            tong.statmod.dungeon.ai.DungeonAiActor.initialize(entity,
+                    tong.statmod.dungeon.ai.DungeonFaction.ADVENTURER_RIVALS,
+                    floor, floor + ":rivals");
 
             DungeonSpawnGuard.spawnAuthorized(() -> {
                 level.addFreshEntity(entity);

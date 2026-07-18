@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.Random;
+import tong.statmod.dungeon.ai.living.DungeonLivingPopulation;
 
 import static tong.statmod.dungeon.DungeonArchitect.AIR;
 import static tong.statmod.dungeon.DungeonArchitect.B;
@@ -99,6 +100,9 @@ public final class DungeonRoomChain {
             // Balisage EN DERNIER (après le décor) : traînée + fanal vers la porte de sortie → guide
             // le joueur, jamais perdu ni à rebrousser chemin.
             DungeonWayfinding.mark(lv, roomSp, r, floor);
+        }
+        if (role == DungeonArchitect.Role.COMBAT) {
+            DungeonLivingPopulation.populateSafehouse(lv, sp, floor);
         }
     }
 

@@ -16,6 +16,7 @@ import tong.statmod.dungeon.ai.DungeonAiActor;
 import tong.statmod.dungeon.ai.DungeonTacticalGoals;
 import tong.statmod.dungeon.ai.DungeonTacticalRole;
 import tong.statmod.dungeon.ai.DungeonTacticalRolePolicy;
+import tong.statmod.dungeon.ai.living.DungeonLivingActor;
 import tong.statmod.dungeon.party.AdventurerPartyHelper;
 import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
 import tong.statmod.dungeon.party.PartyRole;
@@ -120,7 +121,8 @@ public final class DungeonMobSpawner {
         AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
         return lv.getEntitiesOfClass(Mob.class, area,
                 m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
-                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)).size();
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG)).size();
     }
 
     /** Compte les mobs autorisés vivants dans la pièce {@code roomIndex} uniquement. */
@@ -130,6 +132,7 @@ public final class DungeonMobSpawner {
         return lv.getEntitiesOfClass(Mob.class, area,
                 m -> m != exclude && m.isAlive()
                         && m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG)
                         && m.getPersistentData().getInt("statmod_dungeon_room") == roomIndex).size();
     }
 
@@ -188,7 +191,8 @@ public final class DungeonMobSpawner {
         int removed = 0;
         for (Mob m : lv.getEntitiesOfClass(Mob.class, area,
                 m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
-                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG))) {
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG))) {
             m.discard();
             removed++;
         }

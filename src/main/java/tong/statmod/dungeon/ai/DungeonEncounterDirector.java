@@ -18,6 +18,8 @@ import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonMobSpawner;
 import tong.statmod.dungeon.DungeonTeleportHandler;
+import tong.statmod.dungeon.ai.living.DungeonLivingActor;
+import tong.statmod.dungeon.ai.living.DungeonLivingGoals;
 
 @Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonEncounterDirector {
@@ -57,7 +59,10 @@ public final class DungeonEncounterDirector {
                 .stream().limit(MAX_ACTORS_PER_FLOOR).toList();
         MANAGED_COUNTS.put(floor, actors.size());
         if (actors.isEmpty()) return;
-        for (Mob actor : actors) DungeonTacticalGoals.ensureAttached(actor);
+        for (Mob actor : actors) {
+            DungeonLivingGoals.ensureAttached(actor);
+            if (!DungeonLivingActor.isNonCombat(actor)) DungeonTacticalGoals.ensureAttached(actor);
+        }
 
         List<ServerPlayer> players = level.players().stream()
                 .filter(player -> player.isAlive() && !player.isCreative() && !player.isSpectator())
@@ -68,6 +73,11 @@ public final class DungeonEncounterDirector {
         Map<String, Observation> squadSightings = new HashMap<>();
 
         for (Mob actor : actors) {
+            if (DungeonAiActor.faction(actor) == DungeonFaction.INHABITANTS) {
+                actor.setTarget(null);
+                setAlert(actor, DungeonAlertState.IDLE);
+                continue;
+            }
             ServerPlayer visible = nearestVisible(actor, players);
             boolean lowHealth = actor.getHealth() <= actor.getMaxHealth() * 0.20F;
             if (visible != null) {
@@ -92,6 +102,7 @@ public final class DungeonEncounterDirector {
         }
 
         for (Mob actor : actors) {
+            if (DungeonAiActor.faction(actor) == DungeonFaction.INHABITANTS) continue;
             if (DungeonAiActor.alert(actor) == DungeonAlertState.COMBAT) continue;
             Observation sighting = squadSightings.get(
                     actor.getPersistentData().getString(DungeonAiActor.SQUAD_TAG));

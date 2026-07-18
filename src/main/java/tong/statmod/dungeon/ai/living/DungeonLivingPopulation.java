@@ -54,6 +54,7 @@ public final class DungeonLivingPopulation {
         mob.moveTo(position.getX() + 0.5, position.getY(), position.getZ() + 0.5,
                 180.0f, 0.0f);
         DungeonLivingActor.initializeNeutral(mob, role, floor, room);
+        if (role == DungeonLivingRole.SCAVENGER) mob.setCanPickUpLoot(false);
         mob.setCustomName(Component.literal(displayName(role)));
         mob.setCustomNameVisible(true);
         if (role == DungeonLivingRole.WOUNDED_SURVIVOR) {

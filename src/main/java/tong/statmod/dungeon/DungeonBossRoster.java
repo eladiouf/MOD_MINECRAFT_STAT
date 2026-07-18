@@ -6,7 +6,7 @@ import java.util.List;
  * Mission M6 — Roster de boss pour Forge 1.20.1.
  *
  * <p>10 arcs, basés sur les mods RÉELLEMENT disponibles :
- * slu, irons_spellbooks, bosses_of_mass_destruction, epic_mobs, cataclysm,
+ * slu, irons_spellbooks, bosses_of_mass_destruction, epic_mobs,
  * mowziesmobs, mutantmonsters.
  *
  * <p>Mods RETIRÉS du pack : block_factorys_bosses, deeperdarker,
@@ -50,9 +50,9 @@ public final class DungeonBossRoster {
         return List.of(
             s("minecraft:warden"),
             s("bosses_of_mass_destruction:void_blossom"),
-            s("cataclysm:ender_golem"),
-            s("cataclysm:the_leviathan"),
-            s("cataclysm:netherite_monstrosity"),
+            s("irons_spellbooks:citadel_keeper"),
+            s("bosses_of_mass_destruction:obsidilith"),
+            s("slu:magma_giant"),
             s("slu:boss_aatrox"),
             s("slu:boss_jax"),
             s("epic_mobs:phoenix_fight"),
@@ -84,7 +84,7 @@ public final class DungeonBossRoster {
             s("slu:boss_elemer"),
             d("slu:boss_godfrey","slu:boss_hoarah_loux"),
             d("irons_spellbooks:dead_king","irons_spellbooks:citadel_keeper"),
-            s("cataclysm:the_harbinger"),
+            d("irons_spellbooks:dead_king","irons_spellbooks:citadel_keeper"),
             s("slu:boss_pantheon"),
             s("slu:boss_nameless_king"),
             s("bosses_of_mass_destruction:lich")
@@ -97,9 +97,9 @@ public final class DungeonBossRoster {
             s("bosses_of_mass_destruction:obsidilith"),
             s("epic_mobs:pillager_king"),
             s("epic_mobs:the_knight"),
-            s("cataclysm:the_leviathan"),
+            s("bosses_of_mass_destruction:obsidilith"),
             d("epic_mobs:the_knight","epic_mobs:pillager_king"),
-            s("cataclysm:the_prowler"),
+            w("statmod:adventurer","statmod:adventurer","statmod:adventurer"),
             s("epic_mobs:micky"),
             s("epic_mobs:karin"),
             w("slu:boss_gael","slu:boss_radagon","slu:boss_elden_beast")
@@ -114,7 +114,7 @@ public final class DungeonBossRoster {
             s("irons_spellbooks:citadel_keeper"),
             s("slu:boss_soul_of_cinder"),
             s("slu:boss_wukong"),
-            s("cataclysm:the_prowler"),
+            w("statmod:adventurer","statmod:adventurer","statmod:adventurer"),
             d("slu:boss_malenia","slu:boss_malenia_2"),
             s("epic_mobs:phoenix_fight"),
             w("slu:boss_gael","slu:boss_soul_of_cinder","slu:boss_artorias")
@@ -125,7 +125,7 @@ public final class DungeonBossRoster {
         return List.of(
             s("slu:boss_malenia"),
             s("slu:boss_malenia_2"),
-            s("cataclysm:the_harbinger"),
+            d("irons_spellbooks:dead_king","irons_spellbooks:citadel_keeper"),
             d("slu:boss_nameless_king","slu:boss_wukong"),
             s("slu:boss_godskin_apostle"),
             s("slu:boss_godskin_noble"),
@@ -140,7 +140,7 @@ public final class DungeonBossRoster {
         return List.of(
             s("slu:boss_radahn"),
             s("slu:boss_radahn_2"),
-            s("cataclysm:netherite_monstrosity"),
+            s("slu:magma_giant"),
             s("epic_mobs:the_knight"),
             s("bosses_of_mass_destruction:gauntlet"),
             s("slu:boss_aatrox"),
@@ -158,7 +158,7 @@ public final class DungeonBossRoster {
             s("slu:boss_pantheon"),
             s("slu:boss_mohg"),
             s("epic_mobs:micky"),
-            s("cataclysm:ender_golem"),
+            s("irons_spellbooks:citadel_keeper"),
             d("slu:boss_fallen_lord","slu:boss_ancient_warrior"),
             s("slu:boss_dragon_slayer_armour"),
             d("slu:boss_count_robert","slu:boss_crucible_knight"),
@@ -176,7 +176,7 @@ public final class DungeonBossRoster {
             d("slu:boss_notch","slu:boss_minecraft_lord"),
             s("epic_mobs:karin"),
             w("slu:boss_radahn_2","slu:boss_malenia_2","slu:boss_elden_beast"),
-            s("cataclysm:the_prowler"),
+            w("statmod:adventurer","statmod:adventurer","statmod:adventurer"),
             s("slu:boss_artorias")
         );
     }

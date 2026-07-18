@@ -24,28 +24,28 @@
 ### Task 1: Fresh release gate
 
 - [x] Record and version this deployment plan before executing it.
-- [ ] Run `.\gradlew.bat clean test build --console=plain` and require exit code 0.
-- [ ] Inspect the built JAR for `mods.toml`, mixin refmap and living/Iron AI classes.
-- [ ] Scan active STAT dungeon source/resources for `cataclysm:` and require zero matches.
-- [ ] Record artifact size and SHA-256.
+- [x] Run `.\gradlew.bat clean test build --console=plain` and require exit code 0.
+- [x] Inspect the built JAR for `mods.toml`, mixin refmap and living/Iron AI classes.
+- [x] Scan active STAT dungeon source/resources for `cataclysm:` and require zero matches.
+- [x] Record artifact size and SHA-256.
 
 ### Task 2: Transactional deployment
 
-- [ ] Confirm no `java.exe` or `javaw.exe` process is running.
-- [ ] Create matching timestamped client/server directories under `statmod-backups/dungeon-ai-<timestamp>`.
-- [ ] Copy every existing `statmod-*.jar` from each mods directory to its rollback directory.
-- [ ] Remove only the old `statmod-*.jar` target files and copy `build/libs/statmod-0.1.0+1.20.1.jar` to each mods directory.
-- [ ] Require exactly one target JAR and SHA-256 equality among build, client and server.
+- [x] Confirm no Minecraft client or Forge dedicated-server Java process is running.
+- [x] Create matching timestamped client/server directories under `statmod-backups/dungeon-ai-<timestamp>`.
+- [x] Copy every existing `statmod-*.jar` from each mods directory to its rollback directory.
+- [x] Replace the single existing Stat Mod target with `build/libs/statmod-0.1.0+1.20.1.jar` in each mods directory.
+- [x] Require exactly one target JAR and SHA-256 equality among build, client and server.
 
 ### Task 3: Dedicated-server smoke
 
-- [ ] Start `java @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.20.1-47.4.4/win_args.txt nogui` in the server directory with redirected standard streams.
-- [ ] Wait up to 240 seconds for the server `Done` marker while failing immediately on mod-loading exceptions or crash-report creation.
-- [ ] Send `stop` through standard input, wait up to 60 seconds and require process exit.
-- [ ] Verify logs contain Stat Mod initialization and no missing mandatory dependency, mixin apply failure, `NoClassDefFoundError`, or fatal exception attributable to Stat Mod.
+- [x] Start Java 17 with the Forge argument file in the server directory and redirected standard streams.
+- [x] Wait up to 240 seconds for the server `Done` marker while failing immediately on mod-loading exceptions or crash-report creation.
+- [x] Send `stop` through standard input, wait up to 60 seconds and require process exit.
+- [x] Verify logs contain Stat Mod initialization and no missing mandatory dependency, mixin apply failure, `NoClassDefFoundError`, or fatal exception attributable to Stat Mod.
 
 ### Task 4: Final audit and publication
 
-- [ ] Append exact hashes, rollback paths, readiness time and smoke evidence to `docs/forge-1.20.1-server-validation.md`.
-- [ ] Run a final Git status/diff audit and preserve the user's unrelated untracked files.
+- [x] Append exact hashes, rollback paths, readiness time and smoke evidence to `docs/forge-1.20.1-server-validation.md`.
+- [x] Run a final Git status/diff audit and preserve the user's unrelated untracked files.
 - [ ] Commit `docs: verify dungeon AI deployment`, push `forge-1.20.1`, and verify local/remote commit equality.

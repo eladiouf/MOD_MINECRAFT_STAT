@@ -28,7 +28,8 @@ Attach the component at all hostile STAT spawn paths:
 1. the general floor-scaling path for ordinary, elite and deferred chamber mobs;
 2. adventurer role configuration for rival parties, debug parties and adventurer bosses;
 3. boss-altar setup for non-adventurer bosses;
-4. occupied-floor AI recovery so persistent enemies created by an older build receive the reduction after reload.
+4. trap ambushes and the secret-room and Ultra Vault boss paths;
+5. occupied-floor AI recovery so persistent enemies created by an older build receive the reduction after reload.
 
 Neutral inhabitants remain excluded by checking the living-actor non-combat marker before applying the balance modifier.
 

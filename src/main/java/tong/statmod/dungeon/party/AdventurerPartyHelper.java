@@ -14,6 +14,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.fml.ModList;
 import tong.statmod.dungeon.DungeonLayout;
+import tong.statmod.dungeon.DungeonEnemyHealthBalance;
 import tong.statmod.dungeon.DungeonRoomChain;
 import tong.statmod.dungeon.DungeonSpawnGuard;
 import tong.statmod.dungeon.ModdedMobPool;
@@ -121,6 +122,7 @@ public final class AdventurerPartyHelper {
         if (followRange != null) followRange.setBaseValue(48.0);
         applySpawnEffects(entity, role);
         ensureRoleAi(entity);
+        DungeonEnemyHealthBalance.apply(entity);
     }
 
     private static void applySpawnEffects(Mob entity, PartyRole role) {

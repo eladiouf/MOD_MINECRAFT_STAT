@@ -121,6 +121,7 @@ public final class DungeonMobScaling {
         } else {
             mob.setHealth((float) Math.max(1.0, Math.min(mob.getMaxHealth(), mob.getMaxHealth() * healthRatio)));
         }
+        DungeonEnemyHealthBalance.apply(mob);
     }
 
     private static void applyMultiplier(LivingEntity mob, Attribute attr,

@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -157,6 +158,9 @@ public final class DungeonUltraVault {
                 Entity entity = spawnerType.create(lv);
                 if (entity != null) {
                     entity.setPos(c.getX() + 0.5, VY + 3, c.getZ() + 0.5);
+                    if (entity instanceof LivingEntity vaultBoss) {
+                        DungeonEnemyHealthBalance.apply(vaultBoss);
+                    }
                     lv.addFreshEntity(entity);
                 }
             }

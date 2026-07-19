@@ -29,7 +29,7 @@
 - Produces: `public static void apply(LivingEntity entity)`.
 - Produces package-visible pure helpers `maxHealthMultiplier()`, `modifierAmount()` and `healthAtSameRatio(double, double, double)` for deterministic tests.
 
-- [ ] **Step 1: Write the failing unit tests**
+- [x] **Step 1: Write the failing unit tests**
 
 ```java
 package tong.statmod.dungeon;
@@ -52,13 +52,13 @@ class DungeonEnemyHealthBalanceTest {
 }
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run: `.\gradlew.bat test --tests "tong.statmod.dungeon.DungeonEnemyHealthBalanceTest" --console=plain`
 
 Expected: compilation failure because `DungeonEnemyHealthBalance` does not exist.
 
-- [ ] **Step 3: Implement the minimal component**
+- [x] **Step 3: Implement the minimal component**
 
 Create a final utility class containing:
 
@@ -78,13 +78,13 @@ static double healthAtSameRatio(double oldMax, double oldHealth, double newMax) 
 
 `apply` must return for null or `DungeonLivingActor.isNonCombat(entity)` when the entity is a `Mob`; remove the stable UUID modifier, add one transient `MULTIPLY_TOTAL` modifier with amount `-0.5`, then restore health through `healthAtSameRatio`.
 
-- [ ] **Step 4: Run the focused test and verify GREEN**
+- [x] **Step 4: Run the focused test and verify GREEN**
 
 Run: `.\gradlew.bat test --tests "tong.statmod.dungeon.DungeonEnemyHealthBalanceTest" --console=plain`
 
 Expected: 2 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add -- src/main/java/tong/statmod/dungeon/DungeonEnemyHealthBalance.java src/test/java/tong/statmod/dungeon/DungeonEnemyHealthBalanceTest.java
@@ -98,30 +98,34 @@ git commit -m "feat: halve hostile dungeon mob health"
 - Modify: `src/main/java/tong/statmod/dungeon/DungeonMobScaling.java`
 - Modify: `src/main/java/tong/statmod/dungeon/party/AdventurerPartyHelper.java`
 - Modify: `src/main/java/tong/statmod/dungeon/DungeonBossAltarBlock.java`
+- Modify: `src/main/java/tong/statmod/dungeon/DungeonTrapHandler.java`
+- Modify: `src/main/java/tong/statmod/dungeon/DungeonSecretRoom.java`
+- Modify: `src/main/java/tong/statmod/dungeon/DungeonUltraVault.java`
 - Modify: `src/main/java/tong/statmod/dungeon/ai/DungeonEncounterDirector.java`
 
 **Interfaces:**
 - Consumes: `DungeonEnemyHealthBalance.apply(LivingEntity)` from Task 1.
-- Produces: four independently verified integration calls covering scaling, parties, altars and persisted actors.
+- Produces: seven independently verified integration calls covering scaling, parties, altars, trap ambushes, hidden bosses and persisted actors.
 
-- [ ] **Step 1: Write the failing wiring contract**
+- [x] **Step 1: Write the failing wiring contract**
 
-The test reads the four production sources and asserts each contains `DungeonEnemyHealthBalance.apply`. It also asserts the director applies the balance only inside its existing `!DungeonLivingActor.isNonCombat(actor)` branch.
+The test reads the seven production sources and asserts each contains `DungeonEnemyHealthBalance.apply`. It also asserts the director applies the balance only inside its existing `!DungeonLivingActor.isNonCombat(actor)` branch.
 
-- [ ] **Step 2: Run the focused wiring test and verify RED**
+- [x] **Step 2: Run the focused wiring test and verify RED**
 
 Run: `.\gradlew.bat test --tests "tong.statmod.dungeon.DungeonEnemyHealthWiringContractTest" --console=plain`
 
 Expected: assertions fail because no integration calls exist.
 
-- [ ] **Step 3: Add the four minimal calls**
+- [x] **Step 3: Add the seven minimal calls**
 
 - At the end of `DungeonMobScaling.applyFloorScaling`, call `DungeonEnemyHealthBalance.apply(mob)`.
 - At the end of `AdventurerPartyHelper.configureRole`, call `DungeonEnemyHealthBalance.apply(entity)`.
 - In `DungeonBossAltarBlock`, call the component for every spawned `LivingEntity` after boss setup.
+- Apply it to each `LivingEntity` created by `DungeonTrapHandler`, `DungeonSecretRoom` and `DungeonUltraVault` before combat begins.
 - In `DungeonEncounterDirector`, apply it beside `DungeonTacticalGoals.ensureAttached(actor)` only for non-combat actors.
 
-- [ ] **Step 4: Run both focused test classes and verify GREEN**
+- [x] **Step 4: Run both focused test classes and verify GREEN**
 
 Run: `.\gradlew.bat test --tests "tong.statmod.dungeon.DungeonEnemyHealth*" --console=plain`
 
@@ -130,7 +134,7 @@ Expected: all health-balance unit and wiring tests pass.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add -- src/main/java/tong/statmod/dungeon/DungeonMobScaling.java src/main/java/tong/statmod/dungeon/party/AdventurerPartyHelper.java src/main/java/tong/statmod/dungeon/DungeonBossAltarBlock.java src/main/java/tong/statmod/dungeon/ai/DungeonEncounterDirector.java src/test/java/tong/statmod/dungeon/DungeonEnemyHealthWiringContractTest.java
+git add -- src/main/java/tong/statmod/dungeon/DungeonMobScaling.java src/main/java/tong/statmod/dungeon/party/AdventurerPartyHelper.java src/main/java/tong/statmod/dungeon/DungeonBossAltarBlock.java src/main/java/tong/statmod/dungeon/DungeonTrapHandler.java src/main/java/tong/statmod/dungeon/DungeonSecretRoom.java src/main/java/tong/statmod/dungeon/DungeonUltraVault.java src/main/java/tong/statmod/dungeon/ai/DungeonEncounterDirector.java src/test/java/tong/statmod/dungeon/DungeonEnemyHealthWiringContractTest.java
 git commit -m "feat: apply health reduction to every dungeon enemy"
 ```
 

@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -196,7 +197,11 @@ public final class DungeonTrapHandler {
     private static void ambush(ServerLevel lv, BlockPos p, EntityType<?> type, int amount) {
         for (int i = 0; i < amount; i++) {
             BlockPos sp = p.offset((i % 2 == 0 ? 1 : -1) * (1 + i / 2), 1, (i % 2 == 0 ? -1 : 1));
-            DungeonSpawnGuard.spawnAuthorized(() -> type.spawn(lv, sp, net.minecraft.world.entity.MobSpawnType.TRIGGERED));
+            var spawned = DungeonSpawnGuard.spawnAuthorized(
+                    () -> type.spawn(lv, sp, net.minecraft.world.entity.MobSpawnType.TRIGGERED));
+            if (spawned instanceof LivingEntity ambusher) {
+                DungeonEnemyHealthBalance.apply(ambusher);
+            }
         }
         lv.sendParticles(ParticleTypes.LARGE_SMOKE, p.getX() + 0.5, p.getY() + 1, p.getZ() + 0.5,
                 20, 0.8, 0.4, 0.8, 0.03);

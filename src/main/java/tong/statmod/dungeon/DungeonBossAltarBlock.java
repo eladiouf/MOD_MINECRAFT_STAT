@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -130,6 +131,9 @@ public class DungeonBossAltarBlock extends Block {
                         DungeonAiActor.initialize(bossMob, faction,
                                 floor, floor + ":boss", tacticalRole);
                         DungeonTacticalGoals.ensureAttached(bossMob);
+                    }
+                    if (spawnedEntity instanceof LivingEntity livingBoss) {
+                        DungeonEnemyHealthBalance.apply(livingBoss);
                     }
                     DungeonBossTracker.register(floor, spawnedEntity.getUUID());
                 }

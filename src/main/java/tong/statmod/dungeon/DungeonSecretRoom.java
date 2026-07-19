@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -215,6 +216,9 @@ public final class DungeonSecretRoom {
             Entity entity = spawnerType.create(lv);
             if (entity != null) {
                 entity.setPos(cx + 0.5, QLIPHOTH_Y + 3, cz + 0.5);
+                if (entity instanceof LivingEntity secretBoss) {
+                    DungeonEnemyHealthBalance.apply(secretBoss);
+                }
                 lv.addFreshEntity(entity);
             }
         }

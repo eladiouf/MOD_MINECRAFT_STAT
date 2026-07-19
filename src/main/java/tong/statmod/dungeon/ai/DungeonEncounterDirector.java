@@ -16,6 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
+import tong.statmod.dungeon.DungeonEnemyHealthBalance;
 import tong.statmod.dungeon.DungeonMobSpawner;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 import tong.statmod.dungeon.ai.living.DungeonLivingActor;
@@ -61,7 +62,10 @@ public final class DungeonEncounterDirector {
         if (actors.isEmpty()) return;
         for (Mob actor : actors) {
             DungeonLivingGoals.ensureAttached(actor);
-            if (!DungeonLivingActor.isNonCombat(actor)) DungeonTacticalGoals.ensureAttached(actor);
+            if (!DungeonLivingActor.isNonCombat(actor)) {
+                DungeonEnemyHealthBalance.apply(actor);
+                DungeonTacticalGoals.ensureAttached(actor);
+            }
         }
 
         List<ServerPlayer> players = level.players().stream()

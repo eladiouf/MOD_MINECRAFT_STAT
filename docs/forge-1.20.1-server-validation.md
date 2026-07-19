@@ -173,3 +173,21 @@ The final Java 17 dedicated-server smoke test reached readiness in 93.1 seconds;
 - Server rollback: `C:\Users\El Hadji\Downloads\serveur\The Casket of Reveries Server 2.2.9.1\statmod-backups\healer-regen-20260719-035143`.
 
 The final Java 17 dedicated-server smoke test initialized STAT Mod, reached `Done (10.009s)`, accepted `stop`, logged `Stopping server` and `All dimensions are saved`, and exited with code 0. No Forge server process remained. The retained smoke log is `statmod-healer-regen-final-20260719-041112.log` in the server root with SHA-256 `53E6E6820C178AC6BDDACB537E1233B8922CA85F824BA61D81F01B4CB2A77FE0`.
+
+## Full adventurer healer nerf — 2026-07-19
+
+- Validated behavior commit: `164a162`.
+- Normal heal: 200-tick cooldown, `5 + 5%` of healer maximum health, 25% nearby splash and no Regeneration.
+- Patient selection: self below 60%; allies below 75%.
+- Sanctuary: two members below 30%, 20% maximum-health recovery, Regeneration I for 40 ticks, Resistance I for 120 ticks and a 600-tick cooldown.
+- Shield/cleanse: 300-tick interval; Absorption I for 100 ticks; cleanse unchanged.
+- War hymn: 300-tick interval; Strength I and Speed I for 160 ticks; no Resistance.
+- Focused TDD contract failed against the old kit before the production edit and passed afterward.
+- Full release gate: `.\gradlew.bat clean test build --console=plain`, `BUILD SUCCESSFUL in 38s`, 14 tasks executed.
+- Tests: 275 executed, 0 failures, 0 errors.
+- Artifact: `build/libs/statmod-0.1.0+1.20.1.jar`, 961565 bytes.
+- Build/client/server SHA-256: `448F91B5D211A69A3D8A2395FC99D110F9BB9B335ECBAC7814309AB8347D98C6`.
+- Client rollback: `C:\Users\El Hadji\AppData\Roaming\.minecraft\statmod-backups\healer-full-nerf-20260719-042605`.
+- Server rollback: `C:\Users\El Hadji\Downloads\serveur\The Casket of Reveries Server 2.2.9.1\statmod-backups\healer-full-nerf-20260719-042605`.
+
+The final Java 17 dedicated-server smoke test initialized STAT Mod, reached `Done (10.772s)`, accepted `stop`, logged `Stopping server` and `All dimensions are saved`, and exited with code 0. No Forge server process remained. The retained smoke log is `statmod-healer-full-nerf-final-20260719-042826.log` in the server root with SHA-256 `7826598198FCF32D9E591D80916FEFAE9AF5F4AFD849F4B858A9AB236A03D6E1`.

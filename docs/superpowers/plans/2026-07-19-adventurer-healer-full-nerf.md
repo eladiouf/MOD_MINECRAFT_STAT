@@ -112,22 +112,22 @@ git commit -m "balance: make adventurer healers beatable"
 - Consumes: `build/libs/statmod-0.1.0+1.20.1.jar`.
 - Produces: matching client/server artifacts, Java 17 smoke evidence and a published branch.
 
-- [ ] **Step 1: Back up both deployed JARs and replace them with the validated artifact**
+- [x] **Step 1: Back up both deployed JARs and replace them with the validated artifact**
 
 Use timestamped `statmod-backups/healer-full-nerf-*` directories beside the client and server installations before copying the artifact.
 
-- [ ] **Step 2: Verify deployment identity**
+- [x] **Step 2: Verify deployment identity**
 
 Run SHA-256 on the build, client and server JARs and require exactly one unique hash.
 
-- [ ] **Step 3: Run the Java 17 dedicated-server gate**
+- [x] **Step 3: Run the Java 17 dedicated-server gate**
 
 Start the server with `C:/Program Files/Java/jdk-17/bin/java.exe`, wait for `Done (`, send one empty console line followed by `stop`, then require `Stopping server`, `All dimensions are saved`, exit code 0 and zero remaining Forge server processes.
 
-- [ ] **Step 4: Document exact evidence**
+- [x] **Step 4: Document exact evidence**
 
 Append the validated balance, test totals, artifact size/hash, deployment paths, backup paths and smoke markers to `docs/forge-1.20.1-server-validation.md`.
 
-- [ ] **Step 5: Commit, push and verify publication**
+- [x] **Step 5: Commit, push and verify publication**
 
 Commit the validation documentation, push `forge-1.20.1`, fetch the remote ref, require local/remote equality, and preserve the existing worktree.

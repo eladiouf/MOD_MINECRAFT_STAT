@@ -27,8 +27,8 @@ public class HealPartyGoal extends Goal {
     private static final double SUPPORT_RANGE = 18.0;
     private static final double CAST_RANGE = 9.0;
     private static final double FLEE_RANGE = 6.0;
-    private static final int HEAL_COOLDOWN = 20;   // 1 s entre deux soins
-    private static final int BUFF_INTERVAL = 180;  // buff de groupe toutes les 9 s
+    private static final int HEAL_COOLDOWN = 200;  // 10 s entre deux soins
+    private static final int BUFF_INTERVAL = 300;  // buff de groupe toutes les 15 s
 
     private final Mob healer;
     private LivingEntity patient;
@@ -36,7 +36,7 @@ public class HealPartyGoal extends Goal {
     private int buffTimer;
     private int ultCooldown;
     private int shieldTimer;
-    private static final int SHIELD_INTERVAL = 160; // bouclier + purge toutes les 8 s
+    private static final int SHIELD_INTERVAL = 300; // bouclier + purge toutes les 15 s
 
     public HealPartyGoal(Mob healer) {
         this.healer = healer;
@@ -82,7 +82,7 @@ public class HealPartyGoal extends Goal {
         // ULTIME — Sanctuaire : si au moins 2 alliés sont critiques (<40%), gros soin de groupe.
         if (ultCooldown <= 0 && countCritical() >= 2) {
             massHeal();
-            ultCooldown = 400; // 20 s
+            ultCooldown = 600; // 30 s
         }
 
         // Menace de mêlée → repli vers l'ancre (rester protégé derrière le tank).
@@ -127,13 +127,12 @@ public class HealPartyGoal extends Goal {
     /** Soin direct (aucune potion → jamais raté, marche même sur les morts-vivants). */
     private void castHeal(LivingEntity target) {
         if (healCooldown > 0) return;
-        float amount = 8.0f + healer.getMaxHealth() * 0.08f;
+        float amount = 5.0f + healer.getMaxHealth() * 0.05f;
         target.heal(amount);
-        target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, true));
         // Éclaboussure de soin aux camarades proches du patient (soigne vraiment le groupe).
         for (Mob ally : allies(SUPPORT_RANGE, false)) {
             if (ally != target && ally.distanceToSqr(target) < 25.0 && ally.getHealth() < ally.getMaxHealth()) {
-                ally.heal(amount * 0.5f);
+                ally.heal(amount * 0.25f);
             }
         }
         healer.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
@@ -151,9 +150,8 @@ public class HealPartyGoal extends Goal {
     /** Buffs de soutien sur tout le groupe (et le soigneur). */
     private void buffSquad(List<Mob> squad) {
         for (Mob ally : squad) {
-            ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 220, 0, false, true));
-            ally.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 220, 0, false, true));
-            ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 220, 0, false, true));
+            ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 160, 0, false, true));
+            ally.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 160, 0, false, true));
         }
         healer.swing(net.minecraft.world.InteractionHand.OFF_HAND);
         if (healer.level() instanceof ServerLevel lv) {
@@ -169,7 +167,7 @@ public class HealPartyGoal extends Goal {
         for (Mob ally : squad) {
             MobEffectInstance abs = ally.getEffect(MobEffects.ABSORPTION);
             if (abs == null || abs.getDuration() < 40) {
-                ally.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 300, 1, false, true));
+                ally.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 0, false, true));
             }
             ally.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
             ally.removeEffect(MobEffects.WEAKNESS);
@@ -188,9 +186,9 @@ public class HealPartyGoal extends Goal {
     }
 
     private LivingEntity pickPatient() {
-        if (healer.getHealth() < healer.getMaxHealth() * 0.85) return healer;
+        if (healer.getHealth() < healer.getMaxHealth() * 0.60) return healer;
         LivingEntity best = null;
-        float bestFrac = 0.90f; // seuil proactif : on soigne dès 90 %
+        float bestFrac = 0.75f;
         for (Mob ally : allies(SUPPORT_RANGE, false)) {
             float frac = ally.getHealth() / ally.getMaxHealth();
             if (frac < bestFrac) {
@@ -215,9 +213,9 @@ public class HealPartyGoal extends Goal {
 
     private int countCritical() {
         int n = 0;
-        if (healer.getHealth() < healer.getMaxHealth() * 0.40) n++;
+        if (healer.getHealth() < healer.getMaxHealth() * 0.30) n++;
         for (Mob ally : allies(SUPPORT_RANGE, false)) {
-            if (ally.getHealth() < ally.getMaxHealth() * 0.40) n++;
+            if (ally.getHealth() < ally.getMaxHealth() * 0.30) n++;
         }
         return n;
     }
@@ -225,8 +223,8 @@ public class HealPartyGoal extends Goal {
     /** ULTIME — gros soin instantané + régén/résistance sur tout le groupe. */
     private void massHeal() {
         for (Mob ally : allies(SUPPORT_RANGE, true)) {
-            ally.heal(ally.getMaxHealth() * 0.5f);
-            ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 0, false, true));
+            ally.heal(ally.getMaxHealth() * 0.2f);
+            ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, true));
             ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 120, 0, false, true));
         }
         if (healer.level() instanceof ServerLevel lv) {

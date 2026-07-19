@@ -28,7 +28,7 @@
 - Consumes: the source of `HealPartyGoal`.
 - Produces: an exact regression contract for cooldowns, amounts, thresholds, effects and removed effects.
 
-- [ ] **Step 1: Replace the focused regeneration test with the complete contract**
+- [x] **Step 1: Replace the focused regeneration test with the complete contract**
 
 Keep the existing source loading and assert all of the following exact fragments and occurrence counts:
 
@@ -53,7 +53,7 @@ assertTrue(source.contains("healer.getMaxHealth() * 0.60"));
 assertTrue(source.contains("float bestFrac = 0.75f"));
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 ```powershell
 & './gradlew.bat' test --tests tong.statmod.dungeon.party.goal.HealPartyGoalRegenerationContractTest --console=plain
@@ -70,23 +70,23 @@ Expected: FAIL because the current goal still uses the pre-nerf cooldowns, amoun
 - Consumes: the exact contract from Task 1.
 - Produces: the validated combat behavior without changing control flow or public APIs.
 
-- [ ] **Step 1: Change the three timing constants**
+- [x] **Step 1: Change the three timing constants**
 
 Set `HEAL_COOLDOWN`, `BUFF_INTERVAL` and `SHIELD_INTERVAL` to `200`, `300` and `300`.
 
-- [ ] **Step 2: Reduce normal healing**
+- [x] **Step 2: Reduce normal healing**
 
 Use `5.0f + healer.getMaxHealth() * 0.05f`, remove its Regeneration application, and change nearby splash healing to `amount * 0.25f`.
 
-- [ ] **Step 3: Reduce hymn and shielding**
+- [x] **Step 3: Reduce hymn and shielding**
 
 Give Strength I and Speed I for 160 ticks, remove hymn Resistance, and change absorption to `MobEffects.ABSORPTION, 100, 0, false, true`.
 
-- [ ] **Step 4: Reduce patient selection and Sanctuary**
+- [x] **Step 4: Reduce patient selection and Sanctuary**
 
 Set self-priority to `0.60`, ally threshold to `0.75f`, both critical checks to `0.30`, Sanctuary healing to `0.2f`, Sanctuary Regeneration to 40 ticks, and its cooldown to 600 ticks. Keep Sanctuary Resistance at 120 ticks.
 
-- [ ] **Step 5: Verify focused and complete tests**
+- [x] **Step 5: Verify focused and complete tests**
 
 ```powershell
 & './gradlew.bat' test --tests tong.statmod.dungeon.party.goal.HealPartyGoalRegenerationContractTest --console=plain
@@ -95,7 +95,7 @@ Set self-priority to `0.60`, ally threshold to `0.75f`, both critical checks to 
 
 Expected: focused PASS, full `BUILD SUCCESSFUL`, zero failures and zero errors.
 
-- [ ] **Step 6: Commit behavior and plan progress**
+- [x] **Step 6: Commit behavior and plan progress**
 
 ```powershell
 git add src/main/java/tong/statmod/dungeon/party/goal/HealPartyGoal.java src/test/java/tong/statmod/dungeon/party/goal/HealPartyGoalRegenerationContractTest.java docs/superpowers/plans/2026-07-19-adventurer-healer-full-nerf.md

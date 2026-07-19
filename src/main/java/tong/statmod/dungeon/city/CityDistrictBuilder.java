@@ -53,7 +53,7 @@ final class CityDistrictBuilder {
     static void buildDwarvenQuarter(ServerLevel lv) {
         BlockPos c = CityPlan.dwarvenQuarter().above();
         CityMaterialPalette.Style s = CityMaterialPalette.DWARF;
-        platform(lv, c, 38, 31, Blocks.TUFF_BRICKS);
+        platform(lv, c, 38, 31, Blocks.DEEPSLATE_BRICKS);
         hall(lv, c.offset(0, 0, -12), 17, 12, 12, s.wall(), s.roof(), s.window());
         tower(lv, c.offset(-25, 0, 12), 7, 13, s.pillar(), s.roof());
         tower(lv, c.offset(25, 0, 12), 7, 13, s.pillar(), s.roof());
@@ -237,23 +237,37 @@ final class CityDistrictBuilder {
 
     private static void hall(ServerLevel lv, BlockPos c, int rx, int rz, int height,
                              Block wall, Block roof, Block window) {
+        // Baies seedées par bâtiment : espacement variable + décalage → plus de damier (x+z)%5.
+        long seed = ((long) c.getX() * 73856093L) ^ ((long) c.getZ() * 19349663L);
+        int spacing = 4 + (int) Math.floorMod(seed, 3); // 4, 5 ou 6 selon le bâtiment
         for (int x = -rx; x <= rx; x++) for (int z = -rz; z <= rz; z++) {
             boolean edge = Math.abs(x) == rx || Math.abs(z) == rz;
             set(lv, c.offset(x, 0, z), Blocks.POLISHED_ANDESITE);
             if (edge) for (int y = 1; y <= height; y++) {
-                boolean glazed = y >= 3 && y <= 5 && ((x + z) % 5 == 0);
+                boolean bay = Math.floorMod(x + z + (int) seed, spacing) == 0;
+                boolean glazed = y >= 2 && y <= 4 && bay;
                 set(lv, c.offset(x, y, z), glazed ? window : wall);
             }
-            set(lv, c.offset(x, height + 1 + Math.max(0, (rz - Math.abs(z)) / 3), z), roof);
         }
-        for (int y = 1; y <= 4; y++) for (int x = -2; x <= 2; x++) set(lv, c.offset(x, y, rz), Blocks.AIR);
+        CityRoofs.gableRoof(lv, c, rx, rz, height + 1, roofStair(roof), Blocks.EXPOSED_COPPER);
+        CityRoofs.archway(lv, c.offset(0, 0, rz), 2, 4, Blocks.STONE_BRICK_STAIRS);
+    }
+
+    /** Escalier de toit assorti au thème du bâtiment (fallback pierre). */
+    private static Block roofStair(Block roof) {
+        if (roof == Blocks.DARK_OAK_PLANKS) return Blocks.DARK_OAK_STAIRS;
+        if (roof == Blocks.SPRUCE_PLANKS) return Blocks.SPRUCE_STAIRS;
+        if (roof == Blocks.BIRCH_PLANKS) return Blocks.BIRCH_STAIRS;
+        return Blocks.STONE_BRICK_STAIRS;
     }
 
     private static void tower(ServerLevel lv, BlockPos c, int radius, int height, Block wall, Block cap) {
         for (int y = 0; y <= height; y++) for (int x = -radius; x <= radius; x++) for (int z = -radius; z <= radius; z++) {
             if (Math.abs(x) == radius || Math.abs(z) == radius) set(lv, c.offset(x, y, z), wall);
         }
-        for (int x = -radius - 1; x <= radius + 1; x++) for (int z = -radius - 1; z <= radius + 1; z++) set(lv, c.offset(x, height + 1, z), cap);
+        // Chapeau hippé (pyramide en escaliers) au lieu de la dalle plate.
+        CityRoofs.hipRoof(lv, c.offset(0, height + 1, 0), radius + 1, 0,
+                cap == Blocks.BLUE_WOOL ? Blocks.STONE_BRICK_STAIRS : Blocks.DEEPSLATE_BRICK_STAIRS);
     }
 
     private static void platform(ServerLevel lv, BlockPos c, int rx, int rz, Block block) {

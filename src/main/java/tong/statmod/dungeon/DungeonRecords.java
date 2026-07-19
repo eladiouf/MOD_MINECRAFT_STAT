@@ -4,8 +4,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
+
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Records personnels du Trial Dungeon (2026-07-09) — le hook « bats ton propre fantôme ».
  *
- * <p>Deux records persistés dans {@link PlayerStatData} :
+ * <p>Deux records persistés dans {@link PlayerStats} :
  * <ul>
  *   <li><b>Meilleur combo</b> — comparé à chaque kill (célébré à partir de
  *       {@value #COMBO_RECORD_FLOOR} pour ne pas fanfaronner sur un combo de 2) ;</li>
@@ -65,7 +66,7 @@ public final class DungeonRecords {
 
     /** Un kill vient de porter le combo à {@code combo} : record ? */
     public static void onCombo(ServerPlayer player, int combo) {
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PlayerStats data = StatCapabilities.get(player);
         if (!isComboRecord(combo, data.getDungeonBestCombo())) return;
         data.setDungeonBestCombo(combo);
         celebrate(player, Component.translatable("dungeon.record.combo", combo));
@@ -78,7 +79,7 @@ public final class DungeonRecords {
         if (timer == null || timer.floor() != floor) return;
 
         int clearTicks = (int) Math.max(1, gameTick - timer.startTick());
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PlayerStats data = StatCapabilities.get(player);
         if (!isClearRecord(clearTicks, data.getDungeonBestClearTicks())) return;
         data.setDungeonBestClearTicks(clearTicks);
         celebrate(player, Component.translatable("dungeon.record.clear", formatTicks(clearTicks)));

@@ -43,9 +43,9 @@ final class CityMaterialPalette {
     static Block rope() { return mod("quark:rope", Blocks.CHAIN); }
     static Block ancientBookshelf() { return mod("quark:ancient_bookshelf", Blocks.BOOKSHELF); }
     static Block stool() { return mod("quark:brown_stool", Blocks.OAK_STAIRS); }
-    static Block basket() { return mod("farmersdelight:basket", Blocks.BARREL); }
-    static Block cookingPot() { return mod("farmersdelight:cooking_pot", Blocks.CAULDRON); }
-    static Block cuttingBoard() { return mod("farmersdelight:cutting_board", Blocks.OAK_PRESSURE_PLATE); }
+    static Block basket() { return Blocks.BARREL; }
+    static Block cookingPot() { return Blocks.CAULDRON; }
+    static Block cuttingBoard() { return Blocks.OAK_PRESSURE_PLATE; }
     static Block bountyBoard() { return mod("bountiful:bountyboard", Blocks.LECTERN); }
 
     private static Block mod(String id, Block fallback) {

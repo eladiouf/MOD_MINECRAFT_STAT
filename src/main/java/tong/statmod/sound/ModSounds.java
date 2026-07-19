@@ -1,17 +1,17 @@
 package tong.statmod.sound;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import tong.statmod.StatMod;
 
 import java.util.function.Supplier;
 
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS =
-            DeferredRegister.create(Registries.SOUND_EVENT, STATMod.MODID);
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, StatMod.MOD_ID);
 
     public static final Supplier<SoundEvent> LEVEL_UP = register("level_up");
     public static final Supplier<SoundEvent> PERK_UNLOCK = register("perk_unlock");
@@ -22,7 +22,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> DUNGEON_FLOOR_COMPLETE = register("dungeon_floor_complete");
 
     private static Supplier<SoundEvent> register(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(STATMod.MODID, name);
+        ResourceLocation id = new ResourceLocation(StatMod.MOD_ID, name);
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
 

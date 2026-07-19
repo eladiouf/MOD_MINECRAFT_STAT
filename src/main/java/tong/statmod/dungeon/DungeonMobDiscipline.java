@@ -2,11 +2,11 @@ package tong.statmod.dungeon;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import tong.statmod.StatMod;
 
 /**
  * Discipline des mobs du Trial Dungeon (feedback playtest 2026-07-09).
@@ -17,12 +17,12 @@ import tong.statmod.STATMod;
  * <ul>
  *   <li>{@link LivingChangeTargetEvent} : un mob autorisé du donjon ne peut jamais PRENDRE POUR
  *       CIBLE un autre mob autorisé — leur seule cible légitime est le joueur.</li>
- *   <li>{@link LivingIncomingDamageEvent} : les dégâts entre deux mobs autorisés sont annulés
+ *   <li>{@link LivingHurtEvent} : les dégâts entre deux mobs autorisés sont annulés
  *       (flèche perdue, AoE, sorts…) — pas de friendly fire dans la vague.</li>
  * </ul>
  * Les dégâts environnementaux (pièges, chute, feu) et ceux du joueur passent normalement.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonMobDiscipline {
 
     private DungeonMobDiscipline() {}
@@ -30,7 +30,7 @@ public final class DungeonMobDiscipline {
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
         LivingEntity mob = event.getEntity();
-        LivingEntity target = event.getNewAboutToBeSetTarget();
+        LivingEntity target = event.getNewTarget();
         if (target == null) return;
         if (!mob.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
         if (isDungeonMob(mob) && isDungeonMob(target)) {
@@ -39,7 +39,7 @@ public final class DungeonMobDiscipline {
     }
 
     @SubscribeEvent
-    public static void onIncomingDamage(LivingIncomingDamageEvent event) {
+    public static void onIncomingDamage(LivingHurtEvent event) {
         LivingEntity victim = event.getEntity();
         if (!victim.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
         if (!isDungeonMob(victim)) return;

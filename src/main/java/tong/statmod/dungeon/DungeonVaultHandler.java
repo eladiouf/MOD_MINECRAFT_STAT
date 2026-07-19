@@ -4,11 +4,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import tong.statmod.STATMod;
-import tong.statmod.storage.ModAttachments;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import tong.statmod.StatMod;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
 
 /**
  * Mission M6 — Conquête des étages trésor (« vraie aventure », 2026-07-04).
@@ -17,7 +18,7 @@ import tong.statmod.storage.ModAttachments;
  * {@link DungeonObjective#LOOT_VAULT} et débloque la sortie. On ne consomme pas l'interaction :
  * le joueur ouvre bien le coffre (loot Lootr individuel), et la conquête est un effet de bord.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonVaultHandler {
 
     private DungeonVaultHandler() {}
@@ -36,7 +37,7 @@ public final class DungeonVaultHandler {
         if (DungeonObjective.forFloor(floor) != DungeonObjective.LOOT_VAULT) return;
 
         // Idempotent : ne rien refaire si l'étage est déjà conquis.
-        if (sp.getData(ModAttachments.STATS).getDungeonFloorReached() > floor) return;
+        if (StatCapabilities.get(sp).getDungeonFloorReached() > floor) return;
 
         DungeonProgress.completeFloor(sp, floor, DungeonObjective.LOOT_VAULT, false);
     }

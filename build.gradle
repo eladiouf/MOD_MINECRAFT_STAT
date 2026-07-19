@@ -1,52 +1,10 @@
 plugins {
-    id 'java-library'
+    id 'java'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.173'
-    id 'com.modrinth.minotaur' version '2.+'
-    id 'net.darkhax.curseforgegradle' version '1.1.26'
-}
-
-// Publication CurseForge : `gradlew publishCurseForge` avec CURSEFORGE_TOKEN defini
-// et curseforge_project_id renseigne dans gradle.properties (visible sur la page
-// "About Project" une fois le projet cree sur authors.curseforge.com).
-tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    apiToken = System.getenv('CURSEFORGE_TOKEN') ?: ''
-    def mainFile = upload(project.findProperty('curseforge_project_id') ?: '0', jar)
-    mainFile.releaseType = 'beta'
-    mainFile.changelog = rootProject.file('CHANGELOG.md').exists() ? rootProject.file('CHANGELOG.md').text : 'See GitHub for changes.'
-    mainFile.addGameVersion('1.21.1')
-    mainFile.addModLoader('NeoForge')
-    mainFile.addJavaVersion('Java 21')
-    // Relations (dependances optionnelles) : a ajouter via le site apres creation,
-    // les slugs CurseForge different de Modrinth et un slug faux bloque l'upload.
-}
-
-// Publication Modrinth : `gradlew modrinth` avec la variable d'env MODRINTH_TOKEN définie.
-modrinth {
-    token = System.getenv('MODRINTH_TOKEN') ?: ''
-    projectId = 'statmod'
-    versionNumber = mod_version
-    versionName = "STAT Mod ${mod_version}"
-    versionType = 'beta'
-    uploadFile = jar
-    gameVersions = ['1.21.1']
-    loaders = ['neoforge']
-    changelog = rootProject.file('CHANGELOG.md').exists() ? rootProject.file('CHANGELOG.md').text : ''
-    // `gradlew modrinthSyncBody` pousse MODRINTH_DESCRIPTION.md comme description de la page
-    syncBodyFrom = rootProject.file('MODRINTH_DESCRIPTION.md').text
-    dependencies {
-        optional.project 'irons-spells-n-spellbooks'
-        optional.project 'skills'                    // Pufferfish's Skills
-        optional.project 'epic-fight'
-        optional.project 'waystones'
-        optional.project 'lootr'
-        optional.project 'l2hostility'
-        optional.project 'parcool'
-        optional.project 'playerrevive'
-        // FTB Teams et Tensura ne sont pas distribues sur Modrinth (CurseForge)
-    }
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.38'
 }
 
 version = mod_version
@@ -56,94 +14,91 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
-    }
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', mod_id
-    }
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', mod_id
-        argument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', mod_id
-    }
-
-    data {
-        arguments.addAll '--mod', mod_id, '--all',
-                '--output', file('src/generated/resources/').absolutePath,
-                '--existing', file('src/main/resources/').absolutePath
+        client {}
+        server { args '--nogui' }
+        gameTestServer {}
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenLocal()
-    maven { url = 'https://maven.neoforged.net/releases' }
+    mavenCentral()
+    maven {
+        name = 'Architectury'
+        url = 'https://maven.architectury.dev/'
+        content {
+            includeGroup 'dev.architectury'
+        }
+    }
+    maven {
+        name = 'FTB'
+        url = 'https://maven.ftb.dev/releases'
+        content {
+            includeGroup 'dev.ftb.mods'
+        }
+    }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-    implementation fileTree(dir: 'libs', include: '*.jar', exclude: ['elementals*.jar'])
-    implementation fileTree(dir: 'libs/META-INF/jars', include: '*.jar')
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly fg.deobf("maven.modrinth:irons-spells-n-spellbooks:${irons_spellbooks_version}")
+    compileOnly fg.deobf("maven.modrinth:sdm-shop:${sdmshop_version}")
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${ftb_library_version}")
+    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${ftb_teams_version}")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+mixin {
+    add sourceSets.main, 'statmod.refmap.json'
+    config 'statmod.mixins.json'
 }
 
 tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description,
+    def replacements = [
+        minecraft_version_range: minecraft_version_range,
+        forge_version_range: forge_version_range,
+        loader_version_range: loader_version_range,
+        mod_id: mod_id,
+        mod_name: mod_name,
+        mod_license: mod_license,
+        mod_version: mod_version,
+        mod_authors: mod_authors,
+        mod_description: mod_description
     ]
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+    inputs.properties replacements
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replacements
     }
 }
 
@@ -151,38 +106,20 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-test {
+tasks.named('test', Test).configure {
     useJUnitPlatform()
 }
 
-// Regen des JSON Puffish statiques après modif de descriptionFor / catalog. Pas une vraie
-// datagen NeoForge — juste un main() qui sérialise PuffishMagicTreeBuilder dans le repo.
-tasks.register('regenPuffishJson', JavaExec) {
-    group = 'statmod'
-    description = 'Regenerate src/main/resources/.../puffish_skills json configs from builder classes'
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'tong.statmod.integration.puffish.PuffishFamilyTreeExporter'
-    workingDir = project.projectDir
-    dependsOn 'classes'
-}
-
-// Audit catalog : dump la classification (role) de tous les nœuds pour repérer les mauvaises
-// inferences automatiques et préparer les overrides manuels.
-tasks.register('runMagicCatalogAudit', JavaExec) {
-    group = 'statmod'
-    description = 'Dump the SpellRole classification for all 249 magic nodes'
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'tong.statmod.magic.MagicCatalogAuditTool'
-    workingDir = project.projectDir
-    dependsOn 'classes'
-}
-
-// Mission M5 Phase γ — régénère les recettes d'assemblage en scannant libs/*.jar.
-// Le script Python détecte chaque arme par regex + heuristique de path, déduit son
-// matériau et écrit data/statmod/recipe/assembly/<modid>/<weapon>.json.
-tasks.register('generateAssemblyRecipes', Exec) {
-    group = 'statmod'
-    description = 'Scan libs/*.jar and (re)generate Phase γ assembly recipes'
-    workingDir = project.projectDir
-    commandLine 'python', 'tools/generate_assembly_recipes.py'
+jar {
+    manifest {
+        attributes([
+            'Specification-Title': mod_id,
+            'Specification-Vendor': mod_authors,
+            'Specification-Version': '1',
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.jar.archiveVersion,
+            'Implementation-Vendor': mod_authors,
+            'MixinConfigs': 'statmod.mixins.json'
+        ])
+    }
 }

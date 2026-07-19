@@ -1,46 +1,33 @@
 package tong.statmod.dungeon;
 
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import tong.statmod.STATMod;
+import tong.statmod.StatMod;
+
+import java.util.UUID;
 
 /**
  * Scaling des attributs des mobs de donjon par étage, fallback quand L2 Hostility est absent.
- *
- * <p>Applique des multiplicateurs cumulatifs aux stats clés pour rendre la progression en
- * profondeur significative et le donjon très difficile solo dès les étages moyens.
- *
- * <p>Formules (base = floor 1) :
- * <ul>
- *   <li>{@code MAX_HEALTH} : +8 %/floor, cumul additif → floor 50 : x5.0</li>
- *   <li>{@code ATTACK_DAMAGE} : +5 %/floor, cumul additif → floor 50 : x3.5</li>
- *   <li>{@code ARMOR} : +0.5/floor, cap 40</li>
- *   <li>{@code ARMOR_TOUGHNESS} : +0.1/floor, cap 15</li>
- * </ul>
- *
- * <p>S'applique via {@link DungeonMobSpawner#flushL2Queue()} après L2, ou en fallback si L2
- * n'est pas chargé. N'empile pas avec L2 ({@link L2HostilityBridge} prioritaire).
  */
 public final class DungeonMobScaling {
 
     public static final String ROLE_TAG = "statmod_dungeon_mob_role";
     private static final String HP_APPLIED_TAG = "statmod_dungeon_hp_scaled";
 
-    private static final ResourceLocation HP_MOD_ID = ResourceLocation.fromNamespaceAndPath(
-            STATMod.MODID, "dungeon_hp_scale");
-    private static final ResourceLocation ATK_MOD_ID = ResourceLocation.fromNamespaceAndPath(
-            STATMod.MODID, "dungeon_atk_scale");
-    private static final ResourceLocation ARMOR_MOD_ID = ResourceLocation.fromNamespaceAndPath(
-            STATMod.MODID, "dungeon_armor_scale");
-    private static final ResourceLocation TOUGH_MOD_ID = ResourceLocation.fromNamespaceAndPath(
-            STATMod.MODID, "dungeon_toughness_scale");
+    private static final ResourceLocation HP_MOD_ID = new ResourceLocation(
+            StatMod.MOD_ID, "dungeon_hp_scale");
+    private static final ResourceLocation ATK_MOD_ID = new ResourceLocation(
+            StatMod.MOD_ID, "dungeon_atk_scale");
+    private static final ResourceLocation ARMOR_MOD_ID = new ResourceLocation(
+            StatMod.MOD_ID, "dungeon_armor_scale");
+    private static final ResourceLocation TOUGH_MOD_ID = new ResourceLocation(
+            StatMod.MOD_ID, "dungeon_toughness_scale");
 
-    private static final double ATK_PER_FLOOR = 0.05;
+    private static final double ATK_PER_FLOOR = 0.08;
     private static final double ARMOR_PER_FLOOR = 0.5;
     private static final double TOUGH_PER_FLOOR = 0.1;
     private static final double ARMOR_CAP = 40.0;
@@ -49,16 +36,18 @@ public final class DungeonMobScaling {
     private DungeonMobScaling() {}
 
     public enum MobRole {
-        NORMAL("normal", 1.0),
-        ELITE("elite", 1.25),
-        BOSS("boss", 1.5);
+        NORMAL("normal", 1.0, 1.0),
+        ELITE("elite", 1.25, 1.75),
+        BOSS("boss", 1.5, 2.5);
 
         private final String id;
         private final double healthMultiplier;
+        private final double damageMultiplier;
 
-        MobRole(String id, double healthMultiplier) {
+        MobRole(String id, double healthMultiplier, double damageMultiplier) {
             this.id = id;
             this.healthMultiplier = healthMultiplier;
+            this.damageMultiplier = damageMultiplier;
         }
 
         public String id() {
@@ -100,10 +89,6 @@ public final class DungeonMobScaling {
         return Math.max(0.0, finalMultiplier - 1.0);
     }
 
-    /**
-     * Applique le scaling basé sur l'étage à un mob du donjon.
-     * La vie commence à x3 dès l'étage 1. Une réapplication conserve le ratio de vie actuel.
-     */
     public static void applyFloorScaling(LivingEntity mob, int floor) {
         if (mob == null || floor <= 0) return;
 
@@ -115,6 +100,9 @@ public final class DungeonMobScaling {
         applyMultiplier(mob, Attributes.MAX_HEALTH, HP_MOD_ID, hpBonus);
 
         double atkBonus = ATK_PER_FLOOR * (floor - 1);
+        if (role.damageMultiplier > 1.0) {
+            atkBonus += role.damageMultiplier - 1.0;
+        }
         applyMultiplier(mob, Attributes.ATTACK_DAMAGE, ATK_MOD_ID, atkBonus);
 
         double armor = Math.min(ARMOR_CAP, ARMOR_PER_FLOOR * (floor - 1));
@@ -133,27 +121,30 @@ public final class DungeonMobScaling {
         } else {
             mob.setHealth((float) Math.max(1.0, Math.min(mob.getMaxHealth(), mob.getMaxHealth() * healthRatio)));
         }
+        DungeonEnemyHealthBalance.apply(mob);
     }
 
-    private static void applyMultiplier(LivingEntity mob, Holder<Attribute> attr,
+    private static void applyMultiplier(LivingEntity mob, Attribute attr,
                                         ResourceLocation id, double amount) {
         AttributeInstance inst = mob.getAttribute(attr);
         if (inst == null) return;
-        inst.removeModifier(id);
+        UUID uuid = UUID.nameUUIDFromBytes(id.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        inst.removeModifier(uuid);
         if (Math.abs(amount) > 0.001) {
             inst.addTransientModifier(
-                    new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                    new AttributeModifier(uuid, id.toString(), amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
     }
 
-    private static void applyFlat(LivingEntity mob, Holder<Attribute> attr,
+    private static void applyFlat(LivingEntity mob, Attribute attr,
                                   ResourceLocation id, double amount) {
         AttributeInstance inst = mob.getAttribute(attr);
         if (inst == null) return;
-        inst.removeModifier(id);
+        UUID uuid = UUID.nameUUIDFromBytes(id.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        inst.removeModifier(uuid);
         if (Math.abs(amount) > 0.001) {
             inst.addTransientModifier(
-                    new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
+                    new AttributeModifier(uuid, id.toString(), amount, AttributeModifier.Operation.ADDITION));
         }
     }
 }

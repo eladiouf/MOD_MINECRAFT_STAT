@@ -1,72 +1,61 @@
 package tong.statmod.stats;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public enum StatType {
-    BRUTE_FORCE(0, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Brute Force", "Damage bonus for heavy weapons"),
-    BLADE_TECHNIQUE(1, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Blade Technique", "Precision and finesse with blades"),
-    RAPIDITE(2, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Rapidité", "Attack speed and fluidity"),
-    AGILITY(3, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Agility", "Movement speed and evasion"),
-    PHYSICAL_RESISTANCE(4, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Physical Resistance", "Incoming damage reduction"),
-    PHYSICAL_ENDURANCE(5, StatFamily.FRONTLINE_PHYSICAL_COMBAT, "Physical Endurance", "Stamina and absorption"),
-    PRECISION(6, StatFamily.RANGED_HUNT_CONTROL, "Precision", "Ranged accuracy and critical hits"),
-    ARCANE_POWER(7, StatFamily.MAGICAL_CORE, "Arcane Power", "Raw magical damage"),
-    WATER_AFFINITY(8, StatFamily.ELEMENTAL_SPECIALIZATION, "Water Affinity", "Water magic effectiveness"),
-    EARTH_AFFINITY(9, StatFamily.ELEMENTAL_SPECIALIZATION, "Earth Affinity", "Earth magic effectiveness"),
-    FIRE_AFFINITY(10, StatFamily.ELEMENTAL_SPECIALIZATION, "Fire Affinity", "Fire magic effectiveness"),
-    AIR_AFFINITY(11, StatFamily.ELEMENTAL_SPECIALIZATION, "Air Affinity", "Air magic effectiveness"),
-    MAGIC_RESISTANCE(12, StatFamily.MAGICAL_CORE, "Magic Resistance", "Magic damage reduction"),
-    CASTING_SPEED(13, StatFamily.MAGICAL_CORE, "Casting Speed", "Faster spell casting"),
-    MANA_POOL(14, StatFamily.MAGICAL_CORE, "Mana Pool", "Maximum mana"),
-    ERUDITION(15, StatFamily.MAGICAL_CORE, "Erudition", "Spell variety and learning"),
-    TRACKING(16, StatFamily.RANGED_HUNT_CONTROL, "Tracking", "Mob detection and marking"),
-    KEEN_SENSES(17, StatFamily.RANGED_HUNT_CONTROL, "Keen Senses", "Dodge and perception"),
-    FORGING(18, StatFamily.CRAFTING_SUPPORT, "Forging", "Tool and weapon repair"),
-    COOKING(19, StatFamily.CRAFTING_SUPPORT, "Cooking", "Food saturation"),
-    ALCHEMY(20, StatFamily.CRAFTING_SUPPORT, "Alchemy", "Potion duration"),
-    INTIMIDATION(21, StatFamily.MENTAL_PRESSURE_RESILIENCE, "Intimidation", "Bonus damage to marked targets"),
-    WILLPOWER(22, StatFamily.MENTAL_PRESSURE_RESILIENCE, "Willpower", "Status effect resistance");
+    BRUTE_FORCE("brute_force", StatFamily.FRONT_LINE_PHYSICAL),
+    BLADE_TECHNIQUE("blade_technique", StatFamily.FRONT_LINE_PHYSICAL),
+    RAPIDITE("rapidite", StatFamily.FRONT_LINE_PHYSICAL),
+    AGILITY("agility", StatFamily.FRONT_LINE_PHYSICAL),
+    PHYSICAL_RESISTANCE("physical_resistance", StatFamily.FRONT_LINE_PHYSICAL),
+    PHYSICAL_ENDURANCE("physical_endurance", StatFamily.FRONT_LINE_PHYSICAL),
+    PRECISION("precision", StatFamily.RANGED_HUNT),
+    TRACKING("tracking", StatFamily.RANGED_HUNT),
+    KEEN_SENSES("keen_senses", StatFamily.RANGED_HUNT),
+    ARCANE_POWER("arcane_power", StatFamily.MAGICAL_CORE),
+    CASTING_SPEED("casting_speed", StatFamily.MAGICAL_CORE),
+    MANA_POOL("mana_pool", StatFamily.MAGICAL_CORE),
+    ERUDITION("erudition", StatFamily.MAGICAL_CORE),
+    MAGIC_RESISTANCE("magic_resistance", StatFamily.MAGICAL_CORE),
+    INTIMIDATION("intimidation", StatFamily.MENTAL_RESILIENCE),
+    WILLPOWER("willpower", StatFamily.MENTAL_RESILIENCE),
+    FORGING("forging", StatFamily.CRAFTING_SUPPORT),
+    COOKING("cooking", StatFamily.CRAFTING_SUPPORT),
+    ALCHEMY("alchemy", StatFamily.CRAFTING_SUPPORT);
 
-    private static final StatType[] BY_INDEX = new StatType[values().length];
-    static {
-        for (StatType s : values()) BY_INDEX[s.index] = s;
-    }
+    private static final Map<String, StatType> BY_ID = Arrays.stream(values())
+            .collect(Collectors.toUnmodifiableMap(StatType::id, Function.identity()));
 
-    public final int index;
-    public final StatFamily family;
+    private final String id;
+    private final StatFamily family;
     public final String displayName;
-    public final String description;
 
-    StatType(int index, StatFamily family, String displayName, String description) {
-        this.index = index;
+    StatType(String id, StatFamily family) {
+        this.id = id;
         this.family = family;
-        this.displayName = displayName;
-        this.description = description;
+        this.displayName = java.util.Arrays.stream(id.split("_"))
+                .map(word -> word.substring(0, 1).toUpperCase(java.util.Locale.ROOT) + word.substring(1))
+                .collect(java.util.stream.Collectors.joining(" "));
     }
 
-    public static StatType byIndex(int index) {
-        return index >= 0 && index < BY_INDEX.length ? BY_INDEX[index] : null;
+    public String id() {
+        return id;
     }
 
     public StatFamily family() {
         return family;
     }
 
-    public boolean hasPerks() {
-        return true;
+    public static Optional<StatType> fromId(String id) {
+        return Optional.ofNullable(BY_ID.get(id));
     }
 
-    public static StatType byName(String name) {
-        if (name == null) return null;
-        String search = name.trim().toUpperCase(java.util.Locale.ROOT);
-        try {
-            return StatType.valueOf(search);
-        } catch (IllegalArgumentException e) {
-            // Recherche insensible à la casse
-            for (StatType s : values()) {
-                if (s.name().equalsIgnoreCase(search) || s.displayName.equalsIgnoreCase(name)) {
-                    return s;
-                }
-            }
-        }
-        return null;
+    public static StatType byIndex(int index) {
+        if (index < 0 || index >= values().length) return null;
+        return values()[index];
     }
 }

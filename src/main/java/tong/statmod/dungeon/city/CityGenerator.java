@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 import tong.statmod.dungeon.IslandGenerator;
@@ -24,11 +24,13 @@ import tong.statmod.dungeon.DungeonMerchant;
  * en tâche de fond au démarrage du serveur ; marqueur d'achèvement versionné en SavedData
  * ({@link CitySavedData}) — incrémenter {@link #CITY_VERSION} force une reconstruction.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class CityGenerator {
 
     /** Incrémenter à chaque évolution de la génération pour reconstruire les mondes existants. */
-    public static final int CITY_VERSION = 11;
+    public static final int CITY_VERSION = 12;
+    /** Ancienne emprise (RADIUS pré-shrink) à purger sur les mondes existants. */
+    private static final int LEGACY_MAX_RADIUS = 300;
     /** ~2 bandes de 4×600 par tick ≈ 15-30k blocs/tick : invisible en jeu, cité en ~1-2 min. */
     private static final int JOBS_PER_TICK = 2;
 
@@ -51,6 +53,7 @@ public final class CityGenerator {
         QUEUE.clear();
         int previousVersion = CitySavedData.get(lv).builtVersion();
         if (previousVersion > 0) {
+            enqueueLegacyExtentClear(lv, QUEUE);
             enqueueInteriorClear(lv, QUEUE);
             enqueueCityEntityClear(lv, QUEUE);
         } else {
@@ -58,7 +61,7 @@ public final class CityGenerator {
         }
         enqueueBuild(lv, QUEUE);
         building = true;
-        STATMod.LOGGER.info("[City] Construction de la Cité des Aventuriers programmée ({} segments)",
+        StatMod.LOGGER.info("[City] Construction de la Cité des Aventuriers programmée ({} segments)",
                 QUEUE.totalJobs());
     }
 
@@ -66,11 +69,12 @@ public final class CityGenerator {
     public static void regen(ServerLevel lv) {
         QUEUE.clear();
         CitySavedData.get(lv).setBuiltVersion(0);
+        enqueueLegacyExtentClear(lv, QUEUE);
         enqueueInteriorClear(lv, QUEUE);
         enqueueCityEntityClear(lv, QUEUE);
         enqueueBuild(lv, QUEUE);
         building = true;
-        STATMod.LOGGER.info("[City] Regen de la cité programmée ({} segments)", QUEUE.totalJobs());
+        StatMod.LOGGER.info("[City] Regen de la cité programmée ({} segments)", QUEUE.totalJobs());
     }
 
     private static void enqueueBuild(ServerLevel lv, CityBuildQueue q) {
@@ -118,7 +122,33 @@ public final class CityGenerator {
                         }
             });
         }
-        STATMod.LOGGER.info("[City] Ancien temple/cage détectés — purge legacy programmée");
+        StatMod.LOGGER.info("[City] Ancien temple/cage détectés — purge legacy programmée");
+    }
+
+    /**
+     * Vide à l'air toute la colonne (sol → plafond) sur l'ancien disque RADIUS=300, hors de la
+     * nouvelle cité (qui sera rebâtie par-dessus), afin qu'aucun bloc n'orpheline hors du nouveau
+     * rempart après le shrink. Scan-and-clear : jamais de setBlock sur de l'air. Bandes de 8 en X.
+     */
+    private static void enqueueLegacyExtentClear(ServerLevel lv, CityBuildQueue q) {
+        final int cx = CityPlan.CENTER_X, cz = CityPlan.CENTER_Z;
+        for (int x0 = cx - LEGACY_MAX_RADIUS; x0 <= cx + LEGACY_MAX_RADIUS; x0 += 8) {
+            final int xs = x0, xe = Math.min(x0 + 7, cx + LEGACY_MAX_RADIUS);
+            q.add(() -> {
+                for (int x = xs; x <= xe; x++)
+                    for (int z = cz - LEGACY_MAX_RADIUS; z <= cz + LEGACY_MAX_RADIUS; z++) {
+                        long dx = x - cx, dz = z - cz;
+                        if (dx * dx + dz * dz > (long) LEGACY_MAX_RADIUS * LEGACY_MAX_RADIUS) continue;
+                        if (CityPlan.inCity(x, z)) continue; // rebâtie par-dessus
+                        for (int y = CityPlan.GROUND_Y - 2; y <= CityPlan.CEILING_Y + 2; y++) {
+                            BlockPos p = new BlockPos(x, y, z);
+                            if (!lv.getBlockState(p).isAir()) {
+                                lv.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+                            }
+                        }
+                    }
+            });
+        }
     }
 
     /** Purge de l'intérieur de la cité (au-dessus du sol, sous le plafond) pour la regen. */
@@ -144,14 +174,13 @@ public final class CityGenerator {
         q.add(() -> {
             BlockPos c = CityPlan.center();
             AABB city = new AABB(
-                    c.getX() - CityPlan.RADIUS, CityPlan.GROUND_Y,
-                    c.getZ() - CityPlan.RADIUS,
-                    c.getX() + CityPlan.RADIUS, CityPlan.CEILING_Y,
-                    c.getZ() + CityPlan.RADIUS);
+                    c.getX() - LEGACY_MAX_RADIUS, CityPlan.GROUND_Y,
+                    c.getZ() - LEGACY_MAX_RADIUS,
+                    c.getX() + LEGACY_MAX_RADIUS, CityPlan.CEILING_Y,
+                    c.getZ() + LEGACY_MAX_RADIUS);
             for (Entity entity : lv.getEntities((Entity) null, city, e ->
                     e instanceof ArmorStand
-                            || e.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
-                            || e.getPersistentData().getBoolean(CityTrainingDummies.TAG))) {
+                            || e.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG))) {
                 entity.discard();
             }
         });
@@ -164,7 +193,8 @@ public final class CityGenerator {
     }
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
         if (!building) return;
         ServerLevel lv = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
         if (lv == null) { building = false; return; }
@@ -182,7 +212,7 @@ public final class CityGenerator {
         if (QUEUE.isDone()) {
             building = false;
             CitySavedData.get(lv).setBuiltVersion(CITY_VERSION);
-            STATMod.LOGGER.info("[City] Cité des Aventuriers construite ({} segments)", QUEUE.totalJobs());
+            StatMod.LOGGER.info("[City] Cité des Aventuriers construite ({} segments)", QUEUE.totalJobs());
         }
     }
 }

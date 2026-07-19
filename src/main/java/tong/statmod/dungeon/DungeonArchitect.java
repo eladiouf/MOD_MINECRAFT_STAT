@@ -605,8 +605,7 @@ public final class DungeonArchitect {
     // ═══════════════ util ═══════════════
 
     static void placeChest(ServerLevel lv, BlockPos pos) {
-        ResourceKey<LootTable> lootTable = ResourceKey.create(Registries.LOOT_TABLE,
-                ResourceLocation.fromNamespaceAndPath("statmod", "chests/dungeon_treasure"));
+        ResourceLocation lootTable = new ResourceLocation("statmod", "chests/dungeon_treasure");
         LootrBridge.placeIndividualChest(lv, pos, lootTable);
     }
 }

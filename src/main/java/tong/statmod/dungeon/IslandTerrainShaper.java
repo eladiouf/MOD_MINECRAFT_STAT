@@ -248,7 +248,7 @@ public final class IslandTerrainShaper {
             case EARLY -> {
                 double r = rng.nextDouble();
                 if (r < 0.3) lv.setBlock(pos, Blocks.MOSS_CARPET.defaultBlockState(), 3);
-                else if (r < 0.7) lv.setBlock(pos, Blocks.SHORT_GRASS.defaultBlockState(), 3);
+                else if (r < 0.7) lv.setBlock(pos, Blocks.GRASS.defaultBlockState(), 3);
                 else if (r < 0.85) lv.setBlock(pos, Blocks.POPPY.defaultBlockState(), 3);
                 else lv.setBlock(pos, Blocks.DANDELION.defaultBlockState(), 3);
             }
@@ -256,7 +256,7 @@ public final class IslandTerrainShaper {
                 double r = rng.nextDouble();
                 if (r < 0.5) lv.setBlock(pos, Blocks.FERN.defaultBlockState(), 3);
                 else if (r < 0.85) lv.setBlock(pos, Blocks.POPPY.defaultBlockState(), 3);
-                else lv.setBlock(pos, Blocks.SHORT_GRASS.defaultBlockState(), 3);
+                else lv.setBlock(pos, Blocks.GRASS.defaultBlockState(), 3);
             }
             case LATE -> {
                 double r = rng.nextDouble();

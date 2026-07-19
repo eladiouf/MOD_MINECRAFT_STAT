@@ -7,10 +7,10 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerBossEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import java.util.UUID;
  * ({@link DungeonBossTracker}), mise à jour depuis ses PV, visible par les joueurs proches. Retirée
  * quand le boss meurt/disparaît. Rafraîchie toutes les {@value #UPDATE_TICKS} ticks (léger).
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonBossBar {
 
     /** Intervalle de rafraîchissement (ticks) — la barre n'a pas besoin d'être au tick près. */
@@ -40,7 +40,8 @@ public final class DungeonBossBar {
     private DungeonBossBar() {}
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
         if (++tick % UPDATE_TICKS != 0) return;
         MinecraftServer server = event.getServer();
         ServerLevel lv = server.getLevel(DungeonDimensions.TRIAL_DUNGEON);

@@ -5,9 +5,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingConversionEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
 
 import java.util.function.Supplier;
 
@@ -29,6 +31,7 @@ import java.util.function.Supplier;
  * <p>L'ancien système de <i>fenêtre temporelle</i> laissait passer un flux continu de mobs pendant
  * 10–45 s à chaque entrée (et sans limite pendant un combat de boss) → « invasion ». Supprimé.
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonSpawnGuard {
 
     public static final String AUTHORIZED_TAG = "statmod_dungeon_authorized";
@@ -149,18 +152,13 @@ public final class DungeonSpawnGuard {
             // Autoriser les mods de notre liste blanche (modId réels, cf. ModdedMobPool)
             // Note : SLU est exclu ici car ses spawns sauvages envahissent l'arène de boss.
             // Il reste spawnable via spawnAuthorized() dans les vagues normales.
+            // Forge 1.20.1 — mods RÉELLEMENT présents dans le dossier client.
             return "irons_spellbooks".equals(namespace) ||
-                   "tensura".equals(namespace) ||
-                   "block_factorys_bosses".equals(namespace) ||
-                   "xbbsroaringknightmod".equals(namespace) ||
-                   "cataclysm".equals(namespace) ||
-                   "born_in_chaos_v1".equals(namespace) ||
+                   "slu".equals(namespace) ||
                    "mutantmonsters".equals(namespace) ||
                    "mowziesmobs".equals(namespace) ||
-                   "alexsmobs".equals(namespace) ||
-                    "bosses_of_mass_destruction".equals(namespace) ||
-                    "fdbosses".equals(namespace) ||
-                    "iceandfire".equals(namespace);
+                   "bosses_of_mass_destruction".equals(namespace) ||
+                   "epic_mobs".equals(namespace);
 
         } catch (Exception e) {
             return false;
@@ -168,7 +166,7 @@ public final class DungeonSpawnGuard {
     }
 
     @SubscribeEvent
-    public static void onFinalizeSpawn(net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent event) {
+    public static void onFinalizeSpawn(net.minecraftforge.event.entity.living.MobSpawnEvent.FinalizeSpawn event) {
         if (event.getLevel() != null && event.getLevel().getLevel() != null) {
             if (event.getLevel().getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
                 if (event.getSpawnType() == net.minecraft.world.entity.MobSpawnType.NATURAL) {

@@ -29,19 +29,18 @@ public final class DungeonProps {
 
     /** Statues moddées candidates (première présente utilisée) → fallback crâne vanilla sur socle. */
     private static final List<String> STATUES = List.of(
-            "cataclysm:goddess_statue", "irons_spellbooks:tyros_statue", "irons_lib:player_statue",
+            "irons_spellbooks:tyros_statue", "irons_lib:player_statue",
             "quark:myalite_crystal");
     /** Braseros / bougies moddés → fallback lanterne. */
     private static final List<String> BRAZIERS = List.of(
-            "irons_spellbooks:brazier", "block_factorys_bosses:underworld_tall_candles",
-            "block_factorys_bosses:tall_candles", "quark:paper_lantern", "quark:stone_lamp");
+            "irons_spellbooks:brazier", "minecraft:soul_lantern",
+            "minecraft:candle", "quark:paper_lantern", "quark:stone_lamp");
     /** Tas d'os/crânes moddés → fallback bloc d'os vanilla. */
     private static final List<String> SKULL_PILES = List.of(
-            "born_in_chaos_v1:pile_of_skulls");
+            "minecraft:skeleton_skull");
 
     /** Loot table vanilla légère pour les coffres épars (moins riche que le trésor de fin d'étage). */
-    private static final ResourceKey<LootTable> MINOR_LOOT = ResourceKey.create(
-            Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("chests/simple_dungeon"));
+    private static final ResourceLocation MINOR_LOOT = new ResourceLocation("chests/simple_dungeon");
 
     private DungeonProps() {}
 
@@ -93,12 +92,8 @@ public final class DungeonProps {
         BlockPos chestPos = O(sp, x, 0, z);
         boolean trapped = lv.random.nextFloat() < 0.3f;
         if (trapped) {
-            BlockPos cbPos = chestPos.below();
-            S(lv, cbPos, B(Blocks.COMMAND_BLOCK));
-            if (lv.getBlockEntity(cbPos) instanceof net.minecraft.world.level.block.entity.CommandBlockEntity cbe) {
-                cbe.getCommandBlock().setCommand("effect give @p[distance=..4] minecraft:poison 6 1");
-                cbe.getCommandBlock().setTrackOutput(false);
-            }
+            // Coffre piégé en code (plus de command block) : nuage toxique à l'ouverture.
+            DungeonTraps.armChest(chestPos, DungeonTraps.TrapKind.POISON_GAS);
             LootrBridge.placeIndividualTrappedChest(lv, chestPos, MINOR_LOOT);
         } else {
             LootrBridge.placeIndividualChest(lv, chestPos, MINOR_LOOT);

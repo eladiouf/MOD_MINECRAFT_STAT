@@ -3,6 +3,7 @@
   "values": [
     "minecraft:wither_skeleton",
     "minecraft:warden",
+    "minecraft:iron_golem",
     { "id": "slu:boss_aatrox", "required": false },
     { "id": "slu:boss_abyss_watcher", "required": false },
     { "id": "slu:boss_ancient_warrior", "required": false },
@@ -43,13 +44,14 @@
     { "id": "slu:boss_wukong", "required": false },
     { "id": "irons_spellbooks:dead_king", "required": false },
     { "id": "irons_spellbooks:citadel_keeper", "required": false },
-    { "id": "block_factorys_bosses:infernal_dragon", "required": false },
-    { "id": "block_factorys_bosses:yeti", "required": false },
-    { "id": "block_factorys_bosses:sandworm", "required": false },
-    { "id": "block_factorys_bosses:underworld_knight", "required": false },
-    { "id": "block_factorys_bosses:kraken", "required": false },
-    { "id": "block_factorys_bosses:pirate_captain", "required": false },
-    { "id": "block_factorys_bosses:pirate_rook", "required": false },
-    { "id": "block_factorys_bosses:crossbow_pirate", "required": false }
+    { "id": "bosses_of_mass_destruction:lich", "required": false },
+    { "id": "bosses_of_mass_destruction:obsidilith", "required": false },
+    { "id": "bosses_of_mass_destruction:gauntlet", "required": false },
+    { "id": "bosses_of_mass_destruction:void_blossom", "required": false },
+    { "id": "epic_mobs:the_knight", "required": false },
+    { "id": "epic_mobs:phoenix_fight", "required": false },
+    { "id": "epic_mobs:micky", "required": false },
+    { "id": "epic_mobs:karin", "required": false },
+    { "id": "epic_mobs:pillager_king", "required": false }
   ]
 }

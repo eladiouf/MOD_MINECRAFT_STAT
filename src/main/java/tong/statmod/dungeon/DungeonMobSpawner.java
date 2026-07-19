@@ -8,49 +8,41 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
+import tong.statmod.dungeon.ai.DungeonAiActor;
+import tong.statmod.dungeon.ai.DungeonTacticalGoals;
+import tong.statmod.dungeon.ai.DungeonTacticalRole;
+import tong.statmod.dungeon.ai.DungeonTacticalRolePolicy;
+import tong.statmod.dungeon.ai.living.DungeonLivingActor;
+import tong.statmod.dungeon.ai.living.DungeonLivingEventPolicy;
+import tong.statmod.dungeon.ai.living.DungeonLivingGoals;
+import tong.statmod.dungeon.ai.living.DungeonLivingRole;
+import tong.statmod.dungeon.party.AdventurerPartyHelper;
+import tong.statmod.dungeon.party.DungeonAdventurerRolePolicy;
+import tong.statmod.dungeon.party.PartyRole;
 import tong.statmod.integration.l2hostility.L2HostilityBridge;
+import tong.statmod.entity.AdventurerEntities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-/**
- * Mission M6 — Spawn des mobs de donjon, déclenché à l'entrée du joueur.
- *
- * <p><b>Problème résolu (invisibilité)</b> : si les mobs spawnent pendant la <i>génération</i> de
- * l'île (qui peut arriver depuis l'overworld via {@code /statdungeon regen}, ou avant le
- * {@code teleportTo}), ils naissent dans une dimension qu'aucun joueur ne suit → le client ne
- * reçoit jamais leur paquet d'apparition → <b>mobs présents mais invisibles</b>.
- *
- * <p><b>Fix</b> : la génération ne pose plus que des blocs. Les mobs sont demandés via
- * {@link #requestWave(ServerLevel, int)} <i>depuis {@code enterFloor}, après le teleport</i>,
- * donc quand le joueur est réellement dans le donjon et suit les chunks. Le spawn effectif est
- * encore différé de quelques ticks pour laisser le tracking se stabiliser.
- *
- * <p>Garde anti-doublon : {@link #requestWave} ne fait rien si des mobs autorisés sont encore
- * vivants sur l'étage, ou si une vague est déjà en attente pour cet étage.
- */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonMobSpawner {
 
-    /** Délai avant spawn effectif : le joueur est déjà présent, un court délai suffit. */
     private static final int SPAWN_DELAY_TICKS = 10;
-    /** Rayon (blocs) où l'on cherche des mobs déjà vivants sur l'étage. */
-    static final int FLOOR_SCAN_RADIUS = 85;
-
-    /**
-     * Délai avant d'appliquer le niveau L2 Hostility. Doit passer APRÈS l'init de L2 (qui calcule
-     * une difficulté régionale par distance) pour que notre valeur par étage soit autoritaire —
-     * sinon L2 écrase notre niveau (ex : étage 10 à 1800 blocs → L2 forcerait ~27, non monotone).
-     */
+    public static final int FLOOR_SCAN_RADIUS = 85;
     private static final int L2_APPLY_DELAY_TICKS = 12;
 
     private record Pending(ServerLevel level, BlockPos pos, EntityType<?> type, String originalId,
-                           int floor, long dueTick, DungeonMobScaling.MobRole role) {}
+                           int floor, long dueTick, DungeonMobScaling.MobRole role, int roomIndex) {}
 
     private record L2Pending(LivingEntity mob, int floor, long dueTick) {}
 
@@ -59,88 +51,141 @@ public final class DungeonMobSpawner {
     private static final Set<Integer> PENDING_FLOORS = new HashSet<>();
     private static long serverTick = 0L;
 
+    private static final Map<Integer, List<Integer>> FLOOR_COMBAT_ROOMS = new HashMap<>();
+    private static final Map<Integer, Integer> FLOOR_ACTIVE_ROOM_IDX = new HashMap<>();
+    private static final Map<Integer, Integer> FLOOR_MOBS_PER_ROOM = new HashMap<>();
+    private static final Set<Integer> FLOOR_PARTY_SPAWNED = new HashSet<>();
+
     private DungeonMobSpawner() {}
 
-    /**
-     * Programme l'application (différée) du niveau L2 Hostility sur {@code mob}, calé sur
-     * {@code floor}. À appeler juste après le spawn d'un mob de donjon (vague ou boss). L'apply
-     * réel a lieu {@value #L2_APPLY_DELAY_TICKS} ticks plus tard, après l'init de L2, pour être
-     * la dernière écriture (autoritaire).
-     */
     public static void scheduleL2(LivingEntity mob, int floor) {
         if (mob == null) return;
         L2_QUEUE.add(new L2Pending(mob, floor, serverTick + L2_APPLY_DELAY_TICKS));
     }
 
     /**
-     * Demande la vague de mobs de l'étage {@code floor}. À appeler depuis {@code enterFloor}
-     * après le teleport. No-op si des mobs sont déjà vivants ou en attente pour cet étage.
+     * Demande la vague de mobs de l'étage {@code floor}.
+     * Ne spawn QUE la première pièce de combat ; les suivantes sont débloquées
+     * pièce par pièce au fur et à mesure que le joueur nettoie.
      */
     public static void requestWave(ServerLevel lv, int floor) {
-        if (!isCombatFloor(floor)) return; // boss (×10) / trésor (×5) : pas de vague
-        DungeonRoomEncounterDirector.beginFloor(lv, floor);
-    }
-
-    /** Demande uniquement la rencontre de la salle actuellement traversée. */
-    public static boolean requestRoomWave(ServerLevel lv, int floor, int roomIndex) {
-        if (!isCombatFloor(floor)) return false;
-        if (PENDING_FLOORS.contains(floor)) return false;
-        if (countAlive(lv, floor) > 0) return false;
+        if (!isCombatFloor(floor)) return;
+        if (PENDING_FLOORS.contains(floor)) return;
+        if (countAlive(lv, floor) > 0) return;
 
         int players = Math.max(1, DungeonTeleportHandler.playersOnFloor(lv, floor).size());
-        int roomWave = Math.min(12, 4 + floor / 20 + Math.max(0, players - 1) * 2);
-        int queued = enqueueWave(lv, floor, roomWave, roomIndex);
-        if (queued <= 0) {
-            PENDING_FLOORS.remove(floor);
-            return false;
+        int want = waveSizeForFloor(floor, players);
+
+        // Construit la liste ordonnée des pièces de combat (exclut spawn + safehouse)
+        List<Integer> combatRooms = new ArrayList<>();
+        for (DungeonLayout.Room r : DungeonLayout.rooms()) {
+            if (r.isFirst()) continue;
+            if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue;
+            combatRooms.add(r.index());
         }
-        STATMod.LOGGER.info("[TrialDungeon] Rencontre étage {}, salle {} : {} mobs en file ({} joueur(s))",
-                floor, roomIndex, queued, players);
-        return true;
+        if (combatRooms.isEmpty()) return;
+
+        int roomCount = combatRooms.size();
+        int perRoom = Math.max(1, want / roomCount);
+
+        FLOOR_COMBAT_ROOMS.put(floor, combatRooms);
+        FLOOR_ACTIVE_ROOM_IDX.put(floor, 0);
+        FLOOR_MOBS_PER_ROOM.put(floor, perRoom);
+        FLOOR_PARTY_SPAWNED.remove(floor);
+
+        // Spawn les mobs de la PREMIÈRE pièce uniquement
+        int firstRoom = combatRooms.get(0);
+        int firstCount = perRoom + (want % roomCount); // le reste va dans la 1ʳᵉ pièce
+        int queued = enqueueWave(lv, floor, firstCount, firstRoom);
+        if (queued > 0) {
+            PENDING_FLOORS.add(floor);
+            StatMod.LOGGER.info("[TrialDungeon] Vague initiale étage {} : {} mobs en pièce {} ({} joueur(s))",
+                    floor, queued, firstRoom, players);
+        }
     }
 
-    /**
-     * Taille de la vague de combat selon l'étage — donjon DENSE (2026-07-05, à la demande).
-     * Minimum 30 mobs dès l'étage 1, jusqu'à 48 en profondeur, soit ~3-4 mobs par pièce sur les
-     * ~11 pièces. En co-op, +50 % de mobs par joueur supplémentaire présent sur l'étage
-     * (audit multi 2026-07-09), plafond global 72 pour garder le tick serveur sain.
-     * (S'y ajoute le mini-boss de thème.)
-     */
+    public static boolean requestRoomWave(ServerLevel lv, int floor, int roomIndex) {
+        return false;
+    }
+
     static int waveSizeForFloor(int floor, int players) {
-        int n = 30 + floor / 5;         // base 30, +1 mob tous les 5 étages
-        int solo = Math.min(48, Math.max(30, n));
+        int n = 60 + floor / 2;
+        int solo = Math.min(100, Math.max(60, n));
         double coopMult = 1.0 + 0.5 * Math.max(0, players - 1);
-        return (int) Math.min(72, Math.round(solo * coopMult));
+        return (int) Math.min(150, Math.round(solo * coopMult));
     }
 
-    /** {@code true} si l'étage a une vague de combat (ni boss ni trésor). */
     private static boolean isCombatFloor(int floor) {
         return floor > 0 && floor % 10 != 0 && floor % 5 != 0;
     }
 
-    /** Nombre de mobs autorisés (nos mobs) encore vivants sur l'étage. */
+    /** Nombre de mobs autorisés encore vivants sur TOUT l'étage. */
     private static int countAlive(ServerLevel lv, int floor) {
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
         return lv.getEntitiesOfClass(Mob.class, area,
                 m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
-                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)).size();
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG)).size();
+    }
+
+    /** Compte les mobs autorisés vivants dans la pièce {@code roomIndex} uniquement. */
+    public static int countAliveInRoom(ServerLevel lv, int floor, int roomIndex, LivingEntity exclude) {
+        BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
+        AABB area = new AABB(sp).inflate(FLOOR_SCAN_RADIUS);
+        return lv.getEntitiesOfClass(Mob.class, area,
+                m -> m != exclude && m.isAlive()
+                        && m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG)
+                        && m.getPersistentData().getInt("statmod_dungeon_room") == roomIndex).size();
+    }
+
+    /** Pièce de combat actuellement active pour l'étage. */
+    public static int getActiveRoom(int floor) {
+        List<Integer> rooms = FLOOR_COMBAT_ROOMS.get(floor);
+        if (rooms == null) return -1;
+        int idx = FLOOR_ACTIVE_ROOM_IDX.getOrDefault(floor, 0);
+        if (idx < 0 || idx >= rooms.size()) return -1;
+        return rooms.get(idx);
+    }
+
+    /** True si la pièce active est la DERNIÈRE pièce de combat de l'étage. */
+    public static boolean isLastCombatRoom(int floor) {
+        List<Integer> rooms = FLOOR_COMBAT_ROOMS.get(floor);
+        if (rooms == null) return false;
+        int idx = FLOOR_ACTIVE_ROOM_IDX.getOrDefault(floor, 0);
+        return idx >= rooms.size() - 1;
     }
 
     /**
-     * Supprime TOUS les mobs autorisés de l'étage (vague + mini-boss + invocations) et purge
-     * la file d'attente de cet étage. À appeler avant de faire réessayer un étage au joueur (mort)
-     * pour éviter qu'il réapparaisse au milieu de la horde précédente → mort instantanée en boucle.
-     *
-     * <p><b>No-op sur un combat de boss suivi</b> ({@link DungeonBossTracker#isTracked}) : discard le
-     * boss ici le tuerait sans jamais réactiver l'autel ({@link DungeonBossAltarBlock}), rendant
-     * l'étage définitivement infranchissable après une seule mort du joueur (softlock observé,
-     * 2026-07-09). Le combat continue plutôt tel quel — le joueur (ou ses coéquipiers en multi)
-     * retrouve le boss vivant en retournant dans l'arène.
+     * Passe à la pièce suivante et spawn ses mobs.
+     * Si le spawn échoue (0 mobs), avance silencieusement à la suivante.
      */
+    public static void advanceToNextRoom(ServerLevel lv, int floor) {
+        List<Integer> rooms = FLOOR_COMBAT_ROOMS.get(floor);
+        if (rooms == null) return;
+
+        int maxIdx = rooms.size();
+        for (int attempt = 0; attempt < maxIdx; attempt++) {
+            int idx = FLOOR_ACTIVE_ROOM_IDX.getOrDefault(floor, 0) + 1;
+            if (idx >= maxIdx) return;
+
+            FLOOR_ACTIVE_ROOM_IDX.put(floor, idx);
+            int roomIndex = rooms.get(idx);
+            int count = FLOOR_MOBS_PER_ROOM.getOrDefault(floor, 1);
+
+            int queued = enqueueWave(lv, floor, count, roomIndex);
+            if (queued > 0) {
+                StatMod.LOGGER.info("[TrialDungeon] Étage {} -> pièce {} : {} mobs", floor, roomIndex, queued);
+                return;
+            }
+            // 0 mobs → passer à la pièce suivante silencieusement
+        }
+    }
+
     public static void clearFloorMobs(ServerLevel lv, int floor) {
         if (DungeonBossTracker.isTracked(floor)) {
-            STATMod.LOGGER.info(
+            StatMod.LOGGER.info(
                     "[TrialDungeon] Étage {} : combat de boss suivi, purge annulée (le combat continue)",
                     floor);
             return;
@@ -150,39 +195,36 @@ public final class DungeonMobSpawner {
         int removed = 0;
         for (Mob m : lv.getEntitiesOfClass(Mob.class, area,
                 m -> m.getPersistentData().getBoolean(DungeonSpawnGuard.AUTHORIZED_TAG)
-                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG))) {
+                        && !m.getPersistentData().getBoolean(DungeonMerchant.MERCHANT_TAG)
+                        && !m.getPersistentData().getBoolean(DungeonLivingActor.NON_COMBAT_TAG))) {
             m.discard();
             removed++;
         }
         QUEUE.removeIf(p -> p.floor() == floor);
         PENDING_FLOORS.remove(floor);
+        FLOOR_COMBAT_ROOMS.remove(floor);
+        FLOOR_ACTIVE_ROOM_IDX.remove(floor);
+        FLOOR_MOBS_PER_ROOM.remove(floor);
+        FLOOR_PARTY_SPAWNED.remove(floor);
         DungeonRoomEncounterDirector.resetActiveRoom(floor);
         DungeonBossTracker.clear(floor);
         if (removed > 0) {
-            STATMod.LOGGER.info("[TrialDungeon] Étage {} purgé : {} mobs retirés (retry)", floor, removed);
+            StatMod.LOGGER.info("[TrialDungeon] Étage {} purgé : {} mobs retirés (retry)", floor, removed);
         }
     }
 
-    /**
-     * Met en file jusqu'à {@code want} mobs de la vague de l'étage, placés dans l'anneau de combat
-     * sur des positions valides. Marque l'étage comme « en attente ». Retourne le nombre
-     * effectivement mis en file.
-     */
     private static int enqueueWave(ServerLevel lv, int floor, int want, int roomIndex) {
         if (want <= 0) return 0;
-        List<EntityType<?>> pool = ModdedMobPool.getCombinedPool(floor); // vanilla+mods, ou pool thématique
+        List<EntityType<?>> pool = ModdedMobPool.getCombinedPool(floor);
         if (pool.isEmpty()) return 0;
 
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
-        PENDING_FLOORS.add(floor);
-        // Les mobs sont marqués AUTHORIZED_TAG par spawnAuthorized → ils passent le garde.
 
-        // Get combat rooms specifically to map locations to room archetypes
         List<DungeonLayout.Room> combatRooms = new ArrayList<>();
         for (DungeonLayout.Room r : DungeonLayout.rooms()) {
-            if (r.isFirst()) continue; // pas de mobs dans la pièce d'apparition
-            if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue; // havre de paix
-            if (r.index() != roomIndex) continue;
+            if (r.isFirst()) continue;
+            if (r.index() == DungeonLayout.ROOM_COUNT / 2) continue;
+            if (roomIndex != -1 && r.index() != roomIndex) continue;
             combatRooms.add(r);
         }
         if (combatRooms.isEmpty()) {
@@ -190,7 +232,7 @@ public final class DungeonMobSpawner {
             return 0;
         }
 
-        // Mini-boss du thème dans la DERNIÈRE pièce (celle de sortie), en gardien du téléporteur.
+        // Mini-boss du thème dans la DERNIÈRE pièce (celle de sortie)
         DungeonThemes.Theme theme = DungeonThemes.forFloor(floor);
         EntityType<?> miniBoss = firstAvailable(theme.miniBoss());
         if (miniBoss != null && roomIndex == DungeonLayout.ROOM_COUNT - 1) {
@@ -198,45 +240,34 @@ public final class DungeonMobSpawner {
             int lastY = DungeonRoomChain.roomYOffset(lastRoom.index(), floor);
             BlockPos bossPos = sp.offset(lastRoom.centerX(), lastY, lastRoom.centerZ() - 3);
             QUEUE.add(new Pending(lv, bossPos, miniBoss, null, floor,
-                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.ELITE));
+                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.ELITE, roomIndex));
         }
 
         int spawned = 0;
         int attempts = 0;
-        while (spawned < want && attempts < want * 6) { // Max 6 essais par mob
+        while (spawned < want && attempts < want * 6) {
             attempts++;
 
-            // Choisit une pièce de combat aléatoire
             DungeonLayout.Room room = combatRooms.get(lv.random.nextInt(combatRooms.size()));
             int yOffset = DungeonRoomChain.roomYOffset(room.index(), floor);
             BlockPos roomCenter = sp.offset(room.centerX(), yOffset, room.centerZ());
 
-            // Dispersion augmentée car les pièces font 53x61 blocs (colossales)
             int dx = lv.random.nextInt(25) - 12;
             int dz = lv.random.nextInt(25) - 12;
             BlockPos pos = roomCenter.offset(dx, 0, dz);
 
             BlockPos targetPos = pos;
-            // 35% de chance de spawner sur la mezzanine si une plateforme y est présente
             if (lv.random.nextFloat() < 0.35f && isValidSpawnPosition(lv, pos.above(5))) {
                 targetPos = pos.above(5);
             } else {
                 if (!isValidSpawnPosition(lv, pos)) continue;
             }
 
-            // Dégage une colonne d'air 1×2 au point de spawn
             lv.setBlock(targetPos, Blocks.AIR.defaultBlockState(), 3);
             lv.setBlock(targetPos.above(), Blocks.AIR.defaultBlockState(), 3);
 
-            // Choix du mob typé selon l'archétype de la pièce
             int archetype = Math.floorMod(floor * 13 + room.index() * 29, 6);
 
-            // ══ MAGES DU DONJON : spawn direct (fix 2026-07-12) ══
-            // L'ancienne « conversion 20 % des zombies/squelettes » était du code mort avec le
-            // modpack complet : chooseMobForArchetype retourne toujours un mob moddé (nécromancien,
-            // bonescaller…), jamais un zombie/squelette vanilla brut → aucun mage ne spawnait.
-            // Désormais : étage 3+, 15 % par slot (30 % dans les Archives), Mage du Wither étage 15+.
-            // L'escorte (chevalier + archer) plus bas s'applique → ils arrivent TOUJOURS en groupe.
             EntityType<?> type = null;
             String originalId = null;
             float mageChance = floor >= 3 ? (archetype == 0 ? 0.30f : 0.15f) : 0.0f;
@@ -259,7 +290,6 @@ public final class DungeonMobSpawner {
                 type = pool.get(lv.random.nextInt(pool.size()));
             }
 
-            // Conversion de secours (si un zombie/squelette brut sort quand même du pool)
             if (originalId == null && type == EntityType.ZOMBIE) {
                 if (lv.random.nextFloat() < 0.20f) {
                     originalId = lv.random.nextFloat() < 0.25f ? "statmod:cleric_mob" : "statmod:pyromancer_mob";
@@ -285,12 +315,17 @@ public final class DungeonMobSpawner {
                 }
             }
 
+            var livingRole = DungeonLivingEventPolicy.combatRole(
+                    floor, room.index(), spawned);
+            if (livingRole.isPresent()) {
+                type = AdventurerEntities.ADVENTURER.get();
+                originalId = DungeonLivingActor.marker(livingRole.get());
+            }
+
             QUEUE.add(new Pending(lv, targetPos, type, originalId, floor,
-                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
+                    serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL, roomIndex));
             spawned++;
 
-            // IA DE GROUPE RPG : Si un mage (Clerc, Cryo, Électro, Wither, Pyromancien) spawn,
-            // on ajoute automatiquement son escouade (1 Chevalier tank + 1 Archer à distance)
             boolean isMage = "statmod:cleric_mob".equals(originalId)
                           || "statmod:pyromancer_mob".equals(originalId)
                           || "statmod:cryomancer_mob".equals(originalId)
@@ -298,61 +333,67 @@ public final class DungeonMobSpawner {
                           || "statmod:wither_mage_mob".equals(originalId);
 
             if (isMage && spawned < want) {
-                // 1. LE CHEVALIER (Tank)
                 BlockPos pos1 = targetPos.offset(2, 0, 2);
                 if (isValidSpawnPosition(lv, pos1)) {
-                    if (net.neoforged.fml.ModList.get().isLoaded("slu")) {
+                    if (net.minecraftforge.fml.ModList.get().isLoaded("slu")) {
                         QUEUE.add(new Pending(lv, pos1, ModdedMobPool.resolve("slu:knight"), null, floor,
-                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL, roomIndex));
                     } else {
                         QUEUE.add(new Pending(lv, pos1, EntityType.SKELETON, "statmod:dungeon_knight_fallback", floor,
-                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL, roomIndex));
                     }
                     spawned++;
                 }
 
-                // 2. L'ARCHER (Dégâts physiques distance)
                 if (spawned < want) {
                     BlockPos pos2 = targetPos.offset(-2, 0, -2);
                     if (isValidSpawnPosition(lv, pos2)) {
                         QUEUE.add(new Pending(lv, pos2, EntityType.SKELETON, null, floor,
-                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL));
+                                serverTick + SPAWN_DELAY_TICKS, DungeonMobScaling.MobRole.NORMAL, roomIndex));
                         spawned++;
                     }
                 }
             }
         }
+
+        // Groupe d'aventuriers : une seule fois par étage, dans sa pièce dédiée
+        if (AdventurerPartyHelper.isPartyFloor(floor) && !FLOOR_PARTY_SPAWNED.contains(floor)) {
+            FLOOR_PARTY_SPAWNED.add(floor);
+            AdventurerPartyHelper.spawnParty(lv, sp, floor);
+        }
+
         return spawned;
     }
 
     private static EntityType<?> chooseMobForArchetype(ServerLevel lv, int archetype, int floor) {
-        // List of candidate custom mobs per archetype, falling back to standard vanilla choices if mods are absent
         List<String> candidates;
         EntityType<?> fallback;
 
         switch (archetype) {
-            case 0 -> { // Archives / Library (Magic/Evokers)
+            case 0 -> {
                 candidates = List.of("irons_spellbooks:necromancer", "irons_spellbooks:cryomancer", "irons_spellbooks:pyromancer", "minecraft:evoker");
                 fallback = EntityType.WITCH;
             }
-            case 1 -> { // Great Forge (Fire/Industrial)
-                candidates = List.of("born_in_chaos_v1:firelight", "born_in_chaos_v1:withered_corpse", "minecraft:blaze");
+            case 1 -> {
+                candidates = List.of("minecraft:blaze", "minecraft:zombie", "irons_spellbooks:pyromancer", "minecraft:blaze", "minecraft:magma_cube");
                 fallback = EntityType.HUSK;
             }
-            case 2 -> { // Crypt (Undead/Skeletons)
-                candidates = List.of("born_in_chaos_v1:bonescaller", "born_in_chaos_v1:decaying_zombie", "minecraft:wither_skeleton");
+            case 2 -> {
+                candidates = List.of("minecraft:skeleton", "minecraft:zombie", "irons_spellbooks:necromancer", "slu:hollow_soldier_spear", "minecraft:wither_skeleton");
                 fallback = EntityType.SKELETON;
             }
-            case 3 -> { // Prison (Stray/Stalker)
-                candidates = List.of("born_in_chaos_v1:nightmare_stalker", "born_in_chaos_v1:dark_vortex", "minecraft:stray");
+            case 3 -> {
+                candidates = List.of("statmod:adventurer", "irons_spellbooks:necromancer",
+                        "epic_mobs:lost_wanderer", "minecraft:stray");
                 fallback = EntityType.ZOMBIE_VILLAGER;
             }
-            case 4 -> { // Greenhouse (Spiders/Beasts)
-                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:centipede_head", "minecraft:cave_spider");
+            case 4 -> {
+                candidates = List.of("alexsmobs:tarantula_hawk", "alexsmobs:centipede_head", "minecraft:silverfish", "minecraft:cave_spider", "minecraft:spider");
                 fallback = EntityType.SPIDER;
             }
-            default -> { // Treasury (Guards)
-                candidates = List.of("born_in_chaos_v1:lord_of_depths", "minecraft:piglin_brute", "minecraft:vindicator");
+            default -> {
+                candidates = List.of("statmod:adventurer", "irons_spellbooks:magehunter_vindicator",
+                        "epic_mobs:nameless_knight", "minecraft:piglin_brute", "minecraft:vindicator");
                 fallback = EntityType.PILLAGER;
             }
         }
@@ -364,7 +405,6 @@ public final class DungeonMobSpawner {
         return fallback;
     }
 
-    /** Premier EntityType présent parmi une liste d'IDs candidats, ou {@code null}. */
     private static EntityType<?> firstAvailable(List<String> ids) {
         for (String id : ids) {
             EntityType<?> t = ModdedMobPool.resolve(id);
@@ -374,7 +414,8 @@ public final class DungeonMobSpawner {
     }
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
         serverTick++;
         flushL2Queue();
 
@@ -391,54 +432,76 @@ public final class DungeonMobSpawner {
                         () -> p.type.spawn(p.level, p.pos, MobSpawnType.STRUCTURE));
                 if (entity != null) {
                     spawned++;
+                    DungeonLivingRole livingRole = DungeonLivingActor.fromMarker(
+                            p.originalId()).orElse(null);
                     entity.getPersistentData().putString(DungeonMobScaling.ROLE_TAG, p.role().id());
-                    if (entity instanceof Mob mob && p.originalId != null) {
+                    if (p.roomIndex() >= 0) {
+                        entity.getPersistentData().putInt("statmod_dungeon_room", p.roomIndex());
+                    }
+                    if (entity instanceof tong.statmod.entity.AdventurerEntity adventurer) {
+                        PartyRole role;
+                        if (livingRole != null) {
+                            role = DungeonLivingActor.partyRole(livingRole);
+                        } else {
+                            long positionKey = p.pos().asLong();
+                            int ordinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                    PartyRole.values().length);
+                            role = DungeonAdventurerRolePolicy.roleFor(
+                                    p.floor(), p.roomIndex(), ordinal,
+                                    p.role() == DungeonMobScaling.MobRole.BOSS);
+                        }
+                        AdventurerPartyHelper.configureRole(adventurer, role, p.floor());
+                    }
+                    if (entity instanceof Mob mob && p.originalId != null && livingRole == null) {
                         mob.getPersistentData().putString("statmod_custom_mage_type", p.originalId);
+                    }
+                    if (entity instanceof Mob mob) {
+                        if (livingRole != null) {
+                            DungeonLivingActor.initializeCombat(
+                                    mob, livingRole, p.floor(), p.roomIndex());
+                            DungeonLivingGoals.ensureAttached(mob);
+                        } else {
+                            String entityId = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                                    .getKey(mob.getType()).toString();
+                            var faction = DungeonAiActor.factionFor(entityId);
+                            long positionKey = p.pos().asLong();
+                            int tacticalOrdinal = Math.floorMod((int) (positionKey ^ (positionKey >>> 32)),
+                                    DungeonTacticalRole.values().length);
+                            var tacticalRole = DungeonTacticalRolePolicy.roleFor(
+                                    faction, p.floor(), p.roomIndex(), tacticalOrdinal,
+                                    p.role() == DungeonMobScaling.MobRole.BOSS);
+                            DungeonAiActor.initialize(mob, faction, p.floor(),
+                                    p.floor() + ":room:" + p.roomIndex(), tacticalRole);
+                        }
+                        DungeonTacticalGoals.ensureAttached(mob);
                     }
                 }
             } catch (RuntimeException e) {
-                STATMod.LOGGER.warn("[TrialDungeon] Spawn différé fail {} @ {}: {}",
+                StatMod.LOGGER.warn("[TrialDungeon] Spawn différé fail {} @ {}: {}",
                         p.type, p.pos, e.getMessage());
             }
         }
 
-        // Retire des PENDING_FLOORS les étages dont la file est vidée.
         if (spawned > 0) {
             Set<Integer> stillQueued = new HashSet<>();
             for (Pending p : QUEUE) stillQueued.add(p.floor);
             PENDING_FLOORS.retainAll(stillQueued);
-            STATMod.LOGGER.info("[TrialDungeon] {} mobs spawnés (joueur présent, visibles)", spawned);
+            StatMod.LOGGER.info("[TrialDungeon] {} mobs spawnés (joueur présent, visibles)", spawned);
         }
     }
 
-    /** Vérifie si une position est valide pour le spawn d'un mob. */
     private static boolean isValidSpawnPosition(ServerLevel lv, BlockPos pos) {
-        // Check que le sol est solide (pas l'air, pas de blocs non-walkables)
         if (lv.getBlockState(pos.below()).isAir()) return false;
         if (!lv.getBlockState(pos.below()).isSolidRender(lv, pos.below())) return false;
-
-        // Check qu'il y a de l'espace pour le mob (2 blocs de hauteur)
         if (!lv.getBlockState(pos).isAir()) return false;
         if (!lv.getBlockState(pos.above()).isAir()) return false;
-
-        // Check qu'il n'y a pas d'autre mob trop proche (éviter stacking)
         AABB checkArea = new AABB(pos).inflate(2.0);
-        if (!lv.getEntitiesOfClass(net.minecraft.world.entity.Mob.class, checkArea).isEmpty()) {
+        if (!lv.getEntitiesOfClass(Mob.class, checkArea).isEmpty()) {
             return false;
         }
-
         return true;
     }
 
-    /**
-     * Applique les niveaux L2 échus (après l'init de L2 → autoritaire).
-     *
-     * <p><b>Anti-CME</b> : on extrait d'abord les entrées dues dans une liste locale, PUIS on
-     * applique. {@code applyFloorLevel} peut faire naître des entités (parties de boss, invocations)
-     * → {@code EntityJoinLevelEvent} → {@code DungeonSpawnGuard.scheduleL2} → {@code L2_QUEUE.add}.
-     * Si on appliquait pendant l'itération de {@code L2_QUEUE}, cet ajout ré-entrant provoquerait un
-     * {@link java.util.ConcurrentModificationException} (crash observé au spawn du boss étage 10).
-     */
     private static void flushL2Queue() {
         if (L2_QUEUE.isEmpty()) return;
 
@@ -451,7 +514,6 @@ public final class DungeonMobSpawner {
             due.add(p);
         }
 
-        // Application HORS itération : un scheduleL2 ré-entrant s'ajoute sans risque à L2_QUEUE.
         for (L2Pending p : due) {
             if (p.mob.isAlive()) {
                 if (L2HostilityBridge.loaded()) {

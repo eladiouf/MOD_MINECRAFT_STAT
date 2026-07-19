@@ -3,10 +3,10 @@ package tong.statmod.dungeon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /** Runtime progression through the existing DungeonRoomChain, one encounter at a time. */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonRoomEncounterDirector {
     private static final Map<Integer, RoomEncounterProgress> STATES = new HashMap<>();
     private static int tick;
@@ -28,9 +28,10 @@ public final class DungeonRoomEncounterDirector {
     }
 
     public static boolean onActiveRoomCleared(int floor) {
-        RoomEncounterProgress state = STATES.computeIfAbsent(floor,
-                ignored -> new RoomEncounterProgress(requiredRoomIndices()));
-        return state.clearActiveRoom();
+        // All mobs spawn at once on the floor (no room-by-room progression).
+        // When the last authorized mob dies, the floor is complete.
+        STATES.remove(floor);
+        return true;
     }
 
     public static void resetActiveRoom(int floor) {
@@ -41,25 +42,8 @@ public final class DungeonRoomEncounterDirector {
 
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
-        if (++tick % 5 != 0) return;
-        ServerLevel level = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
-        if (level == null) return;
-
-        for (ServerPlayer player : level.players()) {
-            int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
-            if (!isCombatFloor(floor)) continue;
-            RoomEncounterProgress state = STATES.computeIfAbsent(floor,
-                    ignored -> new RoomEncounterProgress(requiredRoomIndices()));
-            if (state.hasActiveRoom()) continue;
-            int room = roomAt(floor, player.blockPosition());
-            if (!requiredRoomIndices().contains(room) || state.isCleared(room)) continue;
-            if (DungeonMobSpawner.requestRoomWave(level, floor, room)) {
-                state.activate(room);
-                player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                        "§6Rencontre " + room + " activée"), true);
-            }
-        }
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        // No-op: all mobs spawn at once when entering the floor
     }
 
     static int roomAt(int floor, BlockPos worldPos) {

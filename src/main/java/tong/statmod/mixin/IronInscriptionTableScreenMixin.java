@@ -6,13 +6,18 @@ import io.redspace.ironsspellbooks.api.spells.ISpellContainer;
 import io.redspace.ironsspellbooks.api.spells.SpellData;
 import io.redspace.ironsspellbooks.gui.inscription_table.InscriptionTableMenu;
 import io.redspace.ironsspellbooks.gui.inscription_table.InscriptionTableScreen;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,371 +27,312 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tong.statmod.STATMod;
-import tong.statmod.client.ClientMagicCache;
-import tong.statmod.client.inscription.KnownSpellFilters;
+import tong.statmod.client.ClientStatsCache;
 import tong.statmod.client.inscription.KnownSpellIconButton;
-import tong.statmod.client.inscription.KnownSpellUiState;
-import tong.statmod.integration.ironspells.IronInscriptionKnownSpellIndex;
+import tong.statmod.integration.ironspells.IronKnownSpellIndex;
+import tong.statmod.integration.ironspells.LearnedSpellBindingPolicy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+@Mixin(value = InscriptionTableScreen.class, remap = false)
+public abstract class IronInscriptionTableScreenMixin
+        extends AbstractContainerScreen<InscriptionTableMenu> {
+    @Shadow
+    private int selectedSpellIndex;
 
-@Mixin(InscriptionTableScreen.class)
-public abstract class IronInscriptionTableScreenMixin extends AbstractContainerScreen<InscriptionTableMenu> {
-    @Unique private static final int statmod$schoolButtonWidth = 20;
-    @Unique private static final int statmod$schoolButtonHeight = 14;
-    @Unique private static final int statmod$schoolButtonGap = 2;
-    @Unique private static final SchoolFilterSpec[] statmod$schoolFilters = new SchoolFilterSpec[] {
-            new SchoolFilterSpec("fire", "Fi"),
-            new SchoolFilterSpec("ice", "Ic"),
-            new SchoolFilterSpec("nature", "Na"),
-            new SchoolFilterSpec("lightning", "Li"),
-            new SchoolFilterSpec("evocation", "Ev"),
-            new SchoolFilterSpec("holy", "Ho"),
-            new SchoolFilterSpec("blood", "Bl"),
-            new SchoolFilterSpec("ender", "En"),
-            new SchoolFilterSpec("eldritch", "El")
-    };
-
-    @Shadow protected Button inscribeButton;
-    @Shadow private int selectedSpellIndex;
-    @Shadow private void setSelectedIndex(int index) {}
+    @Shadow
+    private void setSelectedIndex(int index) {
+    }
 
     @Unique
-    private List<KnownSpellIconButton> statmod$knownSpellButtons = new ArrayList<>();
+    private final List<KnownSpellIconButton> statmod$knownButtons = new ArrayList<>();
     @Unique
-    private Button statmod$prevKnownSpellPageButton;
+    private final List<Button> statmod$schoolButtons = new ArrayList<>();
     @Unique
-    private Button statmod$nextKnownSpellPageButton;
+    private final Set<String> statmod$activeSchools = new LinkedHashSet<>();
     @Unique
-    private List<Button> statmod$schoolFilterButtons = new ArrayList<>();
+    private List<String> statmod$renderedSchools = List.of();
     @Unique
-    private int statmod$knownSpellPage;
+    private EditBox statmod$search;
     @Unique
-    private Integer statmod$selectedKnownSpellOption;
+    private Button statmod$previous;
     @Unique
-    private KnownSpellUiState statmod$lastKnownSpellState;
+    private Button statmod$next;
     @Unique
-    private EditBox statmod$searchBox;
+    private int statmod$page;
     @Unique
-    private String statmod$searchQuery = "";
+    private String statmod$selectedSpellId;
     @Unique
-    private Set<String> statmod$activeSchoolFilters = new LinkedHashSet<>();
+    private long statmod$lastRevision = Long.MIN_VALUE;
+    @Unique
+    private String statmod$lastUiSignature = "";
 
-    private IronInscriptionTableScreenMixin(InscriptionTableMenu menu, Inventory inventory, Component title) {
+    protected IronInscriptionTableScreenMixin(
+            InscriptionTableMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
-    private void statmod$addKnownSpellButtons(CallbackInfo ci) {
-        this.statmod$knownSpellButtons = new ArrayList<>();
-        for (int i = 0; i < IronInscriptionKnownSpellIndex.PAGE_SIZE; i++) {
-            final int visibleIndex = i;
-            KnownSpellIconButton button = this.addRenderableWidget(
-                    new KnownSpellIconButton(0, 0, () -> statmod$selectKnownSpell(visibleIndex)));
-            this.statmod$knownSpellButtons.add(button);
+    @Inject(method = {"init", "m_7856_"}, at = @At("TAIL"))
+    private void statmod$addKnownSpellPanel(CallbackInfo ci) {
+        statmod$knownButtons.clear();
+        for (int index = 0; index < IronKnownSpellIndex.PAGE_SIZE; index++) {
+            int visibleIndex = index;
+            statmod$knownButtons.add(addRenderableWidget(new KnownSpellIconButton(
+                    0, 0, () -> statmod$selectVisible(visibleIndex))));
         }
-
-        this.statmod$prevKnownSpellPageButton = this.addRenderableWidget(Button.builder(Component.literal("<"), b -> {
-            this.statmod$knownSpellPage = Math.max(0, this.statmod$knownSpellPage - 1);
-            this.statmod$refreshKnownSpellButtons();
-        }).bounds(0, 0, 12, 12).build());
-
-        this.statmod$nextKnownSpellPageButton = this.addRenderableWidget(Button.builder(Component.literal(">"), b -> {
-            this.statmod$knownSpellPage = Math.min(statmod$maxKnownSpellPage(), this.statmod$knownSpellPage + 1);
-            this.statmod$refreshKnownSpellButtons();
-        }).bounds(0, 0, 12, 12).build());
-
-        this.statmod$searchBox = new EditBox(this.font, 0, 0, 84, 12,
-                Component.translatable("statmod.spell.search.placeholder"));
-        this.statmod$searchBox.setMaxLength(32);
-        this.statmod$searchBox.setHint(Component.translatable("statmod.spell.search.placeholder"));
-        this.statmod$searchBox.setResponder(value -> {
-            this.statmod$searchQuery = value == null ? "" : value;
-            this.statmod$knownSpellPage = 0;
-            this.statmod$refreshKnownSpellButtons();
+        statmod$search = addRenderableWidget(new EditBox(
+                font, 0, 0, 112, 14,
+                Component.translatable("statmod.spell.search.placeholder")));
+        statmod$search.setMaxLength(64);
+        statmod$search.setHint(Component.translatable("statmod.spell.search.placeholder"));
+        statmod$search.setResponder(value -> {
+            statmod$page = 0;
+            statmod$forceRefresh();
         });
-        this.addRenderableWidget(this.statmod$searchBox);
-
-        this.statmod$schoolFilterButtons = new ArrayList<>();
-        for (SchoolFilterSpec filter : statmod$schoolFilters) {
-            Button button = Button.builder(statmod$schoolButtonLabel(filter), b -> {
-                statmod$toggleSchoolFilter(filter.id());
-                b.setMessage(statmod$schoolButtonLabel(filter));
-            }).bounds(0, 0, statmod$schoolButtonWidth, statmod$schoolButtonHeight).build();
-            button.setTooltip(net.minecraft.client.gui.components.Tooltip.create(
-                    Component.translatable("statmod.spell.filter.school", statmod$schoolDisplayName(filter.id()))));
-            this.statmod$schoolFilterButtons.add(this.addRenderableWidget(button));
-        }
-
-        this.statmod$refreshKnownSpellButtons();
+        statmod$previous = addRenderableWidget(Button.builder(Component.literal("<"), button -> {
+            statmod$page = Math.max(0, statmod$page - 1);
+            statmod$forceRefresh();
+        }).bounds(0, 0, 14, 14).build());
+        statmod$next = addRenderableWidget(Button.builder(Component.literal(">"), button -> {
+            statmod$page++;
+            statmod$forceRefresh();
+        }).bounds(0, 0, 14, 14).build());
+        statmod$forceRefresh();
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    private void statmod$refreshKnownSpellUi(net.minecraft.client.gui.GuiGraphics guiGraphics,
-                                             int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        this.statmod$refreshKnownSpellButtons();
+    @Inject(method = {"render", "m_88315_"}, at = @At("TAIL"))
+    private void statmod$refreshDuringRender(
+            net.minecraft.client.gui.GuiGraphics graphics,
+            int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        statmod$refresh(false);
     }
 
     @Inject(method = "isValidInscription", at = @At("HEAD"), cancellable = true)
-    private void statmod$allowKnownSpellInscription(CallbackInfoReturnable<Boolean> cir) {
-        if (statmod$hasKnownSpellSelection() && this.menu.getSpellBookSlot().hasItem() && !this.menu.getScrollSlot().hasItem()) {
+    private void statmod$allowLearnedSpellInscription(
+            CallbackInfoReturnable<Boolean> cir) {
+        if (statmod$selectedSpellId != null
+                && menu.getSpellBookSlot().hasItem()
+                && !menu.getScrollSlot().hasItem()) {
             cir.setReturnValue(true);
         }
     }
 
     @Inject(method = "onInscription", at = @At("HEAD"), cancellable = true)
-    private void statmod$inscribeKnownSpellWithoutScroll(CallbackInfo ci) {
-        if (!statmod$hasKnownSpellSelection() || this.menu.getScrollSlot().hasItem()) {
+    private void statmod$inscribeLearnedSpellWithoutScroll(CallbackInfo ci) {
+        if (statmod$selectedSpellId == null || menu.getScrollSlot().hasItem()) {
             return;
         }
-
-        ItemStack spellBookStack = this.menu.getSpellBookSlot().getItem();
-        ISpellContainer container = ISpellContainer.get(spellBookStack);
-        int targetIndex = this.selectedSpellIndex;
-        if (targetIndex < 0 || container.getSpellAtIndex(targetIndex) != SpellData.EMPTY) {
-            targetIndex = container.getNextAvailableIndex();
-        }
-        if (targetIndex < 0) {
+        ItemStack book = menu.getSpellBookSlot().getItem();
+        if (book.isEmpty() || !ISpellContainer.isSpellContainer(book)) {
             ci.cancel();
             return;
         }
-
-        this.setSelectedIndex(targetIndex);
-        if (this.minecraft != null && this.minecraft.gameMode != null) {
-            this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, -1);
+        ISpellContainer container = ISpellContainer.get(book);
+        int target = selectedSpellIndex;
+        if (container == null) {
+            ci.cancel();
+            return;
+        }
+        if (target < 0 || target >= container.getMaxSpellCount()
+                || container.getSpellAtIndex(target) != SpellData.EMPTY) {
+            target = container.getNextAvailableIndex();
+        }
+        if (target < 0) {
+            ci.cancel();
+            return;
+        }
+        setSelectedIndex(target);
+        if (minecraft != null && minecraft.gameMode != null) {
+            minecraft.gameMode.handleInventoryButtonClick(menu.containerId, -1);
         }
         ci.cancel();
     }
 
     @Unique
-    private void statmod$selectKnownSpell(int visibleIndex) {
-        List<String> known = statmod$knownIronSpells();
-        List<String> page = IronInscriptionKnownSpellIndex.page(
-                known,
-                this.statmod$knownSpellPage,
-                this::statmod$matchesActiveFilters);
-        if (visibleIndex < 0 || visibleIndex >= page.size()) {
+    private void statmod$selectVisible(int visibleIndex) {
+        List<IronKnownSpellIndex.Entry> visible = statmod$visibleEntries();
+        List<IronKnownSpellIndex.Entry> pageEntries = IronKnownSpellIndex.page(visible, statmod$page);
+        if (visibleIndex < 0 || visibleIndex >= pageEntries.size()) {
             return;
         }
-
-        String spellId = page.get(visibleIndex);
-        int globalIndex = IronInscriptionKnownSpellIndex.optionIndexOf(known, spellId);
-        if (globalIndex < 0) {
-            return;
+        statmod$selectedSpellId = pageEntries.get(visibleIndex).id();
+        List<IronKnownSpellIndex.Entry> canonical = statmod$canonicalEntries();
+        int option = IronKnownSpellIndex.optionIndexOf(canonical, statmod$selectedSpellId);
+        int buttonId = LearnedSpellBindingPolicy.buttonForOption(option);
+        Minecraft client = minecraft;
+        if (buttonId >= 0 && client != null && client.gameMode != null) {
+            client.gameMode.handleInventoryButtonClick(menu.containerId, buttonId);
         }
-        this.statmod$selectedKnownSpellOption = globalIndex;
-        Minecraft minecraft = this.minecraft;
-        if (minecraft != null && minecraft.gameMode != null) {
-            minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
-                    IronInscriptionKnownSpellIndex.buttonIdForOption(globalIndex));
-        }
-        this.statmod$refreshKnownSpellButtons();
+        statmod$forceRefresh();
     }
 
     @Unique
-    private void statmod$refreshKnownSpellButtons() {
-        List<String> known = statmod$knownIronSpells();
-        int maxPage = IronInscriptionKnownSpellIndex.maxPage(known, this::statmod$matchesActiveFilters);
-        this.statmod$knownSpellPage = Mth.clamp(this.statmod$knownSpellPage, 0, maxPage);
-        boolean spellBookSlotted = this.menu.getSpellBookSlot().hasItem();
-        int selectedIndex = this.statmod$selectedKnownSpellOption == null ? -1 : this.statmod$selectedKnownSpellOption;
-        selectedIndex = IronInscriptionKnownSpellIndex.normalizeSelectedOption(
-                known,
-                selectedIndex,
-                this::statmod$matchesActiveFilters);
-        this.statmod$selectedKnownSpellOption = selectedIndex >= 0 ? selectedIndex : null;
-        Set<String> boundSpellIds = statmod$collectBoundSpellIds();
-        List<String> visible = IronInscriptionKnownSpellIndex.page(known, this.statmod$knownSpellPage, this::statmod$matchesActiveFilters);
-        KnownSpellUiState nextState = KnownSpellUiState.capture(
-                visible,
-                this.statmod$knownSpellPage,
-                selectedIndex,
-                spellBookSlotted,
-                boundSpellIds);
-        if (nextState.equals(this.statmod$lastKnownSpellState)) {
+    private void statmod$forceRefresh() {
+        statmod$lastUiSignature = "";
+        statmod$refresh(true);
+    }
+
+    @Unique
+    private void statmod$refresh(boolean force) {
+        if (statmod$search == null) {
             return;
         }
-        this.statmod$lastKnownSpellState = nextState;
-
-        if (STATMod.LOGGER.isDebugEnabled()) {
-            STATMod.LOGGER.debug("KnownSpellButtons refreshed: {} filtered irons_spellbooks spells, page={}/{}",
-                    visible.size(), this.statmod$knownSpellPage, maxPage);
+        Map<String, Integer> learned = ClientStatsCache.state().learnedSpells();
+        Set<String> discovered = IronKnownSpellIndex.schools(
+                learned, this::statmod$schoolId, this::statmod$isRegistered);
+        List<String> schoolList = List.copyOf(discovered);
+        if (!schoolList.equals(statmod$renderedSchools)) {
+            statmod$rebuildSchoolButtons(schoolList);
         }
-
-        List<String> page = visible;
-        int columnWidth = 70;
-        int baseX = this.leftPos - columnWidth - 6;
-        int searchBoxHeight = statmod$schoolButtonHeight;
-        int schoolRows = (int) Math.ceil(statmod$schoolFilters.length / 3.0);
-        int schoolFiltersHeight = schoolRows * statmod$schoolButtonHeight + Math.max(0, schoolRows - 1) * statmod$schoolButtonGap;
-        int baseY = this.topPos + 18 + searchBoxHeight + 4 + schoolFiltersHeight + 4;
-        int rowStep = KnownSpellIconButton.SIZE + 2;
-        int cols = 2;
-        int colWidth = KnownSpellIconButton.SIZE + 4;
-
-        if (this.statmod$searchBox != null) {
-            this.statmod$searchBox.setX(baseX);
-            this.statmod$searchBox.setY(this.topPos + 18);
-            this.statmod$searchBox.setWidth(columnWidth);
+        List<IronKnownSpellIndex.Entry> visible = statmod$visibleEntries();
+        int maxPage = IronKnownSpellIndex.maxPage(visible);
+        statmod$page = Math.max(0, Math.min(maxPage, statmod$page));
+        if (statmod$selectedSpellId != null
+                && !ClientStatsCache.state().learnedSpells().containsKey(statmod$selectedSpellId)) {
+            statmod$selectedSpellId = null;
         }
-
-        for (int i = 0; i < this.statmod$schoolFilterButtons.size(); i++) {
-            Button button = this.statmod$schoolFilterButtons.get(i);
-            int col = i % 3;
-            int row = i / 3;
-            button.setX(baseX + col * (statmod$schoolButtonWidth + statmod$schoolButtonGap));
-            button.setY(this.topPos + 18 + searchBoxHeight + 4 + row * (statmod$schoolButtonHeight + statmod$schoolButtonGap));
-            button.visible = true;
-            button.active = true;
+        Set<String> bound = statmod$boundSpellIds();
+        String signature = ClientStatsCache.state().revision() + "|" + visible + "|"
+                + statmod$page + "|" + statmod$selectedSpellId + "|" + bound + "|"
+                + menu.getSpellBookSlot().hasItem() + "|" + statmod$activeSchools;
+        if (!force && signature.equals(statmod$lastUiSignature)
+                && statmod$lastRevision == ClientStatsCache.state().revision()) {
+            return;
         }
+        statmod$lastUiSignature = signature;
+        statmod$lastRevision = ClientStatsCache.state().revision();
 
-        for (int i = 0; i < this.statmod$knownSpellButtons.size(); i++) {
-            KnownSpellIconButton button = this.statmod$knownSpellButtons.get(i);
-            int col = i % cols;
-            int row = i / cols;
-            button.setX(baseX + col * colWidth);
-            button.setY(baseY + row * rowStep);
-            if (i < page.size()) {
-                String spellId = page.get(i);
-                int globalIndex = IronInscriptionKnownSpellIndex.optionIndexOf(known, spellId);
-                AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
-                button.visible = spell != null;
-                button.active = spellBookSlotted && spell != null;
-                button.setSelected(globalIndex == selectedIndex);
-                button.setBound(boundSpellIds.contains(spellId));
-                if (this.minecraft != null) {
-                    button.setSpell(spell, 1, this.minecraft.player);
-                }
-            } else {
-                button.visible = false;
+        int baseX = Math.max(4, leftPos - 122);
+        int top = topPos + 8;
+        statmod$search.setX(baseX);
+        statmod$search.setY(top);
+        int schoolRows = (statmod$schoolButtons.size() + 2) / 3;
+        for (int index = 0; index < statmod$schoolButtons.size(); index++) {
+            Button button = statmod$schoolButtons.get(index);
+            button.setX(baseX + (index % 3) * 39);
+            button.setY(top + 18 + (index / 3) * 16);
+        }
+        int iconsY = top + 20 + schoolRows * 16;
+        List<IronKnownSpellIndex.Entry> pageEntries = IronKnownSpellIndex.page(visible, statmod$page);
+        boolean hasBook = menu.getSpellBookSlot().hasItem();
+        for (int index = 0; index < statmod$knownButtons.size(); index++) {
+            KnownSpellIconButton button = statmod$knownButtons.get(index);
+            button.setX(baseX + (index % 2) * 24);
+            button.setY(iconsY + (index / 2) * 22);
+            if (index >= pageEntries.size()) {
                 button.active = false;
                 button.setSelected(false);
                 button.setBound(false);
-                button.setSpell(null, 1, this.minecraft != null ? this.minecraft.player : null);
+                button.setSpell(null, 1, minecraft == null ? null : minecraft.player);
+                continue;
             }
+            IronKnownSpellIndex.Entry entry = pageEntries.get(index);
+            AbstractSpell spell = SpellRegistry.getSpell(entry.id());
+            button.active = hasBook && spell != null && spell != SpellRegistry.none();
+            button.setSelected(entry.id().equals(statmod$selectedSpellId));
+            button.setBound(bound.contains(entry.id()));
+            button.setSpell(spell, entry.level(), minecraft == null ? null : minecraft.player);
         }
+        int pagerY = iconsY + 68;
+        statmod$previous.setX(baseX);
+        statmod$previous.setY(pagerY);
+        statmod$previous.visible = maxPage > 0;
+        statmod$previous.active = statmod$page > 0;
+        statmod$next.setX(baseX + 34);
+        statmod$next.setY(pagerY);
+        statmod$next.visible = maxPage > 0;
+        statmod$next.active = statmod$page < maxPage;
+    }
 
-        int pagerRow = (IronInscriptionKnownSpellIndex.PAGE_SIZE + cols - 1) / cols;
-        int pagerY = baseY + pagerRow * rowStep;
-        if (this.statmod$prevKnownSpellPageButton != null) {
-            this.statmod$prevKnownSpellPageButton.setX(baseX);
-            this.statmod$prevKnownSpellPageButton.setY(pagerY);
-            this.statmod$prevKnownSpellPageButton.visible = known.size() > IronInscriptionKnownSpellIndex.PAGE_SIZE;
-            this.statmod$prevKnownSpellPageButton.active = this.statmod$knownSpellPage > 0;
+    @Unique
+    private void statmod$rebuildSchoolButtons(List<String> schools) {
+        statmod$schoolButtons.forEach(this::removeWidget);
+        statmod$schoolButtons.clear();
+        statmod$renderedSchools = List.copyOf(schools);
+        statmod$activeSchools.retainAll(schools);
+        for (String school : schools) {
+            Button button = Button.builder(statmod$schoolLabel(school), pressed -> {
+                if (!statmod$activeSchools.add(school)) {
+                    statmod$activeSchools.remove(school);
+                }
+                pressed.setMessage(statmod$schoolLabel(school));
+                statmod$page = 0;
+                statmod$forceRefresh();
+            }).bounds(0, 0, 37, 14).build();
+            button.setTooltip(Tooltip.create(Component.literal(school)));
+            statmod$schoolButtons.add(addRenderableWidget(button));
         }
-        if (this.statmod$nextKnownSpellPageButton != null) {
-            this.statmod$nextKnownSpellPageButton.setX(baseX + KnownSpellIconButton.SIZE - 12);
-            this.statmod$nextKnownSpellPageButton.setY(pagerY);
-            this.statmod$nextKnownSpellPageButton.visible = known.size() > IronInscriptionKnownSpellIndex.PAGE_SIZE;
-            this.statmod$nextKnownSpellPageButton.active = this.statmod$knownSpellPage < maxPage;
+    }
+
+    @Unique
+    private Component statmod$schoolLabel(String school) {
+        String shortName = school.length() <= 3 ? school : school.substring(0, 3);
+        return Component.literal(statmod$activeSchools.contains(school)
+                ? "[" + shortName + "]" : shortName);
+    }
+
+    @Unique
+    private List<IronKnownSpellIndex.Entry> statmod$visibleEntries() {
+        return IronKnownSpellIndex.visible(
+                ClientStatsCache.state().learnedSpells(),
+                statmod$search == null ? "" : statmod$search.getValue(),
+                statmod$activeSchools,
+                this::statmod$displayName,
+                this::statmod$schoolId,
+                this::statmod$isRegistered);
+    }
+
+    @Unique
+    private List<IronKnownSpellIndex.Entry> statmod$canonicalEntries() {
+        return ClientStatsCache.state().learnedSpells().entrySet().stream()
+                .filter(entry -> statmod$isRegistered(entry.getKey()))
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> new IronKnownSpellIndex.Entry(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    @Unique
+    private boolean statmod$isRegistered(String spellId) {
+        AbstractSpell spell = SpellRegistry.getSpell(spellId);
+        return spell != null && spell != SpellRegistry.none();
+    }
+
+    @Unique
+    private String statmod$displayName(String spellId) {
+        AbstractSpell spell = SpellRegistry.getSpell(spellId);
+        if (spell == null || spell == SpellRegistry.none()) {
+            return spellId;
         }
+        return minecraft == null || minecraft.player == null
+                ? spell.getSpellName()
+                : spell.getDisplayName(minecraft.player).getString();
     }
 
     @Unique
-    private boolean statmod$hasKnownSpellSelection() {
-        List<String> known = statmod$knownIronSpells();
-        return this.statmod$selectedKnownSpellOption != null
-                && this.statmod$selectedKnownSpellOption >= 0
-                && this.statmod$selectedKnownSpellOption < known.size();
+    private String statmod$schoolId(String spellId) {
+        AbstractSpell spell = SpellRegistry.getSpell(spellId);
+        return spell == null || spell == SpellRegistry.none()
+                || spell.getSchoolType() == null || spell.getSchoolType().getId() == null
+                ? ""
+                : spell.getSchoolType().getId().toString();
     }
 
     @Unique
-    private int statmod$maxKnownSpellPage() {
-        return IronInscriptionKnownSpellIndex.maxPage(statmod$knownIronSpells());
-    }
-
-    @Unique
-    private List<String> statmod$knownIronSpells() {
-        return IronInscriptionKnownSpellIndex.learnedCastableSpellIds(ClientMagicCache.getLearnedSpells());
-    }
-
-    @Unique
-    private boolean statmod$matchesActiveFilters(String spellId) {
-        return KnownSpellFilters.matches(
-                spellId,
-                new KnownSpellFilters.Criteria(this.statmod$searchQuery, this.statmod$activeSchoolFilters),
-                this::statmod$displayNameForFilter,
-                this::statmod$schoolIdForFilter);
-    }
-
-    @Unique
-    private String statmod$displayNameForFilter(String spellId) {
-        AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
-        if (spell == null) return null;
-        if (this.minecraft == null || this.minecraft.player == null) {
-            return spell.getSpellName();
-        }
-        return spell.getDisplayName(this.minecraft.player).getString();
-    }
-
-    @Unique
-    private String statmod$schoolIdForFilter(String spellId) {
-        AbstractSpell spell = SpellRegistry.getSpell(ResourceLocation.parse(spellId));
-        if (spell == null || spell.getSchoolType() == null || spell.getSchoolType().getId() == null) {
-            return null;
-        }
-        return spell.getSchoolType().getId().getPath();
-    }
-
-    @Unique
-    private void statmod$toggleSchoolFilter(String schoolId) {
-        if (!this.statmod$activeSchoolFilters.add(schoolId)) {
-            this.statmod$activeSchoolFilters.remove(schoolId);
-        }
-        this.statmod$knownSpellPage = 0;
-        for (int i = 0; i < statmod$schoolFilters.length; i++) {
-            SchoolFilterSpec filter = statmod$schoolFilters[i];
-            this.statmod$schoolFilterButtons.get(i).setMessage(statmod$schoolButtonLabel(filter));
-        }
-        this.statmod$refreshKnownSpellButtons();
-    }
-
-    @Unique
-    private Component statmod$schoolButtonLabel(SchoolFilterSpec filter) {
-        boolean active = this.statmod$activeSchoolFilters.contains(filter.id());
-        return Component.literal(active ? "[" + filter.shortLabel() + "]" : filter.shortLabel());
-    }
-
-    @Unique
-    private Component statmod$schoolDisplayName(String schoolId) {
-        return Component.translatable("statmod.spell.school." + schoolId);
-    }
-
-    /**
-     * Énumère les sorts déjà inscrits dans le grimoire actuellement déposé dans le slot. Vide
-     * si aucun grimoire n'est slotté ou s'il n'expose pas de {@link ISpellContainer} (ex. item
-     * non-grimoire mais accepté par le slot).
-     */
-    @Unique
-    private Set<String> statmod$collectBoundSpellIds() {
-        ItemStack spellBookStack = this.menu.getSpellBookSlot().getItem();
-        if (spellBookStack == null || spellBookStack.isEmpty()) {
+    private Set<String> statmod$boundSpellIds() {
+        ItemStack book = menu.getSpellBookSlot().getItem();
+        if (book.isEmpty() || !ISpellContainer.isSpellContainer(book)) {
             return Set.of();
         }
-        ISpellContainer container = ISpellContainer.get(spellBookStack);
+        ISpellContainer container = ISpellContainer.get(book);
         if (container == null) {
             return Set.of();
         }
         Set<String> bound = new HashSet<>();
-        int slots = container.getMaxSpellCount();
-        for (int i = 0; i < slots; i++) {
-            SpellData data = container.getSpellAtIndex(i);
-            if (data == null || data == SpellData.EMPTY) continue;
-            AbstractSpell spell = data.getSpell();
-            if (spell == null) continue;
-            ResourceLocation rl = spell.getSpellResource();
-            if (rl != null) {
-                bound.add(rl.toString());
+        for (int index = 0; index < container.getMaxSpellCount(); index++) {
+            SpellData data = container.getSpellAtIndex(index);
+            if (data != null && data != SpellData.EMPTY && data.getSpell() != null
+                    && data.getSpell().getSpellResource() != null) {
+                bound.add(data.getSpell().getSpellResource().toString());
             }
         }
         return bound;
     }
-
-    @Unique
-    private record SchoolFilterSpec(String id, String shortLabel) {}
 }

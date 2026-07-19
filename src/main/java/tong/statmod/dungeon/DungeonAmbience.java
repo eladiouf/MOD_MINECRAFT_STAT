@@ -6,10 +6,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 
 /**
  * Mission M6 — Ambiance atmosphérique par thème (2026-07-05).
@@ -18,7 +18,7 @@ import tong.statmod.STATMod;
  * (braises en enfer, flocons en glace, spores en jungle, motes du End dans l'abysse…). Envoyées
  * autour de chaque joueur du donjon, toutes les {@value #TICKS} ticks — léger, purement cosmétique.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonAmbience {
 
     private static final int TICKS = 10;         // intervalle
@@ -30,7 +30,8 @@ public final class DungeonAmbience {
     private DungeonAmbience() {}
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
         if (++tick % TICKS != 0) return;
         ServerLevel lv = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
         if (lv == null || lv.players().isEmpty()) return;

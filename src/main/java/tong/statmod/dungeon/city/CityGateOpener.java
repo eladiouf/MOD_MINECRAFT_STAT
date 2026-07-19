@@ -6,10 +6,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
 
 /**
@@ -17,7 +17,7 @@ import tong.statmod.dungeon.DungeonDimensions;
  * et la referme quand plus personne n'est à proximité. Les battants sont des blocs d'obsidienne
  * dans le passage — pas de redstone (règle du donjon).
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class CityGateOpener {
 
     private static final int CHECK_EVERY_TICKS = 20;
@@ -29,7 +29,8 @@ public final class CityGateOpener {
     private CityGateOpener() {}
 
     @SubscribeEvent
-    public static void onTick(ServerTickEvent.Post event) {
+    public static void onTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (event.getServer().getTickCount() % CHECK_EVERY_TICKS != 0) return;
         ServerLevel lv = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
         if (lv == null || lv.players().isEmpty() || !CityGenerator.isBuilt(lv)) return;

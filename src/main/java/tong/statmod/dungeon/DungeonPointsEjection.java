@@ -2,7 +2,8 @@ package tong.statmod.dungeon;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import tong.statmod.storage.ModAttachments;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
 
 /**
  * Mission M6 — Règle « 0 point → éjection overworld » (2026-07-05).
@@ -22,7 +23,7 @@ public final class DungeonPointsEjection {
     /** Applique la règle pour {@code player} : si éligible, message + retour overworld. */
     public static void enforce(ServerPlayer player) {
         boolean inDungeon = player.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON);
-        int points = player.getData(ModAttachments.STATS).getDungeonPoints();
+        int points = StatCapabilities.get(player).getDungeonPoints();
         if (!shouldEject(inDungeon, points)) return;
         player.displayClientMessage(Component.translatable("dungeon.ejected.no_points"), false);
         DungeonTeleportHandler.returnToOverworld(player);

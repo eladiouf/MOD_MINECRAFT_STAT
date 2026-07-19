@@ -10,7 +10,6 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Blocks;
@@ -143,13 +142,13 @@ public final class DungeonMerchant {
 
     /** Offre d'achat : {@code emeralds} émeraudes → {@code count}×{@code item}. */
     private static MerchantOffer buy(net.minecraft.world.item.Item item, int count, int emeralds) {
-        return new MerchantOffer(new ItemCost(Items.EMERALD, Math.max(1, emeralds)),
+        return new MerchantOffer(new ItemStack(Items.EMERALD, Math.max(1, emeralds)),
                 new ItemStack(item, count), 8, 2, 0.05f);
     }
 
     /** Offre de vente : {@code count}×{@code item} → {@code emeralds} émeraudes. */
     private static MerchantOffer sell(net.minecraft.world.item.Item item, int count, int emeralds) {
-        return new MerchantOffer(new ItemCost(item, count),
+        return new MerchantOffer(new ItemStack(item, count),
                 new ItemStack(Items.EMERALD, Math.max(1, emeralds)), 12, 1, 0.05f);
     }
 }

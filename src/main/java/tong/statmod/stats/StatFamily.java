@@ -1,18 +1,19 @@
 package tong.statmod.stats;
 
 public enum StatFamily {
-    FRONTLINE_PHYSICAL_COMBAT("frontline_physical_combat", "Front-Line Physical Combat"),
-    RANGED_HUNT_CONTROL("ranged_hunt_control", "Ranged and Hunt Control"),
-    MAGICAL_CORE("magical_core", "Magical Core"),
-    ELEMENTAL_SPECIALIZATION("elemental_specialization", "Elemental Specialization"),
-    MENTAL_PRESSURE_RESILIENCE("mental_pressure_resilience", "Mental Pressure and Resilience"),
-    CRAFTING_SUPPORT("crafting_support", "Crafting, Provisioning, and Technical Support");
+    FRONT_LINE_PHYSICAL("front_line_physical"),
+    RANGED_HUNT("ranged_hunt"),
+    MAGICAL_CORE("magical_core"),
+    MENTAL_RESILIENCE("mental_resilience"),
+    CRAFTING_SUPPORT("crafting_support");
 
-    public final String slug;
-    public final String displayName;
+    private final String slug;
 
-    StatFamily(String slug, String displayName) {
+    StatFamily(String slug) {
         this.slug = slug;
-        this.displayName = displayName;
+    }
+
+    public String slug() {
+        return slug;
     }
 }

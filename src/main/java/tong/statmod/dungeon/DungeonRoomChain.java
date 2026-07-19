@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.Random;
+import tong.statmod.dungeon.ai.living.DungeonLivingPopulation;
 
 import static tong.statmod.dungeon.DungeonArchitect.AIR;
 import static tong.statmod.dungeon.DungeonArchitect.B;
@@ -99,6 +100,9 @@ public final class DungeonRoomChain {
             // Balisage EN DERNIER (après le décor) : traînée + fanal vers la porte de sortie → guide
             // le joueur, jamais perdu ni à rebrousser chemin.
             DungeonWayfinding.mark(lv, roomSp, r, floor);
+        }
+        if (role == DungeonArchitect.Role.COMBAT) {
+            DungeonLivingPopulation.populateSafehouse(lv, sp, floor);
         }
     }
 
@@ -436,9 +440,7 @@ public final class DungeonRoomChain {
         BlockPos chestPos = O(sp, cx, 0, cz - 3);
         S(lv, chestPos, Blocks.CHEST.defaultBlockState());
         if (lv.getBlockEntity(chestPos) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c) {
-            c.setLootTable(net.minecraft.resources.ResourceKey.create(
-                net.minecraft.core.registries.Registries.LOOT_TABLE,
-                net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/spawn_bonus_chest")), lv.random.nextLong());
+            c.setLootTable(new net.minecraft.resources.ResourceLocation("chests/spawn_bonus_chest"), lv.random.nextLong());
         }
     }
 
@@ -479,7 +481,7 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx, 0, cz), B(DungeonBlocks.NEXT_FLOOR_TELEPORTER.get()));
     }
 
-    private static void placeSafehouseBarrel(ServerLevel lv, BlockPos pos, net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> lootTable) {
+    private static void placeSafehouseBarrel(ServerLevel lv, BlockPos pos, net.minecraft.resources.ResourceLocation lootTable) {
         S(lv, pos, Blocks.BARREL.defaultBlockState());
         if (lv.getBlockEntity(pos) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c) {
             c.setLootTable(lootTable, lv.random.nextLong());
@@ -811,7 +813,7 @@ public final class DungeonRoomChain {
         DungeonHealHandler.registerHealSpot(lv.dimension(), campfirePos);
 
         // Cooking pot on the campfire (Farmer's Delight cooking pot if available)
-        Block cookingPot = QuarkDungeonDecorator.resolve("farmersdelight:cooking_pot");
+        Block cookingPot = QuarkDungeonDecorator.resolve("minecraft:cauldron");
         S(lv, campfirePos.above(), cookingPot != null ? cookingPot.defaultBlockState() : Blocks.CAULDRON.defaultBlockState());
 
         Block macawChair = MacawDungeonDecorator.oakChair();
@@ -831,22 +833,18 @@ public final class DungeonRoomChain {
         S(lv, O(sp, cx - 2, 0, cz - 3), Blocks.BOOKSHELF.defaultBlockState());
 
         // Safehouse Food and Tool Barrels
-        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 3), net.minecraft.resources.ResourceKey.create(
-            net.minecraft.core.registries.Registries.LOOT_TABLE,
-            net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/village/village_plains_house")));
-        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 2), net.minecraft.resources.ResourceKey.create(
-            net.minecraft.core.registries.Registries.LOOT_TABLE,
-            net.minecraft.resources.ResourceLocation.withDefaultNamespace("chests/village/village_toolsmith")));
+        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 3), new net.minecraft.resources.ResourceLocation("chests/village/village_plains_house"));
+        placeSafehouseBarrel(lv, O(sp, cx + 3, 0, cz + 2), new net.minecraft.resources.ResourceLocation("chests/village/village_toolsmith"));
 
         // Altar of Blessing (Lodestone + hanging soul lantern)
         S(lv, O(sp, cx - 3, 0, cz + 3), Blocks.LODESTONE.defaultBlockState());
         S(lv, O(sp, cx - 3, 1, cz + 3), Blocks.SOUL_LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
 
-        Block cuttingBoard = QuarkDungeonDecorator.resolve("farmersdelight:cutting_board");
+        Block cuttingBoard = QuarkDungeonDecorator.resolve("minecraft:smithing_table");
         if (cuttingBoard != null) {
             S(lv, O(sp, cx + 3, 0, cz + 1), cuttingBoard.defaultBlockState());
         }
-        Block basket = QuarkDungeonDecorator.resolve("farmersdelight:basket");
+        Block basket = QuarkDungeonDecorator.resolve("minecraft:barrel");
         if (basket != null) {
             S(lv, O(sp, cx + 3, 0, cz - 1), basket.defaultBlockState());
         }
@@ -1016,13 +1014,14 @@ public final class DungeonRoomChain {
         S(lv, lecternPos, Blocks.LECTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LecternBlock.HAS_BOOK, true));
         if (lv.getBlockEntity(lecternPos) instanceof net.minecraft.world.level.block.entity.LecternBlockEntity lecternBE) {
             net.minecraft.world.item.ItemStack bookStack = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BOOK);
-            bookStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, net.minecraft.network.chat.Component.literal("§6Secrets du Donjon"));
-            bookStack.set(net.minecraft.core.component.DataComponents.LORE, new net.minecraft.world.item.component.ItemLore(java.util.List.of(
-                net.minecraft.network.chat.Component.literal("§7Le seul bloc de bois au sol révèle"),
-                net.minecraft.network.chat.Component.literal("§7un passage secret vers le labyrinthe."),
-                net.minecraft.network.chat.Component.literal("§7Les boutons cachés sur les piliers"),
-                net.minecraft.network.chat.Component.literal("§7ouvrent les grilles scellées.")
-            )));
+            bookStack.setHoverName(net.minecraft.network.chat.Component.literal("§6Secrets du Donjon"));
+            net.minecraft.nbt.CompoundTag display = bookStack.getOrCreateTagElement("display");
+            net.minecraft.nbt.ListTag lore = new net.minecraft.nbt.ListTag();
+            lore.add(net.minecraft.nbt.StringTag.valueOf("{\"text\":\"Le seul bloc de bois au sol révèle\",\"color\":\"gray\"}"));
+            lore.add(net.minecraft.nbt.StringTag.valueOf("{\"text\":\"un passage secret vers le labyrinthe.\",\"color\":\"gray\"}"));
+            lore.add(net.minecraft.nbt.StringTag.valueOf("{\"text\":\"Les boutons cachés sur les piliers\",\"color\":\"gray\"}"));
+            lore.add(net.minecraft.nbt.StringTag.valueOf("{\"text\":\"ouvrent les grilles scellées.\",\"color\":\"gray\"}"));
+            display.put("Lore", lore);
             lecternBE.setBook(bookStack);
         }
     }

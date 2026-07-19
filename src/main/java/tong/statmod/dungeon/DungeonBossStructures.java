@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import tong.statmod.STATMod;
+import tong.statmod.StatMod;
 
 import java.util.List;
 import java.util.Map;
@@ -88,13 +88,13 @@ public final class DungeonBossStructures {
             });
         }
 
-        STATMod.LOGGER.info("[TrialDungeon] Arène importée '{}' posée à l'étage {} (taille {}×{}×{})",
+        StatMod.LOGGER.info("[TrialDungeon] Arène importée '{}' posée à l'étage {} (taille {}×{}×{})",
                 def.mainPath(), floor, size.getX(), size.getY(), size.getZ());
         // Sol de l'arène ≈ niveau de l'île + yOffset → autel/spawn juste au-dessus.
         return Optional.of(islandCenter.offset(0, def.yOffset() + 1, 0));
     }
 
     private static ResourceLocation rl(String id) {
-        return ResourceLocation.parse(id);
+        return new ResourceLocation(id);
     }
 }

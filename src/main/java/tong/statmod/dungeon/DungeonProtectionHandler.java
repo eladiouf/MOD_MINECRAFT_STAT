@@ -2,10 +2,12 @@ package tong.statmod.dungeon;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.level.ExplosionEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
 
 /**
  * Mission M6 — Le Trial Dungeon est <b>indestructible</b>, par les joueurs COMME par les mobs
@@ -26,6 +28,7 @@ import net.neoforged.neoforge.event.level.ExplosionEvent;
  *       incendiaires (briquet, boule de feu) bloqués en survie.</li>
  * </ol>
  */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonProtectionHandler {
 
     private DungeonProtectionHandler() {}
@@ -136,15 +139,15 @@ public final class DungeonProtectionHandler {
      * posent du feu, silverfish qui s'incrustent, etc. Le donjon appartient au bâtisseur.
      */
     @SubscribeEvent
-    public static void onMobGriefing(net.neoforged.neoforge.event.entity.EntityMobGriefingEvent event) {
+    public static void onMobGriefing(net.minecraftforge.event.entity.EntityMobGriefingEvent event) {
         if (event.getEntity() == null) return;
         if (!inDungeon(event.getEntity().level())) return;
-        event.setCanGrief(false);
+        event.setResult(net.minecraftforge.eventbus.api.Event.Result.DENY);
     }
 
     /** Destruction directe de bloc par une entité vivante (wither, portes, boss moddés) : non. */
     @SubscribeEvent
-    public static void onLivingDestroyBlock(net.neoforged.neoforge.event.entity.living.LivingDestroyBlockEvent event) {
+    public static void onLivingDestroyBlock(net.minecraftforge.event.entity.living.LivingDestroyBlockEvent event) {
         if (!inDungeon(event.getEntity().level())) return;
         event.setCanceled(true);
     }
@@ -162,12 +165,12 @@ public final class DungeonProtectionHandler {
      * Un joueur ne peut pas les tuer — ce sont des PNJ de shop, pas des monstres.
      */
     @SubscribeEvent
-    public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+    public static void onIncomingDamage(net.minecraftforge.event.entity.living.LivingHurtEvent event) {
         var entity = event.getEntity();
         if (!inDungeon(entity.level())) return;
         if (entity instanceof net.minecraft.server.level.ServerPlayer target
                 && DungeonTeleportHandler.floorAtPos(target.getBlockX(), target.getBlockZ()) == 0) {
-            var attacker = tong.statmod.progression.CombatXPHandler.resolveAttacker(
+            var attacker = resolveAttacker(
                     event.getSource().getEntity(), event.getSource().getDirectEntity());
             if (attacker != null) {
                 boolean arenaPvp = tong.statmod.dungeon.city.CityPlan.inArenaCombat(
@@ -186,5 +189,18 @@ public final class DungeonProtectionHandler {
                 return;
             }
         }
+    }
+
+    private static net.minecraft.world.entity.player.Player resolveAttacker(net.minecraft.world.entity.Entity source, net.minecraft.world.entity.Entity direct) {
+        if (source instanceof net.minecraft.world.entity.player.Player player) {
+            return player;
+        }
+        if (source instanceof net.minecraft.world.entity.projectile.Projectile projectile && projectile.getOwner() instanceof net.minecraft.world.entity.player.Player player) {
+            return player;
+        }
+        if (direct instanceof net.minecraft.world.entity.projectile.Projectile projectile && projectile.getOwner() instanceof net.minecraft.world.entity.player.Player player) {
+            return player;
+        }
+        return null;
     }
 }

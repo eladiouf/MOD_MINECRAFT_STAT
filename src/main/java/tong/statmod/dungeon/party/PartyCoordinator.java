@@ -1,0 +1,247 @@
+package tong.statmod.dungeon.party;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
+import tong.statmod.dungeon.DungeonDimensions;
+import tong.statmod.dungeon.DungeonTeleportHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+/**
+ * Cerveau du groupe d'aventuriers : à intervalle fixe, coordonne le ciblage des membres face au(x)
+ * joueur(s) présent(s) et réattache leur IA (perdue au reload). C'est ce qui rend le groupe
+ * <b>complémentaire</b> et intelligent contre un groupe : concentration de dégâts (focus-fire),
+ * l'assassin isole une proie, le tank intercepte la menace qui vise le backline, le soigneur soigne.
+ */
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
+public final class PartyCoordinator {
+
+    private static final int PERIOD = 10;
+    /** Couvre tout l'étage (bien sous FLOOR_SPACING=300) pour coordonner où que soit le combat. */
+    private static final double SCAN_RADIUS = 160.0;
+    /** Clés persistentData de l'ancre de formation, lues par les goals du backline. */
+    public static final String ANCHOR_X = "statmod_party_anchor_x";
+    public static final String ANCHOR_Z = "statmod_party_anchor_z";
+    /** Focus retenu par étage (hystérésis anti-thrashing + continuité de la concentration). */
+    private static final Map<Integer, UUID> LAST_FOCUS = new HashMap<>();
+    private static int tick;
+
+    private PartyCoordinator() {}
+
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (++tick % PERIOD != 0) return;
+
+        ServerLevel lv = event.getServer().getLevel(DungeonDimensions.TRIAL_DUNGEON);
+        if (lv == null || lv.players().isEmpty()) return;
+
+        List<ServerPlayer> active = new ArrayList<>();
+        Set<Integer> floors = new HashSet<>();
+        for (ServerPlayer p : lv.players()) {
+            if (p.isCreative() || p.isSpectator() || !p.isAlive()) continue;
+            int f = DungeonTeleportHandler.floorAtPos(p.getBlockX(), p.getBlockZ());
+            if (f > 0) {
+                active.add(p);
+                floors.add(f);
+            }
+        }
+        if (floors.isEmpty()) return;
+        for (int floor : floors) {
+            try {
+                coordinateFloor(lv, floor, active);
+            } catch (RuntimeException e) {
+                StatMod.LOGGER.warn("[Party] coordination étage {} : {}", floor, e.getMessage());
+            }
+        }
+    }
+
+    private static void coordinateFloor(ServerLevel lv, int floor, List<ServerPlayer> active) {
+        BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
+        AABB box = new AABB(sp).inflate(SCAN_RADIUS);
+
+        List<Mob> party = lv.getEntitiesOfClass(Mob.class, box,
+                m -> m.isAlive() && m.getPersistentData().contains(PartyRole.TAG));
+        if (party.isEmpty()) return;
+
+        // Réattache l'IA à chaque cycle : les goals ne sont pas sérialisés, un reload les efface.
+        for (Mob m : party) {
+            AdventurerPartyHelper.ensureRoleAi(m);
+        }
+
+        List<ServerPlayer> foes = new ArrayList<>();
+        for (ServerPlayer p : active) {
+            if (DungeonTeleportHandler.floorAtPos(p.getBlockX(), p.getBlockZ()) == floor) {
+                foes.add(p);
+            }
+        }
+        if (foes.isEmpty()) {
+            regroup(party); // hors combat : rester groupés autour du leader (fin de la dispersion)
+            return;
+        }
+
+        // Centre du groupe et centre du backline (mage + soigneur) à protéger.
+        double cx = 0, cz = 0;
+        double bx = 0, bz = 0;
+        int bn = 0;
+        for (Mob m : party) {
+            cx += m.getX();
+            cz += m.getZ();
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            if ("MAGE".equals(r) || "HEALER".equals(r)) {
+                bx += m.getX();
+                bz += m.getZ();
+                bn++;
+            }
+        }
+        cx /= party.size();
+        cz /= party.size();
+        if (bn > 0) {
+            bx /= bn;
+            bz /= bn;
+        } else {
+            bx = cx;
+            bz = cz;
+        }
+
+        int n = foes.size();
+        double[][] pos = new double[n][2];
+        double[] hp = new double[n];
+        for (int i = 0; i < n; i++) {
+            ServerPlayer p = foes.get(i);
+            pos[i][0] = p.getX();
+            pos[i][1] = p.getZ();
+            hp[i] = (p.getHealth() + p.getAbsorptionAmount()) / Math.max(1.0f, p.getMaxHealth());
+        }
+
+        int focus = clamp(PartyTargeting.focusIndex(hp, pos, cx, cz), n);
+        int isolated = clamp(PartyTargeting.isolatedIndex(pos), n);
+        int backThreat = clamp(PartyTargeting.nearestToPoint(pos, bx, bz), n);
+
+        // PUNISH : un joueur qui boit/mange/bloque/charge un arc est vulnérable → on l'achève
+        // (interrompre un heal/potion vaut plus que le PV brut). Sinon HYSTÉRÉSIS : on reste sur
+        // le focus précédent tant qu'il n'est pas nettement plus sain → ciblage délibéré, non erratique.
+        int channeling = -1;
+        double channelingHp = Double.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (foes.get(i).isUsingItem() && hp[i] < channelingHp) {
+                channelingHp = hp[i];
+                channeling = i;
+            }
+        }
+        if (channeling >= 0) {
+            focus = channeling;
+        } else {
+            UUID prev = LAST_FOCUS.get(floor);
+            if (prev != null) {
+                for (int i = 0; i < n; i++) {
+                    if (foes.get(i).getUUID().equals(prev) && hp[i] <= hp[focus] + 0.15) {
+                        focus = i;
+                        break;
+                    }
+                }
+            }
+        }
+        LAST_FOCUS.put(floor, foes.get(focus).getUUID());
+
+        LivingEntity focusP = foes.get(focus);
+        LivingEntity isolatedP = foes.get(isolated);
+        LivingEntity backP = foes.get(backThreat);
+
+        // Ancre de formation : le backline (mage/soigneur) reste près du tank (ou du centre du
+        // groupe s'il n'y en a pas) → il recule vers la protection au lieu de fuir dans un coin.
+        double anchorX = cx, anchorZ = cz;
+        for (Mob m : party) {
+            if ("TANK".equals(m.getPersistentData().getString(PartyRole.TAG))) {
+                anchorX = m.getX();
+                anchorZ = m.getZ();
+                break;
+            }
+        }
+        for (Mob m : party) {
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            if ("MAGE".equals(r) || "HEALER".equals(r)) {
+                m.getPersistentData().putDouble(ANCHOR_X, anchorX);
+                m.getPersistentData().putDouble(ANCHOR_Z, anchorZ);
+            }
+        }
+
+        // PEEL : si un joueur frappe le backline (soigneur/mage), le tank se rabat dessus pour le
+        // protéger — impossible de « rush le heal » tranquillement.
+        LivingEntity backlineThreat = null;
+        for (Mob m : party) {
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            if ("HEALER".equals(r) || "MAGE".equals(r)) {
+                LivingEntity a = m.getLastHurtByMob();
+                if (a != null && a.isAlive() && (m.tickCount - m.getLastHurtByMobTimestamp()) < 60
+                        && foes.contains(a)) {
+                    backlineThreat = a;
+                    if ("HEALER".equals(r)) break; // priorité absolue au soigneur
+                }
+            }
+        }
+
+        // Mode EXECUTE : la cible focus est presque morte → tout le monde se rabat dessus pour
+        // sécuriser le kill (au lieu d'étaler les cibles). Comportement d'équipe « finish ».
+        boolean execute = hp[focus] < 0.30;
+
+        for (Mob m : party) {
+            String r = m.getPersistentData().getString(PartyRole.TAG);
+            LivingEntity want;
+            if ("TANK".equals(r) && backlineThreat != null) {
+                want = backlineThreat; // peel : protéger le backline avant tout
+            } else if (execute && !"HEALER".equals(r)) {
+                want = focusP;
+            } else {
+                want = switch (r) {
+                    case "TANK" -> backP;         // intercepte la menace qui vise le backline
+                    // pique la proie isolée — mais si quelqu'un channelle (heal/potion), va l'interrompre.
+                    case "ASSASSIN" -> channeling >= 0 ? foes.get(channeling) : isolatedP;
+                    case "MAGE", "ARCHER" -> focusP; // feu à distance concentré sur le focus
+                    default -> null;              // HEALER : ne cible pas, il soigne (HealPartyGoal)
+                };
+            }
+            if (want != null && m.getTarget() != want) {
+                m.setTarget(want);
+            }
+        }
+    }
+
+    /** Hors combat : les membres qui traînent reviennent vers le leader (le tank). */
+    private static void regroup(List<Mob> party) {
+        Mob leader = null;
+        for (Mob m : party) {
+            if ("TANK".equals(m.getPersistentData().getString(PartyRole.TAG))) {
+                leader = m;
+                break;
+            }
+        }
+        if (leader == null) leader = party.get(0);
+        for (Mob m : party) {
+            if (m == leader || m.getTarget() != null) continue;
+            if (m.distanceToSqr(leader) > 7 * 7) {
+                m.getNavigation().moveTo(leader, 1.0);
+            }
+        }
+    }
+
+    private static int clamp(int idx, int n) {
+        if (idx < 0) return 0;
+        if (idx >= n) return n - 1;
+        return idx;
+    }
+}

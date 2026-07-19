@@ -6,14 +6,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import tong.statmod.STATMod;
+import tong.statmod.StatMod;
 import tong.statmod.config.Config;
 import tong.statmod.integration.RaceEffectApplier;
 import tong.statmod.network.SyncHelper;
 import tong.statmod.sound.ModSounds;
 import tong.statmod.stats.StatType;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
+
 
 /**
  * Mission M6 — « Vraie aventure » (2026-07-04).
@@ -47,17 +48,10 @@ public final class DungeonProgress {
         if (floor <= 0) return;
         if (player.level() instanceof ServerLevel sl
                 && sl.dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) {
-            // FTB Teams : seule l'ÉQUIPE du déclencheur conquiert (2026-07-09). Les rivaux
-            // présents sur l'étage ne profitent pas du kill — ils voient la victoire adverse.
+            // Rencontre publique : toutes les équipes présentes combattent la même vague ou le
+            // même boss, donc tous les joueurs présents conquièrent l'étage ensemble.
             for (ServerPlayer present : DungeonTeleportHandler.playersOnFloor(sl, floor)) {
-                if (tong.statmod.integration.ftbteams.FTBTeamsBridge.sameTeam(player, present)) {
-                    completeForPlayer(present, floor, objective, bossReward);
-                } else if (present.getData(ModAttachments.STATS).getDungeonFloorReached() <= floor) {
-                    net.minecraft.network.chat.Component team =
-                            tong.statmod.integration.ftbteams.FTBTeamsBridge.teamName(player);
-                    present.displayClientMessage(Component.translatable("dungeon.coop.rival_conquered",
-                            team != null ? team : player.getDisplayName(), floor), false);
-                }
+                completeForPlayer(present, floor, objective, bossReward);
             }
         } else {
             // Filet de sécurité (déclencheur hors donjon — commandes/tests) : au moins lui.
@@ -67,7 +61,7 @@ public final class DungeonProgress {
 
     /** Conquête pour UN joueur : unlock + récompense + célébration. Idempotent. */
     private static void completeForPlayer(ServerPlayer player, int floor, DungeonObjective objective, boolean bossReward) {
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PlayerStats data = StatCapabilities.get(player);
         if (data.getDungeonFloorReached() > floor) return; // déjà conquis
 
         data.unlockDungeonFloor(floor + 1);
@@ -84,12 +78,12 @@ public final class DungeonProgress {
             player.displayClientMessage(Component.translatable(
                     "block.statmod.dungeon_portal.boss_kill", gain, statName, floor + 1), false);
             // Gros gain de points pour le boss vaincu.
-            DungeonPoints.awardBoss(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardBoss(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         } else {
             player.displayClientMessage(Component.translatable(
                     "dungeon.floor.conquered", floor, floor + 1), false);
             // Bonus de points pour la conquête d'un étage (remplace la récompense en cristaux).
-            DungeonPoints.awardFloorClear(player, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
+            DungeonPoints.awardFloorClear(player, floor, flawless ? DungeonRush.FLAWLESS_MULTIPLIER : 1);
         }
 
         SyncHelper.syncStats(player);
@@ -109,7 +103,7 @@ public final class DungeonProgress {
         DungeonRush.beginFloor(player.getUUID());
         milestone(player, floor + 1);
 
-        STATMod.LOGGER.info("[TrialDungeon] Étage {} conquis ({}) par {} → étage {} débloqué",
+        StatMod.LOGGER.info("[TrialDungeon] Étage {} conquis ({}) par {} → étage {} débloqué",
                 floor, objective, player.getGameProfile().getName(), floor + 1);
     }
 

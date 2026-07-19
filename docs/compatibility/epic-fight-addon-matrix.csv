@@ -1,0 +1,2 @@
+addon,version,weapon_tags,melee_xp,combo_xp,projectile_xp,crafting_xp,client_test,server_test,status,notes
+EXAMPLE_DO_NOT_SHIP_AS_RESULT,N/A,statmod:heavy_weapons,not_run,not_run,not_run,not_run,not_run,not_run,untested,Template row only; not a real addon result

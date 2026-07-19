@@ -7,10 +7,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
+import tong.statmod.StatMod;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ import java.util.Set;
  * <p>En mémoire uniquement (reconstruit à la génération de chaque étage). Ne persiste pas : c'est
  * un simple index runtime, réalimenté quand une salle est (re)générée.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonHealHandler {
 
     /** Rayon (blocs) d'action d'un point de soin. */
@@ -45,7 +45,8 @@ public final class DungeonHealHandler {
     }
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
         if (++serverTick % PERIOD != 0) return;
         if (HEAL_SPOTS.isEmpty()) return;
 

@@ -13,8 +13,9 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import tong.statmod.config.Config;
 import tong.statmod.integration.sdm.SDMEconomyBridge;
 import tong.statmod.network.SyncHelper;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
+
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -33,7 +34,7 @@ public final class DungeonCommands {
                 .then(Commands.literal("info")
                         .executes(ctx -> {
                             if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                PlayerStats data = StatCapabilities.get(player);
                                 ctx.getSource().sendSuccess(() -> Component.literal(
                                         "Trial Dungeon — Floor reached: " + data.getDungeonFloorReached()), false);
                             }
@@ -44,7 +45,7 @@ public final class DungeonCommands {
                                 .executes(ctx -> {
                                     int floor = IntegerArgumentType.getInteger(ctx, "floor");
                                     if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                        boolean ok = DungeonTeleportHandler.enterFloor(player, floor);
+                                        boolean ok = DungeonTeleportHandler.enterFloor(player, floor, true);
                                         if (ok) {
                                             ctx.getSource().sendSuccess(() -> Component.literal(
                                                     "Teleported to floor " + floor), true);
@@ -60,7 +61,7 @@ public final class DungeonCommands {
                                 .executes(ctx -> {
                                     int floor = IntegerArgumentType.getInteger(ctx, "floor");
                                     if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                        PlayerStatData data = player.getData(ModAttachments.STATS);
+                                        PlayerStats data = StatCapabilities.get(player);
                                         data.unlockDungeonFloor(floor);
                                         ctx.getSource().sendSuccess(() -> Component.literal(
                                                 "Unlocked floor " + floor), true);
@@ -70,7 +71,7 @@ public final class DungeonCommands {
                 .then(Commands.literal("reset")
                         .executes(ctx -> {
                             if (ctx.getSource().getEntity() instanceof ServerPlayer player) {
-                                PlayerStatData data = player.getData(ModAttachments.STATS);
+                                PlayerStats data = StatCapabilities.get(player);
                                 data.unlockDungeonFloor(1);
                                 ctx.getSource().sendSuccess(() -> Component.literal(
                                         "Dungeon progress reset to floor 1"), true);
@@ -183,7 +184,7 @@ public final class DungeonCommands {
     }
 
     private static int doConvert(ServerPlayer player, int requested) {
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PlayerStats data = StatCapabilities.get(player);
         int points = data.getDungeonPoints();
         if (points <= 0) {
             player.sendSystemMessage(Component.translatable("dungeon.convert.no_points"));
@@ -208,7 +209,7 @@ public final class DungeonCommands {
     }
 
     private static int doConvertAll(ServerPlayer player) {
-        PlayerStatData data = player.getData(ModAttachments.STATS);
+        PlayerStats data = StatCapabilities.get(player);
         int points = data.getDungeonPoints();
         // Garder 1 point pour éviter l'éjection (DungeonPointsEjection)
         int max = Math.max(0, points - 1);
@@ -223,16 +224,15 @@ public final class DungeonCommands {
         ItemStack stack = new ItemStack(eggType);
         net.minecraft.nbt.CompoundTag entityData = new net.minecraft.nbt.CompoundTag();
         entityData.putString("id", entityId);
-        // NeoForge ne charge getPersistentData() qu'à partir de la sous-balise "NeoForgeData" :
-        // il faut y nicher notre tag de type de mage ET le marqueur d'autorisation du
-        // DungeonSpawnGuard, sinon (a) DungeonMagicMobs ne voit jamais le mageType et (b) le
-        // mob est annulé à la naissance dans le Trial Dungeon (liste blanche stricte).
-        net.minecraft.nbt.CompoundTag neoForgeData = new net.minecraft.nbt.CompoundTag();
-        neoForgeData.putString("statmod_custom_mage_type", mageType);
-        neoForgeData.putBoolean(DungeonSpawnGuard.AUTHORIZED_TAG, true);
-        entityData.put("NeoForgeData", neoForgeData);
-        stack.set(net.minecraft.core.component.DataComponents.ENTITY_DATA, net.minecraft.world.item.component.CustomData.of(entityData));
-        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(name));
+        
+        // Under Forge 1.20.1, getPersistentData() resolves to ForgeData (instead of NeoForgeData)
+        net.minecraft.nbt.CompoundTag forgeData = new net.minecraft.nbt.CompoundTag();
+        forgeData.putString("statmod_custom_mage_type", mageType);
+        forgeData.putBoolean(DungeonSpawnGuard.AUTHORIZED_TAG, true);
+        entityData.put("ForgeData", forgeData);
+        
+        stack.getOrCreateTag().put("EntityTag", entityData);
+        stack.setHoverName(Component.literal(name));
         return stack;
     }
 }

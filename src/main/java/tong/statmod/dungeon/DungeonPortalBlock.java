@@ -6,24 +6,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import tong.statmod.capability.StatCapabilities;
 import tong.statmod.sound.ModSounds;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
 
-/**
- * Mission M6 — Phase β.
- *
- * <p>Bloc {@code statmod:dungeon_portal} — la porte d'entrée du Trial Dungeon.
- *
- * <p>MVP : right-click téléporte le joueur au plus haut étage débloqué. Un menu de sélection
- * multi-étages viendra en phase β.b.
- */
 public class DungeonPortalBlock extends Block {
 
     public DungeonPortalBlock(Properties properties) {
@@ -31,8 +23,7 @@ public class DungeonPortalBlock extends Block {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
-                                                Player player, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -40,12 +31,12 @@ public class DungeonPortalBlock extends Block {
             return InteractionResult.PASS;
         }
 
-        PlayerStatData data = serverPlayer.getData(ModAttachments.STATS);
+        serverPlayer.getCapability(StatCapabilities.PLAYER_STATS).ifPresent(data -> {
+            data.setLastOverworldDimensionId(level.dimension().location().toString());
+            data.setLastOverworldPos(pos.asLong());
+        });
 
-        data.setLastOverworldDimensionId(level.dimension().location().toString());
-        data.setLastOverworldPos(pos.asLong());
-
-        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0);
+        boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0, true);
         if (ok) {
             serverPlayer.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.7f, 1.3f);
             serverPlayer.displayClientMessage(
@@ -58,7 +49,7 @@ public class DungeonPortalBlock extends Block {
     }
 
     @Override
-    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!level.isClientSide) {
             checkAndCreateMagicCircle(level, pos);
@@ -66,7 +57,6 @@ public class DungeonPortalBlock extends Block {
     }
 
     private void checkAndCreateMagicCircle(Level level, BlockPos pos) {
-        // Il y a 9 centres possibles pour une grille 3x3 contenant le bloc posé
         for (int cx = -1; cx <= 1; cx++) {
             for (int cz = -1; cz <= 1; cz++) {
                 BlockPos center = pos.offset(cx, 0, cz);

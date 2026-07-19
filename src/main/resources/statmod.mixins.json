@@ -2,10 +2,15 @@
   "required": true,
   "minVersion": "0.8",
   "package": "tong.statmod.mixin",
-  "plugin": "tong.statmod.mixin.StatModMixinPlugin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "statmod.refmap.json",
-  "client": ["OvergearedSmithingScreenMixin", "EpicFightSkillBookScreenMixin", "IronInscriptionTableScreenMixin", "EpicFightPlayerScaleMixin", "PuffishSkillsScreenMixin", "ShopPageMixin", "ShopPageModernMixin", "ShopTabPanelMixin"],
-  "mixins": ["PlayerListMixin", "ItemStackDurabilityMixin", "AssemblyCraftingResultMixin", "OvergearedSmithingMixin", "OvergearedSmithingMenuMixin", "OvergearedForgingRecipeMixin", "OvergearedAlloySmelterMixin", "ItemKeywordReloadListenerMixin", "EpicFightSkillBuilderMixin", "EpicFightPlayerSkillsMixin", "EpicFightNullAnimationMixin", "ReincarnationMenuRaceFilterMixin", "IronInscriptionTableMenuMixin", "IronSpellIconResolverMixin", "IronSpellManaOverrideMixin", "IronSpellEquipmentChangeMixin", "SpellSelectionManagerMixin", "IronLearnedSpellCastSourceMixin", "IronWeaponCastImplementMixin", "IndestructibleServerMixin", "RecipeManagerMixin"],
-  "server": []
+  "mixins": [
+    "IronInscriptionTableMenuMixin"
+  ],
+  "client": [
+    "IronInscriptionTableScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

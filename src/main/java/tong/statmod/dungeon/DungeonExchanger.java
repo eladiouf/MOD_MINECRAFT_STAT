@@ -10,15 +10,15 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.network.PacketDistributor;
+import tong.statmod.StatMod;
 import tong.statmod.integration.sdm.SDMEconomyBridge;
-import tong.statmod.network.OpenExchangePayload;
-import tong.statmod.storage.ModAttachments;
+import tong.statmod.capability.StatCapabilities;
+import tong.statmod.stats.PlayerStats;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>Bloqué (NoAI, invulnérable, persistant), tagué {@link #TAG}, sans trade vanilla. Clic-droit →
  * ouvre l'écran d'échange. La monnaie SDM est créée au démarrage serveur.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonExchanger {
 
     /** Marqueur NBT du changeur (exempté du nettoyage des mobs, comme les marchands). */
@@ -74,10 +74,18 @@ public final class DungeonExchanger {
         event.setCancellationResult(InteractionResult.SUCCESS);
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         authorize(sp, event.getTarget());
-        int points = sp.getData(ModAttachments.STATS).getDungeonPoints();
-        long coins = SDMEconomyBridge.getCoins(sp);
-        PacketDistributor.sendToPlayer(sp, new OpenExchangePayload(points, coins,
-                (float) tong.statmod.config.Config.getPointToCoinRate()));
+        int points = StatCapabilities.get(sp).getDungeonPoints();
+        long coins;
+        if (SDMEconomyBridge.available()) {
+            coins = SDMEconomyBridge.getCoins(sp);
+        } else {
+            coins = sp.getInventory().items.stream()
+                    .filter(stack -> stack.is(net.minecraft.world.item.Items.EMERALD))
+                    .mapToLong(net.minecraft.world.item.ItemStack::getCount)
+                    .sum();
+        }
+        tong.statmod.network.StatNetwork.sendOpenExchange(sp, points, coins,
+                (float) tong.statmod.config.Config.getPointToCoinRate());
     }
 
     private static void authorize(ServerPlayer player, Entity exchanger) {

@@ -2,32 +2,33 @@ package tong.statmod.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import tong.statmod.StatMod;
 import tong.statmod.dungeon.DungeonDimensions;
 import tong.statmod.dungeon.DungeonTeleportHandler;
 import tong.statmod.dungeon.DungeonThemes;
 
-@OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class DungeonHudOverlay {
 
     private DungeonHudOverlay() {}
 
-    public static void register(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.HOTBAR,
-                ResourceLocation.fromNamespaceAndPath("statmod", "dungeon_overlay"),
-                DungeonHudOverlay::render);
+    @SubscribeEvent
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("dungeon_overlay", DungeonHudOverlay::render);
     }
 
-    private static void render(GuiGraphics graphics, DeltaTracker delta) {
+    private static void render(ForgeGui gui, GuiGraphics graphics, float partialTick,
+            int screenWidth, int screenHeight) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         if (player == null) return;
@@ -35,10 +36,11 @@ public final class DungeonHudOverlay {
 
         Font font = mc.font;
         int floor = DungeonTeleportHandler.floorAtPos(player.getBlockX(), player.getBlockZ());
-        // Max floor et points viennent du cache client synchronisé (l'attachment n'est PAS
-        // auto-synchronisé au client → lire data.getDungeonPoints() donnait toujours 0).
-        int maxFloor = ClientStatCache.getDungeonFloorReached();
-        int dungeonPoints = ClientStatCache.getDungeonPoints();
+        
+        // Retrieve values from the local ClientStatsState
+        ClientStatsState state = ClientStatsCache.state();
+        int maxFloor = state.dungeonFloorReached();
+        int dungeonPoints = state.dungeonPoints();
         String type = floorType(floor);
         String tier = tierName(floor);
         int nextBoss = ((floor / 10) + 1) * 10;
@@ -66,14 +68,13 @@ public final class DungeonHudOverlay {
         }
         String[] lines = lineList.toArray(new String[0]);
 
-        int screenW = mc.getWindow().getGuiScaledWidth();
         float scale = 0.75f;
         int lineH = (int)(font.lineHeight * scale) + 2;
         int boxW = 0;
         for (String s : lines) boxW = Math.max(boxW, (int)(font.width(s) * scale));
         boxW += 8;
         int boxH = lineH * lines.length + 4;
-        int x = screenW - boxW - 4;
+        int x = screenWidth - boxW - 4;
         int y = 4;
 
         // Fond semi-transparent en coordonnées écran absolues (avant tout scale/translate).
@@ -96,8 +97,7 @@ public final class DungeonHudOverlay {
 
     /** Compte les ennemis (hostiles) proches du joueur — le donjon n'ayant aucun spawn naturel,
      *  tous les {@link net.minecraft.world.entity.monster.Enemy} chargés sont ceux de la vague. */
-    private static int countEnemies(net.minecraft.client.Minecraft mc,
-                                    net.minecraft.world.entity.player.Player player) {
+    private static int countEnemies(Minecraft mc, Player player) {
         if (mc.level == null) return 0;
         net.minecraft.world.phys.AABB area = player.getBoundingBox().inflate(90.0);
         return mc.level.getEntities(player, area,
@@ -124,5 +124,4 @@ public final class DungeonHudOverlay {
         if (floor <= 50) return "§6LATE";
         return "§cABYSS";
     }
-
 }

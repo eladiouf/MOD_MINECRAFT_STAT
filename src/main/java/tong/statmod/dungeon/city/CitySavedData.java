@@ -1,14 +1,11 @@
 package tong.statmod.dungeon.city;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
 /**
- * Marqueur persistant « la cité est construite », versionné : incrémenter
- * {@link CityGenerator#CITY_VERSION} force une reconstruction au prochain démarrage
- * (utile quand la génération évolue entre deux versions du mod).
+ * Marqueur persistant « la cité est construite », versionné.
  */
 public final class CitySavedData extends SavedData {
 
@@ -17,19 +14,21 @@ public final class CitySavedData extends SavedData {
 
     private int builtVersion = 0;
 
+    public CitySavedData() {}
+
     public static CitySavedData get(ServerLevel dungeonLevel) {
         return dungeonLevel.getDataStorage().computeIfAbsent(
-                new SavedData.Factory<>(CitySavedData::new, CitySavedData::load, null), NAME);
+                CitySavedData::load, CitySavedData::new, NAME);
     }
 
-    private static CitySavedData load(CompoundTag tag, HolderLookup.Provider provider) {
+    private static CitySavedData load(CompoundTag tag) {
         CitySavedData data = new CitySavedData();
         data.builtVersion = tag.getInt(TAG_VERSION);
         return data;
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt(TAG_VERSION, builtVersion);
         return tag;
     }

@@ -4,11 +4,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import tong.statmod.StatMod;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * <p>Priorité {@code LOWEST} : on laisse les autres mods réagir à la mort d'abord (compat), et on
  * annule en dernier si personne ne l'a déjà fait.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonRespawnHandler {
 
     private DungeonRespawnHandler() {}
@@ -59,12 +59,12 @@ public final class DungeonRespawnHandler {
         event.setCanceled(true);
 
         // Mort punitive : le joueur perd une partie de ses points de donjon.
-        DungeonPoints.applyDeathPenalty(player);
+        DungeonPoints.applyDeathPenalty(player, floor);
 
         // Règle « 0 point → éjection » : si la mort a vidé les points, on renvoie le joueur à
         // l'overworld AU LIEU de le faire réapparaître dans le donjon (les coins du shop restent
         // acquis). On soigne d'abord pour ne pas le renvoyer mourant.
-        if (player.getData(tong.statmod.storage.ModAttachments.STATS).getDungeonPoints() <= 0) {
+        if (tong.statmod.capability.StatCapabilities.get(player).getDungeonPoints() <= 0) {
             player.setHealth(player.getMaxHealth());
             player.clearFire();
             DungeonPointsEjection.enforce(player);
@@ -87,18 +87,18 @@ public final class DungeonRespawnHandler {
         // PURGE l'étage AVANT de réapparaître : sans ça, le joueur renaissait au centre, au milieu
         // de la horde + mini-boss de sa tentative précédente → mort instantanée → boucle infinie
         // (observée à l'étage 3 « thème ORC » avec l'Orc Lord). On repart sur une vague propre.
-        // SAUF en co-op : si un coéquipier vivant est encore sur l'étage, sa vague est SON combat —
-        // on ne la lui vole pas (audit multi 2026-07-09). Le mort réapparaît au pad et le rejoint.
+        // SAUF en multijoueur : si n'importe quel participant vivant est encore sur l'étage, la
+        // vague partagée continue. Le mort réapparaît au pad et rejoint les autres équipes.
         if (player.level() instanceof ServerLevel sl) {
-            boolean teammateStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
+            boolean participantStillFighting = DungeonTeleportHandler.playersOnFloor(sl, floor).stream()
                     .anyMatch(p -> p != player);
-            if (!teammateStillFighting) {
+            if (!participantStillFighting) {
                 DungeonMobSpawner.clearFloorMobs(sl, floor);
             }
         }
 
         // Réapparition au début du MÊME étage (régénéré, nouvelle vague) — on réessaie l'étage.
-        DungeonTeleportHandler.enterFloor(player, floor);
+        DungeonTeleportHandler.enterFloor(player, floor, true);
 
         // Grâce de réapparition : brève invulnérabilité + résistance/lenteur des mobs autour, le
         // temps de reprendre pied (5 s d'invuln vanilla + résistance forte).
@@ -108,7 +108,7 @@ public final class DungeonRespawnHandler {
         final int retryFloor = floor;
         player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
                 "dungeon.defeat.reset", retryFloor), false);
-        STATMod.LOGGER.info("[TrialDungeon] {} vaincu — réapparaît étage {} (inventaire préservé)",
+        StatMod.LOGGER.info("[TrialDungeon] {} vaincu — réapparaît étage {} (inventaire préservé)",
                 player.getGameProfile().getName(), retryFloor);
     }
 }

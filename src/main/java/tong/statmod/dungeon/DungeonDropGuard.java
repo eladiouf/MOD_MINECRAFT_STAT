@@ -1,9 +1,9 @@
 package tong.statmod.dungeon;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import tong.statmod.STATMod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import tong.statmod.StatMod;
 
 /**
  * Mission M6 — Zéro drop de mob dans le donjon (système de points, 2026-07-05).
@@ -14,7 +14,7 @@ import tong.statmod.STATMod;
  * quelle qu'en soit la source (équipement, code custom SLU/MCreator, loot table). Complète la
  * suppression des Global Loot Modifiers de shards.
  */
-@EventBusSubscriber(modid = STATMod.MODID)
+@Mod.EventBusSubscriber(modid = StatMod.MOD_ID)
 public final class DungeonDropGuard {
 
     private DungeonDropGuard() {}

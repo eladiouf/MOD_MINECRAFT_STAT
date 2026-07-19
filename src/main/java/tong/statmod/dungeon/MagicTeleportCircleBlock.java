@@ -14,9 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import tong.statmod.capability.StatCapabilities;
 import tong.statmod.sound.ModSounds;
-import tong.statmod.storage.ModAttachments;
-import tong.statmod.storage.PlayerStatData;
 
 import java.util.Map;
 import java.util.UUID;
@@ -62,37 +61,35 @@ public class MagicTeleportCircleBlock extends Block {
     }
 
     public static void applyCooldown(UUID playerUuid, long gameTime) {
-        // Enregistre un cooldown de 3 secondes + 5 secondes bonus (100 ticks)
-        // pour laisser au joueur le temps de s'écarter à son retour dans l'Overworld.
         LAST_TELEPORT.put(playerUuid, gameTime + 100L);
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide && entity instanceof ServerPlayer serverPlayer) {
             UUID uuid = serverPlayer.getUUID();
             long now = level.getGameTime();
             long lastTp = LAST_TELEPORT.getOrDefault(uuid, 0L);
 
-            if (now - lastTp > 60L) { // 3 secondes de cooldown
+            if (now - lastTp > 60L) {
                 LAST_TELEPORT.put(uuid, now);
 
-                PlayerStatData data = serverPlayer.getData(ModAttachments.STATS);
+                serverPlayer.getCapability(StatCapabilities.PLAYER_STATS).ifPresent(data -> {
+                    data.setLastOverworldDimensionId(level.dimension().location().toString());
+                    data.setLastOverworldPos(pos.asLong());
+                });
 
-                data.setLastOverworldDimensionId(level.dimension().location().toString());
-                data.setLastOverworldPos(pos.asLong());
-
-                boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0);
+                boolean ok = DungeonTeleportHandler.enterFloor(serverPlayer, 0, true);
                 if (ok) {
                     serverPlayer.playNotifySound(ModSounds.DUNGEON_PORTAL_ENTER.get(), SoundSource.BLOCKS, 0.7f, 1.3f);
                     serverPlayer.displayClientMessage(

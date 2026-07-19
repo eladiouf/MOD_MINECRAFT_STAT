@@ -3,7 +3,7 @@ package tong.statmod.dungeon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import tong.statmod.STATMod;
+import tong.statmod.StatMod;
 
 /**
  * Mission M6 — Génération d'un étage du Trial Dungeon.
@@ -35,6 +35,7 @@ public final class IslandGenerator {
         }
         BlockPos sp = DungeonTeleportHandler.floorSpawnPos(floor);
         if (!lv.getBlockState(sp.below()).isAir()) return false;
+        DungeonTraps.clearFloor(floor); // registre de pièges neuf à chaque (re)génération
         FloorPalette tier = FloorPalette.forFloor(floor);
         ThemePalette theme = ThemePalette.forFloor(floor); // identité matérielle par thème/arc
 
@@ -53,7 +54,7 @@ public final class IslandGenerator {
         // 3. Cage de blocs barrière autour de l'île : empêche de voler d'une île à l'autre.
         DungeonBarrierCage.enclose(lv, sp);
 
-        STATMod.LOGGER.info("[TrialDungeon] Floor {} generated ({}, {})", floor, theme.name(), role);
+        StatMod.LOGGER.info("[TrialDungeon] Floor {} generated ({}, {})", floor, theme.name(), role);
         return true;
     }
 

@@ -1,0 +1,35 @@
+{
+  "protected_mod_ids": [
+    "statmod",
+    "epicfight",
+    "irons_spellbooks"
+  ],
+  "excluded_mod_ids": [
+    "tensura",
+    "tensura_iron_spells",
+    "tensuramoreskills"
+  ],
+  "built_in_dependency_ids": [
+    "minecraft",
+    "forge",
+    "neoforge",
+    "java"
+  ],
+  "excluded_filename_patterns": [
+    "(?i)^tacz-",
+    "(?i)^CGM-",
+    "(?i)^create-",
+    "(?i)^create_",
+    "(?i)^project_babylon_",
+    "(?i)^arknights_",
+    "(?i)^slugterra-",
+    "(?i)^slu_",
+    "(?i)^Connector-"
+  ],
+  "preferred_filenames": [
+    "epicfight-x-curios-compat-2.2-forge-1.20.1.jar",
+    "EpicFight-Resurrection-forge1.20.1-0.20.12.2.jar"
+  ],
+  "reference_root": "C:\\Users\\El Hadji\\Downloads\\STAT_MOD\\test\\MOD_MINECRAFT_STAT\\libs",
+  "client_root": "C:\\Users\\El Hadji\\AppData\\Roaming\\.minecraft\\versions\\test-1.20.1"
+}

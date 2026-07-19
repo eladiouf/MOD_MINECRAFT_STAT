@@ -1,8 +1,0 @@
-# Mission M5 — Phase γ — Tensura whitelist.
-# Un id par ligne (modid:item_path). Vide par défaut = aucune arme Tensura forgeable.
-# Le fondateur peut ajouter les armes Tensura "mortelles" à autoriser après playtest.
-#
-# Exemples (à décommenter si voulu) :
-#   tensura:adamantite_short_sword
-#   tensura:adamantite_long_sword
-#   tensura:orichalcum_katana

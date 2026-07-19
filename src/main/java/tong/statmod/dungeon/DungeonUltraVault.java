@@ -1,13 +1,13 @@
 package tong.statmod.dungeon;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -41,7 +41,7 @@ import static tong.statmod.dungeon.DungeonArchitect.S;
  * forcément à nous (la pose de blocs y est interdite aux joueurs). La direction est déduite de
  * l'altitude : en bas → on entre ; dans la chambre → on ressort.
  */
-@net.neoforged.fml.common.EventBusSubscriber(modid = tong.statmod.STATMod.MODID)
+@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = tong.statmod.StatMod.MOD_ID)
 public final class DungeonUltraVault {
 
     /** Position de la chambre relative au centre d'île : haut dans la cage, décalée du donjon. */
@@ -81,8 +81,8 @@ public final class DungeonUltraVault {
      * dans la chambre ; en haut (chambre) → on ressort au pad d'apparition. Toute lodestone du
      * donjon est à nous : la pose de blocs y est interdite aux joueurs en survie.
      */
-    @net.neoforged.bus.api.SubscribeEvent
-    public static void onUseLodestone(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+    @net.minecraftforge.eventbus.api.SubscribeEvent
+    public static void onUseLodestone(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide) return;
         if (!(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) return;
         if (!event.getLevel().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)) return;
@@ -139,10 +139,16 @@ public final class DungeonUltraVault {
         if (DungeonSecretRoom.isQliphothFloor(floor)) {
             int arc = java.lang.Math.floorDiv(floor - 1, 10) % 10;
             String spawnerId = switch (arc) {
-                case 0, 3 -> "fdbosses:geburah_boss_spawner";
-                case 1, 6 -> "fdbosses:netzach_boss_spawner";
-                case 2, 5, 7 -> "fdbosses:malkuth_boss_spawner";
-                default  -> "fdbosses:chesed_boss_spawner";
+                case 0 -> "bosses_of_mass_destruction:lich";
+                case 1 -> "irons_spellbooks:dead_king";
+                case 2 -> "bosses_of_mass_destruction:obsidilith";
+                case 3 -> "epic_mobs:the_knight";
+                case 4 -> "slu:boss_nameless_king";
+                case 5 -> "bosses_of_mass_destruction:gauntlet";
+                case 6 -> "epic_mobs:phoenix_fight";
+                case 7 -> "statmod:adventurer";
+                case 8 -> "bosses_of_mass_destruction:void_blossom";
+                default -> "epic_mobs:micky";
             };
             // Piédestal central + spawner
             S(lv, c.offset(0, 1, 0), accent);
@@ -152,6 +158,9 @@ public final class DungeonUltraVault {
                 Entity entity = spawnerType.create(lv);
                 if (entity != null) {
                     entity.setPos(c.getX() + 0.5, VY + 3, c.getZ() + 0.5);
+                    if (entity instanceof LivingEntity vaultBoss) {
+                        DungeonEnemyHealthBalance.apply(vaultBoss);
+                    }
                     lv.addFreshEntity(entity);
                 }
             }
@@ -192,9 +201,9 @@ public final class DungeonUltraVault {
                 if (item != null) break;
             }
         }
-        if (item == null) item = BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace("netherite_sword"));
+        if (item == null) item = BuiltInRegistries.ITEM.get(new ResourceLocation("netherite_sword"));
         ItemStack stack = new ItemStack(item);
-        stack.set(DataComponents.CUSTOM_NAME,
+        stack.setHoverName(
                 Component.literal("§6⚔ ").append(stack.getHoverName().copy().withStyle(s -> s.withColor(0xFFAA00).withItalic(false)))
                         .append(Component.literal(" §7— Relique du Donjon")));
         return stack;

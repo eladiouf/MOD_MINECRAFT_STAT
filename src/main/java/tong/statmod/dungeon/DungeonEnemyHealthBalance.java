@@ -44,7 +44,7 @@ public final class DungeonEnemyHealthBalance {
         double previousMaxHealth = entity.getMaxHealth();
         double previousHealth = entity.getHealth();
         maxHealth.removeModifier(MODIFIER_UUID);
-        maxHealth.addTransientModifier(new AttributeModifier(
+        maxHealth.addPermanentModifier(new AttributeModifier(
                 MODIFIER_UUID,
                 MODIFIER_ID.toString(),
                 modifierAmount(),

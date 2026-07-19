@@ -1,7 +1,11 @@
 package tong.statmod.dungeon;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 class DungeonEnemyHealthBalanceTest {
@@ -19,5 +23,13 @@ class DungeonEnemyHealthBalanceTest {
         assertEquals(60.0D,
                 DungeonEnemyHealthBalance.healthAtSameRatio(100.0D, 60.0D, 100.0D),
                 1.0e-9);
+    }
+
+    @Test
+    void modifierPersistsAcrossChunkReloads() throws Exception {
+        String source = Files.readString(Path.of(
+                "src/main/java/tong/statmod/dungeon/DungeonEnemyHealthBalance.java"));
+        assertTrue(source.contains("addPermanentModifier"));
+        assertFalse(source.contains("addTransientModifier"));
     }
 }

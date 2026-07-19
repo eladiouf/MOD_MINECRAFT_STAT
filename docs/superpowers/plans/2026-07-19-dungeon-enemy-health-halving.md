@@ -166,7 +166,7 @@ Create timestamped `statmod-backups/health-halving-<timestamp>` directories unde
 
 Append test count, artifact hash, deployment targets and rollback paths to `docs/forge-1.20.1-server-validation.md`. Mark this plan complete.
 
-- [ ] **Step 5: Commit and push**
+- [x] **Step 5: Commit and push**
 
 ```powershell
 git add -- docs/forge-1.20.1-server-validation.md docs/superpowers/plans/2026-07-19-dungeon-enemy-health-halving.md

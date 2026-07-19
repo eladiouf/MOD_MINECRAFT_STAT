@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import tong.statmod.StatMod;
 import tong.statmod.dungeon.ai.living.DungeonLivingActor;
 
@@ -35,7 +36,10 @@ public final class DungeonEnemyHealthBalance {
     }
 
     public static void apply(LivingEntity entity) {
-        if (entity == null || entity instanceof Mob mob && DungeonLivingActor.isNonCombat(mob)) {
+        if (entity == null
+                || entity instanceof Player
+                || !entity.level().dimension().equals(DungeonDimensions.TRIAL_DUNGEON)
+                || entity instanceof Mob mob && DungeonLivingActor.isNonCombat(mob)) {
             return;
         }
         AttributeInstance maxHealth = entity.getAttribute(Attributes.MAX_HEALTH);

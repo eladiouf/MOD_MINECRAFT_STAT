@@ -27,9 +27,21 @@ class DungeonEnemyHealthBalanceTest {
 
     @Test
     void modifierPersistsAcrossChunkReloads() throws Exception {
-        String source = Files.readString(Path.of(
-                "src/main/java/tong/statmod/dungeon/DungeonEnemyHealthBalance.java"));
+        String source = balanceSource();
         assertTrue(source.contains("addPermanentModifier"));
         assertFalse(source.contains("addTransientModifier"));
+    }
+
+    @Test
+    void publicApiRejectsPlayersAndEntitiesOutsideTrialDungeon() throws Exception {
+        String source = balanceSource();
+        assertTrue(source.contains("entity instanceof Player"));
+        assertTrue(source.contains("DungeonDimensions.TRIAL_DUNGEON"));
+        assertTrue(source.contains("entity.level().dimension()"));
+    }
+
+    private static String balanceSource() throws Exception {
+        return Files.readString(Path.of(
+                "src/main/java/tong/statmod/dungeon/DungeonEnemyHealthBalance.java"));
     }
 }

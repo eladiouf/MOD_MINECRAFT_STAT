@@ -28,7 +28,7 @@
 - Consumes: the two `MobEffectInstance` constructions for `MobEffects.REGENERATION` in `HealPartyGoal`.
 - Produces: exact source-level contracts for normal-heal and Sanctuary regeneration values.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```java
 package tong.statmod.dungeon.party.goal;
@@ -56,7 +56,7 @@ class HealPartyGoalRegenerationContractTest {
 }
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run:
 
@@ -66,7 +66,7 @@ Run:
 
 Expected: FAIL because the source still contains durations/amplifiers `80, 1` and `120, 1`.
 
-- [ ] **Step 3: Apply the minimal production change**
+- [x] **Step 3: Apply the minimal production change**
 
 In the normal direct heal:
 
@@ -80,7 +80,7 @@ In Sanctuary:
 ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 0, false, true));
 ```
 
-- [ ] **Step 4: Run focused and complete verification**
+- [x] **Step 4: Run focused and complete verification**
 
 Run:
 
@@ -91,7 +91,7 @@ Run:
 
 Expected: focused test PASS, complete build SUCCESS, zero test failures.
 
-- [ ] **Step 5: Commit the tested behavior**
+- [x] **Step 5: Commit the tested behavior**
 
 ```powershell
 git add src/test/java/tong/statmod/dungeon/party/goal/HealPartyGoalRegenerationContractTest.java src/main/java/tong/statmod/dungeon/party/goal/HealPartyGoal.java docs/superpowers/plans/2026-07-19-adventurer-healer-regeneration-balance.md

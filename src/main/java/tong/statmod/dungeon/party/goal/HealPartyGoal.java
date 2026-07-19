@@ -129,7 +129,7 @@ public class HealPartyGoal extends Goal {
         if (healCooldown > 0) return;
         float amount = 8.0f + healer.getMaxHealth() * 0.08f;
         target.heal(amount);
-        target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 1, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, true));
         // Éclaboussure de soin aux camarades proches du patient (soigne vraiment le groupe).
         for (Mob ally : allies(SUPPORT_RANGE, false)) {
             if (ally != target && ally.distanceToSqr(target) < 25.0 && ally.getHealth() < ally.getMaxHealth()) {
@@ -226,7 +226,7 @@ public class HealPartyGoal extends Goal {
     private void massHeal() {
         for (Mob ally : allies(SUPPORT_RANGE, true)) {
             ally.heal(ally.getMaxHealth() * 0.5f);
-            ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 120, 1, false, true));
+            ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 0, false, true));
             ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 120, 0, false, true));
         }
         if (healer.level() instanceof ServerLevel lv) {

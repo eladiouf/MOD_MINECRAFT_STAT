@@ -155,3 +155,21 @@ Deployment evidence:
 - Final-deployment rollback copies: client and server `statmod-backups/health-halving-final-20260719-033349`.
 
 The final Java 17 dedicated-server smoke test reached readiness in 93.1 seconds; Minecraft reported `Done (9.078s)`. Stat Mod logged its Forge 1.20.1 initialization, no fatal dependency/mixin/class-loading/server-tick marker appeared, and redirected `stop` produced `Stopping server`, `Saving players`, `Saving worlds` and `All dimensions are saved`. The process exited with code 0 and no Forge server process remained. Captured logs are `statmod-health-halving-final-20260719-033408.stdout.log` and `statmod-health-halving-final-20260719-033408.stderr.log` in the server root.
+
+## Adventurer healer regeneration balance — 2026-07-19
+
+- Validated behavior commit: `3c4bf0d`.
+- Normal direct heal: Regeneration I for 40 ticks (2 seconds).
+- Sanctuary group heal: Regeneration I for 80 ticks (4 seconds).
+- Direct heal amounts, cooldowns, activation thresholds, absorption, cleanse, resistance, strength and speed remain unchanged.
+- Focused TDD cycle: the contract test failed against the former `80/1` and `120/1` values, then passed after the exact duration/amplifier change.
+- Full release gate: `.\gradlew.bat clean test build --console=plain`, `BUILD SUCCESSFUL in 31s`, 14 tasks executed.
+- Tests: 275 executed, 0 failures, 0 errors.
+- Artifact: `build/libs/statmod-0.1.0+1.20.1.jar`, 961582 bytes.
+- Build/client/server SHA-256: `E97F31F2CFF504D413474339A32AF8A96511F09F68CD5A36BC396A58CE9EEE7D`.
+- Client target: `C:\Users\El Hadji\AppData\Roaming\.minecraft\mods\statmod-0.1.0-1.20.1.jar`.
+- Server target: `C:\Users\El Hadji\Downloads\serveur\The Casket of Reveries Server 2.2.9.1\mods\statmod-0.1.0+1.20.1.jar`.
+- Client rollback: `C:\Users\El Hadji\AppData\Roaming\.minecraft\statmod-backups\healer-regen-20260719-035143`.
+- Server rollback: `C:\Users\El Hadji\Downloads\serveur\The Casket of Reveries Server 2.2.9.1\statmod-backups\healer-regen-20260719-035143`.
+
+The final Java 17 dedicated-server smoke test initialized STAT Mod, reached `Done (10.009s)`, accepted `stop`, logged `Stopping server` and `All dimensions are saved`, and exited with code 0. No Forge server process remained. The retained smoke log is `statmod-healer-regen-final-20260719-041112.log` in the server root with SHA-256 `53E6E6820C178AC6BDDACB537E1233B8922CA85F824BA61D81F01B4CB2A77FE0`.

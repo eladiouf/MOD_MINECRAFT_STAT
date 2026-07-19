@@ -109,7 +109,7 @@ git commit -m "balance: reduce adventurer healer regeneration"
 - Consumes: `build/libs/statmod-0.1.0+1.20.1.jar` produced by Task 1.
 - Produces: matching client/server deployments, validation record and pushed `forge-1.20.1` branch.
 
-- [ ] **Step 1: Back up and copy the artifact**
+- [x] **Step 1: Back up and copy the artifact**
 
 ```powershell
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
@@ -125,7 +125,7 @@ Copy-Item -LiteralPath $build -Destination $client -Force
 Copy-Item -LiteralPath $build -Destination $server -Force
 ```
 
-- [ ] **Step 2: Verify artifact identity**
+- [x] **Step 2: Verify artifact identity**
 
 ```powershell
 $hashes = Get-FileHash -Algorithm SHA256 -LiteralPath $build, $client, $server
@@ -135,11 +135,11 @@ if (($hashes.Hash | Select-Object -Unique).Count -ne 1) { throw 'Deployed JAR ha
 
 Expected: three identical SHA-256 values.
 
-- [ ] **Step 3: Record validation**
+- [x] **Step 3: Record validation**
 
 Append a dated `Adventurer healer regeneration balance — 2026-07-19` section to `docs/forge-1.20.1-server-validation.md`. Record Regeneration I for 40 ticks on normal heals, Regeneration I for 80 ticks on Sanctuary, unchanged direct healing and unrelated support behavior, the exact aggregated XML test totals, the exact `Get-Item.Length` artifact size, the identical `Get-FileHash` SHA-256 value, and both deployment paths.
 
-- [ ] **Step 4: Commit and push**
+- [x] **Step 4: Commit and push**
 
 ```powershell
 git add docs/forge-1.20.1-server-validation.md docs/superpowers/plans/2026-07-19-adventurer-healer-regeneration-balance.md
@@ -147,6 +147,6 @@ git commit -m "docs: validate healer regeneration balance"
 git push origin forge-1.20.1
 ```
 
-- [ ] **Step 5: Verify publication**
+- [x] **Step 5: Verify publication**
 
 Fetch `origin/forge-1.20.1`, assert local `HEAD` equals the remote ref, and confirm no tracked changes remain.

@@ -134,3 +134,24 @@ The final Java 17 dedicated-server smoke test succeeded:
 - Captured stderr: `statmod-dungeon-ai-validation-20260718-135830.stderr.log` (only the standard JVM class-data-sharing warning).
 
 Cataclysm and its unrelated modpack configuration remain installed. EULA, authentication mode, operators, whitelist, shop data and unrelated configuration were not modified by this deployment.
+
+## Hostile dungeon health reduction — 2026-07-19
+
+- Validated code commit: `5da884f`.
+- Final maximum-health multiplier: `0.5` through the stable `statmod:dungeon_enemy_health_balance` attribute modifier.
+- Modifier persistence: permanent and idempotent across chunk reloads; reapplication preserves the current health percentage.
+- Exclusions: players, every actor outside `statmod:trial_dungeon`, and every actor marked `statmod_living_non_combat`.
+- Covered hostile paths: general room scaling, rival/debug adventurer parties, boss altars, trap ambushes, secret-room bosses, Ultra Vault bosses and occupied-floor recovery.
+- Unchanged systems: damage, armor, toughness, spells, tactical AI, encounter size and neutral inhabitants.
+
+The final release gate used `.\gradlew.bat clean test build --console=plain` and completed successfully in 33 seconds with all 14 tasks executed. The suite contains 274 tests with 0 failures and 0 errors. The release artifact is 961583 bytes with SHA-256 `E550ECF5957ACF57591E5DF3B02165B0532B43C1C5852E36ED8236CA07941897`.
+
+Deployment evidence:
+
+- Client target: `C:\Users\El Hadji\AppData\Roaming\.minecraft\mods\statmod-0.1.0-1.20.1.jar`.
+- Server target: `C:\Users\El Hadji\Downloads\serveur\The Casket of Reveries Server 2.2.9.1\mods\statmod-0.1.0+1.20.1.jar`.
+- Build, client and server hashes are identical, and each target contains exactly one Stat Mod JAR.
+- Pre-change rollback copies: client and server `statmod-backups/health-halving-20260719-032407`.
+- Final-deployment rollback copies: client and server `statmod-backups/health-halving-final-20260719-033349`.
+
+The final Java 17 dedicated-server smoke test reached readiness in 93.1 seconds; Minecraft reported `Done (9.078s)`. Stat Mod logged its Forge 1.20.1 initialization, no fatal dependency/mixin/class-loading/server-tick marker appeared, and redirected `stop` produced `Stopping server`, `Saving players`, `Saving worlds` and `All dimensions are saved`. The process exited with code 0 and no Forge server process remained. Captured logs are `statmod-health-halving-final-20260719-033408.stdout.log` and `statmod-health-halving-final-20260719-033408.stderr.log` in the server root.

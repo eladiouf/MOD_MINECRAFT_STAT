@@ -131,7 +131,7 @@ Run: `.\gradlew.bat test --tests "tong.statmod.dungeon.DungeonEnemyHealth*" --co
 
 Expected: all health-balance unit and wiring tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add -- src/main/java/tong/statmod/dungeon/DungeonMobScaling.java src/main/java/tong/statmod/dungeon/party/AdventurerPartyHelper.java src/main/java/tong/statmod/dungeon/DungeonBossAltarBlock.java src/main/java/tong/statmod/dungeon/DungeonTrapHandler.java src/main/java/tong/statmod/dungeon/DungeonSecretRoom.java src/main/java/tong/statmod/dungeon/DungeonUltraVault.java src/main/java/tong/statmod/dungeon/ai/DungeonEncounterDirector.java src/test/java/tong/statmod/dungeon/DungeonEnemyHealthWiringContractTest.java
@@ -148,21 +148,21 @@ git commit -m "feat: apply health reduction to every dungeon enemy"
 - Consumes: verified build artifact `build/libs/statmod-0.1.0+1.20.1.jar`.
 - Produces: byte-identical client/server deployment and rollback copies.
 
-- [ ] **Step 1: Run the complete release gate**
+- [x] **Step 1: Run the complete release gate**
 
 Run: `.\gradlew.bat clean test build --console=plain`
 
 Expected: build successful, zero test failures.
 
-- [ ] **Step 2: Verify artifact and transactional targets**
+- [x] **Step 2: Verify artifact and transactional targets**
 
 Record the JAR size and SHA-256. Confirm no Minecraft client or Forge server process is active and both targets contain all mandatory dependencies.
 
-- [ ] **Step 3: Back up and deploy only Stat Mod**
+- [x] **Step 3: Back up and deploy only Stat Mod**
 
 Create timestamped `statmod-backups/health-halving-<timestamp>` directories under the active client and server roots, copy the previous Stat Mod JARs, and replace them with the verified artifact. Require exactly one Stat Mod JAR and matching SHA-256 on build, client and server.
 
-- [ ] **Step 4: Update validation evidence**
+- [x] **Step 4: Update validation evidence**
 
 Append test count, artifact hash, deployment targets and rollback paths to `docs/forge-1.20.1-server-validation.md`. Mark this plan complete.
 
